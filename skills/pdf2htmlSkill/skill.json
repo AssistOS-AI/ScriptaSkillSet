@@ -1,0 +1,22 @@
+{
+  "title": "PDF to Semantic HTML",
+  "family": "document-conversion",
+  "summary": "Converts born-digital PDFs through one approved launcher that automatically bootstraps a skill-owned Python runtime and deterministic QA.",
+  "aliases": [
+    "pdf2html",
+    "pdf-to-html"
+  ],
+  "dependsOn": [],
+  "outputs": [
+    "<outputDir>/index.html",
+    "<outputDir>/assets/"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/pdf2html",
+    "scripts/pdf2html.py",
+    "references/dependencies.md",
+    "references/validation.md"
+  ],
+  "selfContained": true
+}

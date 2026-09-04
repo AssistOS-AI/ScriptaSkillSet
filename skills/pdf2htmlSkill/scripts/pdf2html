@@ -1,0 +1,48 @@
+#!/bin/sh
+set -eu
+
+skill_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+
+if [ -z "${UV_CACHE_DIR:-}" ]; then
+  UV_CACHE_DIR="${TMPDIR:-/tmp}/pdf2html-skill-uv-cache"
+  export UV_CACHE_DIR
+fi
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "pdf2html setup: uv is required. Install it from https://docs.astral.sh/uv/." >&2
+  exit 1
+fi
+
+missing_poppler=""
+for executable in pdfinfo pdftoppm; do
+  if ! command -v "$executable" >/dev/null 2>&1; then
+    missing_poppler="$missing_poppler $executable"
+  fi
+done
+if [ -n "$missing_poppler" ]; then
+  echo "pdf2html setup: missing Poppler command(s):$missing_poppler" >&2
+  echo "Install 'poppler' on macOS or 'poppler-utils' on Linux, then retry." >&2
+  exit 1
+fi
+
+UV_PROJECT_ENVIRONMENT="$skill_root/.venv"
+export UV_PROJECT_ENVIRONMENT
+
+uv python install 3.12
+uv --project "$skill_root" sync --managed-python --python 3.12
+
+runtime_marker="$UV_PROJECT_ENVIRONMENT/.pdf2html-runtime-ready"
+runtime_key=$(uv --project "$skill_root" run --no-sync python -c 'from hashlib import sha256; from pathlib import Path; import sys; print(sha256(Path(sys.argv[1]).read_bytes()).hexdigest())' "$skill_root/uv.lock")
+did_bootstrap=0
+if [ ! -f "$runtime_marker" ] || [ "$(cat "$runtime_marker")" != "$runtime_key" ]; then
+  uv --project "$skill_root" run --no-sync python -m playwright install chromium
+  uv --project "$skill_root" run --no-sync pdf2html doctor
+  printf '%s\n' "$runtime_key" > "$runtime_marker"
+  did_bootstrap=1
+fi
+
+if [ "$did_bootstrap" -eq 1 ] && [ "$#" -eq 1 ] && [ "$1" = doctor ]; then
+  exit 0
+fi
+
+exec uv --project "$skill_root" run --no-sync pdf2html "$@"
