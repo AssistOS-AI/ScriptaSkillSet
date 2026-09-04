@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 from PIL import Image, ImageDraw
+from playwright.sync_api import sync_playwright
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
@@ -71,3 +72,31 @@ def test_full_conversion_preserves_image_as_image(tmp_path: Path) -> None:
     assert not (destination / "qa").exists()
     assert source.is_file()
     assert (destination / ".pdf2html-qa" / "report.json").is_file()
+
+    with sync_playwright() as manager:
+        browser = manager.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto((destination / "index.html").as_uri(), wait_until="load")
+        page.evaluate(
+            "window.postMessage({type: 'axiologic-reader-settings', fontSize: 1.16}, '*')"
+        )
+        page.wait_for_function(
+            "getComputedStyle(document.documentElement).getPropertyValue('--standalone-size').trim() === '1.16rem'"
+        )
+        normal_sizes = page.locator("h1, p, th, td").evaluate_all(
+            "nodes => nodes.map(node => parseFloat(getComputedStyle(node).fontSize))"
+        )
+        page.evaluate(
+            "window.postMessage({type: 'axiologic-reader-settings', fontSize: 1.24}, '*')"
+        )
+        page.wait_for_function(
+            "getComputedStyle(document.documentElement).getPropertyValue('--standalone-size').trim() === '1.24rem'"
+        )
+        larger_sizes = page.locator("h1, p, th, td").evaluate_all(
+            "nodes => nodes.map(node => parseFloat(getComputedStyle(node).fontSize))"
+        )
+        browser.close()
+
+    assert normal_sizes
+    assert len(normal_sizes) == len(larger_sizes)
+    assert all(larger > normal for normal, larger in zip(normal_sizes, larger_sizes))

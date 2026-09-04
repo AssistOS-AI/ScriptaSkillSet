@@ -66,10 +66,17 @@ def test_enhance_html_adds_semantics_and_local_styles(tmp_path: Path) -> None:
     assert soup.title.string == "Document"
     assert soup.find("meta", attrs={"name": "generator"})["content"] == "pdf2html-skill"
     assert "pdf-document" in soup.main["class"]
+    assert soup.main.has_attr("data-reader-content")
+    assert "--pdf-reader-size: var(--reader-font-size, var(--standalone-size, 10.00pt))" in soup.section["style"]
+    assert "font-size: var(--pdf-reader-size)" in soup.section["style"]
     assert "table-scroll" in soup.table.parent["class"]
     assert soup.img["alt"] == ""
     assert soup.h1.get_text(strip=True) == "Title"
     assert soup.find("section", id="page_1")["aria-label"] == "PDF page 1"
+    bridge = soup.find("script", id="pdf2html-reader-bridge")
+    assert bridge is not None
+    assert "axiologic-reader-settings" in bridge.string
+    assert "--standalone-size" in bridge.string
     assert stylesheet.is_file()
 
 
@@ -325,7 +332,7 @@ def test_table_preserves_source_indent_caption_style_and_borderless_rows(tmp_pat
     assert "margin-left: 5.56%" in soup.table["style"]
     assert "left: -10.00pt" in soup.caption["style"]
     assert "text-align: left" in soup.caption["style"]
-    assert "font-size: 11.00pt" in soup.caption["style"]
+    assert "font-size: calc(var(--pdf-reader-size) * 1.1000)" in soup.caption["style"]
     assert 'font-family: "pdf-play"' in soup.caption["style"]
     assert "color: #17324d" in soup.caption["style"]
     assert all("border: 0" in cell["style"] for cell in soup.select("th, td"))
@@ -796,8 +803,8 @@ def test_applies_consistent_size_and_centering_to_uppercase_notice_blocks(tmp_pa
     soup = BeautifulSoup(html_path.read_text(encoding="utf-8"), "html.parser")
     assert soup.h2 is None
     assert [item["style"] for item in soup.find_all("p")] == [
-        "font-size: 8.50pt; min-height: 22.00pt; text-align: center",
-        "font-size: 8.50pt; text-align: center",
+        "font-size: calc(var(--pdf-reader-size) * 0.7083); min-height: 22.00pt; text-align: center",
+        "font-size: calc(var(--pdf-reader-size) * 0.7083); text-align: center",
     ]
 
 
@@ -1344,6 +1351,7 @@ def test_screen_html_preserves_full_page_aspect_and_source_whitespace() -> None:
     assert "margin-bottom: 1.5rem" in screen_styles
     assert "box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12)" in screen_styles
     assert "text-align: justify" in screen_styles
+    assert "font-size: var(--standalone-size, var(--pdf-body-size))" in screen_styles
     assert ".toc-table td { padding: 0; border: 0; }" in screen_styles
     assert ".toc-table td:last-child" not in screen_styles
     assert ".table-scroll { width: 100%; max-width: 100%; overflow-x: auto; }" in screen_styles

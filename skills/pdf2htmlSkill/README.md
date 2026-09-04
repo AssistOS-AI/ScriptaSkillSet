@@ -62,6 +62,8 @@ Validation results are returned to the caller without adding technical files to 
 
 Every source page has a stable `page_N` anchor. In normal browser view each source page appears as an individual white sheet on a neutral background, with the PDF's physical aspect ratio, source-derived margins, a compact visible gap, subtle shadow, and numbered footer. Short pages retain their original blank area instead of collapsing around their text. The sheets scale responsively with the viewport; explicit print page height and page breaks remain confined to print CSS. URI annotations become local HTML links, and PDF internal destinations point to the page anchors. Validation fails if the anchor set differs from the source PDF page set.
 
+Generated editions also support adaptable-reader text controls. Source font sizes are stored as ratios of a shared base, so a host `--reader-font-size` setting resizes prose, headings, captions, and table cells consistently. When an edition is loaded through a local `file:` iframe, the inline bridge accepts the reader's `axiologic-reader-settings` message and applies its `fontSize` without depending on files from the host website.
+
 ## Development
 
 ```bash

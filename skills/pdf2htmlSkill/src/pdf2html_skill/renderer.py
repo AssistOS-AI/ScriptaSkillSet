@@ -31,6 +31,7 @@ PLAIN_TOC_ENTRY_PATTERN = re.compile(
     r"conclusion\b|appendix\b|references\b)",
     re.IGNORECASE,
 )
+READER_BRIDGE_ID = "pdf2html-reader-bridge"
 
 
 @dataclass(frozen=True)
@@ -58,6 +59,12 @@ def _set_style(block: object, property_name: str, value: str) -> None:
     ]
     declarations.append(f"{property_name}: {value}")
     block["style"] = "; ".join(declarations)
+
+
+def _relative_font_size(size_pt: float, body_size_pt: float) -> str:
+    """Keep source type scale while allowing a host reader to resize all text."""
+    ratio = size_pt / body_size_pt if body_size_pt > 0 else 1.0
+    return f"calc(var(--pdf-reader-size) * {ratio:.4f})"
 
 
 def _unwrap_inferred_inline_styles(container: object) -> None:
@@ -351,7 +358,7 @@ def _repair_headings(
             heading.name = "h3"
         else:
             heading.name = "p"
-        _set_style(heading, "font-size", f"{size:.2f}pt")
+        _set_style(heading, "font-size", _relative_font_size(size, body_size))
 
 
 def _apply_block_font_sizes(
@@ -388,7 +395,7 @@ def _apply_block_font_sizes(
             _set_style(block, "line-height", f"{max(0.9, min(1.5, line_height)):.3f}")
         if abs(size - body_size) < 0.5:
             continue
-        _set_style(block, "font-size", f"{size:.2f}pt")
+        _set_style(block, "font-size", _relative_font_size(size, body_size))
 
 
 def _apply_block_typography(
@@ -934,7 +941,12 @@ def _apply_block_alignment(
             _set_style(block, "text-align", "left")
 
 
-def _rebuild_contents_table(soup: BeautifulSoup, section: object, page: SourcePageEvidence) -> None:
+def _rebuild_contents_table(
+    soup: BeautifulSoup,
+    section: object,
+    page: SourcePageEvidence,
+    body_size: float,
+) -> None:
     heading = section.find(re.compile(r"^h[1-6]$"))
     table = section.find("table")
     if table is None:
@@ -1000,7 +1012,11 @@ def _rebuild_contents_table(soup: BeautifulSoup, section: object, page: SourcePa
     ]
     if dotted_lines:
         toc_size = median(line.size_pt for line in dotted_lines if line.size_pt > 0)
-        _set_style(table, "font-size", f"{toc_size:.2f}pt")
+        _set_style(
+            table,
+            "font-size",
+            _relative_font_size(toc_size, body_size),
+        )
         line_tops = sorted(line.top for line in dotted_lines)
         if len(line_tops) > 1 and toc_size > 0:
             source_span = max(line.bottom for line in dotted_lines) - min(
@@ -1553,6 +1569,35 @@ def _mark_image_only_pages(main: object, evidence: SourceEvidence) -> None:
             )
 
 
+def _apply_reader_font_base(main: object, body_size_pt: float) -> None:
+    """Expose one scalable base on every page that survives reader extraction."""
+    value = (
+        "var(--reader-font-size, "
+        f"var(--standalone-size, {body_size_pt:.2f}pt))"
+    )
+    for section in main.find_all("section", class_="source-page", recursive=False):
+        _set_style(section, "--pdf-reader-size", value)
+        _set_style(section, "font-size", "var(--pdf-reader-size)")
+
+
+def _install_reader_bridge(soup: BeautifulSoup) -> None:
+    """Handle Axiologic Reader settings when opened in a local iframe."""
+    for existing in list(soup.find_all("script", id=READER_BRIDGE_ID)):
+        existing.decompose()
+    bridge = soup.new_tag("script", id=READER_BRIDGE_ID)
+    bridge.string = """(() => {
+  window.addEventListener("message", (event) => {
+    if (event.data?.type !== "axiologic-reader-settings") return;
+    const size = Number(event.data.fontSize);
+    if (Number.isFinite(size) && size > 0) {
+      document.documentElement.style.setProperty("--standalone-size", `${size}rem`);
+    }
+    if (event.data.theme) document.documentElement.dataset.theme = event.data.theme;
+  });
+})();"""
+    soup.body.append(bridge)
+
+
 def _font_stack(family: str) -> str:
     return {
         "serif": 'Georgia, "Times New Roman", serif',
@@ -1596,7 +1641,7 @@ body {{
   margin: 0 auto;
   padding: 2rem 0;
   font-family: {body_stack};
-  font-size: var(--pdf-body-size);
+  font-size: var(--standalone-size, var(--pdf-body-size));
   line-height: 1.45;
 }}
 main.pdf-document {{ width: 100%; margin: 0; }}
@@ -1736,6 +1781,8 @@ def enhance_html(
     main = _normalize_source_pages(soup, evidence, content_pages)
     _normalize_local_image_paths(soup, html_path)
     _mark_image_only_pages(main, evidence)
+    main["data-reader-content"] = ""
+    _apply_reader_font_base(main, evidence.typography.body_size_pt)
     document_right_ratio = _infer_document_justified_right_ratio(evidence)
     document_body_left_ratio = _infer_document_body_left_ratio(evidence)
     document_first_line_indent_ratio = _infer_document_first_line_indent_ratio(
@@ -1747,7 +1794,9 @@ def enhance_html(
             continue
         _unwrap_inferred_inline_styles(section)
         _repair_single_column_tables(soup, section, page)
-        _rebuild_contents_table(soup, section, page)
+        _rebuild_contents_table(
+            soup, section, page, evidence.typography.body_size_pt
+        )
         _rebuild_plain_contents(soup, section, page)
         _repair_merged_justified_paragraphs(
             soup, section, page, document_right_ratio
@@ -1819,6 +1868,8 @@ def enhance_html(
     for anchor in soup.find_all("a", href=True):
         if str(anchor["href"]).startswith(("http://", "https://")):
             anchor["rel"] = "noopener noreferrer"
+
+    _install_reader_bridge(soup)
 
     for doctype in list(soup.find_all(string=lambda value: isinstance(value, Doctype))):
         doctype.extract()
