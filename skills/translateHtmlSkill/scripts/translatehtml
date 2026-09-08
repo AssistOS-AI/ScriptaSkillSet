@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+
+skill_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+
+if [ -z "${UV_CACHE_DIR:-}" ]; then
+  UV_CACHE_DIR="${TMPDIR:-/tmp}/translatehtml-skill-uv-cache"
+  export UV_CACHE_DIR
+fi
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "translatehtml setup: uv is required. Install it from https://docs.astral.sh/uv/." >&2
+  exit 1
+fi
+
+UV_PROJECT_ENVIRONMENT="$skill_root/.venv"
+export UV_PROJECT_ENVIRONMENT
+
+if ! uv python find 3.12 >/dev/null 2>&1; then
+  uv python install 3.12
+fi
+uv --project "$skill_root" sync --managed-python --python 3.12
+exec uv --project "$skill_root" run --no-sync translatehtml "$@"

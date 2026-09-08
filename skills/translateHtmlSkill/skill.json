@@ -1,0 +1,21 @@
+{
+  "title": "Translate HTML",
+  "family": "document-translation",
+  "summary": "Translates semantic HTML in parallel 32k-character batches with translation memory while preserving markup, behavior, links, and shared assets.",
+  "aliases": [
+    "translateHtml",
+    "translate-html",
+    "html-translate"
+  ],
+  "dependsOn": [],
+  "outputs": [
+    "<target-language-directory>/index.html"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/translatehtml",
+    "scripts/translatehtml.py",
+    "references/job-format.md"
+  ],
+  "selfContained": true
+}
