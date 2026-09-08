@@ -1,0 +1,22 @@
+{
+  "title": "Scripta HTML to DOCX",
+  "family": "document-conversion",
+  "summary": "Converts Scripta semantic HTML books into validated, reflowable DOCX documents with native Word book features.",
+  "aliases": [
+    "html2Doc",
+    "html2doc",
+    "html-to-docx"
+  ],
+  "dependsOn": [],
+  "outputs": [
+    "<source-name>.docx"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/html2doc",
+    "scripts/html2doc.py",
+    "references/compatibility.md",
+    "references/validation.md"
+  ],
+  "selfContained": true
+}
