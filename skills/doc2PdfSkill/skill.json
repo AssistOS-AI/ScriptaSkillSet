@@ -1,0 +1,16 @@
+{
+  "title": "Scripta DOC/DOCX to PDF",
+  "family": "document-conversion",
+  "summary": "Converts Word documents to optimized PDFs through LibreOffice with lossless-by-default packaging and deterministic rendered-page QA.",
+  "aliases": ["doc2Pdf", "doc2pdf", "docx-to-pdf", "doc-to-pdf"],
+  "dependsOn": [],
+  "outputs": ["<source-name>.pdf"],
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/doc2pdf",
+    "scripts/doc2pdf.py",
+    "references/dependencies.md",
+    "references/validation.md"
+  ],
+  "selfContained": true
+}
