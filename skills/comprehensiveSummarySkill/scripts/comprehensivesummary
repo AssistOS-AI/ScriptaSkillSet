@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+SKILL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-$SKILL_DIR/.venv}"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-/tmp/comprehensivesummary-uv-cache}"
+exec uv run --project "$SKILL_DIR" comprehensivesummary "$@"

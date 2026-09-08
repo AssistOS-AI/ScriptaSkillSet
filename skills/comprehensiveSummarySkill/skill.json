@@ -1,0 +1,22 @@
+{
+  "title": "Comprehensive Summary",
+  "family": "document-summarization",
+  "summary": "Builds source-traceable, reading-time-targeted HTML essays without exposing internal budget metrics in the reader-facing page.",
+  "aliases": [
+    "comprehensiveSummary",
+    "comprehensive-summary",
+    "book-summary",
+    "summary-html"
+  ],
+  "dependsOn": [],
+  "outputs": [
+    "<source-name>.summary-<minutes>min.html"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/comprehensivesummary",
+    "scripts/comprehensivesummary.py",
+    "references/job-format.md"
+  ],
+  "selfContained": true
+}
