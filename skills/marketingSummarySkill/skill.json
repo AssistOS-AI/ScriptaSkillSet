@@ -15,7 +15,7 @@
   "entrypoints": [
     "SKILL.md",
     "scripts/marketingsummary",
-    "scripts/marketingsummary.py",
+    "scripts/marketingsummary.mjs",
     "references/job-format.md"
   ],
   "selfContained": true

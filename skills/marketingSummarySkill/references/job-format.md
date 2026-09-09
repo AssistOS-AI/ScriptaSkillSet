@@ -193,3 +193,5 @@ After reading the complete draft, synthesis, and all protected revelations, writ
 ```
 
 The title, dek, every visible body paragraph, and the closing must be reviewed exactly once in that order. Any possible semantic leak sets `spoilerRisk` true, names the matched revelations, and makes `passed` false. Revise the draft, then replace the stale review with a new review carrying the new byte-level hash.
+
+The Node.js implementation preserves this job contract. Frozen JSON fixtures record the expected outputs.

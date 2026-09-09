@@ -18,4 +18,16 @@ The default artifact is `shortDescription.html`. It is standalone UTF-8 HTML wit
 
 ## Safety
 
-Only Beautiful Soup is a runtime dependency. Language tags receive conservative standard-library validation. Source HTML is never modified. Existing output is overwritten only when it carries this skill's ownership marker and `--overwrite` is explicit. Failed jobs remain available for repair; successful jobs are removed.
+The runtime uses Node.js and a locally bundled HTML parser. Language tags receive conservative standard-library validation. Source HTML is never modified. Existing output is overwritten only when it carries this skill's ownership marker and `--overwrite` is explicit. Failed jobs remain available for repair; successful jobs are removed.
+
+## Node.js runtime
+
+Requires Node.js 22 or newer. Use ECMAScript modules in .mjs files, explicit
+relative imports, node: built-ins, async/await and node --test. Keep all owned
+resources inside this skill. Document necessary dependency exceptions in
+[dependencies.md](dependencies.md). Check prerequisites before outputs are created.
+Never install dependencies during startup.
+
+Node.js runs the skill and its tests. The HTML parser is bundled.
+Run `node --test tests/equivalence.test.mjs`. Frozen JSON fixtures preserve
+the original outputs; see tests/fixtures/README.md for provenance.

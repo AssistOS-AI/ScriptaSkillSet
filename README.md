@@ -2,6 +2,10 @@
 
 Portable document skills for an active LLM environment:
 
+`shortDescriptionSkill` and `marketingSummarySkill` now run on Node.js 22 or newer
+with bundled local dependencies. Other skills retain their Python runtimes. See
+[MIGRATION.md](MIGRATION.md) for the migration scope and comparative checks.
+
 - `pdf2htmlSkill` converts born-digital PDFs to semantic responsive HTML.
 - `translateHtmlSkill` translates semantic HTML with the active LLM while preserving structure and shared assets.
 - `humaniseHtmlSkill` conservatively improves same-language book prose chapter by chapter while preserving HTML, facts, links, and shared assets.

@@ -115,3 +115,8 @@ Read the complete draft and every protected revelation, then write:
 ```
 
 Review every draft sentence exactly once and in order. Any possible disclosure sets the applicable risk to true, lists matching revelation IDs, and makes `passed` false. Revise the draft and replace the stale review before building.
+
+## Runtime compatibility
+
+The Node.js implementation preserves this job contract. Frozen JSON fixtures preserve
+the expected reference outputs.

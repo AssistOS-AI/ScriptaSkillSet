@@ -35,3 +35,9 @@ Use this skill for a compact thematic description, not a summary of conclusions 
 ## Completion standard
 
 Deliver only after all batches are analyzed, every protected revelation is registered, each sentence passes independent semantic review, the source remains unchanged, and build plus independent validation pass.
+
+## Runtime
+
+Use `scripts/shortdescription` with Node.js 22 or newer. The HTML parser is bundled
+inside this skill.
+See [dependencies.md](dependencies.md).

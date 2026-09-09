@@ -38,3 +38,8 @@ Use this skill when the user wants persuasive editorial copy for a book or docum
 ## Completion standard
 
 Deliver only after all content batches are analyzed, every protected revelation is registered, every visible paragraph passes the independent spoiler review, the adaptive word range is met, and build plus independent validation pass. Keep metrics, source IDs, spoiler ledgers, and validation details in the job and report only; never render them in the user-facing page or handoff.
+
+## Runtime
+
+Use scripts/marketingsummary with Node.js 22 or newer. All runtime dependencies
+are local to this folder. Commands never install packages. See dependencies.md.
