@@ -1,0 +1,10 @@
+{
+  "title": "Short Description",
+  "family": "document-summary",
+  "summary": "Creates a neutral 4–6 sentence HTML description of a document's theme without revealing its solutions, conclusions, or spoilers.",
+  "aliases": ["shortDescription", "short-description", "book-description", "thematic-description"],
+  "dependsOn": [],
+  "outputs": ["shortDescription.html"],
+  "entrypoints": ["SKILL.md", "scripts/shortdescription", "scripts/shortdescription.py", "references/job-format.md"],
+  "selfContained": true
+}
