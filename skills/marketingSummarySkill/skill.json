@@ -1,0 +1,22 @@
+{
+  "title": "Marketing Summary",
+  "family": "document-marketing",
+  "summary": "Creates concise editorial HTML sales pages that explain a book's questions and stakes without revealing answers or spoilers.",
+  "aliases": [
+    "marketingSummary",
+    "marketing-summary",
+    "book-marketing-copy",
+    "spoiler-free-book-page"
+  ],
+  "dependsOn": [],
+  "outputs": [
+    "<source-name>.marketing.html"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/marketingsummary",
+    "scripts/marketingsummary.py",
+    "references/job-format.md"
+  ],
+  "selfContained": true
+}
