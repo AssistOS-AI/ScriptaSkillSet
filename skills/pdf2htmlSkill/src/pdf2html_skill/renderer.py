@@ -809,6 +809,48 @@ def _apply_paragraph_first_line_indents(
         )
 
 
+def _apply_heading_rules(
+    section: object,
+    page: SourcePageEvidence,
+    html_words: list[_HtmlWord],
+    source_to_html: dict[int, int],
+) -> None:
+    """Recover horizontal rules between a heading and its next source block."""
+    html_to_source = {value: key for key, value in source_to_html.items()}
+    for heading in section.find_all(["h1", "h2", "h3", "h4", "h5", "h6"], recursive=False):
+        following = heading.find_next_sibling()
+        if following is None:
+            continue
+        words = [
+            page.words[html_to_source[index]]
+            for index, word in enumerate(html_words)
+            if index in html_to_source and _belongs_to(word, heading)
+        ]
+        next_words = [
+            page.words[html_to_source[index]]
+            for index, word in enumerate(html_words)
+            if index in html_to_source and _belongs_to(word, following)
+        ]
+        if not words or not next_words:
+            continue
+        bottom = max(word.bottom for word in words)
+        next_top = min(word.top for word in next_words)
+        strokes = [
+            stroke for stroke in page.strokes
+            if bottom <= stroke.top <= stroke.bottom <= next_top
+            and stroke.bottom - stroke.top <= 1.0
+            and stroke.x1 - stroke.x0 >= page.width_pt * 0.5
+            and stroke.x0 <= min(word.x0 for word in words) + 2.0
+            and stroke.x1 >= max(word.x1 for word in words) - 2.0
+        ]
+        if not strokes:
+            continue
+        stroke = min(strokes, key=lambda item: item.top)
+        _set_style(heading, "padding-bottom", f"{stroke.top - bottom:.2f}pt")
+        _set_style(heading, "border-bottom", f"{max(0.5, stroke.width):.2f}pt solid {stroke.color}")
+        _set_style(heading, "margin-bottom", f"{next_top - stroke.bottom:.2f}pt")
+
+
 def _apply_centered_display_rhythm(
     section: object,
     page: SourcePageEvidence,
@@ -1680,7 +1722,6 @@ h1, h2, h3, h4, h5, h6 {{
   break-after: avoid;
 }}
 h1 {{ border-bottom: 0; }}
-.source-page > h1:first-child:not([style*="text-align: center"]) {{ padding-bottom: 0.3em; border-bottom: 0.12em solid currentColor; }}
 p {{ margin: 0 0 0.55em; text-align: justify; }}
 p, li, td, th {{ overflow-wrap: anywhere; }}
 figure {{ max-width: 100%; margin: 1.5em 0; text-align: center; }}
@@ -1837,6 +1878,7 @@ def enhance_html(
             evidence.typography.body_size_pt,
         )
         _apply_centered_display_rhythm(section, page, html_words, source_to_html)
+        _apply_heading_rules(section, page, html_words, source_to_html)
         _apply_source_inline_evidence(soup, page, html_words, source_to_html)
 
     _repair_continued_table_headers(main)

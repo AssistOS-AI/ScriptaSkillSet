@@ -1,0 +1,131 @@
+{
+  "source": "<!doctype html><html lang=\"en\"><head><title>Memory example</title></head><body><main><section data-source-page=\"1\" aria-label=\"PDF page 1\"><p>Repeated text.</p></section><section data-source-page=\"2\" aria-label=\"PDF page 2\"><p>Repeated text.</p></section><section data-source-page=\"3\" aria-label=\"PDF page 3\"><p>Different text.</p></section></main></body></html>",
+  "sourceRelative": "book/en/index.html",
+  "prepared": {
+    "status": "prepared",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/en/index.html",
+    "output": "__ROOT__/book/ro/index.html",
+    "sourceLanguage": "en",
+    "targetLanguage": "ro",
+    "units": 8,
+    "modelUnits": 5,
+    "batches": 2,
+    "batchMaximumChars": 32000,
+    "translationMemory": {
+      "exactMatches": 1,
+      "templatedLabels": 2,
+      "modelUnitsSaved": 3
+    },
+    "parallelTranslation": true,
+    "bootstrapPages": [
+      "3",
+      "2"
+    ],
+    "completedBatches": 0,
+    "remainingBatches": 2,
+    "nextBatch": "batch-0001.json"
+  },
+  "initialContext": "{\n  \"bootstrapReviewed\": false,\n  \"documentProfile\": \"\",\n  \"glossary\": [],\n  \"previousBatchSummary\": \"\",\n  \"previousPairs\": []\n}\n",
+  "initial": {
+    "status": "in_progress",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/en/index.html",
+    "output": "__ROOT__/book/ro/index.html",
+    "sourceLanguage": "en",
+    "targetLanguage": "ro",
+    "units": 8,
+    "modelUnits": 5,
+    "completedUnits": 0,
+    "batches": 2,
+    "completedBatches": 0,
+    "remainingBatches": 2,
+    "nextBatch": "batch-0001.json",
+    "readyBatches": [
+      "batch-0001.json"
+    ],
+    "recommendedParallelBatches": 1
+  },
+  "profile": null,
+  "ready": {
+    "status": "ready_to_build",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/en/index.html",
+    "output": "__ROOT__/book/ro/index.html",
+    "sourceLanguage": "en",
+    "targetLanguage": "ro",
+    "units": 8,
+    "modelUnits": 5,
+    "completedUnits": 8,
+    "batches": 2,
+    "completedBatches": 2,
+    "remainingBatches": 0,
+    "nextBatch": null,
+    "readyBatches": [],
+    "recommendedParallelBatches": 0
+  },
+  "files": {
+    "job.json": "{\n  \"source\": \"__ROOT__/book/en/index.html\",\n  \"sourceSha256\": \"a0c70bbc4db4c2472fd6a7d4aab18df444dfb7947ab15b211131794ea8e11130\",\n  \"output\": \"__ROOT__/book/ro/index.html\",\n  \"sourceLanguage\": \"en\",\n  \"targetLanguage\": \"ro\",\n  \"bootstrapPages\": [\n    \"3\",\n    \"2\"\n  ],\n  \"bootstrapUnitIds\": [\n    \"u000003\",\n    \"u000004\",\n    \"u000007\",\n    \"u000008\"\n  ],\n  \"batches\": [\n    \"batch-0001.json\",\n    \"batch-0002.json\"\n  ],\n  \"unitCount\": 8,\n  \"modelUnitCount\": 5,\n  \"batchMaximumChars\": 32000,\n  \"translationMemory\": {\n    \"exactMatches\": 1,\n    \"templatedLabels\": 2,\n    \"modelUnitsSaved\": 3\n  },\n  \"parallelTranslation\": {\n    \"enabledAfterBootstrap\": true,\n    \"maxBatches\": 4\n  },\n  \"elementCounts\": {\n    \"html\": 1,\n    \"head\": 1,\n    \"title\": 1,\n    \"body\": 1,\n    \"main\": 1,\n    \"section\": 3,\n    \"p\": 3\n  }\n}\n",
+    "context.json": "{\"bootstrapReviewed\": true, \"documentProfile\": \"Use clear Romanian prose.\", \"glossary\": [], \"previousBatchSummary\": \"\", \"previousPairs\": []}",
+    "template.html": "<span data-translatehtml-unit=\"u000005\" data-translatehtml-wrapper=\"\"><!DOCTYPE html>\n</span><html lang=\"en\"><head><title data-translatehtml-unit=\"u000001\">Memory example</title></head><body><main><section aria-label=\"PDF page 1\" data-source-page=\"1\" data-translatehtml-node=\"n000001\"><p data-translatehtml-unit=\"u000002\">Repeated text.</p></section><section aria-label=\"PDF page 2\" data-source-page=\"2\" data-translatehtml-node=\"n000002\"><p data-translatehtml-unit=\"u000003\">Repeated text.</p></section><section aria-label=\"PDF page 3\" data-source-page=\"3\" data-translatehtml-node=\"n000003\"><p data-translatehtml-unit=\"u000004\">Different text.</p></section></main></body></html>",
+    "bootstrap.json": "{\n  \"title\": \"Memory example\",\n  \"headings\": [],\n  \"captions\": [],\n  \"bootstrapPages\": [\n    \"3\",\n    \"2\"\n  ],\n  \"representativeSamples\": [\n    \"Repeated text.\"\n  ],\n  \"instructions\": \"Create a compact translation profile, translate and review the bootstrap units first, then set bootstrapReviewed to true in context.json.\"\n}\n",
+    "batches/batch-0002.json": "{\n  \"batch\": 2,\n  \"bootstrap\": false,\n  \"sourceLanguage\": \"en\",\n  \"targetLanguage\": \"ro\",\n  \"units\": [\n    {\n      \"id\": \"u000001\",\n      \"kind\": \"title\",\n      \"page\": null,\n      \"source\": \"Memory example\",\n      \"plainText\": \"Memory example\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000002\",\n      \"kind\": \"p\",\n      \"page\": \"1\",\n      \"source\": \"Repeated text.\",\n      \"plainText\": \"Repeated text.\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000005\",\n      \"kind\": \"text\",\n      \"page\": null,\n      \"source\": \"html\",\n      \"plainText\": \"html\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000006\",\n      \"kind\": \"attribute:aria-label\",\n      \"page\": \"1\",\n      \"source\": \"PDF page 1\",\n      \"plainText\": \"PDF page 1\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"attribute\": \"aria-label\",\n      \"nodeId\": \"n000001\"\n    }\n  ]\n}\n",
+    "batches/batch-0001.json": "{\n  \"batch\": 1,\n  \"bootstrap\": true,\n  \"sourceLanguage\": \"en\",\n  \"targetLanguage\": \"ro\",\n  \"units\": [\n    {\n      \"id\": \"u000003\",\n      \"kind\": \"p\",\n      \"page\": \"2\",\n      \"source\": \"Repeated text.\",\n      \"plainText\": \"Repeated text.\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"reuseOf\": \"u000002\"\n    },\n    {\n      \"id\": \"u000004\",\n      \"kind\": \"p\",\n      \"page\": \"3\",\n      \"source\": \"Different text.\",\n      \"plainText\": \"Different text.\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000007\",\n      \"kind\": \"attribute:aria-label\",\n      \"page\": \"2\",\n      \"source\": \"PDF page 2\",\n      \"plainText\": \"PDF page 2\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"attribute\": \"aria-label\",\n      \"nodeId\": \"n000002\",\n      \"reuseTemplateOf\": \"u000006\",\n      \"templateNumber\": \"1\",\n      \"sourceNumber\": \"2\"\n    },\n    {\n      \"id\": \"u000008\",\n      \"kind\": \"attribute:aria-label\",\n      \"page\": \"3\",\n      \"source\": \"PDF page 3\",\n      \"plainText\": \"PDF page 3\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"attribute\": \"aria-label\",\n      \"nodeId\": \"n000003\",\n      \"reuseTemplateOf\": \"u000006\",\n      \"templateNumber\": \"1\",\n      \"sourceNumber\": \"3\"\n    }\n  ]\n}\n",
+    "translations/batch-0002.json": "{\"units\": [{\"id\": \"u000001\", \"translation\": \"traducere3 traducere4\"}, {\"id\": \"u000002\", \"translation\": \"traducere5 traducere6.\"}, {\"id\": \"u000005\", \"translation\": \"traducere7\"}, {\"id\": \"u000006\", \"translation\": \"traducere8 traducere9 1\"}]}",
+    "translations/batch-0001.json": "{\"units\": [{\"id\": \"u000004\", \"translation\": \"traducere1 traducere2.\"}]}"
+  },
+  "html": "<!doctype html>\ntraducere7<html lang=\"ro\"><head><title>traducere3 traducere4</title><meta content=\"translatehtml-skill\" name=\"translation-generator\"/><meta content=\"en\" name=\"translation-source-language\"/><meta content=\"ro\" name=\"translation-target-language\"/><meta content=\"a0c70bbc4db4c2472fd6a7d4aab18df444dfb7947ab15b211131794ea8e11130\" name=\"translation-source-sha256\"/></head><body><main><section aria-label=\"traducere8 traducere9 1\" data-source-page=\"1\"><p>traducere5 traducere6.</p></section><section aria-label=\"traducere8 traducere9 2\" data-source-page=\"2\"><p>traducere5 traducere6.</p></section><section aria-label=\"traducere8 traducere9 3\" data-source-page=\"3\"><p>traducere1 traducere2.</p></section></main></body></html>",
+  "buildReport": {
+    "status": "passed",
+    "artifact": "__ROOT__/book/ro/index.html",
+    "job": "__ROOT__/job",
+    "validation": {
+      "status": "passed",
+      "findings": [],
+      "metrics": {
+        "sourceBlocks": {
+          "p": 3
+        },
+        "targetBlocks": {
+          "p": 3
+        },
+        "sourceElements": 11,
+        "targetElements": 11,
+        "expectedScript": null,
+        "expectedScriptRatio": null,
+        "eligibleTranslationUnits": 0,
+        "unchangedUnits": 0,
+        "unchangedRatio": 0,
+        "sourceNgramOverlap": 0,
+        "duplicateTranslationRatio": 0,
+        "lengthRatio": 1.62
+      }
+    }
+  },
+  "validation": {
+    "status": "passed",
+    "findings": [],
+    "metrics": {
+      "sourceBlocks": {
+        "p": 3
+      },
+      "targetBlocks": {
+        "p": 3
+      },
+      "sourceElements": 11,
+      "targetElements": 11,
+      "expectedScript": null,
+      "expectedScriptRatio": null,
+      "eligibleTranslationUnits": 0,
+      "unchangedUnits": 0,
+      "unchangedRatio": 0,
+      "sourceNgramOverlap": 0,
+      "duplicateTranslationRatio": 0,
+      "lengthRatio": 1.62
+    }
+  },
+  "assets": {
+    "book/en/assets/styles.css": "626f6479207b20636f6c6f723a20626c61636b3b207d",
+    "book/en/assets/images/figure.png": "706e67"
+  }
+}

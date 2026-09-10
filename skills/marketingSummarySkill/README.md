@@ -26,3 +26,6 @@ See tests/fixtures/README.md for provenance. Acceptance requires zero skipped te
 
 Job JSON and command arguments are preserved. Doctor retains its behavioral
 metadata and reports the Node.js and htmlparser2 versions.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

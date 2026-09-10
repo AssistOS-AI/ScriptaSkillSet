@@ -15,3 +15,19 @@ scripts/humanisehtml validate /path/to/index.html --html /path/to/index.humanise
 The default output is beside the source as `index.humanised.html`. Use `--in-place` only when replacement of the source is explicitly intended. Job files remain in the source workspace, so the workflow does not need approval for each batch.
 
 The skill improves editorial quality; it does not claim to conceal provenance or defeat automated detectors.
+
+## Node.js runtime
+
+Requires Node.js 22 or newer. The POSIX launcher runs on macOS and Linux:
+
+```sh
+scripts/humanisehtml doctor
+node --test tests/*.test.mjs
+```
+
+The skill includes its HTML parser. Language tags are normalized with Node.js Intl.Locale.
+[dependencies.md](dependencies.md) records versions, licenses and update steps.
+Startup checks the runtime and bundled resources before creating job files.
+
+Language is read from `<html lang>` unless `--language` is supplied. Tags use
+hyphenated BCP 47 syntax and are normalized by Node.js `Intl.Locale`.

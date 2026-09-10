@@ -1,0 +1,49 @@
+{
+  "BLOCK_TAGS": [
+    "blockquote",
+    "caption",
+    "dd",
+    "dt",
+    "figcaption",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "li",
+    "p",
+    "td",
+    "th"
+  ],
+  "SCRIPT_PATTERNS": {
+    "arabic": "[\\u0600-\\u06ff\\u0750-\\u077f\\u08a0-\\u08ff]",
+    "cyrillic": "[\\u0400-\\u052f]",
+    "devanagari": "[\\u0900-\\u097f]",
+    "greek": "[\\u0370-\\u03ff]",
+    "han": "[\\u3400-\\u4dbf\\u4e00-\\u9fff]",
+    "hebrew": "[\\u0590-\\u05ff]",
+    "japanese": "[\\u3040-\\u30ff\\u3400-\\u4dbf\\u4e00-\\u9fff]",
+    "korean": "[\\u1100-\\u11ff\\u3130-\\u318f\\uac00-\\ud7af]"
+  },
+  "LANGUAGE_SCRIPTS": {
+    "ar": "arabic",
+    "fa": "arabic",
+    "ps": "arabic",
+    "ur": "arabic",
+    "bg": "cyrillic",
+    "mk": "cyrillic",
+    "ru": "cyrillic",
+    "sr": "cyrillic",
+    "uk": "cyrillic",
+    "hi": "devanagari",
+    "mr": "devanagari",
+    "ne": "devanagari",
+    "el": "greek",
+    "zh": "han",
+    "he": "hebrew",
+    "yi": "hebrew",
+    "ja": "japanese",
+    "ko": "korean"
+  }
+}

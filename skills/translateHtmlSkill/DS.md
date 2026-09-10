@@ -6,7 +6,7 @@ The skill translates semantic HTML with the active LLM without binding the repos
 
 ## Translation model boundary
 
-Python never generates translated prose. `prepare` creates ordered JSON units; the active LLM translates them; `build` accepts only complete, structurally valid results. This boundary makes LLM choice a host concern while keeping the skill reusable.
+The active LLM generates translated prose. `prepare` creates ordered JSON units; the active LLM translates them; `build` accepts only complete, structurally valid results. This boundary makes LLM choice a host concern while keeping the skill reusable.
 
 ## Context strategy
 
@@ -30,3 +30,18 @@ Scripts, styles, code regions, identifiers, classes, data attributes, and behavi
 Build requires every model-owned unit exactly once, resolves every memory-backed unit, and requires a reviewed bootstrap plus a nonempty document profile. It checks placeholder identity and nesting before creating a candidate. Validation compares element topology, protected attributes and program regions, semantic block counts, resource existence, unchanged substantial units, retained source five-word sequences, unexpected duplicate model translations, broad length ratios, and—only where useful—the target's Unicode script. Intentional copies expanded from translation memory are excluded from the duplicate metric. It uses no statistical language detector. Only a passing candidate is installed, and existing files require both explicit overwrite and an ownership marker.
 
 Heuristics identify likely omissions or wrong-language output but cannot establish semantic equivalence. The focused bootstrap review is the only mandatory model-based semantic audit.
+
+## Coding style and runtime
+
+Write executable modules as .mjs ECMAScript modules with explicit relative imports,
+node: imports for built-ins and async/await. Keep functions focused and all skill
+resources inside this folder. Resolve resources with import.meta.url. Node.js 22
+or newer runs commands and the node:test suite. Bundled dependency exceptions,
+licenses and update procedures are recorded in dependencies.md.
+
+Preserve command arguments, JSON schemas and ownership checks. Doctor reports
+Node.js and htmlparser2 versions. Tests compare reference fixtures and exercise
+publication safeguards, language handling and portable startup.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

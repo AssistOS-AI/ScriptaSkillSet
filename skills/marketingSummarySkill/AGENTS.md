@@ -15,11 +15,11 @@ When changing behavior, update `SKILL.md`, `README.md`, `DS.md`, `references/job
 Requires Node.js 22 or newer. Use .mjs ECMAScript modules, explicit relative
 imports, node: built-ins, async/await and node --test. Keep every owned resource
 inside this skill. [dependencies.md](dependencies.md) records bundled parser and
-language-data exceptions. Startup checks prerequisites and never installs them.
+runtime requirements. Startup checks prerequisites and never installs them.
 
 Run tests with Node.js:
-`node --test tests/equivalence.test.mjs`. Frozen reference fixtures preserve
-preparation, workflow states, exact HTML output and language normalization.
+`node --test tests/*.test.mjs`. Frozen reference fixtures preserve
+preparation, workflow states, exact HTML output.
 See tests/fixtures/README.md for provenance. Acceptance requires zero skipped tests.
 
 Job JSON and command arguments are preserved. Doctor retains its behavioral

@@ -1,0 +1,93 @@
+{
+  "TRANSLATABLE_TAGS": [
+    "blockquote",
+    "button",
+    "caption",
+    "dd",
+    "dt",
+    "figcaption",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "label",
+    "legend",
+    "li",
+    "option",
+    "p",
+    "summary",
+    "td",
+    "th",
+    "title"
+  ],
+  "SKIP_TAGS": [
+    "code",
+    "kbd",
+    "math",
+    "pre",
+    "samp",
+    "script",
+    "style",
+    "svg"
+  ],
+  "HUMAN_ATTRIBUTES": [
+    "alt",
+    "aria-label",
+    "title"
+  ],
+  "URL_ATTRIBUTES": [
+    "action",
+    "formaction",
+    "href",
+    "poster",
+    "src"
+  ],
+  "VOID_TAGS": [
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr"
+  ],
+  "TOKEN_RE": "⟦(?P<kind>OPEN|CLOSE|VOID):(?P<id>T\\d{6})⟧",
+  "PROTECTED_RE": "(?:https?://|mailto:|www\\.)[^\\s<>()]+|\\b[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}\\b|\\b10\\.\\d{4,9}/[-._;()/:A-Z0-9]+",
+  "MARKER_UNIT": "data-translatehtml-unit",
+  "MARKER_NODE": "data-translatehtml-node",
+  "MARKER_WRAPPER": "data-translatehtml-wrapper",
+  "TRANSLATION_META_NAMES": [
+    "translation-generator",
+    "translation-source-language",
+    "translation-source-sha256",
+    "translation-target-language"
+  ],
+  "RTL_LANGUAGES": [
+    "ar",
+    "arc",
+    "dv",
+    "fa",
+    "ha",
+    "he",
+    "khw",
+    "ks",
+    "ku",
+    "ps",
+    "sd",
+    "ug",
+    "ur",
+    "yi"
+  ],
+  "BATCH_MAXIMUM_CHARS": 32000,
+  "MAX_PARALLEL_BATCHES": 4,
+  "REPETITIVE_LABEL_RE": "^(?P<prefix>.*?\\D)(?P<number>\\d+)(?P<suffix>\\D*)$"
+}

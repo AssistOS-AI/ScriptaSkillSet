@@ -15,7 +15,7 @@
   "entrypoints": [
     "SKILL.md",
     "scripts/humanisehtml",
-    "scripts/humanisehtml.py",
+    "scripts/humanisehtml.mjs",
     "references/job-format.md"
   ],
   "selfContained": true

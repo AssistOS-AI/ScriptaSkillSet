@@ -14,7 +14,7 @@
   "entrypoints": [
     "SKILL.md",
     "scripts/translatehtml",
-    "scripts/translatehtml.py",
+    "scripts/translatehtml.mjs",
     "references/job-format.md"
   ],
   "selfContained": true

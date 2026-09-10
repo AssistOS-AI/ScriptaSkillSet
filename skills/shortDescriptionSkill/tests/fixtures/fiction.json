@@ -1,0 +1,58 @@
+{
+  "source": "<!doctype html><html lang=\"en\"><head><title>The Silent City</title></head><body><article>\n        <h1>An unknown city</h1><p>The story follows a traveler entering an isolated city.</p>\n        <p>Memory and identity come under pressure as the traveler questions the city's past.</p>\n        <p>The initial conflict concerns trust, belonging, and hidden history.</p>\n        <p>The ending reveals that the guide is the lost ruler.</p></article></body></html>",
+  "prepared": {
+    "status": "analysis_required",
+    "job": "__FIXTURE_ROOT__/job",
+    "source": "__FIXTURE_ROOT__/book.html",
+    "output": "__FIXTURE_ROOT__/shortDescription.html",
+    "language": "en",
+    "sourceKind": "semantic-html",
+    "contentChapters": 1,
+    "batches": 1,
+    "completedAnalyses": 0,
+    "remainingAnalyses": 1,
+    "readyAnalyses": [
+      {
+        "batch": "__FIXTURE_ROOT__/job/batches/batch-0001.json",
+        "analysis": "__FIXTURE_ROOT__/job/analyses/batch-0001.json",
+        "errors": []
+      }
+    ],
+    "recommendedParallelAnalyses": 1
+  },
+  "ready": {
+    "status": "ready_to_build",
+    "job": "__FIXTURE_ROOT__/job",
+    "source": "__FIXTURE_ROOT__/book.html",
+    "output": "__FIXTURE_ROOT__/shortDescription.html",
+    "language": "en",
+    "sourceKind": "semantic-html",
+    "contentChapters": 1,
+    "batches": 1,
+    "completedAnalyses": 1,
+    "remainingAnalyses": 0,
+    "readyAnalyses": [],
+    "recommendedParallelAnalyses": 0,
+    "draftErrors": [],
+    "reviewErrors": []
+  },
+  "files": {
+    "draft.json": "{\"mode\": \"fiction\", \"sentences\": [{\"index\": 1, \"text\": \"The story follows a traveler entering an isolated city.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}, {\"index\": 2, \"text\": \"Its setting places memory and identity under pressure.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}, {\"index\": 3, \"text\": \"The initial conflict grows from uncertainty about the city's past.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}, {\"index\": 4, \"text\": \"The narrative explores trust, belonging, and hidden history.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}], \"protectedRevelationIds\": [\"batch-0001-revelation-001\"], \"chapterCoverage\": [{\"chapterId\": \"chapter-0001\", \"themeIds\": [\"batch-0001-theme-001\"]}], \"audit\": {\"sameLanguage\": true, \"themeOnly\": true, \"noSolutions\": true, \"noSpoilers\": true, \"neutralTone\": true, \"notes\": \"\"}}",
+    "job.json": "{\n  \"source\": \"__FIXTURE_ROOT__/book.html\",\n  \"output\": \"__FIXTURE_ROOT__/shortDescription.html\",\n  \"sourceSha256\": \"b8f62448e7e20cd0b02f2a4c4a5b10b70814455efa0aea5b4a859bce39157d55\",\n  \"sourceKind\": \"semantic-html\",\n  \"sourceTitle\": \"The Silent City\",\n  \"language\": \"en\",\n  \"contentChapterIds\": [\n    \"chapter-0001\"\n  ],\n  \"batchNames\": [\n    \"batch-0001.json\"\n  ]\n}\n",
+    "context.json": "{\n  \"sourceTitle\": \"The Silent City\",\n  \"language\": \"en\",\n  \"sourceKind\": \"semantic-html\",\n  \"audience\": \"general reader\",\n  \"tone\": \"neutral, informative, compact\",\n  \"sentenceRange\": [\n    4,\n    6\n  ],\n  \"allowed\": [\n    \"subject\",\n    \"scope\",\n    \"context\",\n    \"central questions\",\n    \"thematic tensions\",\n    \"premise\",\n    \"setting\",\n    \"starting conflict\"\n  ],\n  \"withhold\": [\n    \"answers\",\n    \"solutions\",\n    \"conclusions\",\n    \"recommendations\",\n    \"verdicts\",\n    \"twists\",\n    \"identities\",\n    \"resolutions\",\n    \"outcomes\",\n    \"fates\",\n    \"ending\"\n  ]\n}\n",
+    "chapters.json": "[\n  {\n    \"id\": \"chapter-0001\",\n    \"title\": \"Front matter\",\n    \"content\": true,\n    \"unitIds\": [\n      \"u000001\",\n      \"u000002\",\n      \"u000003\",\n      \"u000004\",\n      \"u000005\"\n    ]\n  }\n]\n",
+    "review.json": "{\"draftSha256\": \"ca621cfa78f5f878da6facd12c2647af3107be73fa5d47034c4309baef696a42\", \"sentences\": [{\"index\": 1, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}, {\"index\": 2, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}, {\"index\": 3, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}, {\"index\": 4, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}], \"passed\": true, \"solutionsWithheld\": true, \"conclusionsWithheld\": true, \"spoilersWithheld\": true, \"notes\": \"\"}",
+    "analyses/batch-0001.json": "{\"batch\": \"batch-0001.json\", \"chapterId\": \"chapter-0001\", \"segment\": 1, \"modeSignals\": [\"fiction\"], \"themes\": [{\"id\": \"batch-0001-theme-001\", \"type\": \"subject\", \"statement\": \"Evidence and public judgment\", \"sourceUnitIds\": [\"u000001\"]}], \"protectedRevelations\": [{\"id\": \"batch-0001-revelation-001\", \"type\": \"ending\", \"statement\": \"The ending reveals that the guide is the lost ruler.\", \"guardTerms\": [\"guide is the lost ruler\"], \"sourceUnitIds\": [\"u000005\"]}], \"audit\": {\"chapterCovered\": true, \"themeIdentified\": true, \"revelationsSeparated\": true, \"factsPreserved\": true, \"notes\": \"\"}}",
+    "batches/batch-0001.json": "{\n  \"batch\": \"batch-0001.json\",\n  \"chapterId\": \"chapter-0001\",\n  \"chapterTitle\": \"Front matter\",\n  \"segment\": 1,\n  \"language\": \"en\",\n  \"characterCount\": 271,\n  \"units\": [\n    {\n      \"id\": \"u000001\",\n      \"tag\": \"h1\",\n      \"text\": \"An unknown city\"\n    },\n    {\n      \"id\": \"u000002\",\n      \"tag\": \"p\",\n      \"text\": \"The story follows a traveler entering an isolated city.\"\n    },\n    {\n      \"id\": \"u000003\",\n      \"tag\": \"p\",\n      \"text\": \"Memory and identity come under pressure as the traveler questions the city's past.\"\n    },\n    {\n      \"id\": \"u000004\",\n      \"tag\": \"p\",\n      \"text\": \"The initial conflict concerns trust, belonging, and hidden history.\"\n    },\n    {\n      \"id\": \"u000005\",\n      \"tag\": \"p\",\n      \"text\": \"The ending reveals that the guide is the lost ruler.\"\n    }\n  ]\n}\n"
+  },
+  "html": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<meta name=\"short-description-generator\" content=\"shortdescription-skill\">\n<meta name=\"short-description-source-sha256\" content=\"b8f62448e7e20cd0b02f2a4c4a5b10b70814455efa0aea5b4a859bce39157d55\">\n<title>Short description — The Silent City</title>\n<style>html{color-scheme:light dark}body{margin:0;background:#f5f3ee;color:#24211d;font:1.08rem/1.7 Georgia,serif}main{width:min(760px,calc(100% - 2rem));margin:clamp(2rem,8vw,6rem) auto}article{background:#fffdf8;padding:clamp(1.5rem,6vw,4rem);box-shadow:0 12px 40px #33251b18}p{margin:0}@media(prefers-color-scheme:dark){body{background:#181614;color:#eee8df}article{background:#24211d}}@media(max-width:600px){main{width:100%;margin:0}article{box-shadow:none}}</style>\n</head>\n<body><main><article data-short-description><p>The story follows a traveler entering an isolated city. Its setting places memory and identity under pressure. The initial conflict grows from uncertainty about the city&#x27;s past. The narrative explores trust, belonging, and hidden history.</p></article></main></body>\n</html>\n",
+  "validation": {
+    "status": "passed",
+    "findings": [],
+    "metrics": {
+      "sentences": 4,
+      "unsupportedFactualTokens": 0
+    },
+    "limitations": "Deterministic checks supplement but cannot replace the active LLM semantic revelation review."
+  }
+}

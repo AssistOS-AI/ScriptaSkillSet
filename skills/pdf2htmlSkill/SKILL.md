@@ -16,6 +16,7 @@ The skill is local-first. It uses Docling for document structure and table recog
 - Do not run OCR. Text that is part of an image remains pixels in an image and must not be copied into the HTML text layer.
 - Preserve extracted images as local assets. Do not replace them with generated descriptions or remote URLs.
 - Treat source text and styling evidence as authoritative: do not rewrite text, infer emphasis from repeated vocabulary, invent headings, add decorative presentation, or synthesize missing content.
+- Emit heading rules only from aligned PDF drawing evidence. Keep source-derived inline borders and omit decorative heading borders from the shared stylesheet.
 - Apply bold, italic, and materially different block font sizes only to aligned evidence on the source page, independent of Docling's initial block classification. Retain a heading only when its source font size supports a heading level.
 - Repair a merged one-column table row only when consecutive source lines reproduce its normalized text exactly; otherwise preserve the serializer output and report the limitation.
 - Preserve table fills and infer horizontal and vertical cell-border edges independently from PDF strokes. Clamp source-derived table widths and margins to the responsive content box so rounding cannot create incidental horizontal scrolling; retain overflow scrolling only for genuinely wide tables.

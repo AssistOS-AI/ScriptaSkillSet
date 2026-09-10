@@ -1,0 +1,38 @@
+{
+  "BLOCK_TAGS": [
+    "blockquote",
+    "caption",
+    "dd",
+    "dt",
+    "figcaption",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "li",
+    "p",
+    "td",
+    "th"
+  ],
+  "CANNED_PATTERNS": [
+    "\\bit is important to (?:note|remember)\\b",
+    "\\bin today's (?:world|fast-paced world|digital age)\\b",
+    "\\bin conclusion\\b",
+    "\\bdelve(?:s|d)? into\\b",
+    "\\bserves as a testament\\b",
+    "\\bnot only\\b.{0,90}\\bbut also\\b",
+    "\\beste important de (?:menționat|reținut|observat)\\b",
+    "\\bîn concluzie\\b",
+    "\\bîn lumea de astăzi\\b",
+    "\\bes importante (?:señalar|destacar|recordar)\\b",
+    "\\ben conclusión\\b",
+    "\\bnel mondo di oggi\\b",
+    "\\bè importante (?:notare|ricordare|sottolineare)\\b",
+    "\\babschließend lässt sich sagen\\b",
+    "\\bes ist wichtig zu beachten\\b",
+    "\\bil est important de (?:noter|rappeler)\\b",
+    "\\ben conclusion\\b"
+  ]
+}

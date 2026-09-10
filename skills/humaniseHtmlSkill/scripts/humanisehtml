@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 SKILL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-$SKILL_DIR/.venv}"
-export UV_CACHE_DIR="${UV_CACHE_DIR:-/tmp/humanisehtml-uv-cache}"
-exec uv run --project "$SKILL_DIR" humanisehtml "$@"
+if ! command -v node >/dev/null 2>&1; then
+  echo "humanisehtml: Node.js >=22 is required. See $SKILL_DIR/dependencies.md." >&2
+  exit 1
+fi
+exec node "$SKILL_DIR/scripts/humanisehtml.mjs" "$@"

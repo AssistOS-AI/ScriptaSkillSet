@@ -1,0 +1,134 @@
+{
+  "source": "<!doctype html><html lang=\"en\"><head><title>Example book</title>\n        <link rel=\"stylesheet\" href=\"assets/styles.css\"><style>.x{color:red}</style></head>\n        <body><main data-reader-content><section data-source-page=\"1\">\n        <h1>A <strong>careful</strong> title</h1>\n        <p>Hello <em>thoughtful</em> reader.</p>\n        <p aria-label=\"Closing paragraph\">A short final paragraph.</p>\n        <img src=\"assets/images/figure.png\" alt=\"A blue figure\">\n        </section></main><script>window.reader = true;</script></body></html>",
+  "sourceRelative": "book/en/index.html",
+  "prepared": {
+    "status": "prepared",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/en/index.html",
+    "output": "__ROOT__/book/ro/index.html",
+    "sourceLanguage": "en",
+    "targetLanguage": "ro",
+    "units": 7,
+    "modelUnits": 7,
+    "batches": 2,
+    "batchMaximumChars": 32000,
+    "translationMemory": {
+      "exactMatches": 0,
+      "templatedLabels": 0,
+      "modelUnitsSaved": 0
+    },
+    "parallelTranslation": true,
+    "bootstrapPages": [
+      "1"
+    ],
+    "completedBatches": 0,
+    "remainingBatches": 2,
+    "nextBatch": "batch-0001.json"
+  },
+  "initialContext": "{\n  \"bootstrapReviewed\": false,\n  \"documentProfile\": \"\",\n  \"glossary\": [],\n  \"previousBatchSummary\": \"\",\n  \"previousPairs\": []\n}\n",
+  "initial": {
+    "status": "in_progress",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/en/index.html",
+    "output": "__ROOT__/book/ro/index.html",
+    "sourceLanguage": "en",
+    "targetLanguage": "ro",
+    "units": 7,
+    "modelUnits": 7,
+    "completedUnits": 0,
+    "batches": 2,
+    "completedBatches": 0,
+    "remainingBatches": 2,
+    "nextBatch": "batch-0001.json",
+    "readyBatches": [
+      "batch-0001.json"
+    ],
+    "recommendedParallelBatches": 1
+  },
+  "profile": null,
+  "ready": {
+    "status": "ready_to_build",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/en/index.html",
+    "output": "__ROOT__/book/ro/index.html",
+    "sourceLanguage": "en",
+    "targetLanguage": "ro",
+    "units": 7,
+    "modelUnits": 7,
+    "completedUnits": 7,
+    "batches": 2,
+    "completedBatches": 2,
+    "remainingBatches": 0,
+    "nextBatch": null,
+    "readyBatches": [],
+    "recommendedParallelBatches": 0
+  },
+  "files": {
+    "job.json": "{\n  \"source\": \"__ROOT__/book/en/index.html\",\n  \"sourceSha256\": \"2aad5ff2e94a146420ba63e4566082b32673ef1553e78b9571433de6256805cb\",\n  \"output\": \"__ROOT__/book/ro/index.html\",\n  \"sourceLanguage\": \"en\",\n  \"targetLanguage\": \"ro\",\n  \"bootstrapPages\": [\n    \"1\"\n  ],\n  \"bootstrapUnitIds\": [\n    \"u000002\",\n    \"u000003\",\n    \"u000004\",\n    \"u000006\",\n    \"u000007\"\n  ],\n  \"batches\": [\n    \"batch-0001.json\",\n    \"batch-0002.json\"\n  ],\n  \"unitCount\": 7,\n  \"modelUnitCount\": 7,\n  \"batchMaximumChars\": 32000,\n  \"translationMemory\": {\n    \"exactMatches\": 0,\n    \"templatedLabels\": 0,\n    \"modelUnitsSaved\": 0\n  },\n  \"parallelTranslation\": {\n    \"enabledAfterBootstrap\": true,\n    \"maxBatches\": 4\n  },\n  \"elementCounts\": {\n    \"html\": 1,\n    \"head\": 1,\n    \"title\": 1,\n    \"link\": 1,\n    \"style\": 1,\n    \"body\": 1,\n    \"main\": 1,\n    \"section\": 1,\n    \"h1\": 1,\n    \"strong\": 1,\n    \"p\": 2,\n    \"em\": 1,\n    \"img\": 1,\n    \"script\": 1\n  }\n}\n",
+    "context.json": "{\"bootstrapReviewed\": true, \"documentProfile\": \"Use clear Romanian prose.\", \"glossary\": [], \"previousBatchSummary\": \"\", \"previousPairs\": []}",
+    "template.html": "<span data-translatehtml-unit=\"u000005\" data-translatehtml-wrapper=\"\"><!DOCTYPE html>\n</span><html lang=\"en\"><head><title data-translatehtml-unit=\"u000001\">Example book</title>\n<link href=\"assets/styles.css\" rel=\"stylesheet\"/><style>.x{color:red}</style></head>\n<body><main data-reader-content=\"\"><section data-source-page=\"1\">\n<h1 data-translatehtml-unit=\"u000002\">A <strong>careful</strong> title</h1>\n<p data-translatehtml-unit=\"u000003\">Hello <em>thoughtful</em> reader.</p>\n<p aria-label=\"Closing paragraph\" data-translatehtml-node=\"n000001\" data-translatehtml-unit=\"u000004\">A short final paragraph.</p>\n<img alt=\"A blue figure\" data-translatehtml-node=\"n000002\" src=\"assets/images/figure.png\"/>\n</section></main><script>window.reader = true;</script></body></html>",
+    "bootstrap.json": "{\n  \"title\": \"Example book\",\n  \"headings\": [\n    \"A careful title\"\n  ],\n  \"captions\": [],\n  \"bootstrapPages\": [\n    \"1\"\n  ],\n  \"representativeSamples\": [],\n  \"instructions\": \"Create a compact translation profile, translate and review the bootstrap units first, then set bootstrapReviewed to true in context.json.\"\n}\n",
+    "batches/batch-0002.json": "{\n  \"batch\": 2,\n  \"bootstrap\": false,\n  \"sourceLanguage\": \"en\",\n  \"targetLanguage\": \"ro\",\n  \"units\": [\n    {\n      \"id\": \"u000001\",\n      \"kind\": \"title\",\n      \"page\": null,\n      \"source\": \"Example book\",\n      \"plainText\": \"Example book\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000005\",\n      \"kind\": \"text\",\n      \"page\": null,\n      \"source\": \"html\",\n      \"plainText\": \"html\",\n      \"placeholders\": {},\n      \"protections\": {}\n    }\n  ]\n}\n",
+    "batches/batch-0001.json": "{\n  \"batch\": 1,\n  \"bootstrap\": true,\n  \"sourceLanguage\": \"en\",\n  \"targetLanguage\": \"ro\",\n  \"units\": [\n    {\n      \"id\": \"u000002\",\n      \"kind\": \"h1\",\n      \"page\": \"1\",\n      \"source\": \"A ⟦OPEN:T000001⟧careful⟦CLOSE:T000001⟧ title\",\n      \"plainText\": \"A careful title\",\n      \"placeholders\": {\n        \"T000001\": {\n          \"tag\": \"strong\",\n          \"attrs\": {}\n        }\n      },\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000003\",\n      \"kind\": \"p\",\n      \"page\": \"1\",\n      \"source\": \"Hello ⟦OPEN:T000001⟧thoughtful⟦CLOSE:T000001⟧ reader.\",\n      \"plainText\": \"Hello thoughtful reader.\",\n      \"placeholders\": {\n        \"T000001\": {\n          \"tag\": \"em\",\n          \"attrs\": {}\n        }\n      },\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000004\",\n      \"kind\": \"p\",\n      \"page\": \"1\",\n      \"source\": \"A short final paragraph.\",\n      \"plainText\": \"A short final paragraph.\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000006\",\n      \"kind\": \"attribute:aria-label\",\n      \"page\": \"1\",\n      \"source\": \"Closing paragraph\",\n      \"plainText\": \"Closing paragraph\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"attribute\": \"aria-label\",\n      \"nodeId\": \"n000001\"\n    },\n    {\n      \"id\": \"u000007\",\n      \"kind\": \"attribute:alt\",\n      \"page\": \"1\",\n      \"source\": \"A blue figure\",\n      \"plainText\": \"A blue figure\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"attribute\": \"alt\",\n      \"nodeId\": \"n000002\"\n    }\n  ]\n}\n",
+    "translations/batch-0002.json": "{\"units\": [{\"id\": \"u000001\", \"translation\": \"traducere16 traducere17\"}, {\"id\": \"u000005\", \"translation\": \"traducere18\"}]}",
+    "translations/batch-0001.json": "{\"units\": [{\"id\": \"u000002\", \"translation\": \"traducere1 ⟦OPEN:T000001⟧traducere2⟦CLOSE:T000001⟧ traducere3\"}, {\"id\": \"u000003\", \"translation\": \"traducere4 ⟦OPEN:T000001⟧traducere5⟦CLOSE:T000001⟧ traducere6.\"}, {\"id\": \"u000004\", \"translation\": \"traducere7 traducere8 traducere9 traducere10.\"}, {\"id\": \"u000006\", \"translation\": \"traducere11 traducere12\"}, {\"id\": \"u000007\", \"translation\": \"traducere13 traducere14 traducere15\"}]}"
+  },
+  "html": "<!doctype html>\ntraducere18<html lang=\"ro\"><head><title>traducere16 traducere17</title>\n<link href=\"../en/assets/styles.css\" rel=\"stylesheet\"/><style>.x{color:red}</style><meta content=\"translatehtml-skill\" name=\"translation-generator\"/><meta content=\"en\" name=\"translation-source-language\"/><meta content=\"ro\" name=\"translation-target-language\"/><meta content=\"2aad5ff2e94a146420ba63e4566082b32673ef1553e78b9571433de6256805cb\" name=\"translation-source-sha256\"/></head>\n<body><main data-reader-content=\"\"><section data-source-page=\"1\">\n<h1>traducere1 <strong>traducere2</strong> traducere3</h1>\n<p>traducere4 <em>traducere5</em> traducere6.</p>\n<p aria-label=\"traducere11 traducere12\">traducere7 traducere8 traducere9 traducere10.</p>\n<img alt=\"traducere13 traducere14 traducere15\" src=\"../en/assets/images/figure.png\"/>\n</section></main><script>window.reader = true;</script></body></html>",
+  "buildReport": {
+    "status": "passed",
+    "artifact": "__ROOT__/book/ro/index.html",
+    "job": "__ROOT__/job",
+    "validation": {
+      "status": "passed",
+      "findings": [],
+      "metrics": {
+        "sourceBlocks": {
+          "h1": 1,
+          "p": 2
+        },
+        "targetBlocks": {
+          "h1": 1,
+          "p": 2
+        },
+        "sourceElements": 15,
+        "targetElements": 15,
+        "expectedScript": null,
+        "expectedScriptRatio": null,
+        "eligibleTranslationUnits": 1,
+        "unchangedUnits": 0,
+        "unchangedRatio": 0,
+        "sourceNgramOverlap": 0,
+        "duplicateTranslationRatio": 0,
+        "lengthRatio": 1.8
+      }
+    }
+  },
+  "validation": {
+    "status": "passed",
+    "findings": [],
+    "metrics": {
+      "sourceBlocks": {
+        "h1": 1,
+        "p": 2
+      },
+      "targetBlocks": {
+        "h1": 1,
+        "p": 2
+      },
+      "sourceElements": 15,
+      "targetElements": 15,
+      "expectedScript": null,
+      "expectedScriptRatio": null,
+      "eligibleTranslationUnits": 1,
+      "unchangedUnits": 0,
+      "unchangedRatio": 0,
+      "sourceNgramOverlap": 0,
+      "duplicateTranslationRatio": 0,
+      "lengthRatio": 1.8
+    }
+  },
+  "assets": {
+    "book/en/assets/styles.css": "626f6479207b20636f6c6f723a20626c61636b3b207d",
+    "book/en/assets/images/figure.png": "706e67"
+  }
+}

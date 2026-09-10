@@ -38,3 +38,11 @@ Use this skill when the user wants a book summarized to a requested reading time
 ## Completion standard
 
 Deliver only after every content chapter has a valid analysis, the evidence graph is complete, all source-bound factual tokens are supported, the main essay is within ±10% of the requested reading time, and the generated HTML passes structural validation. Keep the actual word count and estimated reading time in the technical report and hidden document metadata; do not render them in the user-facing page or handoff. LLM review and deterministic checks improve traceability but cannot guarantee perfect factual or interpretive accuracy.
+
+## Runtime
+
+Use scripts/comprehensivesummary with Node.js 22 or newer. The HTML parser is bundled inside this skill. See
+[dependencies.md](dependencies.md).
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

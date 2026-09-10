@@ -1,6 +1,6 @@
 # translateHtmlSkill
 
-`translateHtmlSkill` lets the active LLM translate a complete semantic HTML document while deterministic Python tooling protects markup and validates the result. It is independent of the host and translation provider, and requires no separate API key.
+`translateHtmlSkill` lets the active LLM translate a complete semantic HTML document while deterministic Node.js tooling protects markup and validates the result. It is independent of the host and translation provider, and requires no separate API key.
 
 ## What it preserves
 
@@ -14,7 +14,7 @@ Visible text, document metadata, alternative text, and accessibility labels are 
 
 ## Runtime
 
-The launcher requires `uv` and works on macOS and Linux. It provisions managed Python 3.12 and a skill-owned `.venv` automatically:
+Requires Node.js 22 or newer on macOS or Linux. The launcher checks the runtime and bundled resources:
 
 ```bash
 scripts/translatehtml doctor
@@ -49,7 +49,7 @@ scripts/translatehtml status /books/example/.translatehtml-jobs/...
 
 After the bootstrap is reviewed, `status` returns `readyBatches` and
 `recommendedParallelBatches`, allowing distinct workers to write distinct translation
-files safely. The shared context is frozen while those workers run.
+files safely. Workers use the reviewed shared context.
 
 For a source under `en/`, the default output is the same filename under `ro/`. References such as `assets/styles.css` are rewritten to `../en/assets/styles.css`; no asset is duplicated.
 
@@ -65,7 +65,11 @@ The validator combines exact structural invariants with fast unchanged-content, 
 ## Development
 
 ```bash
-uv sync --extra dev
-uv run pytest
-uv run python -m compileall -q src tests
+node --test tests/*.test.mjs
 ```
+
+[dependencies.md](dependencies.md) records bundled parser and language-data versions,
+licenses and update steps.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

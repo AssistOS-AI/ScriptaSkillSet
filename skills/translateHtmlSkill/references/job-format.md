@@ -32,3 +32,12 @@ caps simultaneous work with `recommendedParallelBatches`. Parallel workers read 
 frozen context and each writes only its assigned `translations/batch-NNNN.json`.
 
 `context.json` must set `bootstrapReviewed` to `true` and contain a concise `documentProfile` plus a `glossary` array before `build` can publish.
+
+## Runtime
+
+The Node.js implementation uses the command arguments and JSON shapes documented
+here. Reference fixtures in tests/fixtures verify preparation, state transitions
+and generated artifacts.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

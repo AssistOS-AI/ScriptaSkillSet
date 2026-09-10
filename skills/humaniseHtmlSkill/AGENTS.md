@@ -9,3 +9,9 @@ Keep persistent documentation, schemas, code, tests, and comments in English. Do
 Use `scripts/humanisehtml` as the normal runtime. Keep jobs beside the source in `.humanisehtml-jobs/` unless the caller explicitly selects another workspace path. Do not create per-batch approval steps or ask the user intermediate questions. If the host requires permission, obtain one combined approval before the end-to-end run.
 
 When changing behavior, update `SKILL.md`, `README.md`, `DS.md`, `references/job-format.md`, descriptors, tests, and the dependency lock where relevant. Run tests, compilation, `doctor`, and an end-to-end prepare/build/validate fixture.
+
+## Implementation rules
+
+Follow the coding style and runtime section in [DS.md](DS.md). Use .mjs modules
+and Node.js built-ins; document bundled dependency exceptions in dependencies.md.
+Run `node --test tests/*.test.mjs`, syntax checks and `scripts/humanisehtml doctor`.

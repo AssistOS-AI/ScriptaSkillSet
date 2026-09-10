@@ -1,0 +1,214 @@
+{
+  "TEXT_TAGS": [
+    "blockquote",
+    "caption",
+    "dd",
+    "dt",
+    "figcaption",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "li",
+    "p",
+    "td",
+    "th"
+  ],
+  "SKIP_TAGS": [
+    "code",
+    "kbd",
+    "math",
+    "nav",
+    "pre",
+    "samp",
+    "script",
+    "style",
+    "svg"
+  ],
+  "BATCH_MAXIMUM_CHARS": 32000,
+  "MAX_PARALLEL_ANALYSES": 4,
+  "DEFAULT_WPM": 200,
+  "UI_STRINGS": {
+    "ro": {
+      "minutes": "min",
+      "words": "cuvinte",
+      "map": "Harta ideilor și capitolelor",
+      "idea": "Idee",
+      "summary": "Sinteză",
+      "chapters": "Capitole-sursă",
+      "front": "Material introductiv"
+    },
+    "en": {
+      "minutes": "min",
+      "words": "words",
+      "map": "Idea and chapter map",
+      "idea": "Idea",
+      "summary": "Summary",
+      "chapters": "Source chapters",
+      "front": "Front matter"
+    },
+    "it": {
+      "minutes": "min",
+      "words": "parole",
+      "map": "Mappa delle idee e dei capitoli",
+      "idea": "Idea",
+      "summary": "Sintesi",
+      "chapters": "Capitoli fonte",
+      "front": "Materiale introduttivo"
+    },
+    "es": {
+      "minutes": "min",
+      "words": "palabras",
+      "map": "Mapa de ideas y capítulos",
+      "idea": "Idea",
+      "summary": "Síntesis",
+      "chapters": "Capítulos fuente",
+      "front": "Material introductorio"
+    },
+    "de": {
+      "minutes": "Min.",
+      "words": "Wörter",
+      "map": "Ideen- und Kapitelübersicht",
+      "idea": "Idee",
+      "summary": "Zusammenfassung",
+      "chapters": "Quellkapitel",
+      "front": "Einführendes Material"
+    },
+    "fr": {
+      "minutes": "min",
+      "words": "mots",
+      "map": "Carte des idées et des chapitres",
+      "idea": "Idée",
+      "summary": "Synthèse",
+      "chapters": "Chapitres sources",
+      "front": "Documents liminaires"
+    }
+  },
+  "CONTENTS_HEADINGS": [
+    "contenido",
+    "contents",
+    "cuprins",
+    "indice",
+    "inhaltsverzeichnis",
+    "sommaire",
+    "table des matières",
+    "table of contents",
+    "índice"
+  ],
+  "BIBLIOGRAPHY_PREFIXES": [
+    "bibliografia",
+    "bibliografie",
+    "bibliografía",
+    "bibliographie",
+    "bibliography",
+    "literaturverzeichnis",
+    "quellen",
+    "references",
+    "referencias",
+    "referinte",
+    "referințe",
+    "riferimenti",
+    "références",
+    "sources",
+    "works cited"
+  ],
+  "LEGAL_RE": "(?:©|copyright|all rights reserved|toate drepturile rezervate|todos los derechos reservados|tutti i diritti riservati|alle rechte vorbehalten|isbn\\b)",
+  "FACT_RE": "(?:https?://|mailto:|www\\.)[^\\s<>()]+|\\b[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}\\b|\\b10\\.\\d{4,9}/[-._;()/:A-Z0-9]+|(?<![\\w])[+-]?\\d+(?:[.,:/-]\\d+)*(?:\\s?%|[A-Za-z]{1,4})?(?![\\w])",
+  "ANALYSIS_KEYS": [
+    "audit",
+    "batch",
+    "chapterId",
+    "evidenceAndExamples",
+    "ideas",
+    "objectionsAndQualifications",
+    "role",
+    "segment",
+    "thesis"
+  ],
+  "IDEA_KEYS": [
+    "centrality",
+    "id",
+    "originality",
+    "recurrenceCandidate",
+    "sourceUnitIds",
+    "statement"
+  ],
+  "EVIDENCE_KEYS": [
+    "sourceUnitIds",
+    "statement"
+  ],
+  "ANALYSIS_AUDIT_KEYS": [
+    "chapterCovered",
+    "factsPreserved",
+    "meaningPreserved",
+    "notes"
+  ],
+  "SYNTHESIS_KEYS": [
+    "audit",
+    "centralMessage",
+    "chapterCoverage",
+    "clusters",
+    "outline"
+  ],
+  "CLUSTER_KEYS": [
+    "centrality",
+    "chapterIds",
+    "id",
+    "ideaIds",
+    "label",
+    "originality",
+    "recurrence",
+    "score",
+    "selected",
+    "sourceUnitIds",
+    "synthesis"
+  ],
+  "OUTLINE_KEYS": [
+    "budgetWords",
+    "clusterIds",
+    "id",
+    "purpose",
+    "title"
+  ],
+  "COVERAGE_KEYS": [
+    "chapterId",
+    "clusterIds"
+  ],
+  "SYNTHESIS_AUDIT_KEYS": [
+    "allAnalysesUsed",
+    "centralMessageCovered",
+    "notes",
+    "redundancyMerged"
+  ],
+  "DRAFT_KEYS": [
+    "audit",
+    "conclusion",
+    "dek",
+    "sections",
+    "title"
+  ],
+  "SECTION_KEYS": [
+    "heading",
+    "id",
+    "paragraphs"
+  ],
+  "PARAGRAPH_KEYS": [
+    "audit",
+    "clusterIds",
+    "sourceUnitIds",
+    "text"
+  ],
+  "PARAGRAPH_AUDIT_KEYS": [
+    "factsPreserved",
+    "meaningPreserved",
+    "noUnsupportedClaim"
+  ],
+  "DRAFT_AUDIT_KEYS": [
+    "centralMessagePreserved",
+    "coherentEssay",
+    "notes",
+    "sameLanguage"
+  ]
+}

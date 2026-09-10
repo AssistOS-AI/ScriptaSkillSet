@@ -1,0 +1,172 @@
+{
+  "source": "<!doctype html><html lang=\"en\"><head><title>A useful book</title>\n        <meta name=\"description\" content=\"A careful description\">\n        <link rel=\"stylesheet\" href=\"assets/book.css\"><style>.x{color:red}</style></head>\n        <body><main data-reader-content>\n        <section data-source-page=\"1\" aria-label=\"PDF page 1\"><h1>First chapter</h1>\n        <p>It is important to note that the result in 2024 was <em>carefully</em> tested.</p>\n        <p>Repeated editorial sentence.</p></section>\n        <section data-source-page=\"2\" aria-label=\"PDF page 2\"><p>Repeated editorial sentence.</p>\n        <figure><img src=\"assets/figure.png\" alt=\"A blue diagram\"><figcaption>Measured at 42%.</figcaption></figure></section>\n        <section data-source-page=\"3\"><h1>Bibliography</h1><p>Doe, J. (2020). Example. doi:10.1000/xyz123</p></section>\n        </main><script>window.reader = true;</script></body></html>",
+  "sourceRelative": "book/index.html",
+  "prepared": {
+    "status": "prepared",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/index.html",
+    "output": "__ROOT__/book/index.humanised.html",
+    "inPlace": false,
+    "language": "en",
+    "chapters": 3,
+    "units": 13,
+    "modelUnits": 12,
+    "batches": 1,
+    "batchMaximumChars": 32000,
+    "memory": {
+      "exactMatches": 1,
+      "modelUnitsSaved": 1
+    },
+    "completedBatches": 0,
+    "remainingBatches": 1,
+    "readyBatches": [],
+    "recommendedParallelBatches": 0
+  },
+  "initialContext": "{\n  \"profileReviewed\": false,\n  \"documentProfile\": \"\",\n  \"preserveTerms\": [],\n  \"avoidPatterns\": [],\n  \"notes\": \"\"\n}\n",
+  "initial": {
+    "status": "profile_required",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/index.html",
+    "output": "__ROOT__/book/index.humanised.html",
+    "inPlace": false,
+    "language": "en",
+    "chapters": 3,
+    "units": 13,
+    "modelUnits": 12,
+    "completedUnits": 0,
+    "batches": 1,
+    "completedBatches": 0,
+    "remainingBatches": 1,
+    "nextBatch": null,
+    "readyBatches": [],
+    "recommendedParallelBatches": 0
+  },
+  "profile": {
+    "status": "in_progress",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/index.html",
+    "output": "__ROOT__/book/index.humanised.html",
+    "inPlace": false,
+    "language": "en",
+    "chapters": 3,
+    "units": 13,
+    "modelUnits": 12,
+    "completedUnits": 0,
+    "batches": 1,
+    "completedBatches": 0,
+    "remainingBatches": 1,
+    "nextBatch": "batch-0001.json",
+    "readyBatches": [
+      "batch-0001.json"
+    ],
+    "recommendedParallelBatches": 1
+  },
+  "ready": {
+    "status": "ready_to_build",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/index.html",
+    "output": "__ROOT__/book/index.humanised.html",
+    "inPlace": false,
+    "language": "en",
+    "chapters": 3,
+    "units": 13,
+    "modelUnits": 12,
+    "completedUnits": 13,
+    "batches": 1,
+    "completedBatches": 1,
+    "remainingBatches": 0,
+    "nextBatch": null,
+    "readyBatches": [],
+    "recommendedParallelBatches": 0
+  },
+  "files": {
+    "source-original.html": "<!doctype html><html lang=\"en\"><head><title>A useful book</title>\n        <meta name=\"description\" content=\"A careful description\">\n        <link rel=\"stylesheet\" href=\"assets/book.css\"><style>.x{color:red}</style></head>\n        <body><main data-reader-content>\n        <section data-source-page=\"1\" aria-label=\"PDF page 1\"><h1>First chapter</h1>\n        <p>It is important to note that the result in 2024 was <em>carefully</em> tested.</p>\n        <p>Repeated editorial sentence.</p></section>\n        <section data-source-page=\"2\" aria-label=\"PDF page 2\"><p>Repeated editorial sentence.</p>\n        <figure><img src=\"assets/figure.png\" alt=\"A blue diagram\"><figcaption>Measured at 42%.</figcaption></figure></section>\n        <section data-source-page=\"3\"><h1>Bibliography</h1><p>Doe, J. (2020). Example. doi:10.1000/xyz123</p></section>\n        </main><script>window.reader = true;</script></body></html>",
+    "job.json": "{\n  \"source\": \"__ROOT__/book/index.html\",\n  \"sourceSha256\": \"021ab335cba4016a6cde0f1ee428b976a3270156b123adc8a5e8c4b00d543078\",\n  \"output\": \"__ROOT__/book/index.humanised.html\",\n  \"inPlace\": false,\n  \"language\": \"en\",\n  \"batches\": [\n    \"batch-0001.json\"\n  ],\n  \"unitCount\": 13,\n  \"modelUnitCount\": 12,\n  \"chapterCount\": 3,\n  \"batchMaximumChars\": 32000,\n  \"memory\": {\n    \"exactMatches\": 1,\n    \"modelUnitsSaved\": 1\n  },\n  \"parallel\": {\n    \"enabledAfterProfile\": true,\n    \"maxBatches\": 4\n  },\n  \"elementCounts\": {\n    \"html\": 1,\n    \"head\": 1,\n    \"title\": 1,\n    \"meta\": 1,\n    \"link\": 1,\n    \"style\": 1,\n    \"body\": 1,\n    \"main\": 1,\n    \"section\": 3,\n    \"h1\": 2,\n    \"p\": 4,\n    \"em\": 1,\n    \"figure\": 1,\n    \"img\": 1,\n    \"figcaption\": 1,\n    \"script\": 1\n  }\n}\n",
+    "context.json": "{\"profileReviewed\": true, \"documentProfile\": \"Clear, restrained expository English; preserve technical terms.\", \"preserveTerms\": [\"doi\"], \"avoidPatterns\": [\"It is important to note\"], \"notes\": \"\"}",
+    "template.html": "<span data-humanisehtml-unit=\"u000009\" data-humanisehtml-wrapper=\"\"><!DOCTYPE html>\n</span><html lang=\"en\"><head><title data-humanisehtml-unit=\"u000001\">A useful book</title>\n<meta content=\"A careful description\" data-humanisehtml-node=\"n000001\" name=\"description\"/>\n<link href=\"assets/book.css\" rel=\"stylesheet\"/><style>.x{color:red}</style></head>\n<body><main data-reader-content=\"\">\n<section aria-label=\"PDF page 1\" data-humanisehtml-node=\"n000002\" data-source-page=\"1\"><h1 data-humanisehtml-unit=\"u000002\">First chapter</h1>\n<p data-humanisehtml-unit=\"u000003\">It is important to note that the result in 2024 was <em>carefully</em> tested.</p>\n<p data-humanisehtml-unit=\"u000004\">Repeated editorial sentence.</p></section>\n<section aria-label=\"PDF page 2\" data-humanisehtml-node=\"n000003\" data-source-page=\"2\"><p data-humanisehtml-unit=\"u000005\">Repeated editorial sentence.</p>\n<figure><img alt=\"A blue diagram\" data-humanisehtml-node=\"n000004\" src=\"assets/figure.png\"/><figcaption data-humanisehtml-unit=\"u000006\">Measured at 42%.</figcaption></figure></section>\n<section data-source-page=\"3\"><h1 data-humanisehtml-unit=\"u000007\">Bibliography</h1><p data-humanisehtml-unit=\"u000008\">Doe, J. (2020). Example. doi:10.1000/xyz123</p></section>\n</main><script>window.reader = true;</script></body></html>",
+    "context.sha256": "8da3bed003aada1ab5c481db182b42bf417bf2fae96ca1a1ae0a5266d1cd7523\n",
+    "bootstrap.json": "{\n  \"title\": \"A useful book\",\n  \"chapters\": [\n    {\n      \"id\": \"front-matter\",\n      \"title\": \"Front matter\"\n    },\n    {\n      \"id\": \"chapter-0001\",\n      \"title\": \"First chapter\"\n    },\n    {\n      \"id\": \"chapter-0002\",\n      \"title\": \"Bibliography\"\n    }\n  ],\n  \"headings\": [\n    \"First chapter\",\n    \"Bibliography\"\n  ],\n  \"representativeSamples\": [],\n  \"rubric\": {\n    \"remove\": [\n      \"generic openings and summaries\",\n      \"repeated conclusions\",\n      \"mechanical transitions\",\n      \"excessive signposting\",\n      \"inflated abstractions\",\n      \"artificial antitheses\",\n      \"repetitive triads\",\n      \"uniform sentence rhythm\",\n      \"needless hedging\",\n      \"canned phrases\"\n    ],\n    \"preserve\": [\n      \"meaning\",\n      \"facts\",\n      \"uncertainty\",\n      \"terminology\",\n      \"tone\",\n      \"chronology\",\n      \"examples\",\n      \"quotations\",\n      \"citations\",\n      \"language\"\n    ],\n    \"never\": [\n      \"translate\",\n      \"invent facts or sources\",\n      \"add anecdotes or personal experience\",\n      \"change the thesis\",\n      \"force colloquial or quirky variation\"\n    ]\n  },\n  \"instructions\": \"Infer a compact same-language voice and register profile. Fill context.json and set profileReviewed=true before any batch is edited.\"\n}\n",
+    "rewrites/batch-0001.json": "{\"units\": [{\"id\": \"u000001\", \"action\": \"keep\", \"text\": \"A useful book\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000002\", \"action\": \"keep\", \"text\": \"First chapter\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000003\", \"action\": \"rewrite\", \"text\": \"the result in ⟦PROTECT:P000001⟧ was ⟦OPEN:T000001⟧carefully⟦CLOSE:T000001⟧ tested.\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000004\", \"action\": \"keep\", \"text\": \"Repeated editorial sentence.\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000006\", \"action\": \"keep\", \"text\": \"Measured at ⟦PROTECT:P000001⟧.\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000007\", \"action\": \"keep\", \"text\": \"Bibliography\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000008\", \"action\": \"keep\", \"text\": \"Doe, J. (⟦PROTECT:P000001⟧). Example. doi:⟦PROTECT:P000002⟧\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000009\", \"action\": \"keep\", \"text\": \"html\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000010\", \"action\": \"keep\", \"text\": \"A careful description\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000011\", \"action\": \"keep\", \"text\": \"PDF page ⟦PROTECT:P000001⟧\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000012\", \"action\": \"keep\", \"text\": \"PDF page ⟦PROTECT:P000001⟧\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}, {\"id\": \"u000013\", \"action\": \"keep\", \"text\": \"A blue diagram\", \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"natural\": true, \"noSlop\": true, \"notes\": \"\"}}]}",
+    "batches/batch-0001.json": "{\n  \"batch\": 1,\n  \"language\": \"en\",\n  \"chapterIds\": [\n    \"front-matter\",\n    \"chapter-0001\",\n    \"chapter-0002\",\n    \"document\"\n  ],\n  \"rubric\": {\n    \"remove\": [\n      \"generic openings and summaries\",\n      \"repeated conclusions\",\n      \"mechanical transitions\",\n      \"excessive signposting\",\n      \"inflated abstractions\",\n      \"artificial antitheses\",\n      \"repetitive triads\",\n      \"uniform sentence rhythm\",\n      \"needless hedging\",\n      \"canned phrases\"\n    ],\n    \"preserve\": [\n      \"meaning\",\n      \"facts\",\n      \"uncertainty\",\n      \"terminology\",\n      \"tone\",\n      \"chronology\",\n      \"examples\",\n      \"quotations\",\n      \"citations\",\n      \"language\"\n    ],\n    \"never\": [\n      \"translate\",\n      \"invent facts or sources\",\n      \"add anecdotes or personal experience\",\n      \"change the thesis\",\n      \"force colloquial or quirky variation\"\n    ]\n  },\n  \"units\": [\n    {\n      \"id\": \"u000001\",\n      \"kind\": \"title\",\n      \"chapterId\": \"front-matter\",\n      \"chapterTitle\": \"Front matter\",\n      \"page\": null,\n      \"policy\": \"editable\",\n      \"source\": \"A useful book\",\n      \"plainText\": \"A useful book\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000002\",\n      \"kind\": \"h1\",\n      \"chapterId\": \"chapter-0001\",\n      \"chapterTitle\": \"First chapter\",\n      \"page\": \"1\",\n      \"policy\": \"editable\",\n      \"source\": \"First chapter\",\n      \"plainText\": \"First chapter\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000003\",\n      \"kind\": \"p\",\n      \"chapterId\": \"chapter-0001\",\n      \"chapterTitle\": \"First chapter\",\n      \"page\": \"1\",\n      \"policy\": \"editable\",\n      \"source\": \"It is important to note that the result in ⟦PROTECT:P000001⟧ was ⟦OPEN:T000001⟧carefully⟦CLOSE:T000001⟧ tested.\",\n      \"plainText\": \"It is important to note that the result in 2024 was carefully tested.\",\n      \"placeholders\": {\n        \"T000001\": {\n          \"tag\": \"em\",\n          \"attrs\": {}\n        }\n      },\n      \"protections\": {\n        \"⟦PROTECT:P000001⟧\": \"2024\"\n      }\n    },\n    {\n      \"id\": \"u000004\",\n      \"kind\": \"p\",\n      \"chapterId\": \"chapter-0001\",\n      \"chapterTitle\": \"First chapter\",\n      \"page\": \"1\",\n      \"policy\": \"editable\",\n      \"source\": \"Repeated editorial sentence.\",\n      \"plainText\": \"Repeated editorial sentence.\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000005\",\n      \"kind\": \"p\",\n      \"chapterId\": \"chapter-0001\",\n      \"chapterTitle\": \"First chapter\",\n      \"page\": \"2\",\n      \"policy\": \"editable\",\n      \"source\": \"Repeated editorial sentence.\",\n      \"plainText\": \"Repeated editorial sentence.\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"reuseOf\": \"u000004\"\n    },\n    {\n      \"id\": \"u000006\",\n      \"kind\": \"figcaption\",\n      \"chapterId\": \"chapter-0001\",\n      \"chapterTitle\": \"First chapter\",\n      \"page\": \"2\",\n      \"policy\": \"editable\",\n      \"source\": \"Measured at ⟦PROTECT:P000001⟧.\",\n      \"plainText\": \"Measured at 42%.\",\n      \"placeholders\": {},\n      \"protections\": {\n        \"⟦PROTECT:P000001⟧\": \"42%\"\n      }\n    },\n    {\n      \"id\": \"u000007\",\n      \"kind\": \"h1\",\n      \"chapterId\": \"chapter-0002\",\n      \"chapterTitle\": \"Bibliography\",\n      \"page\": \"3\",\n      \"policy\": \"verify-only\",\n      \"source\": \"Bibliography\",\n      \"plainText\": \"Bibliography\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000008\",\n      \"kind\": \"p\",\n      \"chapterId\": \"chapter-0002\",\n      \"chapterTitle\": \"Bibliography\",\n      \"page\": \"3\",\n      \"policy\": \"verify-only\",\n      \"source\": \"Doe, J. (⟦PROTECT:P000001⟧). Example. doi:⟦PROTECT:P000002⟧\",\n      \"plainText\": \"Doe, J. (2020). Example. doi:10.1000/xyz123\",\n      \"placeholders\": {},\n      \"protections\": {\n        \"⟦PROTECT:P000001⟧\": \"2020\",\n        \"⟦PROTECT:P000002⟧\": \"10.1000/xyz123\"\n      }\n    },\n    {\n      \"id\": \"u000009\",\n      \"kind\": \"text\",\n      \"chapterId\": \"document\",\n      \"chapterTitle\": \"Document\",\n      \"page\": null,\n      \"policy\": \"editable\",\n      \"source\": \"html\",\n      \"plainText\": \"html\",\n      \"placeholders\": {},\n      \"protections\": {}\n    },\n    {\n      \"id\": \"u000010\",\n      \"kind\": \"attribute:content\",\n      \"chapterId\": \"document\",\n      \"chapterTitle\": \"Document\",\n      \"page\": null,\n      \"policy\": \"editable\",\n      \"source\": \"A careful description\",\n      \"plainText\": \"A careful description\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"attribute\": \"content\",\n      \"nodeId\": \"n000001\"\n    },\n    {\n      \"id\": \"u000011\",\n      \"kind\": \"attribute:aria-label\",\n      \"chapterId\": \"document\",\n      \"chapterTitle\": \"Document\",\n      \"page\": \"1\",\n      \"policy\": \"verify-only\",\n      \"source\": \"PDF page ⟦PROTECT:P000001⟧\",\n      \"plainText\": \"PDF page 1\",\n      \"placeholders\": {},\n      \"protections\": {\n        \"⟦PROTECT:P000001⟧\": \"1\"\n      },\n      \"attribute\": \"aria-label\",\n      \"nodeId\": \"n000002\"\n    },\n    {\n      \"id\": \"u000012\",\n      \"kind\": \"attribute:aria-label\",\n      \"chapterId\": \"document\",\n      \"chapterTitle\": \"Document\",\n      \"page\": \"2\",\n      \"policy\": \"verify-only\",\n      \"source\": \"PDF page ⟦PROTECT:P000001⟧\",\n      \"plainText\": \"PDF page 2\",\n      \"placeholders\": {},\n      \"protections\": {\n        \"⟦PROTECT:P000001⟧\": \"2\"\n      },\n      \"attribute\": \"aria-label\",\n      \"nodeId\": \"n000003\"\n    },\n    {\n      \"id\": \"u000013\",\n      \"kind\": \"attribute:alt\",\n      \"chapterId\": \"document\",\n      \"chapterTitle\": \"Document\",\n      \"page\": \"2\",\n      \"policy\": \"editable\",\n      \"source\": \"A blue diagram\",\n      \"plainText\": \"A blue diagram\",\n      \"placeholders\": {},\n      \"protections\": {},\n      \"attribute\": \"alt\",\n      \"nodeId\": \"n000004\"\n    }\n  ]\n}\n"
+  },
+  "html": "<!doctype html>\nhtml<html lang=\"en\"><head><title>A useful book</title>\n<meta content=\"A careful description\" name=\"description\"/>\n<link href=\"assets/book.css\" rel=\"stylesheet\"/><style>.x{color:red}</style><meta content=\"humanisehtml-skill\" name=\"humanisation-generator\"/><meta content=\"021ab335cba4016a6cde0f1ee428b976a3270156b123adc8a5e8c4b00d543078\" name=\"humanisation-source-sha256\"/><meta content=\"en\" name=\"humanisation-language\"/></head>\n<body><main data-reader-content=\"\">\n<section aria-label=\"PDF page 1\" data-source-page=\"1\"><h1>First chapter</h1>\n<p>the result in 2024 was <em>carefully</em> tested.</p>\n<p>Repeated editorial sentence.</p></section>\n<section aria-label=\"PDF page 2\" data-source-page=\"2\"><p>Repeated editorial sentence.</p>\n<figure><img alt=\"A blue diagram\" src=\"assets/figure.png\"/><figcaption>Measured at 42%.</figcaption></figure></section>\n<section data-source-page=\"3\"><h1>Bibliography</h1><p>Doe, J. (2020). Example. doi:10.1000/xyz123</p></section>\n</main><script>window.reader = true;</script></body></html>",
+  "buildReport": {
+    "status": "passed",
+    "artifact": "__ROOT__/book/index.humanised.html",
+    "job": "__ROOT__/job",
+    "inPlace": false,
+    "report": "__ROOT__/job/report.json",
+    "findings": [],
+    "metrics": {
+      "sourceElements": 22,
+      "targetElements": 22,
+      "sourceBlocks": {
+        "h1": 2,
+        "p": 4,
+        "figcaption": 1
+      },
+      "targetBlocks": {
+        "h1": 2,
+        "p": 4,
+        "figcaption": 1
+      },
+      "sourceStyle": {
+        "stylePenalty": 1,
+        "sentences": 3,
+        "repeatedSentenceBeginnings": 0,
+        "sentenceLengthCoefficientOfVariation": null,
+        "duplicateBlocks": 0
+      },
+      "targetStyle": {
+        "stylePenalty": 0,
+        "sentences": 3,
+        "repeatedSentenceBeginnings": 0,
+        "sentenceLengthCoefficientOfVariation": null,
+        "duplicateBlocks": 0
+      },
+      "auditedUnits": 13,
+      "rewrittenUnits": 1,
+      "keptUnits": 12
+    }
+  },
+  "validation": {
+    "status": "passed",
+    "findings": [],
+    "metrics": {
+      "sourceElements": 22,
+      "targetElements": 22,
+      "sourceBlocks": {
+        "h1": 2,
+        "p": 4,
+        "figcaption": 1
+      },
+      "targetBlocks": {
+        "h1": 2,
+        "p": 4,
+        "figcaption": 1
+      },
+      "sourceStyle": {
+        "stylePenalty": 1,
+        "sentences": 3,
+        "repeatedSentenceBeginnings": 0,
+        "sentenceLengthCoefficientOfVariation": null,
+        "duplicateBlocks": 0
+      },
+      "targetStyle": {
+        "stylePenalty": 0,
+        "sentences": 3,
+        "repeatedSentenceBeginnings": 0,
+        "sentenceLengthCoefficientOfVariation": null,
+        "duplicateBlocks": 0
+      },
+      "auditedUnits": null,
+      "rewrittenUnits": null,
+      "keptUnits": null
+    },
+    "limitations": "Deterministic checks and LLM self-audit cannot prove human authorship or guarantee factual correctness; no detector-evasion claim is made."
+  },
+  "assets": {
+    "book/assets/book.css": "626f64797b636f6c6f723a233232327d",
+    "book/assets/figure.png": "706e67"
+  }
+}

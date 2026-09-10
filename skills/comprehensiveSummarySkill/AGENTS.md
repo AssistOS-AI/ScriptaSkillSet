@@ -9,3 +9,9 @@ Keep persistent documentation, schemas, code, tests, and comments in English. Th
 The workflow runs end to end without per-batch questions. If the host requires permission, request one combined approval before work begins. After preparation, process up to four chapter batches in parallel, then complete synthesis, drafting, build, and independent validation.
 
 When changing behavior, update `SKILL.md`, `README.md`, `DS.md`, `references/job-format.md`, `skill.json`, tests, and the lockfile where relevant. Run tests, compilation, `doctor`, and an end-to-end prepare/build/validate fixture.
+
+## Implementation rules
+
+Follow the coding style and runtime section in [DS.md](DS.md). Use .mjs modules
+and Node.js built-ins; document bundled dependency exceptions in dependencies.md.
+Run `node --test tests/*.test.mjs`, syntax checks and `scripts/comprehensivesummary doctor`.
