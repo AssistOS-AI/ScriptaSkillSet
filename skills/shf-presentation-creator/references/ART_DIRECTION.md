@@ -211,3 +211,12 @@ faithfully. Choose only those warranted by the source. Emotional motion should
 carry meaning rather than make generic assets busier. Review representative early
 and middle frames before mass rendering; require a rewrite of the composition
 when its relationship to the narration needs an additional verbal explanation.
+
+A quiet background must not reduce a substantive scene to floating clipart.
+A decision, institution or relationship needs a visible situation: who acts,
+what changes, and who experiences the consequence. A collection of chairs,
+a bell and labelled rectangles does not by itself explain political correction.
+Review a complete early scene in actual rendered form before expanding a batch.
+For silent art inspection, temporarily hide the paused central Play overlay
+in the test capture, then restore it for normal interaction checks. Record
+this capture adjustment; never start audible playback to remove the overlay.

@@ -99,3 +99,12 @@ region awaiting data, not to the whole page. An inline question mode can replace
 the entry choices in the same footprint; provide a labelled close control and
 restore focus to the originating choice. Preserve typed text while other site
 components initialise or the interface language changes.
+
+## Host close control
+
+When a presentation host provides dismissal, use a clearly visible X just above
+the player at its right edge, without a coloured background or visible label.
+Keep a localised accessible name, keyboard focus outline and at least a 44px
+hit target. Closing must pause playback; preserve Escape for modal hosts and
+prevent pending loads from restarting dismissed playback. Keep host navigation
+outside the reusable player stage.
