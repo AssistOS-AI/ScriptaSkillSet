@@ -1,0 +1,22 @@
+{
+  "title": "Node Coding Style",
+  "family": "anthropic",
+  "summary": "Default dependency-free Node.js .mjs coding rules, portable dependency records, Python conversion prompts, and startup checks for justified exceptions.",
+  "aliases": [
+    "node-coding-style"
+  ],
+  "dependsOn": [],
+  "outputs": [
+    "Node.js .mjs code using built-ins by default",
+    "Project or skill dependencies.md",
+    "Effective coding-style guidance",
+    "Startup prerequisite checks when external dependencies are required"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "DS.md",
+    "dependencies.md",
+    "assets/dependencies.md"
+  ],
+  "selfContained": true
+}

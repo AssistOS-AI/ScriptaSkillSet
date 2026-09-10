@@ -1,0 +1,705 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:theatrical-audio:score:1",
+  "title": "Theatrical Audio Score 1",
+  "type": "object",
+  "properties": {
+    "format": {
+      "const": "theatrical-audio/1"
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2,3}(?:-[A-Z]{2})?$",
+      "description": "BCP-47-like language tag. Actual support depends on the selected provider/voice."
+    },
+    "notes": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 5000
+    },
+    "sourceText": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 1000000
+    },
+    "voices": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/voice"
+      }
+    },
+    "settings": {
+      "$ref": "#/$defs/settings"
+    },
+    "beats": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/speech"
+          },
+          {
+            "$ref": "#/$defs/pause"
+          }
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 500
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/effect"
+      },
+      "minItems": 0,
+      "maxItems": 100
+    },
+    "beds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/bed"
+      },
+      "minItems": 0,
+      "maxItems": 12
+    },
+    "visuals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/visual"
+      },
+      "minItems": 0,
+      "maxItems": 500
+    }
+  },
+  "required": [
+    "format",
+    "id",
+    "title",
+    "language",
+    "voices",
+    "beats"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+    },
+    "at": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 600
+        },
+        {
+          "type": "object",
+          "properties": {
+            "beat": {
+              "$ref": "#/$defs/id"
+            },
+            "edge": {
+              "enum": [
+                "start",
+                "end",
+                "marker"
+              ]
+            },
+            "marker": {
+              "$ref": "#/$defs/id"
+            },
+            "offsetSeconds": {
+              "type": "number",
+              "minimum": -600,
+              "maximum": 600
+            }
+          },
+          "required": [
+            "beat",
+            "edge"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "voice": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "qwenSpeaker": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "kokoroVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "description": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1200
+        },
+        "openaiVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "elevenlabsVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "azureVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "azureLocale": {
+          "type": "string",
+          "pattern": "^[a-z]{2,3}-[A-Z]{2}$"
+        },
+        "geminiVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "groqVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "humeVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "cartesiaVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "cloudflareVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "googleVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "voicerssVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "deepgramVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "pollyVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "mistralVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "humeProvider": {
+          "enum": [
+            "HUME_AI",
+            "CUSTOM_VOICE"
+          ]
+        },
+        "googleLocale": {
+          "type": "string",
+          "pattern": "^[a-z]{2,3}-[A-Z]{2}$"
+        },
+        "voicerssLocale": {
+          "type": "string",
+          "pattern": "^[a-z]{2,3}-[a-z]{2}$"
+        },
+        "piperVoice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "direction": {
+      "type": "object",
+      "properties": {
+        "emotion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "intensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pace": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "delivery": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 1600
+        },
+        "emphasis": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "elevenlabs": {
+          "type": "object",
+          "properties": {
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z ,'-]{0,63}$"
+              },
+              "maxItems": 8
+            },
+            "stability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "similarityBoost": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "speed": {
+              "type": "number",
+              "minimum": 0.7,
+              "maximum": 1.2
+            }
+          },
+          "additionalProperties": false
+        },
+        "azure": {
+          "type": "object",
+          "properties": {
+            "style": {
+              "type": "string",
+              "pattern": "^[a-z][a-z_-]{0,63}$"
+            },
+            "styleDegree": {
+              "type": "number",
+              "minimum": 0.01,
+              "maximum": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "groq": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tags": {
+              "type": "array",
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              }
+            }
+          }
+        },
+        "cartesia": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "emotion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            }
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "sampleRate": {
+          "enum": [
+            24000,
+            48000
+          ]
+        },
+        "takes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "tailSeconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "ceilingDbFS": {
+          "type": "number",
+          "minimum": -20,
+          "maximum": -0.1
+        },
+        "maxSceneSeconds": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 600
+        },
+        "room": {
+          "type": "object",
+          "properties": {
+            "wet": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.3
+            },
+            "delayMs": {
+              "type": "number",
+              "minimum": 15,
+              "maximum": 200
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "maxNewTokens": {
+          "type": "integer",
+          "minimum": 64,
+          "maximum": 2048
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "speech": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "at": {
+          "$ref": "#/$defs/at"
+        },
+        "type": {
+          "const": "speech"
+        },
+        "speaker": {
+          "$ref": "#/$defs/id"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "sourceSpan": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "additionalProperties": false
+        },
+        "direction": {
+          "$ref": "#/$defs/direction"
+        },
+        "takes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "selectedTake": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "gainDb": {
+          "type": "number",
+          "minimum": -60,
+          "maximum": 12
+        },
+        "pan": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "markers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "seconds": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 600
+              },
+              "basis": {
+                "enum": [
+                  "manual",
+                  "forced-alignment"
+                ]
+              },
+              "audioSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 0,
+                "maxLength": 160
+              }
+            },
+            "required": [
+              "id",
+              "seconds",
+              "basis",
+              "audioSha256"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "speaker",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "pause": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "at": {
+          "$ref": "#/$defs/at"
+        },
+        "type": {
+          "const": "pause"
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "seconds"
+      ],
+      "additionalProperties": false
+    },
+    "effect": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "at": {
+          "$ref": "#/$defs/at"
+        },
+        "preset": {
+          "enum": [
+            "space-hum",
+            "wind",
+            "rain",
+            "drone",
+            "metal",
+            "chime",
+            "airlock",
+            "pulse"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0.05,
+          "maximum": 120
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "gainDb": {
+          "type": "number",
+          "minimum": -60,
+          "maximum": 12
+        },
+        "pan": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "bed": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "preset": {
+          "enum": [
+            "space-hum",
+            "wind",
+            "rain",
+            "drone",
+            "metal",
+            "chime",
+            "airlock",
+            "pulse"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "seconds": {
+          "type": "number",
+          "minimum": 0.05,
+          "maximum": 120
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "gainDb": {
+          "type": "number",
+          "minimum": -60,
+          "maximum": 12
+        },
+        "duckDb": {
+          "type": "number",
+          "minimum": -30,
+          "maximum": 0
+        },
+        "fadeSeconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "visual": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "at": {
+          "$ref": "#/$defs/at"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 120
+        },
+        "target": {
+          "$ref": "#/$defs/id"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "target",
+        "action",
+        "durationSeconds"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

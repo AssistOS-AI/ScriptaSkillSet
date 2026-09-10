@@ -1,0 +1,8 @@
+{
+  "source": "Independently computed using botocore.auth.SigV4Auth; test credentials only",
+  "method": "POST",
+  "url": "https://polly.us-east-1.amazonaws.com/v1/speech",
+  "body": "{}",
+  "timestamp": "2026-09-10T10:00:00Z",
+  "authorization": "AWS4-HMAC-SHA256 Credential=AKIDEXAMPLE/20260910/us-east-1/polly/aws4_request, SignedHeaders=content-type;host;x-amz-date;x-amz-security-token, Signature=f5cd4586bf9e9185cbbc8b9b6275d440c1f51e4936ac9dc32656086b3fb7b654"
+}

@@ -1,0 +1,76 @@
+{
+  "checks": 14,
+  "passed": 14,
+  "results": [
+    {
+      "file": "examples/custom-asset.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/freedom-practice.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/governable-ai.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/mars-library.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/minimal.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/visual-lab.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "freedom-practice.ready.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "governable-ai.ready.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "mars-library.ready.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "visual-lab.ready.direction.json",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/rendered/freedom-practice.shf",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/rendered/governable-ai.shf",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/rendered/mars-library.shf",
+      "pass": true,
+      "errors": []
+    },
+    {
+      "file": "examples/rendered/visual-lab.shf",
+      "pass": true,
+      "errors": []
+    }
+  ]
+}

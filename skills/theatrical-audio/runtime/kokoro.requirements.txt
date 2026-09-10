@@ -1,0 +1,2 @@
+# Bundles its phonemizer library via espeakng-loader; no global espeak installation required by this adapter.
+kokoro-onnx==0.6.1

@@ -1,0 +1,818 @@
+{
+  "format": "SHF-VoiceTasks",
+  "version": "1",
+  "filmId": "governable-ai",
+  "selection": "Inspect actual environment skills/tools; choose an available compatible TTS provider. Do not invent a skill or API.",
+  "tasks": [
+    {
+      "id": "governable-ai-blackbox-line-01",
+      "sceneId": "blackbox",
+      "text": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Un răspuns bun nu este suficient",
+        "sceneIntent": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.",
+        "previousLine": "",
+        "nextLine": "Într-un proces important, calitatea textului nu rezolvă singură problema controlului. Trebuie să putem pune întrebări despre muncă."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-blackbox-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-blackbox-line-02",
+      "sceneId": "blackbox",
+      "text": "Într-un proces important, calitatea textului nu rezolvă singură problema controlului. Trebuie să putem pune întrebări despre muncă.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Un răspuns bun nu este suficient",
+        "sceneIntent": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.",
+        "previousLine": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.",
+        "nextLine": "Cum transformăm un rezultat greu de inspectat într-un proces pe care oamenii îl pot urmări și corecta?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-blackbox-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-blackbox-line-03",
+      "sceneId": "blackbox",
+      "text": "Cum transformăm un rezultat greu de inspectat într-un proces pe care oamenii îl pot urmări și corecta?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Un răspuns bun nu este suficient",
+        "sceneIntent": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.",
+        "previousLine": "Într-un proces important, calitatea textului nu rezolvă singură problema controlului. Trebuie să putem pune întrebări despre muncă.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-blackbox-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-trace-line-01",
+      "sceneId": "trace",
+      "text": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Munca devine o succesiune vizibilă",
+        "sceneIntent": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.",
+        "previousLine": "",
+        "nextLine": "Fiecare rezultat păstrează o legătură cu intrările sale. Putem vedea unde a apărut o afirmație și ce o susține."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-trace-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-trace-line-02",
+      "sceneId": "trace",
+      "text": "Fiecare rezultat păstrează o legătură cu intrările sale. Putem vedea unde a apărut o afirmație și ce o susține.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Munca devine o succesiune vizibilă",
+        "sceneIntent": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.",
+        "previousLine": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.",
+        "nextLine": "O urmă explicită face procesul mai inspectabil. Nu dovedește, prin simpla ei existență, că fiecare pas a fost corect."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-trace-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-trace-line-03",
+      "sceneId": "trace",
+      "text": "O urmă explicită face procesul mai inspectabil. Nu dovedește, prin simpla ei existență, că fiecare pas a fost corect.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Munca devine o succesiune vizibilă",
+        "sceneIntent": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.",
+        "previousLine": "Fiecare rezultat păstrează o legătură cu intrările sale. Putem vedea unde a apărut o afirmație și ce o susține.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-trace-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-source-link-line-01",
+      "sceneId": "source-link",
+      "text": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Afirmația rămâne lângă sursă",
+        "sceneIntent": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.",
+        "previousLine": "",
+        "nextLine": "Un cititor poate verifica dacă acel pasaj spune într-adevăr ceea ce pretinde analiza. Poate observa o omisiune sau o interpretare prea puternică."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-source-link-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-source-link-line-02",
+      "sceneId": "source-link",
+      "text": "Un cititor poate verifica dacă acel pasaj spune într-adevăr ceea ce pretinde analiza. Poate observa o omisiune sau o interpretare prea puternică.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Afirmația rămâne lângă sursă",
+        "sceneIntent": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.",
+        "previousLine": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.",
+        "nextLine": "Legătura nu certifică adevărul sursei. Face doar posibilă o verificare care altfel ar fi mult mai dificilă."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-source-link-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-source-link-line-03",
+      "sceneId": "source-link",
+      "text": "Legătura nu certifică adevărul sursei. Face doar posibilă o verificare care altfel ar fi mult mai dificilă.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Afirmația rămâne lângă sursă",
+        "sceneIntent": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.",
+        "previousLine": "Un cititor poate verifica dacă acel pasaj spune într-adevăr ceea ce pretinde analiza. Poate observa o omisiune sau o interpretare prea puternică.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-source-link-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-approval-line-01",
+      "sceneId": "approval",
+      "text": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Aprobarea trebuie să schimbe traseul",
+        "sceneIntent": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.",
+        "previousLine": "",
+        "nextLine": "Un buton de aprobare nu este suficient. Alegerea trebuie să producă o schimbare observabilă în ceea ce se întâmplă mai departe."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-approval-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-approval-line-02",
+      "sceneId": "approval",
+      "text": "Un buton de aprobare nu este suficient. Alegerea trebuie să producă o schimbare observabilă în ceea ce se întâmplă mai departe.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Aprobarea trebuie să schimbe traseul",
+        "sceneIntent": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.",
+        "previousLine": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.",
+        "nextLine": "Un sistem controlabil face vizibile aceste puncte de decizie și păstrează contextul în care persoana a intervenit."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-approval-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-approval-line-03",
+      "sceneId": "approval",
+      "text": "Un sistem controlabil face vizibile aceste puncte de decizie și păstrează contextul în care persoana a intervenit.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Aprobarea trebuie să schimbe traseul",
+        "sceneIntent": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.",
+        "previousLine": "Un buton de aprobare nu este suficient. Alegerea trebuie să producă o schimbare observabilă în ceea ce se întâmplă mai departe.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-approval-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-limits-line-01",
+      "sceneId": "limits",
+      "text": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Vizibil nu înseamnă infailibil",
+        "sceneIntent": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.",
+        "previousLine": "",
+        "nextLine": "Avem nevoie de teste care introduc erori și verifică dacă ele sunt detectate, explicate și corectate la timp."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-limits-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-limits-line-02",
+      "sceneId": "limits",
+      "text": "Avem nevoie de teste care introduc erori și verifică dacă ele sunt detectate, explicate și corectate la timp.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Vizibil nu înseamnă infailibil",
+        "sceneIntent": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.",
+        "previousLine": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.",
+        "nextLine": "Schema de aici ilustrează un principiu de proiectare. Nu este un rezultat experimental și nu promite eliminarea erorilor."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-limits-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-limits-line-03",
+      "sceneId": "limits",
+      "text": "Schema de aici ilustrează un principiu de proiectare. Nu este un rezultat experimental și nu promite eliminarea erorilor.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Vizibil nu înseamnă infailibil",
+        "sceneIntent": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.",
+        "previousLine": "Avem nevoie de teste care introduc erori și verifică dacă ele sunt detectate, explicate și corectate la timp.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-limits-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-governable-line-01",
+      "sceneId": "governable",
+      "text": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Nu doar rezultate. Muncă verificabilă.",
+        "sceneIntent": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.",
+        "previousLine": "",
+        "nextLine": "De unde vine afirmația? Ce s-a schimbat pe parcurs? Unde poate interveni un om?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-governable-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-governable-line-02",
+      "sceneId": "governable",
+      "text": "De unde vine afirmația? Ce s-a schimbat pe parcurs? Unde poate interveni un om?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Nu doar rezultate. Muncă verificabilă.",
+        "sceneIntent": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.",
+        "previousLine": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.",
+        "nextLine": "Valoarea practică apare atunci când răspunsurile la aceste întrebări pot fi testate în sarcini concrete, nu doar desenate într-o arhitectură."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-governable-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "governable-ai-governable-line-03",
+      "sceneId": "governable",
+      "text": "Valoarea practică apare atunci când răspunsurile la aceste întrebări pot fi testate în sarcini concrete, nu doar desenate într-o arhitectură.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "AI pe care îl poți întreba „de ce?”",
+        "sceneTitle": "Nu doar rezultate. Muncă verificabilă.",
+        "sceneIntent": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.",
+        "previousLine": "De unde vine afirmația? Ce s-a schimbat pe parcurs? Unde poate interveni un om?",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/governable-ai-governable-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    }
+  ]
+}

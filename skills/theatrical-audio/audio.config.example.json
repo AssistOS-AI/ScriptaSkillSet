@@ -1,0 +1,18 @@
+{
+  "engine": "gemini",
+  "providers": {
+    "gemini": {
+      "model": "gemini-2.5-flash-preview-tts",
+      "voice": "Kore"
+    },
+    "hume": {
+      "model": "1",
+      "voice": "Ava Song"
+    },
+    "cartesia": {
+      "model": "sonic-3.6",
+      "apiVersion": "2026-08-14",
+      "voice": "db6b0ed5-d5d3-463d-ae85-518a07d3c2b4"
+    }
+  }
+}

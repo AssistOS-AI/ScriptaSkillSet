@@ -1,0 +1,661 @@
+{
+  "format": "SHF-Direction",
+  "version": "0.4",
+  "id": "visual-lab",
+  "title": "Patru idei. Patru mici spectacole.",
+  "genreLabel": "ATELIER VIZUAL",
+  "language": "ro",
+  "stage": {
+    "width": 1200,
+    "height": 760
+  },
+  "audioRole": "effects",
+  "audioDisclosure": "Voce eSpeak demonstrativă; nu este o mostră de narațiune neuronală profesională.",
+  "description": "Patru mini-scene pentru a compara desenul, mișcarea și cele trei teme. Durata a fost recalculată din replicile audio măsurate.",
+  "sources": [
+    {
+      "id": "original-lab",
+      "kind": "original-demo-text",
+      "text": "Patru micro-scenarii originale pentru testarea limbajului vizual."
+    }
+  ],
+  "editorial": {
+    "disclosure": "Exemple originale, regizate pentru acest prototip. Metaforele nu constituie rezultate experimentale.",
+    "qualityStatus": "authored-demonstration-not-an-automatic-book-adaptation"
+  },
+  "assets": {},
+  "scenes": [
+    {
+      "id": "paperwork",
+      "title": "Încă un formular.",
+      "durationMs": 22000,
+      "emotionLabel": "umor discret",
+      "promise": "Un proces ar trebui să ajute omul, nu să-l îngroape.",
+      "setting": "studio",
+      "objects": [
+        {
+          "id": "desk",
+          "asset": "desk",
+          "x": 787,
+          "y": 629,
+          "scale": 1,
+          "options": {},
+          "meaning": "desk"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-curious",
+          "x": 359,
+          "y": 645,
+          "scale": 1.27,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "papers",
+          "asset": "stack",
+          "x": 801,
+          "y": 431,
+          "scale": 0.95,
+          "options": {},
+          "meaning": "stack"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "papers",
+          "action": "stack.grow",
+          "atMs": 3100,
+          "durationMs": 8900
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 7300,
+          "durationMs": 1100,
+          "target": "papers",
+          "up": true
+        },
+        {
+          "actor": "papers",
+          "action": "stack.wobble",
+          "atMs": 13500,
+          "durationMs": 2600
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 14300,
+          "durationMs": 2400,
+          "emotion": "surprised"
+        }
+      ],
+      "beats": [
+        {
+          "startMs": 700,
+          "endMs": 6300,
+          "label": "UN OBIECT. O SITUAȚIE.",
+          "text": "La început, tot ce trebuia era un formular.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-paperwork-line-01",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "playful",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 6500,
+          "endMs": 13000,
+          "label": "ACUMULARE",
+          "text": "Apoi a mai fost nevoie de unul. Și de încă unul.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-paperwork-line-02",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "playful",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 13500,
+          "endMs": 21400,
+          "label": "O REACȚIE, NU UN EFECT GRATUIT",
+          "text": "Când procedura devine mai mare decât omul, avem o problemă.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-paperwork-line-03",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "playful",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "world-in-book",
+      "title": "Din pagini, un oraș.",
+      "durationMs": 22000,
+      "emotionLabel": "uimire",
+      "setting": "studio",
+      "objects": [
+        {
+          "id": "town",
+          "asset": "city",
+          "x": 776,
+          "y": 542,
+          "scale": 0.91,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "book",
+          "asset": "book",
+          "x": 776,
+          "y": 550,
+          "scale": 1.15,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-inspired",
+          "x": 306,
+          "y": 640,
+          "scale": 1.26,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "book",
+          "action": "book.open",
+          "atMs": 1900,
+          "durationMs": 2000
+        },
+        {
+          "actor": "town",
+          "action": "city.grow",
+          "atMs": 6900,
+          "durationMs": 5500
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 9700,
+          "durationMs": 1100,
+          "target": "town",
+          "up": true
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 13000,
+          "durationMs": 2100,
+          "emotion": "surprised"
+        }
+      ],
+      "beats": [
+        {
+          "startMs": 700,
+          "endMs": 6000,
+          "label": "O CARTE SE DESCHIDE",
+          "text": "O carte nu este doar un obiect. Este o lume în așteptare.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-world-in-book-line-01",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "wonder",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 6500,
+          "endMs": 13500,
+          "label": "TRANSFORMARE MOTIVATĂ",
+          "text": "Paginile se deschid. Clădirile cresc chiar dintre ele.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-world-in-book-line-02",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "wonder",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 14100,
+          "endMs": 21400,
+          "label": "ESENȚA UNEI POVEȘTI",
+          "text": "Nu desenăm fiecare detaliu. Facem vizibilă posibilitatea.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-world-in-book-line-03",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "wonder",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "show-the-source",
+      "title": "Arată-mi sursa.",
+      "durationMs": 24000,
+      "emotionLabel": "curiozitate → claritate",
+      "setting": "studio",
+      "objects": [
+        {
+          "id": "source",
+          "asset": "book",
+          "x": 232,
+          "y": 510,
+          "scale": 0.7,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "machine",
+          "asset": "machine",
+          "x": 602,
+          "y": 552,
+          "scale": 0.91,
+          "options": {},
+          "meaning": "machine"
+        },
+        {
+          "id": "claim",
+          "asset": "paper",
+          "x": 993,
+          "y": 555,
+          "scale": 0.91,
+          "options": {
+            "label": "Afirmație"
+          },
+          "meaning": "paper"
+        },
+        {
+          "id": "reviewer",
+          "asset": "person-02-skeptical",
+          "x": 606,
+          "y": 692,
+          "scale": 0.73,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "connections": [
+        {
+          "id": "input",
+          "from": {
+            "node": "source",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "machine",
+            "anchor": "input"
+          },
+          "meaning": "Source to inspected processing",
+          "bend": -42
+        },
+        {
+          "id": "output",
+          "from": {
+            "node": "machine",
+            "anchor": "output"
+          },
+          "to": {
+            "node": "claim",
+            "anchor": "left"
+          },
+          "meaning": "Processing to claim",
+          "bend": -42
+        }
+      ],
+      "actions": [
+        {
+          "actor": "source",
+          "action": "book.open",
+          "atMs": 1100,
+          "durationMs": 1800
+        },
+        {
+          "actor": "machine",
+          "action": "machine.think",
+          "atMs": 1600,
+          "durationMs": 2500
+        },
+        {
+          "actor": "claim",
+          "action": "appear",
+          "atMs": 4700,
+          "durationMs": 1800
+        },
+        {
+          "actor": "reviewer",
+          "action": "react",
+          "atMs": 7300,
+          "durationMs": 2200,
+          "emotion": "surprised"
+        },
+        {
+          "actor": "input",
+          "action": "connection.draw",
+          "atMs": 10600,
+          "durationMs": 2500
+        },
+        {
+          "actor": "output",
+          "action": "connection.draw",
+          "atMs": 14500,
+          "durationMs": 2500
+        },
+        {
+          "actor": "reviewer",
+          "action": "lookAt",
+          "atMs": 18200,
+          "durationMs": 1300,
+          "target": "claim"
+        }
+      ],
+      "beats": [
+        {
+          "startMs": 700,
+          "endMs": 7300,
+          "label": "O AFIRMAȚIE NU ESTE O DOVADĂ",
+          "text": "Mașina poate produce un răspuns foarte convingător.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-show-the-source-line-01",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "clarity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 7900,
+          "endMs": 15500,
+          "label": "LEGĂTURI CU ORIGINE ȘI DESTINAȚIE",
+          "text": "Dar ce anume îl susține? Urmărim legătura dintre sursă, proces și afirmație.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-show-the-source-line-02",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "clarity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 16300,
+          "endMs": 23300,
+          "label": "O LIMITĂ IMPORTANTĂ",
+          "text": "Acum îl putem verifica. Asta nu înseamnă că l-am dovedit adevărat.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-show-the-source-line-03",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "clarity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "room-to-choose",
+      "title": "Un pas. Dar nu din inerție.",
+      "durationMs": 20000,
+      "emotionLabel": "reflecție",
+      "setting": "studio",
+      "objects": [
+        {
+          "id": "habit",
+          "asset": "door",
+          "x": 305,
+          "y": 577,
+          "scale": 0.97,
+          "options": {
+            "color": "$blue",
+            "label": "Obicei"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "choice",
+          "asset": "door",
+          "x": 916,
+          "y": 577,
+          "scale": 0.97,
+          "options": {
+            "color": "$teal",
+            "label": "Alegere"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-relieved",
+          "x": 590,
+          "y": 687,
+          "scale": 1,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "habit",
+          "action": "door.open",
+          "atMs": 1600,
+          "durationMs": 1700
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 4300,
+          "durationMs": 1100,
+          "target": "habit"
+        },
+        {
+          "actor": "choice",
+          "action": "door.open",
+          "atMs": 10300,
+          "durationMs": 2300
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 13100,
+          "durationMs": 1000,
+          "target": "choice"
+        },
+        {
+          "actor": "mira",
+          "action": "walkTo",
+          "atMs": 15400,
+          "durationMs": 2600,
+          "x": 672
+        }
+      ],
+      "beats": [
+        {
+          "startMs": 700,
+          "endMs": 7200,
+          "label": "DOUĂ OPȚIUNI",
+          "text": "Două uși deschise nu sunt, singure, o explicație a libertății.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-room-to-choose-line-01",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "hope",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 7800,
+          "endMs": 14600,
+          "label": "UN MOMENT DE REFLECȚIE",
+          "text": "Putem urma un obicei. Sau ne putem întreba de ce ne atrage.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-room-to-choose-line-02",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "hope",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        },
+        {
+          "startMs": 15000,
+          "endMs": 19400,
+          "label": "UN GEST MIC, CU SENS",
+          "text": "Același pas. O altă relație cu propria alegere.",
+          "sourceRefs": [
+            "original-lab"
+          ],
+          "id": "visual-lab-room-to-choose-line-03",
+          "performance": {
+            "delivery": "calm, warm, lightly amused when justified",
+            "emotion": "hope",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 400,
+            "emphasize": [],
+            "avoid": [
+              "announcer voice",
+              "shouting",
+              "reading stage directions"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "audioDemo": true,
+  "voice": {
+    "id": "espeak-ro-demonstration",
+    "quality": "demonstration-only"
+  },
+  "visualLibrary": "shf-repertory@2.0",
+  "visualIdentity": "illustrated-theatre"
+}

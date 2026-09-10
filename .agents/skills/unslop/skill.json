@@ -1,0 +1,10 @@
+{
+  "title": "Unslop",
+  "family": "anthropic",
+  "summary": "Edits prose to remove formulaic AI writing patterns while preserving meaning and the intended tone.",
+  "aliases": ["unslop"],
+  "dependsOn": [],
+  "outputs": ["Revised prose preserving source meaning and intended tone"],
+  "entrypoints": ["SKILL.md", "DS.md"],
+  "selfContained": true
+}

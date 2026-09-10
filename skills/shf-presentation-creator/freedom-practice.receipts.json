@@ -1,0 +1,169 @@
+{
+  "format": "SHF-VoiceReceipts",
+  "version": "1",
+  "provider": "eSpeak demonstration, inherited and segmented",
+  "lines": [
+    {
+      "id": "freedom-practice-strings-line-01",
+      "file": "assets/voice-demo/freedom-practice-strings-line-01.mp3",
+      "sha256": "025f6d3d2c25318c5fdcb7ed0f97acfa82520c71dc99d781485ef851c1b74591",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-strings-line-02",
+      "file": "assets/voice-demo/freedom-practice-strings-line-02.mp3",
+      "sha256": "713057af79d6e177e7bfe2b9e78e0b1b63c9c135b4443042e99a57ebbf44e8e7",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-strings-line-03",
+      "file": "assets/voice-demo/freedom-practice-strings-line-03.mp3",
+      "sha256": "05b9d7d9f368a03add9441af5474429b1e1d4d805868f554a2838b5148aff0f6",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-two-doors-line-01",
+      "file": "assets/voice-demo/freedom-practice-two-doors-line-01.mp3",
+      "sha256": "a7372a58fe2cd9a2214c32c3eb8e907721d4080b73f565f7ef33b91aedb85017",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-two-doors-line-02",
+      "file": "assets/voice-demo/freedom-practice-two-doors-line-02.mp3",
+      "sha256": "b6c168644f7c61ffe8198c12461a93e138dbfad84bef30801d639e9774670f1c",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-two-doors-line-03",
+      "file": "assets/voice-demo/freedom-practice-two-doors-line-03.mp3",
+      "sha256": "3fb0298dc4882565e01f54d99219a127ba8cade3b51b4e88c40806f184fd5c38",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-mirror-line-01",
+      "file": "assets/voice-demo/freedom-practice-mirror-line-01.mp3",
+      "sha256": "62456a5b4c879685bedb6567264eea9692d3c8c22932ca7ce6310bb2f586cfb9",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-mirror-line-02",
+      "file": "assets/voice-demo/freedom-practice-mirror-line-02.mp3",
+      "sha256": "a5f4fc5f31c8bc36198791893ab57f6febdfc3549dff8dee39dfad70efa4a626",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-mirror-line-03",
+      "file": "assets/voice-demo/freedom-practice-mirror-line-03.mp3",
+      "sha256": "85ea5f83ab709848398c44f241f304a805e4a3ce153f4b690c8ee409b80ecd18",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-balance-line-01",
+      "file": "assets/voice-demo/freedom-practice-balance-line-01.mp3",
+      "sha256": "e0545d125e4b6a739fe6fd5aa611e0b170eb124314a74c051c64e4d2bd79d86b",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-balance-line-02",
+      "file": "assets/voice-demo/freedom-practice-balance-line-02.mp3",
+      "sha256": "97d4832cb82655afc277ccea543d3697930de97a837212f46b34d1ce7865e654",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-balance-line-03",
+      "file": "assets/voice-demo/freedom-practice-balance-line-03.mp3",
+      "sha256": "033d8f7039bae6ba936ca4ef2209e6438fb49b01de59df8ceeae84016005785c",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-conditions-line-01",
+      "file": "assets/voice-demo/freedom-practice-conditions-line-01.mp3",
+      "sha256": "54c4e2d67795fe808a4e0275b8de75d39529691c1e1935bc00a817e45b2f774b",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-conditions-line-02",
+      "file": "assets/voice-demo/freedom-practice-conditions-line-02.mp3",
+      "sha256": "9cc958f91d889df6c5272eeab05205097dc1f275a99dd66f0a1f6f2e95494cc7",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-conditions-line-03",
+      "file": "assets/voice-demo/freedom-practice-conditions-line-03.mp3",
+      "sha256": "3bb9ea263441f7a73aaee14d1ab5b3e81fae571c08ed6183fa6922e149369bc4",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-freedom-line-01",
+      "file": "assets/voice-demo/freedom-practice-freedom-line-01.mp3",
+      "sha256": "a3fa326d1e5ecbe16c0183cf08ca71a6e0a1f377e75c35dc053acb9ed156cf44",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-freedom-line-02",
+      "file": "assets/voice-demo/freedom-practice-freedom-line-02.mp3",
+      "sha256": "d5c3cdeda6e5e54e177b88ce1dc75ec5d2f1709b70353338c17d8b8abe680d79",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "freedom-practice-freedom-line-03",
+      "file": "assets/voice-demo/freedom-practice-freedom-line-03.mp3",
+      "sha256": "7e7c8d9c24e97be12eb9e0118d08acb690e8397395ff2c23012ae127a77711d9",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    }
+  ]
+}

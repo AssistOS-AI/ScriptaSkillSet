@@ -1,0 +1,10680 @@
+[
+  {
+    "id": "character",
+    "label": "character",
+    "kind": "character",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "book",
+    "label": "book",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -190,
+      -90,
+      380,
+      185
+    ]
+  },
+  {
+    "id": "city",
+    "label": "city",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "paper",
+    "label": "paper",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "stack",
+    "label": "stack",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "desk",
+    "label": "desk",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "door",
+    "label": "door",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "shelf",
+    "label": "shelf",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "machine",
+    "label": "machine",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "bulb",
+    "label": "bulb",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "tree",
+    "label": "tree",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "planet",
+    "label": "planet",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "balance",
+    "label": "balance",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "mirror",
+    "label": "mirror",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "plaque",
+    "label": "plaque",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "stamp",
+    "label": "stamp",
+    "kind": "rigged-object",
+    "category": "core",
+    "tags": [
+      "animated",
+      "rigged"
+    ],
+    "bounds": [
+      -250,
+      -315,
+      500,
+      360
+    ]
+  },
+  {
+    "id": "microscope",
+    "label": "Microscope",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "telescope",
+    "label": "Telescope",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "flask",
+    "label": "Laboratory flask",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "beaker",
+    "label": "Beaker",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "test-tubes",
+    "label": "Test-tube rack",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "petri-dish",
+    "label": "Petri dish",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "dna",
+    "label": "DNA model",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "atom",
+    "label": "Atomic model",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "magnet",
+    "label": "Horseshoe magnet",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "thermometer",
+    "label": "Thermometer",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "molecule",
+    "label": "Molecule",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "brain",
+    "label": "Brain",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "heart-organ",
+    "label": "Anatomical heart",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "cell",
+    "label": "Biological cell",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bacteria",
+    "label": "Bacteria",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "centrifuge",
+    "label": "Centrifuge",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "pipette",
+    "label": "Pipette",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "prism",
+    "label": "Optical prism",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "fossil",
+    "label": "Fossil",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "sample-box",
+    "label": "Specimen box",
+    "category": "science",
+    "kind": "object",
+    "tags": [
+      "science"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "laptop",
+    "label": "Laptop",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "desktop",
+    "label": "Desktop monitor",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "phone",
+    "label": "Smartphone",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "tablet",
+    "label": "Tablet",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "server",
+    "label": "Server rack",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "database",
+    "label": "Database",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "chip",
+    "label": "Computer chip",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "keyboard",
+    "label": "Keyboard",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "mouse",
+    "label": "Computer mouse",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "headphones",
+    "label": "Headphones",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "microphone",
+    "label": "Microphone",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "camera",
+    "label": "Camera",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "projector",
+    "label": "Projector",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "printer",
+    "label": "Printer",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "router",
+    "label": "Router",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "cloud-storage",
+    "label": "Cloud storage",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "battery",
+    "label": "Battery",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "solar-panel",
+    "label": "Solar panel",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "circuit-board",
+    "label": "Circuit board",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "robot",
+    "label": "Robot",
+    "category": "technology",
+    "kind": "object",
+    "tags": [
+      "technology"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "closed-book",
+    "label": "Closed book",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "notebook",
+    "label": "Notebook",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "scroll",
+    "label": "Scroll",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "quill",
+    "label": "Quill and ink",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "pencil",
+    "label": "Pencil",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "pen",
+    "label": "Fountain pen",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "school-bag",
+    "label": "School bag",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "graduation-cap",
+    "label": "Graduation cap",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "globe",
+    "label": "Globe",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "map",
+    "label": "Folded map",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "compass",
+    "label": "Compass",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "abacus",
+    "label": "Abacus",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "blackboard",
+    "label": "Blackboard",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "paint-palette",
+    "label": "Paint palette",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "violin",
+    "label": "Violin",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "piano",
+    "label": "Piano",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "theatre-masks",
+    "label": "Theatre masks",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "chess",
+    "label": "Chess knight",
+    "category": "learning",
+    "kind": "object",
+    "tags": [
+      "learning"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "house",
+    "label": "House",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "school",
+    "label": "School",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "hospital",
+    "label": "Hospital",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "courthouse",
+    "label": "Courthouse",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bank",
+    "label": "Bank",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "museum",
+    "label": "Museum",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "library-building",
+    "label": "Library building",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "workshop",
+    "label": "Workshop",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "shop",
+    "label": "Shop",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "post-office",
+    "label": "Post office",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "factory",
+    "label": "Factory",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "castle",
+    "label": "Castle",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "lighthouse",
+    "label": "Lighthouse",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "windmill",
+    "label": "Windmill",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bridge",
+    "label": "Bridge",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "tent",
+    "label": "Tent",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "skyscraper",
+    "label": "Skyscraper",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "fountain",
+    "label": "Fountain",
+    "category": "places",
+    "kind": "object",
+    "tags": [
+      "places"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "pine-tree",
+    "label": "Pine tree",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "palm-tree",
+    "label": "Palm tree",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "cactus",
+    "label": "Cactus",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "flower",
+    "label": "Flower",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "seedling",
+    "label": "Seedling",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "mushroom",
+    "label": "Mushroom",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "mountain",
+    "label": "Mountain",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "volcano",
+    "label": "Volcano",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "island",
+    "label": "Island",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "river",
+    "label": "River",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "waterfall",
+    "label": "Waterfall",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "cloud",
+    "label": "Cloud",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "rain-cloud",
+    "label": "Rain cloud",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "snowflake",
+    "label": "Snowflake",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "sun",
+    "label": "Sun",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "moon",
+    "label": "Moon",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "star",
+    "label": "Star",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "rainbow",
+    "label": "Rainbow",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "butterfly",
+    "label": "Butterfly",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bird",
+    "label": "Bird",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "fish",
+    "label": "Fish",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "cat",
+    "label": "Cat",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "dog",
+    "label": "Dog",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "owl",
+    "label": "Owl",
+    "category": "nature",
+    "kind": "object",
+    "tags": [
+      "nature"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "rocket",
+    "label": "Rocket",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "satellite",
+    "label": "Satellite",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "ufo",
+    "label": "UFO",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "ringed-planet",
+    "label": "Ringed planet",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "earth",
+    "label": "Earth",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "comet",
+    "label": "Comet",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "moon-rover",
+    "label": "Moon rover",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "space-station",
+    "label": "Space station",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "observatory",
+    "label": "Observatory",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "astronaut-helmet",
+    "label": "Astronaut helmet",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "star-chart",
+    "label": "Star chart",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "wormhole",
+    "label": "Wormhole model",
+    "category": "space",
+    "kind": "object",
+    "tags": [
+      "space"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "car",
+    "label": "Car",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "taxi",
+    "label": "Taxi",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "ambulance",
+    "label": "Ambulance",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "police-car",
+    "label": "Service car",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "delivery-van",
+    "label": "Delivery van",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bus",
+    "label": "Bus",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "train",
+    "label": "Train",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bicycle",
+    "label": "Bicycle",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "scooter",
+    "label": "Scooter",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "airplane",
+    "label": "Airplane",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "helicopter",
+    "label": "Helicopter",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "sailboat",
+    "label": "Sailboat",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "ship",
+    "label": "Cargo ship",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "hot-air-balloon",
+    "label": "Hot-air balloon",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "traffic-light",
+    "label": "Traffic light",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "road-sign",
+    "label": "Road sign",
+    "category": "transport",
+    "kind": "object",
+    "tags": [
+      "transport"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "chair",
+    "label": "Chair",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "sofa",
+    "label": "Sofa",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bed",
+    "label": "Bed",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "lamp",
+    "label": "Desk lamp",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "candle",
+    "label": "Candle",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "cup",
+    "label": "Cup",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "teapot",
+    "label": "Teapot",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "bottle",
+    "label": "Bottle",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "clock",
+    "label": "Clock",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "alarm-clock",
+    "label": "Alarm clock",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "key",
+    "label": "Key",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "lock",
+    "label": "Lock",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "umbrella",
+    "label": "Umbrella",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "suitcase",
+    "label": "Suitcase",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "gift",
+    "label": "Gift",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "window",
+    "label": "Window",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "envelope",
+    "label": "Envelope",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "basket",
+    "label": "Basket",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "watering-can",
+    "label": "Watering can",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "plant-pot",
+    "label": "Plant pot",
+    "category": "home",
+    "kind": "object",
+    "tags": [
+      "home"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "hammer",
+    "label": "Hammer",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "wrench",
+    "label": "Wrench",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "screwdriver",
+    "label": "Screwdriver",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "saw",
+    "label": "Saw",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "scissors",
+    "label": "Scissors",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "ruler",
+    "label": "Ruler",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "gear",
+    "label": "Gear",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "toolbox",
+    "label": "Toolbox",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "paintbrush",
+    "label": "Paintbrush",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "shovel",
+    "label": "Shovel",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "ladder",
+    "label": "Ladder",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "hard-hat",
+    "label": "Hard hat",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "safety-goggles",
+    "label": "Safety goggles",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "scale",
+    "label": "Weighing scale",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "sewing-machine",
+    "label": "Sewing machine",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "wheelbarrow",
+    "label": "Wheelbarrow",
+    "category": "tools",
+    "kind": "object",
+    "tags": [
+      "tools"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "coins",
+    "label": "Coins",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "wallet",
+    "label": "Wallet",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "piggy-bank",
+    "label": "Piggy bank",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "briefcase",
+    "label": "Briefcase",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "contract",
+    "label": "Contract",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "gavel",
+    "label": "Gavel",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "ballot-box",
+    "label": "Ballot box",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "megaphone",
+    "label": "Megaphone",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "shield",
+    "label": "Shield",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "certificate",
+    "label": "Certificate",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "hourglass",
+    "label": "Hourglass",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "calendar",
+    "label": "Calendar",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "handshake",
+    "label": "Handshake",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "safe",
+    "label": "Safe",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "shopping-cart",
+    "label": "Shopping cart",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "package",
+    "label": "Parcel",
+    "category": "economy",
+    "kind": "object",
+    "tags": [
+      "economy"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "treasure-chest",
+    "label": "Treasure chest",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "crown",
+    "label": "Crown",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "sword",
+    "label": "Sword",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "dragon",
+    "label": "Dragon",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "feather",
+    "label": "Feather",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "lantern",
+    "label": "Lantern",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "puzzle",
+    "label": "Puzzle piece",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "infinity",
+    "label": "Infinity",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "question",
+    "label": "Question token",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "warning",
+    "label": "Warning sign",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "target",
+    "label": "Target",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "flag",
+    "label": "Flag",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "thought-bubble",
+    "label": "Thought bubble",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "speech-bubble",
+    "label": "Speech bubble",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "fingerprint",
+    "label": "Fingerprint",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "chain",
+    "label": "Chain link",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "broken-chain",
+    "label": "Broken chain",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "open-lock",
+    "label": "Open lock",
+    "category": "story",
+    "kind": "object",
+    "tags": [
+      "story"
+    ],
+    "rig": [
+      "body"
+    ],
+    "anchors": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "center"
+    ],
+    "bounds": [
+      -110,
+      -210,
+      220,
+      230
+    ]
+  },
+  {
+    "id": "person-01-neutral",
+    "label": "Ada · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "short",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-happy",
+    "label": "Ada · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "short",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-curious",
+    "label": "Ada · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "short",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-worried",
+    "label": "Ada · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "short",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-sad",
+    "label": "Ada · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "short",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-angry",
+    "label": "Ada · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "short",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-surprised",
+    "label": "Ada · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "short",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-determined",
+    "label": "Ada · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "short",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-tired",
+    "label": "Ada · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "short",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-skeptical",
+    "label": "Ada · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "short",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-relieved",
+    "label": "Ada · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "short",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-01-inspired",
+    "label": "Ada · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-01",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "short",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-neutral",
+    "label": "Mira · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "bob",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-happy",
+    "label": "Mira · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "bob",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-curious",
+    "label": "Mira · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "bob",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-worried",
+    "label": "Mira · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "bob",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-sad",
+    "label": "Mira · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "bob",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-angry",
+    "label": "Mira · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "bob",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-surprised",
+    "label": "Mira · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "bob",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-determined",
+    "label": "Mira · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "bob",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-tired",
+    "label": "Mira · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "bob",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-skeptical",
+    "label": "Mira · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "bob",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-relieved",
+    "label": "Mira · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "bob",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-02-inspired",
+    "label": "Mira · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-02",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "bob",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-neutral",
+    "label": "Noor · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "curls",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-happy",
+    "label": "Noor · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "curls",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-curious",
+    "label": "Noor · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "curls",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-worried",
+    "label": "Noor · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "curls",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-sad",
+    "label": "Noor · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "curls",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-angry",
+    "label": "Noor · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "curls",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-surprised",
+    "label": "Noor · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "curls",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-determined",
+    "label": "Noor · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "curls",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-tired",
+    "label": "Noor · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "curls",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-skeptical",
+    "label": "Noor · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "curls",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-relieved",
+    "label": "Noor · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "curls",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-03-inspired",
+    "label": "Noor · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-03",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "curls",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-neutral",
+    "label": "Leo · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "bun",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-happy",
+    "label": "Leo · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "bun",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-curious",
+    "label": "Leo · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "bun",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-worried",
+    "label": "Leo · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "bun",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-sad",
+    "label": "Leo · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "bun",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-angry",
+    "label": "Leo · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "bun",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-surprised",
+    "label": "Leo · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "bun",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-determined",
+    "label": "Leo · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "bun",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-tired",
+    "label": "Leo · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "bun",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-skeptical",
+    "label": "Leo · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "bun",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-relieved",
+    "label": "Leo · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "bun",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-04-inspired",
+    "label": "Leo · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-04",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "bun",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-neutral",
+    "label": "Amir · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "long",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-happy",
+    "label": "Amir · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "long",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-curious",
+    "label": "Amir · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "long",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-worried",
+    "label": "Amir · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "long",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-sad",
+    "label": "Amir · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "long",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-angry",
+    "label": "Amir · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "long",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-surprised",
+    "label": "Amir · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "long",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-determined",
+    "label": "Amir · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "long",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-tired",
+    "label": "Amir · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "long",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-skeptical",
+    "label": "Amir · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "long",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-relieved",
+    "label": "Amir · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "long",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-05-inspired",
+    "label": "Amir · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-05",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "long",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-neutral",
+    "label": "Lina · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "bald",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-happy",
+    "label": "Lina · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "bald",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-curious",
+    "label": "Lina · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "bald",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-worried",
+    "label": "Lina · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "bald",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-sad",
+    "label": "Lina · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "bald",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-angry",
+    "label": "Lina · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "bald",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-surprised",
+    "label": "Lina · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "bald",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-determined",
+    "label": "Lina · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "bald",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-tired",
+    "label": "Lina · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "bald",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-skeptical",
+    "label": "Lina · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "bald",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-relieved",
+    "label": "Lina · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "bald",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-06-inspired",
+    "label": "Lina · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-06",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "bald",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-neutral",
+    "label": "Sam · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "short",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-happy",
+    "label": "Sam · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "short",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-curious",
+    "label": "Sam · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "short",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-worried",
+    "label": "Sam · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "short",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-sad",
+    "label": "Sam · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "short",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-angry",
+    "label": "Sam · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "short",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-surprised",
+    "label": "Sam · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "short",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-determined",
+    "label": "Sam · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "short",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-tired",
+    "label": "Sam · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "short",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-skeptical",
+    "label": "Sam · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "short",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-relieved",
+    "label": "Sam · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "short",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-07-inspired",
+    "label": "Sam · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-07",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "short",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-neutral",
+    "label": "Sofia · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "bob",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-happy",
+    "label": "Sofia · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "bob",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-curious",
+    "label": "Sofia · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "bob",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-worried",
+    "label": "Sofia · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "bob",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-sad",
+    "label": "Sofia · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "bob",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-angry",
+    "label": "Sofia · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "bob",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-surprised",
+    "label": "Sofia · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "bob",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-determined",
+    "label": "Sofia · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "bob",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-tired",
+    "label": "Sofia · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "bob",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-skeptical",
+    "label": "Sofia · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "bob",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-relieved",
+    "label": "Sofia · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "bob",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-08-inspired",
+    "label": "Sofia · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-08",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "bob",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-neutral",
+    "label": "Jun · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "curls",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-happy",
+    "label": "Jun · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "curls",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-curious",
+    "label": "Jun · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "curls",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-worried",
+    "label": "Jun · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "curls",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-sad",
+    "label": "Jun · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "curls",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-angry",
+    "label": "Jun · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "curls",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-surprised",
+    "label": "Jun · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "curls",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-determined",
+    "label": "Jun · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "curls",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-tired",
+    "label": "Jun · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "curls",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-skeptical",
+    "label": "Jun · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "curls",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-relieved",
+    "label": "Jun · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "curls",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-09-inspired",
+    "label": "Jun · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-09",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "curls",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-neutral",
+    "label": "Ravi · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "bun",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-happy",
+    "label": "Ravi · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "bun",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-curious",
+    "label": "Ravi · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "bun",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-worried",
+    "label": "Ravi · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "bun",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-sad",
+    "label": "Ravi · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "bun",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-angry",
+    "label": "Ravi · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "bun",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-surprised",
+    "label": "Ravi · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "bun",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-determined",
+    "label": "Ravi · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "bun",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-tired",
+    "label": "Ravi · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "bun",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-skeptical",
+    "label": "Ravi · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "bun",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-relieved",
+    "label": "Ravi · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "bun",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-10-inspired",
+    "label": "Ravi · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-10",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "bun",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-neutral",
+    "label": "Elena · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "long",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-happy",
+    "label": "Elena · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "long",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-curious",
+    "label": "Elena · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "long",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-worried",
+    "label": "Elena · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "long",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-sad",
+    "label": "Elena · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "long",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-angry",
+    "label": "Elena · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "long",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-surprised",
+    "label": "Elena · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "long",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-determined",
+    "label": "Elena · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "long",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-tired",
+    "label": "Elena · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "long",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-skeptical",
+    "label": "Elena · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "long",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-relieved",
+    "label": "Elena · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "long",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-11-inspired",
+    "label": "Elena · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-11",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "long",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-neutral",
+    "label": "Theo · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "neutral",
+    "tags": [
+      "adult",
+      "bald",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-happy",
+    "label": "Theo · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "happy",
+    "tags": [
+      "adult",
+      "bald",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-curious",
+    "label": "Theo · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "curious",
+    "tags": [
+      "adult",
+      "bald",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-worried",
+    "label": "Theo · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "worried",
+    "tags": [
+      "adult",
+      "bald",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-sad",
+    "label": "Theo · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "sad",
+    "tags": [
+      "adult",
+      "bald",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-angry",
+    "label": "Theo · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "angry",
+    "tags": [
+      "adult",
+      "bald",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-surprised",
+    "label": "Theo · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "surprised",
+    "tags": [
+      "adult",
+      "bald",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-determined",
+    "label": "Theo · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "determined",
+    "tags": [
+      "adult",
+      "bald",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-tired",
+    "label": "Theo · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "tired",
+    "tags": [
+      "adult",
+      "bald",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-skeptical",
+    "label": "Theo · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "skeptical",
+    "tags": [
+      "adult",
+      "bald",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-relieved",
+    "label": "Theo · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "relieved",
+    "tags": [
+      "adult",
+      "bald",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-12-inspired",
+    "label": "Theo · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-12",
+    "emotion": "inspired",
+    "tags": [
+      "adult",
+      "bald",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-neutral",
+    "label": "Iris · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "neutral",
+    "tags": [
+      "young",
+      "short",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-happy",
+    "label": "Iris · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "happy",
+    "tags": [
+      "young",
+      "short",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-curious",
+    "label": "Iris · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "curious",
+    "tags": [
+      "young",
+      "short",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-worried",
+    "label": "Iris · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "worried",
+    "tags": [
+      "young",
+      "short",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-sad",
+    "label": "Iris · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "sad",
+    "tags": [
+      "young",
+      "short",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-angry",
+    "label": "Iris · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "angry",
+    "tags": [
+      "young",
+      "short",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-surprised",
+    "label": "Iris · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "surprised",
+    "tags": [
+      "young",
+      "short",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-determined",
+    "label": "Iris · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "determined",
+    "tags": [
+      "young",
+      "short",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-tired",
+    "label": "Iris · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "tired",
+    "tags": [
+      "young",
+      "short",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-skeptical",
+    "label": "Iris · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "skeptical",
+    "tags": [
+      "young",
+      "short",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-relieved",
+    "label": "Iris · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "relieved",
+    "tags": [
+      "young",
+      "short",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-13-inspired",
+    "label": "Iris · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-13",
+    "emotion": "inspired",
+    "tags": [
+      "young",
+      "short",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-neutral",
+    "label": "Alex · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "neutral",
+    "tags": [
+      "young",
+      "bob",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-happy",
+    "label": "Alex · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "happy",
+    "tags": [
+      "young",
+      "bob",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-curious",
+    "label": "Alex · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "curious",
+    "tags": [
+      "young",
+      "bob",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-worried",
+    "label": "Alex · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "worried",
+    "tags": [
+      "young",
+      "bob",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-sad",
+    "label": "Alex · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "sad",
+    "tags": [
+      "young",
+      "bob",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-angry",
+    "label": "Alex · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "angry",
+    "tags": [
+      "young",
+      "bob",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-surprised",
+    "label": "Alex · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "surprised",
+    "tags": [
+      "young",
+      "bob",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-determined",
+    "label": "Alex · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "determined",
+    "tags": [
+      "young",
+      "bob",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-tired",
+    "label": "Alex · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "tired",
+    "tags": [
+      "young",
+      "bob",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-skeptical",
+    "label": "Alex · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "skeptical",
+    "tags": [
+      "young",
+      "bob",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-relieved",
+    "label": "Alex · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "relieved",
+    "tags": [
+      "young",
+      "bob",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-14-inspired",
+    "label": "Alex · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-14",
+    "emotion": "inspired",
+    "tags": [
+      "young",
+      "bob",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-neutral",
+    "label": "Yara · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "neutral",
+    "tags": [
+      "young",
+      "curls",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-happy",
+    "label": "Yara · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "happy",
+    "tags": [
+      "young",
+      "curls",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-curious",
+    "label": "Yara · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "curious",
+    "tags": [
+      "young",
+      "curls",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-worried",
+    "label": "Yara · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "worried",
+    "tags": [
+      "young",
+      "curls",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-sad",
+    "label": "Yara · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "sad",
+    "tags": [
+      "young",
+      "curls",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-angry",
+    "label": "Yara · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "angry",
+    "tags": [
+      "young",
+      "curls",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-surprised",
+    "label": "Yara · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "surprised",
+    "tags": [
+      "young",
+      "curls",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-determined",
+    "label": "Yara · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "determined",
+    "tags": [
+      "young",
+      "curls",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-tired",
+    "label": "Yara · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "tired",
+    "tags": [
+      "young",
+      "curls",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-skeptical",
+    "label": "Yara · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "skeptical",
+    "tags": [
+      "young",
+      "curls",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-relieved",
+    "label": "Yara · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "relieved",
+    "tags": [
+      "young",
+      "curls",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-15-inspired",
+    "label": "Yara · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-15",
+    "emotion": "inspired",
+    "tags": [
+      "young",
+      "curls",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-neutral",
+    "label": "Daniel · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "neutral",
+    "tags": [
+      "young",
+      "bun",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-happy",
+    "label": "Daniel · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "happy",
+    "tags": [
+      "young",
+      "bun",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-curious",
+    "label": "Daniel · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "curious",
+    "tags": [
+      "young",
+      "bun",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-worried",
+    "label": "Daniel · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "worried",
+    "tags": [
+      "young",
+      "bun",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-sad",
+    "label": "Daniel · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "sad",
+    "tags": [
+      "young",
+      "bun",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-angry",
+    "label": "Daniel · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "angry",
+    "tags": [
+      "young",
+      "bun",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-surprised",
+    "label": "Daniel · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "surprised",
+    "tags": [
+      "young",
+      "bun",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-determined",
+    "label": "Daniel · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "determined",
+    "tags": [
+      "young",
+      "bun",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-tired",
+    "label": "Daniel · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "tired",
+    "tags": [
+      "young",
+      "bun",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-skeptical",
+    "label": "Daniel · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "skeptical",
+    "tags": [
+      "young",
+      "bun",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-relieved",
+    "label": "Daniel · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "relieved",
+    "tags": [
+      "young",
+      "bun",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-16-inspired",
+    "label": "Daniel · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-16",
+    "emotion": "inspired",
+    "tags": [
+      "young",
+      "bun",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-neutral",
+    "label": "Ana · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "neutral",
+    "tags": [
+      "young",
+      "long",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-happy",
+    "label": "Ana · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "happy",
+    "tags": [
+      "young",
+      "long",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-curious",
+    "label": "Ana · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "curious",
+    "tags": [
+      "young",
+      "long",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-worried",
+    "label": "Ana · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "worried",
+    "tags": [
+      "young",
+      "long",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-sad",
+    "label": "Ana · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "sad",
+    "tags": [
+      "young",
+      "long",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-angry",
+    "label": "Ana · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "angry",
+    "tags": [
+      "young",
+      "long",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-surprised",
+    "label": "Ana · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "surprised",
+    "tags": [
+      "young",
+      "long",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-determined",
+    "label": "Ana · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "determined",
+    "tags": [
+      "young",
+      "long",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-tired",
+    "label": "Ana · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "tired",
+    "tags": [
+      "young",
+      "long",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-skeptical",
+    "label": "Ana · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "skeptical",
+    "tags": [
+      "young",
+      "long",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-relieved",
+    "label": "Ana · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "relieved",
+    "tags": [
+      "young",
+      "long",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-17-inspired",
+    "label": "Ana · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-17",
+    "emotion": "inspired",
+    "tags": [
+      "young",
+      "long",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-neutral",
+    "label": "Niko · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "neutral",
+    "tags": [
+      "young",
+      "bald",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-happy",
+    "label": "Niko · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "happy",
+    "tags": [
+      "young",
+      "bald",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-curious",
+    "label": "Niko · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "curious",
+    "tags": [
+      "young",
+      "bald",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-worried",
+    "label": "Niko · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "worried",
+    "tags": [
+      "young",
+      "bald",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-sad",
+    "label": "Niko · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "sad",
+    "tags": [
+      "young",
+      "bald",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-angry",
+    "label": "Niko · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "angry",
+    "tags": [
+      "young",
+      "bald",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-surprised",
+    "label": "Niko · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "surprised",
+    "tags": [
+      "young",
+      "bald",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-determined",
+    "label": "Niko · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "determined",
+    "tags": [
+      "young",
+      "bald",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-tired",
+    "label": "Niko · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "tired",
+    "tags": [
+      "young",
+      "bald",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-skeptical",
+    "label": "Niko · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "skeptical",
+    "tags": [
+      "young",
+      "bald",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-relieved",
+    "label": "Niko · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "relieved",
+    "tags": [
+      "young",
+      "bald",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-18-inspired",
+    "label": "Niko · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-18",
+    "emotion": "inspired",
+    "tags": [
+      "young",
+      "bald",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-neutral",
+    "label": "Lea · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "neutral",
+    "tags": [
+      "older",
+      "short",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-happy",
+    "label": "Lea · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "happy",
+    "tags": [
+      "older",
+      "short",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-curious",
+    "label": "Lea · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "curious",
+    "tags": [
+      "older",
+      "short",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-worried",
+    "label": "Lea · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "worried",
+    "tags": [
+      "older",
+      "short",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-sad",
+    "label": "Lea · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "sad",
+    "tags": [
+      "older",
+      "short",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-angry",
+    "label": "Lea · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "angry",
+    "tags": [
+      "older",
+      "short",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-surprised",
+    "label": "Lea · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "surprised",
+    "tags": [
+      "older",
+      "short",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-determined",
+    "label": "Lea · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "determined",
+    "tags": [
+      "older",
+      "short",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-tired",
+    "label": "Lea · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "tired",
+    "tags": [
+      "older",
+      "short",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-skeptical",
+    "label": "Lea · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "skeptical",
+    "tags": [
+      "older",
+      "short",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-relieved",
+    "label": "Lea · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "relieved",
+    "tags": [
+      "older",
+      "short",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-19-inspired",
+    "label": "Lea · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-19",
+    "emotion": "inspired",
+    "tags": [
+      "older",
+      "short",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-neutral",
+    "label": "Omar · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "neutral",
+    "tags": [
+      "older",
+      "bob",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-happy",
+    "label": "Omar · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "happy",
+    "tags": [
+      "older",
+      "bob",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-curious",
+    "label": "Omar · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "curious",
+    "tags": [
+      "older",
+      "bob",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-worried",
+    "label": "Omar · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "worried",
+    "tags": [
+      "older",
+      "bob",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-sad",
+    "label": "Omar · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "sad",
+    "tags": [
+      "older",
+      "bob",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-angry",
+    "label": "Omar · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "angry",
+    "tags": [
+      "older",
+      "bob",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-surprised",
+    "label": "Omar · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "surprised",
+    "tags": [
+      "older",
+      "bob",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-determined",
+    "label": "Omar · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "determined",
+    "tags": [
+      "older",
+      "bob",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-tired",
+    "label": "Omar · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "tired",
+    "tags": [
+      "older",
+      "bob",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-skeptical",
+    "label": "Omar · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "skeptical",
+    "tags": [
+      "older",
+      "bob",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-relieved",
+    "label": "Omar · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "relieved",
+    "tags": [
+      "older",
+      "bob",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-20-inspired",
+    "label": "Omar · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-20",
+    "emotion": "inspired",
+    "tags": [
+      "older",
+      "bob",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-neutral",
+    "label": "Eli · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "neutral",
+    "tags": [
+      "older",
+      "curls",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-happy",
+    "label": "Eli · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "happy",
+    "tags": [
+      "older",
+      "curls",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-curious",
+    "label": "Eli · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "curious",
+    "tags": [
+      "older",
+      "curls",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-worried",
+    "label": "Eli · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "worried",
+    "tags": [
+      "older",
+      "curls",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-sad",
+    "label": "Eli · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "sad",
+    "tags": [
+      "older",
+      "curls",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-angry",
+    "label": "Eli · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "angry",
+    "tags": [
+      "older",
+      "curls",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-surprised",
+    "label": "Eli · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "surprised",
+    "tags": [
+      "older",
+      "curls",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-determined",
+    "label": "Eli · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "determined",
+    "tags": [
+      "older",
+      "curls",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-tired",
+    "label": "Eli · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "tired",
+    "tags": [
+      "older",
+      "curls",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-skeptical",
+    "label": "Eli · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "skeptical",
+    "tags": [
+      "older",
+      "curls",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-relieved",
+    "label": "Eli · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "relieved",
+    "tags": [
+      "older",
+      "curls",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-21-inspired",
+    "label": "Eli · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-21",
+    "emotion": "inspired",
+    "tags": [
+      "older",
+      "curls",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-neutral",
+    "label": "Maya · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "neutral",
+    "tags": [
+      "older",
+      "bun",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-happy",
+    "label": "Maya · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "happy",
+    "tags": [
+      "older",
+      "bun",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-curious",
+    "label": "Maya · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "curious",
+    "tags": [
+      "older",
+      "bun",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-worried",
+    "label": "Maya · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "worried",
+    "tags": [
+      "older",
+      "bun",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-sad",
+    "label": "Maya · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "sad",
+    "tags": [
+      "older",
+      "bun",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-angry",
+    "label": "Maya · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "angry",
+    "tags": [
+      "older",
+      "bun",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-surprised",
+    "label": "Maya · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "surprised",
+    "tags": [
+      "older",
+      "bun",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-determined",
+    "label": "Maya · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "determined",
+    "tags": [
+      "older",
+      "bun",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-tired",
+    "label": "Maya · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "tired",
+    "tags": [
+      "older",
+      "bun",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-skeptical",
+    "label": "Maya · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "skeptical",
+    "tags": [
+      "older",
+      "bun",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-relieved",
+    "label": "Maya · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "relieved",
+    "tags": [
+      "older",
+      "bun",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-22-inspired",
+    "label": "Maya · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-22",
+    "emotion": "inspired",
+    "tags": [
+      "older",
+      "bun",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-neutral",
+    "label": "Ari · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "neutral",
+    "tags": [
+      "older",
+      "long",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-happy",
+    "label": "Ari · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "happy",
+    "tags": [
+      "older",
+      "long",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-curious",
+    "label": "Ari · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "curious",
+    "tags": [
+      "older",
+      "long",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-worried",
+    "label": "Ari · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "worried",
+    "tags": [
+      "older",
+      "long",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-sad",
+    "label": "Ari · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "sad",
+    "tags": [
+      "older",
+      "long",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-angry",
+    "label": "Ari · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "angry",
+    "tags": [
+      "older",
+      "long",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-surprised",
+    "label": "Ari · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "surprised",
+    "tags": [
+      "older",
+      "long",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-determined",
+    "label": "Ari · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "determined",
+    "tags": [
+      "older",
+      "long",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-tired",
+    "label": "Ari · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "tired",
+    "tags": [
+      "older",
+      "long",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-skeptical",
+    "label": "Ari · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "skeptical",
+    "tags": [
+      "older",
+      "long",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-relieved",
+    "label": "Ari · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "relieved",
+    "tags": [
+      "older",
+      "long",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-23-inspired",
+    "label": "Ari · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-23",
+    "emotion": "inspired",
+    "tags": [
+      "older",
+      "long",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-neutral",
+    "label": "Sage · neutral",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "neutral",
+    "tags": [
+      "older",
+      "bald",
+      "neutral"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-happy",
+    "label": "Sage · happy",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "happy",
+    "tags": [
+      "older",
+      "bald",
+      "happy"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-curious",
+    "label": "Sage · curious",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "curious",
+    "tags": [
+      "older",
+      "bald",
+      "curious"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-worried",
+    "label": "Sage · worried",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "worried",
+    "tags": [
+      "older",
+      "bald",
+      "worried"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-sad",
+    "label": "Sage · sad",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "sad",
+    "tags": [
+      "older",
+      "bald",
+      "sad"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-angry",
+    "label": "Sage · angry",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "angry",
+    "tags": [
+      "older",
+      "bald",
+      "angry"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-surprised",
+    "label": "Sage · surprised",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "surprised",
+    "tags": [
+      "older",
+      "bald",
+      "surprised"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-determined",
+    "label": "Sage · determined",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "determined",
+    "tags": [
+      "older",
+      "bald",
+      "determined"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-tired",
+    "label": "Sage · tired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "tired",
+    "tags": [
+      "older",
+      "bald",
+      "tired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-skeptical",
+    "label": "Sage · skeptical",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "skeptical",
+    "tags": [
+      "older",
+      "bald",
+      "skeptical"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-relieved",
+    "label": "Sage · relieved",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "relieved",
+    "tags": [
+      "older",
+      "bald",
+      "relieved"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  },
+  {
+    "id": "person-24-inspired",
+    "label": "Sage · inspired",
+    "kind": "character-variant",
+    "category": "people",
+    "identity": "person-24",
+    "emotion": "inspired",
+    "tags": [
+      "older",
+      "bald",
+      "inspired"
+    ],
+    "bounds": [
+      -95,
+      -315,
+      190,
+      340
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "title": "GAMP Specs",
+  "family": "anthropic",
+  "summary": "Creates README, AGENTS guidance, HTML documentation, and design specifications, incorporating an available node-coding-style default and dependency policy while preserving explicit project choices.",
+  "aliases": [
+    "gamp-structure",
+    "docs-builder",
+    "gamp-specs"
+  ],
+  "dependsOn": [
+    "detect-main-behaviors"
+  ],
+  "outputs": [
+    "README.md",
+    "AGENTS.md",
+    "fileSizesCheck.sh",
+    "docs/index.html",
+    "docs/specs/",
+    "docs/specs/matrix.md",
+    "docs/specs/DS003-main-behavior.md"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "examples/skillCatalog.mjs",
+    "references/diagrams-guidelines.md",
+    "references/documentation-writing-guidelines.md",
+    "references/docs-structure.md",
+    "references/specs-guidelines.md",
+    "references/technical-docs-guidelines.md",
+    "scripts/generate_specs_matrix.mjs",
+    "scripts/verify_docs_links.mjs",
+    "scripts/verify_static_site.js",
+    "assets/specsLoader.html",
+    "assets/fileSizesCheck.sh"
+  ],
+  "selfContained": true
+}

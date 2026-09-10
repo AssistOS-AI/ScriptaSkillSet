@@ -1,0 +1,56 @@
+WEBVTT
+
+00:00:00.800 --> 00:00:11.519
+Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.
+
+00:00:11.699 --> 00:00:22.428
+Într-un proces important, calitatea textului nu rezolvă singură problema controlului. Trebuie să putem pune întrebări despre muncă.
+
+00:00:22.608 --> 00:00:33.317
+Cum transformăm un rezultat greu de inspectat într-un proces pe care oamenii îl pot urmări și corecta?
+
+00:00:34.517 --> 00:00:44.891
+În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.
+
+00:00:45.071 --> 00:00:55.455
+Fiecare rezultat păstrează o legătură cu intrările sale. Putem vedea unde a apărut o afirmație și ce o susține.
+
+00:00:55.635 --> 00:01:06.031
+O urmă explicită face procesul mai inspectabil. Nu dovedește, prin simpla ei existență, că fiecare pas a fost corect.
+
+00:01:07.231 --> 00:01:18.947
+Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.
+
+00:01:19.127 --> 00:01:30.834
+Un cititor poate verifica dacă acel pasaj spune într-adevăr ceea ce pretinde analiza. Poate observa o omisiune sau o interpretare prea puternică.
+
+00:01:31.014 --> 00:01:42.733
+Legătura nu certifică adevărul sursei. Face doar posibilă o verificare care altfel ar fi mult mai dificilă.
+
+00:01:43.933 --> 00:01:53.983
+Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.
+
+00:01:54.163 --> 00:02:04.223
+Un buton de aprobare nu este suficient. Alegerea trebuie să producă o schimbare observabilă în ceea ce se întâmplă mai departe.
+
+00:02:04.403 --> 00:02:14.460
+Un sistem controlabil face vizibile aceste puncte de decizie și păstrează contextul în care persoana a intervenit.
+
+00:02:15.660 --> 00:02:25.045
+Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.
+
+00:02:25.225 --> 00:02:34.600
+Avem nevoie de teste care introduc erori și verifică dacă ele sunt detectate, explicate și corectate la timp.
+
+00:02:34.780 --> 00:02:44.167
+Schema de aici ilustrează un principiu de proiectare. Nu este un rezultat experimental și nu promite eliminarea erorilor.
+
+00:02:45.367 --> 00:02:56.425
+Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.
+
+00:02:56.605 --> 00:03:07.665
+De unde vine afirmația? Ce s-a schimbat pe parcurs? Unde poate interveni un om?
+
+00:03:07.845 --> 00:03:18.886
+Valoarea practică apare atunci când răspunsurile la aceste întrebări pot fi testate în sarcini concrete, nu doar desenate într-o arhitectură.
+

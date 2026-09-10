@@ -1,0 +1,180 @@
+{
+  "checkedAt": "2026-09-10",
+  "notice": "Published offers, not an entitlement or live quota check. No automatic billing or provider fallback.",
+  "providers": [
+    {
+      "id": "gemini",
+      "name": "Gemini Developer API",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "Free input/output for Gemini Flash TTS; account/model rate limits apply. Pro TTS is not free.",
+      "requiredEnvironment": [
+        "GEMINI_API_KEY"
+      ],
+      "defaultModel": "gemini-2.5-flash-preview-tts",
+      "defaultVoice": "Kore",
+      "control": "natural-language-instructions",
+      "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+      "apiUrl": "https://ai.google.dev/gemini-api/docs/speech-generation",
+      "accountUrl": "https://aistudio.google.com/apikey",
+      "cautions": "Account/region eligibility applies. Review applicable data-use terms; do not submit sensitive material to a demo account.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "groq",
+      "name": "Groq Orpheus",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "Free Plan: Orpheus 10 requests/minute, 100/day, plus token limits; 200 input characters/request.",
+      "requiredEnvironment": [
+        "GROQ_API_KEY"
+      ],
+      "defaultModel": "canopylabs/orpheus-v1-english",
+      "defaultVoice": "troy",
+      "control": "short-audio-tags",
+      "pricingUrl": "https://console.groq.com/docs/rate-limits",
+      "apiUrl": "https://console.groq.com/docs/text-to-speech/orpheus",
+      "accountUrl": "https://console.groq.com/keys",
+      "cautions": "Only six English voices. Tags count towards the 200-character cap. Quotas can differ by account.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "hume",
+      "name": "Hume Octave",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "Free: 10,000 TTS characters/month and 15 requests/minute.",
+      "requiredEnvironment": [
+        "HUME_API_KEY"
+      ],
+      "defaultModel": "1",
+      "defaultVoice": "Ava Song",
+      "control": "natural-language-instructions",
+      "pricingUrl": "https://www.hume.ai/pricing",
+      "apiUrl": "https://dev.hume.ai/docs/text-to-speech-tts/acting-instructions",
+      "accountUrl": "https://app.hume.ai/",
+      "cautions": "Octave 1 is selected for acting instructions. Octave 2 description support is not yet documented as available. Use an Octave-1-compatible voice; check plan licensing.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "cartesia",
+      "name": "Cartesia Sonic",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "Free: 20,000 credits/month; consumption depends on the model.",
+      "requiredEnvironment": [
+        "CARTESIA_API_KEY"
+      ],
+      "defaultModel": "sonic-3.6",
+      "defaultVoice": "db6b0ed5-d5d3-463d-ae85-518a07d3c2b4",
+      "control": "enumerated-emotion-and-speed",
+      "pricingUrl": "https://www.cartesia.ai/pricing",
+      "apiUrl": "https://docs.cartesia.ai/api-reference/tts/bytes",
+      "accountUrl": "https://play.cartesia.ai/keys",
+      "cautions": "Free is for non-commercial testing; pricing places commercial use on paid plans. Emotion control is guidance, not exact acting.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "elevenlabs",
+      "name": "ElevenLabs",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "Free API allowance: 10,000 characters for v3; model-specific allowances and restrictions apply.",
+      "requiredEnvironment": [
+        "ELEVENLABS_API_KEY",
+        "ELEVENLABS_VOICE_ID"
+      ],
+      "defaultModel": "eleven_v3",
+      "defaultVoice": null,
+      "control": "explicit-audio-tags-and-settings",
+      "pricingUrl": "https://elevenlabs.io/pricing/api",
+      "apiUrl": "https://elevenlabs.io/docs/api-reference/text-to-speech/convert",
+      "accountUrl": "https://elevenlabs.io/app/settings/api-keys",
+      "cautions": "Review free-plan attribution and commercial-use restrictions. Some voices/models/formats are plan restricted.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "azure",
+      "name": "Azure Speech",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "F0 resource: 500,000 Neural TTS characters/month.",
+      "requiredEnvironment": [
+        "AZURE_SPEECH_KEY",
+        "AZURE_SPEECH_REGION"
+      ],
+      "defaultModel": "azure-neural",
+      "defaultVoice": "en-US-JennyNeural",
+      "control": "ssml-style-and-prosody",
+      "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/speech/",
+      "apiUrl": "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/rest-text-to-speech",
+      "accountUrl": "https://portal.azure.com/",
+      "cautions": "Select F0 explicitly; S0 is a different billing tier. Styles depend on voice and region. Resource/account eligibility applies.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare Workers AI",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "10,000 Neurons/day shared across Workers AI models; resets at 00:00 UTC.",
+      "requiredEnvironment": [
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID"
+      ],
+      "defaultModel": "@cf/deepgram/aura-1",
+      "defaultVoice": "asteria",
+      "control": "voice-only",
+      "pricingUrl": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "apiUrl": "https://developers.cloudflare.com/workers-ai/models/aura-1/",
+      "accountUrl": "https://dash.cloudflare.com/",
+      "cautions": "Direct REST; no Worker deployment required. Free plan stops at quota, while paid plans can charge overage. No free-form acting control.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "google",
+      "name": "Google Cloud Text-to-Speech",
+      "execution": "cloud",
+      "freeKind": "recurring-billing-required",
+      "offer": "Monthly free usage: Neural2 1M characters; Standard/WaveNet pricing lists 4M. Default here is Neural2.",
+      "requiredEnvironment": [
+        "GOOGLE_TTS_API_KEY"
+      ],
+      "defaultModel": "neural2",
+      "defaultVoice": "en-US-Neural2-F",
+      "control": "voice-and-speed-only",
+      "pricingUrl": "https://cloud.google.com/text-to-speech/pricing",
+      "apiUrl": "https://docs.cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize",
+      "accountUrl": "https://console.cloud.google.com/apis/credentials",
+      "cautions": "Billing and API enablement required; overages may auto-charge. Distinct from Gemini Developer API. OAuth access token is supported as an alternative; Chirp/Gemini Cloud voices are not selected by this adapter.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    },
+    {
+      "id": "voicerss",
+      "name": "Voice RSS",
+      "execution": "cloud",
+      "freeKind": "recurring",
+      "offer": "Free: 350 requests/day; text limit 100 KB/request; this skill uses much shorter clips.",
+      "requiredEnvironment": [
+        "VOICERSS_API_KEY"
+      ],
+      "defaultModel": "voicerss",
+      "defaultVoice": "Linda",
+      "control": "voice-and-rate-only",
+      "pricingUrl": "https://www.voicerss.org/pricing/",
+      "apiUrl": "https://www.voicerss.org/api/",
+      "accountUrl": "https://www.voicerss.org/registration.aspx",
+      "cautions": "Basic narration/preview, not theatrical emotional control. SSML is not part of the free plan; adapter sends plain text.",
+      "checkedAt": "2026-09-10",
+      "liveTested": false
+    }
+  ]
+}

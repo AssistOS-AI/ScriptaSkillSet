@@ -1,0 +1,2281 @@
+{
+  "format": "SHF-Direction",
+  "version": "0.4",
+  "id": "mars-library",
+  "title": "Ultima bibliotecă de pe Marte",
+  "language": "ro",
+  "genreLabel": "SF • poveste",
+  "description": "O arhivă începe să imagineze lumi. Cine decide ce facem cu ele?",
+  "stage": {
+    "width": 1200,
+    "height": 760
+  },
+  "durationMs": 405000,
+  "visualIdentity": "illustrated-theatre",
+  "assets": {},
+  "editorial": {
+    "mode": "visual-essence",
+    "disclosure": "Poveste originală, creată pentru această demonstrație. Nu este rezumatul unui roman publicat. Reprezentările și dialogul narativ sunt ficționale.",
+    "novelty": {
+      "kind": "story-premise",
+      "claim": "O bibliotecă devine un simulator al posibilităților, nu un oracol.",
+      "verification": "not-assessed-against-external-literature"
+    },
+    "spoilers": "original-demo; premise and thematic arc disclosed",
+    "qualityStatus": "authored-demonstration-not-an-automatic-book-adaptation"
+  },
+  "sources": [
+    {
+      "id": "src-mars",
+      "kind": "original-demo-text",
+      "text": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert. Deasupra, orașele încearcă să supraviețuiască. Dedesubt, cineva păstrează vie amintirea unor lumi care nu mai există. Dar ce se întâmplă când o bibliotecă nu se mai mulțumește să păstreze trecutul și începe să imagineze viitorul?"
+    },
+    {
+      "id": "src-archivist",
+      "kind": "original-demo-text",
+      "text": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut. Pentru autorități, acestea sunt obiecte de inventar. Pentru Mira, fiecare fragment este urma unei vieți care a contat. Munca ei nu pare eroică. Și totuși, fără cineva care să aibă grijă de memorie, o civilizație poate uita cine a fost."
+    },
+    {
+      "id": "src-signal",
+      "kind": "original-demo-text",
+      "text": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă. Mira îl ascultă. În locul unei alarme fără sens, ea recunoaște o ordine: fragmente care par să se caute unele pe altele. Camera nu ar trebui deschisă. Dar semnalul pare să răspundă chiar cărților pe care Mira le-a citit în acea zi."
+    },
+    {
+      "id": "src-connections",
+      "kind": "original-demo-text",
+      "text": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții. Biblioteca nu repetă aceeași propoziție. Ea pune fragmentele în relații noi, ca și cum ar căuta o întrebare comună. Arhiva nu mai pare o colecție de obiecte izolate. Devine o rețea de posibilități, iar Mira începe să-i urmărească firele."
+    },
+    {
+      "id": "src-simulation",
+      "kind": "original-demo-text",
+      "text": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă. Mira privește cum din povești apar piețe, poduri și oameni. Nu sunt amintiri exacte, ci lumi construite din fragmentele memoriei. Biblioteca nu mai este doar un loc care păstrează vieți. Devine un loc în care se încearcă alte feluri de a trăi."
+    },
+    {
+      "id": "src-branches",
+      "kind": "original-demo-text",
+      "text": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva. Într-o lume, orașele învață să împartă resursele. În alta, frica ridică ziduri. Aceleași fragmente pot conduce spre istorii diferite. Aceste imagini nu sunt profeții. Sunt întrebări făcute vizibile: ce am fi putut construi și ce am mai putea schimba?"
+    },
+    {
+      "id": "src-uncertainty",
+      "kind": "original-demo-text",
+      "text": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile. Cărțile sunt incomplete. Unele spun adevărul, altele ascund, exagerează sau visează. Frumusețea unei lumi nu dovedește că ea a existat. Dacă oamenii confundă posibilitatea cu certitudinea, biblioteca poate deveni un nou oracol. Mira trebuie să învețe și când să nu o creadă."
+    },
+    {
+      "id": "src-authority",
+      "kind": "original-demo-text",
+      "text": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare. Ordinul este simplu: camera trebuie închisă. Oamenii nu ar trebui să compare lumea în care trăiesc cu lumi organizate altfel. Conflictul nu mai este între om și mașină. Este între cei care vor să păstreze ordinea și cei care îndrăznesc să o pună sub semnul întrebării."
+    },
+    {
+      "id": "src-decision",
+      "kind": "original-demo-text",
+      "text": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități. Dacă o lasă deschisă fără explicații, riscă să transforme ficțiunea în autoritate. Nici tăcerea, nici încrederea oarbă nu sunt suficiente. Mira începe să caute altceva: un mod în care biblioteca poate fi văzută, discutată și contrazisă, fără să decidă în locul oamenilor."
+    },
+    {
+      "id": "src-distinction",
+      "kind": "original-demo-text",
+      "text": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit. În stânga rămâne arhiva: ceea ce poate fi consultat. În dreapta, posibilitatea: ceea ce poate fi discutat, schimbat sau respins. Această separare nu face simularea infailibilă. Dar le dă oamenilor un loc din care să înceapă întrebările și dezacordul."
+    },
+    {
+      "id": "src-shared",
+      "kind": "original-demo-text",
+      "text": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții. Biblioteca nu trebuie să conducă orașul. Poate să-l ajute să se vadă din afară și să compare alegerile pe care le are. Decizia rămâne a celor care vor trăi consecințele. Mașina oferă posibilități; oamenii au responsabilitatea de a le judeca."
+    },
+    {
+      "id": "src-question",
+      "kind": "original-demo-text",
+      "text": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări. Aceasta este o poveste despre memorie care devine posibilitate. Și despre grija de a nu lăsa posibilitatea să se transforme în poruncă. Dacă toate cărțile noastre ar putea imagina împreună o lume nouă, ce am vrea să păstrăm din lumea de acum?"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "mars",
+      "title": "O bibliotecă sub praful lui Marte",
+      "emotionLabel": "uimire",
+      "alt": "O bibliotecă sub praful lui Marte. city, door, character, book",
+      "promise": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert.",
+      "durationMs": 33000,
+      "beats": [
+        {
+          "label": "O lume pierdută",
+          "text": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert.",
+          "startMs": 800,
+          "endMs": 11353,
+          "sourceRefs": [
+            "src-mars"
+          ],
+          "spokenEndMs": 10368,
+          "id": "mars-library-mars-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Un gest de grijă",
+          "text": "Deasupra, orașele încearcă să supraviețuiască. Dedesubt, cineva păstrează vie amintirea unor lumi care nu mai există.",
+          "startMs": 11533,
+          "endMs": 22087,
+          "sourceRefs": [
+            "src-mars"
+          ],
+          "spokenEndMs": 20395,
+          "id": "mars-library-mars-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Întrebarea poveștii",
+          "text": "Dar ce se întâmplă când o bibliotecă nu se mai mulțumește să păstreze trecutul și începe să imagineze viitorul?",
+          "startMs": 22267,
+          "endMs": 32820,
+          "sourceRefs": [
+            "src-mars"
+          ],
+          "spokenEndMs": 29898,
+          "id": "mars-library-mars-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "town",
+          "asset": "city",
+          "x": 920,
+          "y": 550,
+          "scale": 0.69,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "archive",
+          "asset": "door",
+          "x": 598,
+          "y": 615,
+          "scale": 1.08,
+          "options": {
+            "color": "$teal"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-curious",
+          "x": 309,
+          "y": 639,
+          "scale": 1.13,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "memory",
+          "asset": "book",
+          "x": 915,
+          "y": 661,
+          "scale": 0.45,
+          "options": {},
+          "meaning": "book"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "town",
+          "action": "city.grow",
+          "atMs": 1300,
+          "durationMs": 3000
+        },
+        {
+          "actor": "archive",
+          "action": "door.open",
+          "atMs": 11533,
+          "durationMs": 2200,
+          "cue": {
+            "beatId": "mars-library-mars-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 13733,
+          "durationMs": 800,
+          "target": "archive"
+        },
+        {
+          "actor": "memory",
+          "action": "book.open",
+          "atMs": 22267,
+          "durationMs": 1800,
+          "cue": {
+            "beatId": "mars-library-mars-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "mars"
+    },
+    {
+      "id": "archivist",
+      "title": "Mira păstrează ceea ce dispare",
+      "emotionLabel": "tandrețe",
+      "alt": "Mira păstrează ceea ce dispare. shelf, shelf, desk, character, book",
+      "promise": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut.",
+      "durationMs": 34000,
+      "beats": [
+        {
+          "label": "Personajul",
+          "text": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut.",
+          "startMs": 800,
+          "endMs": 11687,
+          "sourceRefs": [
+            "src-archivist"
+          ],
+          "spokenEndMs": 10825,
+          "id": "mars-library-archivist-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Lumea interioară",
+          "text": "Pentru autorități, acestea sunt obiecte de inventar. Pentru Mira, fiecare fragment este urma unei vieți care a contat.",
+          "startMs": 11867,
+          "endMs": 22753,
+          "sourceRefs": [
+            "src-archivist"
+          ],
+          "spokenEndMs": 20724,
+          "id": "mars-library-archivist-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Ce merită salvat",
+          "text": "Munca ei nu pare eroică. Și totuși, fără cineva care să aibă grijă de memorie, o civilizație poate uita cine a fost.",
+          "startMs": 22933,
+          "endMs": 33820,
+          "sourceRefs": [
+            "src-archivist"
+          ],
+          "spokenEndMs": 31728,
+          "id": "mars-library-archivist-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "shelfA",
+          "asset": "shelf",
+          "x": 231,
+          "y": 622,
+          "scale": 0.91,
+          "options": {},
+          "meaning": "shelf"
+        },
+        {
+          "id": "shelfB",
+          "asset": "shelf",
+          "x": 1002,
+          "y": 622,
+          "scale": 0.91,
+          "options": {},
+          "meaning": "shelf"
+        },
+        {
+          "id": "desk",
+          "asset": "desk",
+          "x": 700,
+          "y": 623,
+          "scale": 0.87,
+          "options": {},
+          "meaning": "desk"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-determined",
+          "x": 451,
+          "y": 641,
+          "scale": 1.13,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "memory",
+          "asset": "book",
+          "x": 708,
+          "y": 414,
+          "scale": 0.62,
+          "options": {},
+          "meaning": "book"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "memory",
+          "action": "book.open",
+          "atMs": 1900,
+          "durationMs": 1500
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 11867,
+          "durationMs": 800,
+          "target": "memory",
+          "cue": {
+            "beatId": "mars-library-archivist-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "memory",
+          "action": "book.turnPage",
+          "atMs": 14467,
+          "durationMs": 2300
+        },
+        {
+          "actor": "mira",
+          "action": "reach",
+          "atMs": 22933,
+          "durationMs": 1700,
+          "untilMs": 25633,
+          "cue": {
+            "beatId": "mars-library-archivist-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "signal",
+      "title": "Un mesaj din camera interzisă",
+      "emotionLabel": "mister",
+      "alt": "Un mesaj din camera interzisă. door, bulb, character, book",
+      "promise": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă.",
+      "durationMs": 31000,
+      "beats": [
+        {
+          "label": "Ruptura",
+          "text": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă.",
+          "startMs": 800,
+          "endMs": 10687,
+          "sourceRefs": [
+            "src-signal"
+          ],
+          "spokenEndMs": 9362,
+          "id": "mars-library-signal-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Atenția",
+          "text": "Mira îl ascultă. În locul unei alarme fără sens, ea recunoaște o ordine: fragmente care par să se caute unele pe altele.",
+          "startMs": 10867,
+          "endMs": 20753,
+          "sourceRefs": [
+            "src-signal"
+          ],
+          "spokenEndMs": 19838,
+          "id": "mars-library-signal-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Primul pas",
+          "text": "Camera nu ar trebui deschisă. Dar semnalul pare să răspundă chiar cărților pe care Mira le-a citit în acea zi.",
+          "startMs": 20933,
+          "endMs": 30820,
+          "sourceRefs": [
+            "src-signal"
+          ],
+          "spokenEndMs": 28533,
+          "id": "mars-library-signal-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "archive",
+          "asset": "door",
+          "x": 809,
+          "y": 621,
+          "scale": 1.12,
+          "options": {
+            "color": "$teal"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "signal",
+          "asset": "bulb",
+          "x": 809,
+          "y": 497,
+          "scale": 0.47,
+          "options": {},
+          "meaning": "bulb"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-surprised",
+          "x": 370,
+          "y": 642,
+          "scale": 1.22,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "memory",
+          "asset": "book",
+          "x": 546,
+          "y": 621,
+          "scale": 0.37,
+          "options": {},
+          "meaning": "book"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "signal",
+          "action": "appear",
+          "atMs": 1700,
+          "durationMs": 1300
+        },
+        {
+          "actor": "signal",
+          "action": "light.warm",
+          "atMs": 4000,
+          "durationMs": 3500
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 10867,
+          "durationMs": 850,
+          "target": "archive",
+          "up": true,
+          "cue": {
+            "beatId": "mars-library-signal-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 12867,
+          "durationMs": 2200,
+          "emotion": "surprised"
+        },
+        {
+          "actor": "archive",
+          "action": "door.open",
+          "atMs": 20933,
+          "durationMs": 2000,
+          "cue": {
+            "beatId": "mars-library-signal-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "connections",
+      "title": "Cărțile încep să se recunoască",
+      "emotionLabel": "descoperire",
+      "alt": "Cărțile încep să se recunoască. book, book, book, character",
+      "promise": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții.",
+      "durationMs": 30000,
+      "beats": [
+        {
+          "label": "Legături",
+          "text": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții.",
+          "startMs": 800,
+          "endMs": 10353,
+          "sourceRefs": [
+            "src-connections"
+          ],
+          "spokenEndMs": 9206,
+          "id": "mars-library-connections-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Nu doar căutare",
+          "text": "Biblioteca nu repetă aceeași propoziție. Ea pune fragmentele în relații noi, ca și cum ar căuta o întrebare comună.",
+          "startMs": 10533,
+          "endMs": 20087,
+          "sourceRefs": [
+            "src-connections"
+          ],
+          "spokenEndMs": 19298,
+          "id": "mars-library-connections-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Schimbarea",
+          "text": "Arhiva nu mai pare o colecție de obiecte izolate. Devine o rețea de posibilități, iar Mira începe să-i urmărească firele.",
+          "startMs": 20267,
+          "endMs": 29820,
+          "sourceRefs": [
+            "src-connections"
+          ],
+          "spokenEndMs": 28898,
+          "id": "mars-library-connections-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "legend",
+          "asset": "book",
+          "x": 277,
+          "y": 528,
+          "scale": 0.68,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "treatise",
+          "asset": "book",
+          "x": 600,
+          "y": 398,
+          "scale": 0.65,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "journal",
+          "asset": "book",
+          "x": 925,
+          "y": 528,
+          "scale": 0.68,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-worried",
+          "x": 599,
+          "y": 678,
+          "scale": 0.71,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "legend",
+          "action": "book.open",
+          "atMs": 1000,
+          "durationMs": 1500
+        },
+        {
+          "actor": "treatise",
+          "action": "book.open",
+          "atMs": 1900,
+          "durationMs": 1500
+        },
+        {
+          "actor": "journal",
+          "action": "book.open",
+          "atMs": 2800,
+          "durationMs": 1500
+        },
+        {
+          "actor": "link1",
+          "action": "connection.draw",
+          "atMs": 10533,
+          "durationMs": 2200,
+          "cue": {
+            "beatId": "mars-library-connections-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "link2",
+          "action": "connection.draw",
+          "atMs": 13733,
+          "durationMs": 2200
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 20267,
+          "durationMs": 800,
+          "target": "journal",
+          "up": true,
+          "cue": {
+            "beatId": "mars-library-connections-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "link1",
+          "from": {
+            "node": "legend",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "treatise",
+            "anchor": "left"
+          },
+          "meaning": "Une légende à un traité",
+          "bend": -25
+        },
+        {
+          "id": "link2",
+          "from": {
+            "node": "treatise",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "journal",
+            "anchor": "left"
+          },
+          "meaning": "Un traité à un journal",
+          "bend": -25
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "simulation",
+      "title": "O lume se ridică dintre pagini",
+      "emotionLabel": "revelație",
+      "alt": "O lume se ridică dintre pagini. city, book, character",
+      "promise": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă.",
+      "durationMs": 33000,
+      "beats": [
+        {
+          "label": "Mecanismul ficțional",
+          "text": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă.",
+          "startMs": 800,
+          "endMs": 11353,
+          "sourceRefs": [
+            "src-simulation"
+          ],
+          "spokenEndMs": 10255,
+          "id": "mars-library-simulation-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Imaginea centrală",
+          "text": "Mira privește cum din povești apar piețe, poduri și oameni. Nu sunt amintiri exacte, ci lumi construite din fragmentele memoriei.",
+          "startMs": 11533,
+          "endMs": 22087,
+          "sourceRefs": [
+            "src-simulation"
+          ],
+          "spokenEndMs": 21205,
+          "id": "mars-library-simulation-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Noutatea poveștii",
+          "text": "Biblioteca nu mai este doar un loc care păstrează vieți. Devine un loc în care se încearcă alte feluri de a trăi.",
+          "startMs": 22267,
+          "endMs": 32820,
+          "sourceRefs": [
+            "src-simulation"
+          ],
+          "spokenEndMs": 29992,
+          "id": "mars-library-simulation-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "town",
+          "asset": "city",
+          "x": 771,
+          "y": 548,
+          "scale": 0.87,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "memory",
+          "asset": "book",
+          "x": 770,
+          "y": 550,
+          "scale": 1.11,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-inspired",
+          "x": 300,
+          "y": 641,
+          "scale": 1.22,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "memory",
+          "action": "book.open",
+          "atMs": 1200,
+          "durationMs": 2000
+        },
+        {
+          "actor": "town",
+          "action": "city.grow",
+          "atMs": 11533,
+          "durationMs": 4600,
+          "cue": {
+            "beatId": "mars-library-simulation-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 13833,
+          "durationMs": 800,
+          "target": "town",
+          "up": true
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 22267,
+          "durationMs": 2400,
+          "emotion": "surprised",
+          "cue": {
+            "beatId": "mars-library-simulation-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "branches",
+      "title": "Viitorurile pe care nu le-am ales",
+      "emotionLabel": "posibilitate",
+      "alt": "Viitorurile pe care nu le-am ales. tree, city, city, book, Împreună, Sub control",
+      "promise": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva.",
+      "durationMs": 35000,
+      "beats": [
+        {
+          "label": "O surpriză",
+          "text": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva.",
+          "startMs": 800,
+          "endMs": 12020,
+          "sourceRefs": [
+            "src-branches"
+          ],
+          "spokenEndMs": 7774,
+          "id": "mars-library-branches-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Alternative",
+          "text": "Într-o lume, orașele învață să împartă resursele. În alta, frica ridică ziduri. Aceleași fragmente pot conduce spre istorii diferite.",
+          "startMs": 12200,
+          "endMs": 23420,
+          "sourceRefs": [
+            "src-branches"
+          ],
+          "spokenEndMs": 22587,
+          "id": "mars-library-branches-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "O distincție importantă",
+          "text": "Aceste imagini nu sunt profeții. Sunt întrebări făcute vizibile: ce am fi putut construi și ce am mai putea schimba?",
+          "startMs": 23600,
+          "endMs": 34820,
+          "sourceRefs": [
+            "src-branches"
+          ],
+          "spokenEndMs": 32181,
+          "id": "mars-library-branches-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "garden",
+          "asset": "tree",
+          "x": 150,
+          "y": 588,
+          "scale": 0.58,
+          "options": {},
+          "meaning": "tree"
+        },
+        {
+          "id": "townA",
+          "asset": "city",
+          "x": 347,
+          "y": 558,
+          "scale": 0.73,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "townB",
+          "asset": "city",
+          "x": 893,
+          "y": 558,
+          "scale": 0.73,
+          "options": {
+            "variant": 1
+          },
+          "meaning": "city"
+        },
+        {
+          "id": "memory",
+          "asset": "book",
+          "x": 614,
+          "y": 650,
+          "scale": 0.34,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "nameA",
+          "asset": "plaque",
+          "x": 350,
+          "y": 642,
+          "scale": 0.87,
+          "options": {
+            "label": "Împreună",
+            "color": "$ink"
+          },
+          "meaning": "Împreună"
+        },
+        {
+          "id": "nameB",
+          "asset": "plaque",
+          "x": 893,
+          "y": 642,
+          "scale": 0.87,
+          "options": {
+            "label": "Sub control",
+            "color": "$ink"
+          },
+          "meaning": "Sub control"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "townA",
+          "action": "city.grow",
+          "atMs": 1700,
+          "durationMs": 4200
+        },
+        {
+          "actor": "townB",
+          "action": "city.grow",
+          "atMs": 12200,
+          "durationMs": 4200,
+          "cue": {
+            "beatId": "mars-library-branches-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "garden",
+          "action": "tree.sway",
+          "atMs": 23600,
+          "durationMs": 4000,
+          "cue": {
+            "beatId": "mars-library-branches-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "memory",
+          "action": "book.open",
+          "atMs": 1200,
+          "durationMs": 1600
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "uncertainty",
+      "title": "O imagine convingătoare poate greși",
+      "emotionLabel": "îndoială",
+      "alt": "O imagine convingătoare poate greși. city, city, paper, character, Reconstrucția A, Reconstrucția B",
+      "promise": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile.",
+      "durationMs": 36000,
+      "beats": [
+        {
+          "label": "Limita",
+          "text": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile.",
+          "startMs": 800,
+          "endMs": 12353,
+          "sourceRefs": [
+            "src-uncertainty"
+          ],
+          "spokenEndMs": 9117,
+          "id": "mars-library-uncertainty-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Riscul",
+          "text": "Cărțile sunt incomplete. Unele spun adevărul, altele ascund, exagerează sau visează. Frumusețea unei lumi nu dovedește că ea a existat.",
+          "startMs": 12533,
+          "endMs": 24087,
+          "sourceRefs": [
+            "src-uncertainty"
+          ],
+          "spokenEndMs": 23009,
+          "id": "mars-library-uncertainty-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Miza",
+          "text": "Dacă oamenii confundă posibilitatea cu certitudinea, biblioteca poate deveni un nou oracol. Mira trebuie să învețe și când să nu o creadă.",
+          "startMs": 24267,
+          "endMs": 35820,
+          "sourceRefs": [
+            "src-uncertainty"
+          ],
+          "spokenEndMs": 34202,
+          "id": "mars-library-uncertainty-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "townA",
+          "asset": "city",
+          "x": 302,
+          "y": 551,
+          "scale": 0.73,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "townB",
+          "asset": "city",
+          "x": 906,
+          "y": 551,
+          "scale": 0.73,
+          "options": {
+            "variant": 1
+          },
+          "meaning": "city"
+        },
+        {
+          "id": "source",
+          "asset": "paper",
+          "x": 605,
+          "y": 321,
+          "scale": 0.59,
+          "options": {},
+          "meaning": "paper"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-curious",
+          "x": 606,
+          "y": 685,
+          "scale": 0.8,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "labelA",
+          "asset": "plaque",
+          "x": 299,
+          "y": 631,
+          "scale": 0.87,
+          "options": {
+            "label": "Reconstrucția A",
+            "color": "$ink"
+          },
+          "meaning": "Reconstrucția A"
+        },
+        {
+          "id": "labelB",
+          "asset": "plaque",
+          "x": 907,
+          "y": 631,
+          "scale": 0.87,
+          "options": {
+            "label": "Reconstrucția B",
+            "color": "$ink"
+          },
+          "meaning": "Reconstrucția B"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "townA",
+          "action": "city.grow",
+          "atMs": 1000,
+          "durationMs": 2200
+        },
+        {
+          "actor": "townB",
+          "action": "city.grow",
+          "atMs": 4500,
+          "durationMs": 2200
+        },
+        {
+          "actor": "left",
+          "action": "connection.draw",
+          "atMs": 12533,
+          "durationMs": 1900,
+          "cue": {
+            "beatId": "mars-library-uncertainty-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "right",
+          "action": "connection.draw",
+          "atMs": 15033,
+          "durationMs": 1900
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 24267,
+          "durationMs": 2200,
+          "emotion": "surprised",
+          "cue": {
+            "beatId": "mars-library-uncertainty-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "left",
+          "from": {
+            "node": "source",
+            "anchor": "left"
+          },
+          "to": {
+            "node": "townA",
+            "anchor": "top"
+          },
+          "meaning": "Same incomplete source",
+          "bend": -30
+        },
+        {
+          "id": "right",
+          "from": {
+            "node": "source",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "townB",
+            "anchor": "top"
+          },
+          "meaning": "Alternative reconstruction",
+          "bend": -30
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "authority",
+      "title": "Cine are voie să imagineze?",
+      "emotionLabel": "tensiune",
+      "alt": "Cine are voie să imagineze?. door, character, character, paper",
+      "promise": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare.",
+      "durationMs": 34000,
+      "beats": [
+        {
+          "label": "Conflictul",
+          "text": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare.",
+          "startMs": 800,
+          "endMs": 11687,
+          "sourceRefs": [
+            "src-authority"
+          ],
+          "spokenEndMs": 10637,
+          "id": "mars-library-authority-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Controlul",
+          "text": "Ordinul este simplu: camera trebuie închisă. Oamenii nu ar trebui să compare lumea în care trăiesc cu lumi organizate altfel.",
+          "startMs": 11867,
+          "endMs": 22753,
+          "sourceRefs": [
+            "src-authority"
+          ],
+          "spokenEndMs": 20860,
+          "id": "mars-library-authority-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Puterea unei povești",
+          "text": "Conflictul nu mai este între om și mașină. Este între cei care vor să păstreze ordinea și cei care îndrăznesc să o pună sub semnul întrebării.",
+          "startMs": 22933,
+          "endMs": 33820,
+          "sourceRefs": [
+            "src-authority"
+          ],
+          "spokenEndMs": 32901,
+          "id": "mars-library-authority-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "archive",
+          "asset": "door",
+          "x": 766,
+          "y": 621,
+          "scale": 1.1,
+          "options": {
+            "color": "$teal"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-determined",
+          "x": 366,
+          "y": 640,
+          "scale": 1.2,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "official",
+          "asset": "person-02-determined",
+          "x": 1036,
+          "y": 641,
+          "scale": 0.96,
+          "options": {
+            "color": "$coral"
+          },
+          "meaning": "character"
+        },
+        {
+          "id": "order",
+          "asset": "paper",
+          "x": 1043,
+          "y": 368,
+          "scale": 0.5,
+          "options": {
+            "label": "ORDIN"
+          },
+          "meaning": "paper"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 800,
+          "durationMs": 1000,
+          "target": "official",
+          "cue": {
+            "beatId": "mars-library-authority-line-01",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "archive",
+          "action": "door.close",
+          "atMs": 11867,
+          "durationMs": 2100,
+          "cue": {
+            "beatId": "mars-library-authority-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "official",
+          "action": "react",
+          "atMs": 14267,
+          "durationMs": 1800
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 22933,
+          "durationMs": 2100,
+          "emotion": "surprised",
+          "cue": {
+            "beatId": "mars-library-authority-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "decision",
+      "title": "Mira nu alege între bine și rău",
+      "emotionLabel": "dilemă",
+      "alt": "Mira nu alege între bine și rău. door, door, character",
+      "promise": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități.",
+      "durationMs": 35000,
+      "beats": [
+        {
+          "label": "Două riscuri",
+          "text": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități.",
+          "startMs": 800,
+          "endMs": 12020,
+          "sourceRefs": [
+            "src-decision"
+          ],
+          "spokenEndMs": 9429,
+          "id": "mars-library-decision-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Nicio soluție magică",
+          "text": "Dacă o lasă deschisă fără explicații, riscă să transforme ficțiunea în autoritate. Nici tăcerea, nici încrederea oarbă nu sunt suficiente.",
+          "startMs": 12200,
+          "endMs": 23420,
+          "sourceRefs": [
+            "src-decision"
+          ],
+          "spokenEndMs": 22586,
+          "id": "mars-library-decision-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "O a treia cale",
+          "text": "Mira începe să caute altceva: un mod în care biblioteca poate fi văzută, discutată și contrazisă, fără să decidă în locul oamenilor.",
+          "startMs": 23600,
+          "endMs": 34820,
+          "sourceRefs": [
+            "src-decision"
+          ],
+          "spokenEndMs": 33609,
+          "id": "mars-library-decision-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "leftDoor",
+          "asset": "door",
+          "x": 297,
+          "y": 576,
+          "scale": 0.9,
+          "options": {
+            "color": "$blue",
+            "label": "Închidem?"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "rightDoor",
+          "asset": "door",
+          "x": 908,
+          "y": 576,
+          "scale": 0.9,
+          "options": {
+            "color": "$teal",
+            "label": "Deschidem?"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-surprised",
+          "x": 600,
+          "y": 673,
+          "scale": 1.05,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 1800,
+          "durationMs": 1300,
+          "target": "leftDoor"
+        },
+        {
+          "actor": "rightDoor",
+          "action": "door.open",
+          "atMs": 12200,
+          "durationMs": 2200,
+          "cue": {
+            "beatId": "mars-library-decision-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 15400,
+          "durationMs": 1500,
+          "target": "rightDoor"
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 23600,
+          "durationMs": 2200,
+          "cue": {
+            "beatId": "mars-library-decision-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "distinction",
+      "title": "Ce știm. Ce doar imaginăm.",
+      "emotionLabel": "claritate",
+      "alt": "Ce știm. Ce doar imaginăm.. book, city, character, Arhivă, Posibilitate",
+      "promise": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit.",
+      "durationMs": 35000,
+      "beats": [
+        {
+          "label": "O regulă nouă",
+          "text": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit.",
+          "startMs": 800,
+          "endMs": 12020,
+          "sourceRefs": [
+            "src-distinction"
+          ],
+          "spokenEndMs": 9303,
+          "id": "mars-library-distinction-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Două registre",
+          "text": "În stânga rămâne arhiva: ceea ce poate fi consultat. În dreapta, posibilitatea: ceea ce poate fi discutat, schimbat sau respins.",
+          "startMs": 12200,
+          "endMs": 23420,
+          "sourceRefs": [
+            "src-distinction"
+          ],
+          "spokenEndMs": 22390,
+          "id": "mars-library-distinction-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Nu o garanție",
+          "text": "Această separare nu face simularea infailibilă. Dar le dă oamenilor un loc din care să înceapă întrebările și dezacordul.",
+          "startMs": 23600,
+          "endMs": 34820,
+          "sourceRefs": [
+            "src-distinction"
+          ],
+          "spokenEndMs": 31810,
+          "id": "mars-library-distinction-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "archive",
+          "asset": "book",
+          "x": 313,
+          "y": 521,
+          "scale": 0.98,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "possible",
+          "asset": "city",
+          "x": 917,
+          "y": 552,
+          "scale": 0.75,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-worried",
+          "x": 599,
+          "y": 685,
+          "scale": 0.73,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "sourceLabel",
+          "asset": "plaque",
+          "x": 311,
+          "y": 635,
+          "scale": 0.87,
+          "options": {
+            "label": "Arhivă",
+            "color": "$ink"
+          },
+          "meaning": "Arhivă"
+        },
+        {
+          "id": "possibleLabel",
+          "asset": "plaque",
+          "x": 915,
+          "y": 635,
+          "scale": 0.87,
+          "options": {
+            "label": "Posibilitate",
+            "color": "$ink"
+          },
+          "meaning": "Posibilitate"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "archive",
+          "action": "book.open",
+          "atMs": 1600,
+          "durationMs": 2000
+        },
+        {
+          "actor": "possible",
+          "action": "city.grow",
+          "atMs": 5300,
+          "durationMs": 3800
+        },
+        {
+          "actor": "source",
+          "action": "connection.draw",
+          "atMs": 12200,
+          "durationMs": 2800,
+          "cue": {
+            "beatId": "mars-library-distinction-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 23600,
+          "durationMs": 1000,
+          "target": "possible",
+          "cue": {
+            "beatId": "mars-library-distinction-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "source",
+          "from": {
+            "node": "archive",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "possible",
+            "anchor": "left"
+          },
+          "meaning": "Source-to-reconstruction, not proof",
+          "bend": -50
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "shared",
+      "title": "Biblioteca devine o conversație",
+      "emotionLabel": "speranță",
+      "alt": "Biblioteca devine o conversație. city, book, character, character",
+      "promise": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții.",
+      "durationMs": 34000,
+      "beats": [
+        {
+          "label": "Împreună",
+          "text": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții.",
+          "startMs": 800,
+          "endMs": 11687,
+          "sourceRefs": [
+            "src-shared"
+          ],
+          "spokenEndMs": 10626,
+          "id": "mars-library-shared-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "O schimbare de rol",
+          "text": "Biblioteca nu trebuie să conducă orașul. Poate să-l ajute să se vadă din afară și să compare alegerile pe care le are.",
+          "startMs": 11867,
+          "endMs": 22753,
+          "sourceRefs": [
+            "src-shared"
+          ],
+          "spokenEndMs": 20267,
+          "id": "mars-library-shared-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Puterea revine oamenilor",
+          "text": "Decizia rămâne a celor care vor trăi consecințele. Mașina oferă posibilități; oamenii au responsabilitatea de a le judeca.",
+          "startMs": 22933,
+          "endMs": 33820,
+          "sourceRefs": [
+            "src-shared"
+          ],
+          "spokenEndMs": 31888,
+          "id": "mars-library-shared-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "town",
+          "asset": "city",
+          "x": 619,
+          "y": 488,
+          "scale": 0.75,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "memory",
+          "asset": "book",
+          "x": 619,
+          "y": 530,
+          "scale": 0.9,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-inspired",
+          "x": 273,
+          "y": 641,
+          "scale": 1.16,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "reader",
+          "asset": "person-02-inspired",
+          "x": 967,
+          "y": 641,
+          "scale": 1.16,
+          "options": {
+            "color": "$coral",
+            "facing": "left"
+          },
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "memory",
+          "action": "book.open",
+          "atMs": 1400,
+          "durationMs": 1800
+        },
+        {
+          "actor": "town",
+          "action": "city.grow",
+          "atMs": 11867,
+          "durationMs": 3900,
+          "cue": {
+            "beatId": "mars-library-shared-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 11867,
+          "durationMs": 900,
+          "target": "town",
+          "up": true,
+          "cue": {
+            "beatId": "mars-library-shared-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "reader",
+          "action": "lookAt",
+          "atMs": 14067,
+          "durationMs": 900,
+          "target": "town",
+          "up": true
+        },
+        {
+          "actor": "reader",
+          "action": "react",
+          "atMs": 22933,
+          "durationMs": 2100,
+          "cue": {
+            "beatId": "mars-library-shared-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "question",
+      "title": "Ce viitor merită să păstrăm?",
+      "emotionLabel": "rezonanță",
+      "alt": "Ce viitor merită să păstrăm?. city, book, character, bulb",
+      "promise": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări.",
+      "durationMs": 35000,
+      "beats": [
+        {
+          "label": "Întoarcerea",
+          "text": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări.",
+          "startMs": 800,
+          "endMs": 12020,
+          "sourceRefs": [
+            "src-question"
+          ],
+          "spokenEndMs": 11077,
+          "id": "mars-library-question-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Esența",
+          "text": "Aceasta este o poveste despre memorie care devine posibilitate. Și despre grija de a nu lăsa posibilitatea să se transforme în poruncă.",
+          "startMs": 12200,
+          "endMs": 23420,
+          "sourceRefs": [
+            "src-question"
+          ],
+          "spokenEndMs": 21749,
+          "id": "mars-library-question-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Mai departe",
+          "text": "Dacă toate cărțile noastre ar putea imagina împreună o lume nouă, ce am vrea să păstrăm din lumea de acum?",
+          "startMs": 23600,
+          "endMs": 34820,
+          "sourceRefs": [
+            "src-question"
+          ],
+          "spokenEndMs": 30693,
+          "id": "mars-library-question-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "town",
+          "asset": "city",
+          "x": 818,
+          "y": 529,
+          "scale": 0.78,
+          "options": {},
+          "meaning": "city"
+        },
+        {
+          "id": "memory",
+          "asset": "book",
+          "x": 817,
+          "y": 560,
+          "scale": 0.97,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-relieved",
+          "x": 318,
+          "y": 641,
+          "scale": 1.22,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "idea",
+          "asset": "bulb",
+          "x": 536,
+          "y": 413,
+          "scale": 0.4,
+          "options": {},
+          "meaning": "bulb"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "memory",
+          "action": "book.open",
+          "atMs": 1500,
+          "durationMs": 2000
+        },
+        {
+          "actor": "town",
+          "action": "city.grow",
+          "atMs": 3500,
+          "durationMs": 4300
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 12200,
+          "durationMs": 1000,
+          "target": "town",
+          "up": true,
+          "cue": {
+            "beatId": "mars-library-question-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "idea",
+          "action": "appear",
+          "atMs": 23600,
+          "durationMs": 2100,
+          "cue": {
+            "beatId": "mars-library-question-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "idea",
+          "action": "light.warm",
+          "atMs": 26100,
+          "durationMs": 3000
+        }
+      ],
+      "connections": [],
+      "setting": "mars"
+    }
+  ],
+  "audioDemo": true,
+  "audioDisclosure": "Voce eSpeak demonstrativă; nu este o mostră de narațiune neuronală profesională.",
+  "visualLibrary": "shf-repertory@2.0",
+  "voice": {
+    "id": "espeak-ro-demonstration",
+    "language": "ro",
+    "quality": "demonstration-only"
+  }
+}

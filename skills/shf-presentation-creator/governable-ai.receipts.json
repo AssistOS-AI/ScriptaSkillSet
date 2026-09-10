@@ -1,0 +1,169 @@
+{
+  "format": "SHF-VoiceReceipts",
+  "version": "1",
+  "provider": "eSpeak demonstration, inherited and segmented",
+  "lines": [
+    {
+      "id": "governable-ai-blackbox-line-01",
+      "file": "assets/voice-demo/governable-ai-blackbox-line-01.mp3",
+      "sha256": "cd06b7b9e681bc53741e09771438c1e2e5896fd78f18d65817fabeb9b42825a6",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-blackbox-line-02",
+      "file": "assets/voice-demo/governable-ai-blackbox-line-02.mp3",
+      "sha256": "6b5d22c15dc7022ee8e5d2001eac02059f6744c2f3e5a0761209f384091117a6",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-blackbox-line-03",
+      "file": "assets/voice-demo/governable-ai-blackbox-line-03.mp3",
+      "sha256": "ce53cc019e572c631ec861b8e84d9c3cf3a502c6f56809990d9a4f3c1406fd1d",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-trace-line-01",
+      "file": "assets/voice-demo/governable-ai-trace-line-01.mp3",
+      "sha256": "0b0d2a1cf0f641e046f4473409166a725297d223c02b0b369751ed2b3630ea93",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-trace-line-02",
+      "file": "assets/voice-demo/governable-ai-trace-line-02.mp3",
+      "sha256": "68bc2a278c9fb1fcb8b15ec967c0837c0928ce697f4ab4a3b2f0145bb11b5731",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-trace-line-03",
+      "file": "assets/voice-demo/governable-ai-trace-line-03.mp3",
+      "sha256": "bbd10b127f179ea998e4abf73a0bef2d0120715c1bb0b620a8b37852c2457ccc",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-source-link-line-01",
+      "file": "assets/voice-demo/governable-ai-source-link-line-01.mp3",
+      "sha256": "b2518e8bea06e1aabd7ac2076fa35549488d1dc103c3b234881eca97bac2cde0",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-source-link-line-02",
+      "file": "assets/voice-demo/governable-ai-source-link-line-02.mp3",
+      "sha256": "bad49050fd8e178ad1eb3a56d8009f45eb21180d31d153d1a20788667f0aaa75",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-source-link-line-03",
+      "file": "assets/voice-demo/governable-ai-source-link-line-03.mp3",
+      "sha256": "7901595bea67d2b53ba4262259ee3e18c9b636b2855ff8dced184fb8f536db52",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-approval-line-01",
+      "file": "assets/voice-demo/governable-ai-approval-line-01.mp3",
+      "sha256": "c28b15a401c1ed4edf280c417e0a2961ac7fee8c3aa5426644b95fb513df61f0",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-approval-line-02",
+      "file": "assets/voice-demo/governable-ai-approval-line-02.mp3",
+      "sha256": "fcc9536bec7f7cfc94d0335360d20a81863517dab42eee1617729d96876d83cb",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-approval-line-03",
+      "file": "assets/voice-demo/governable-ai-approval-line-03.mp3",
+      "sha256": "3440286e0ac0ba489af2821e4338ee8df4c5167ab484342ba000aa86a0a90b22",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-limits-line-01",
+      "file": "assets/voice-demo/governable-ai-limits-line-01.mp3",
+      "sha256": "29bb67ff8d3d7ee3dc0c6832c0a688f5f792af9ced8d7c964b5438faa5da1768",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-limits-line-02",
+      "file": "assets/voice-demo/governable-ai-limits-line-02.mp3",
+      "sha256": "e687422aecde2ad9a0f8f61c5f1e0507bf9134680034523e8785af01c7606431",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-limits-line-03",
+      "file": "assets/voice-demo/governable-ai-limits-line-03.mp3",
+      "sha256": "3c92ca658063cffc29a9f16baf02eaf630b1c8789cb8d9b6b079492acc2dc0bc",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-governable-line-01",
+      "file": "assets/voice-demo/governable-ai-governable-line-01.mp3",
+      "sha256": "d56db333a417d94c9caa62a5e9061a12d55f830e3c1e2b8c1e35bbfa41148127",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-governable-line-02",
+      "file": "assets/voice-demo/governable-ai-governable-line-02.mp3",
+      "sha256": "71fc7eae5e71275dd92f35ee9b7fb5e76c7508edd162e34e3260c6eb01e37101",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "governable-ai-governable-line-03",
+      "file": "assets/voice-demo/governable-ai-governable-line-03.mp3",
+      "sha256": "1a91419331832008acdb4d2ca235fdc20e3614418dbe63c5b8257ad280cd1c23",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    }
+  ]
+}

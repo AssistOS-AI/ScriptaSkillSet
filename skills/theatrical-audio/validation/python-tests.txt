@@ -1,0 +1,14 @@
+test_custom_voice_receives_text_separately_from_direction (__main__.BackendContracts.test_custom_voice_receives_text_separately_from_direction) ... ok
+test_design_uses_a_description_not_a_custom_speaker (__main__.BackendContracts.test_design_uses_a_description_not_a_custom_speaker) ... ok
+test_kokoro_local_files_required (__main__.BackendContracts.test_kokoro_local_files_required) ... ok
+test_kokoro_receives_native_speed_but_not_fake_emotion_argument (__main__.BackendContracts.test_kokoro_receives_native_speed_but_not_fake_emotion_argument) ... ok
+test_qwen_load_is_local_and_occurs_once_per_worker (__main__.BackendContracts.test_qwen_load_is_local_and_occurs_once_per_worker) ... ok
+test_rejects_06b_instead_of_ignoring_emotion (__main__.BackendContracts.test_rejects_06b_instead_of_ignoring_emotion) ... ok
+test_rejects_base_instead_of_pretending_clone_is_instruction_control (__main__.BackendContracts.test_rejects_base_instead_of_pretending_clone_is_instruction_control) ... ok
+test_unknown_custom_speaker_is_an_error (__main__.BackendContracts.test_unknown_custom_speaker_is_an_error) ... ok
+test_worker_errors_are_json_and_worker_can_close_cleanly (__main__.BackendContracts.test_worker_errors_are_json_and_worker_can_close_cleanly) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.300s
+
+OK

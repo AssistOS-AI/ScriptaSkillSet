@@ -1,0 +1,156 @@
+{
+  "format": "SHF-Score",
+  "version": "1",
+  "id": "original-hope",
+  "title": "SHF · hope",
+  "mood": "hope",
+  "original": true,
+  "composer": "Procedural SHF score generator",
+  "license": "MIT",
+  "seed": "deterministic-1",
+  "bpm": 76,
+  "durationSeconds": 16,
+  "maxPolyphony": 6,
+  "events": [
+    {
+      "time": 0,
+      "duration": 2.2105263157894735,
+      "midi": 72,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 0,
+      "duration": 3.1578947368421053,
+      "midi": 48,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 0.06,
+      "duration": 3,
+      "midi": 67,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 1.5789473684210527,
+      "duration": 2.2105263157894735,
+      "midi": 74,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 3.1578947368421053,
+      "duration": 2.2105263157894735,
+      "midi": 76,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 3.1578947368421053,
+      "duration": 3.1578947368421053,
+      "midi": 55,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 3.2178947368421054,
+      "duration": 3,
+      "midi": 67,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 4.7368421052631575,
+      "duration": 2.2105263157894735,
+      "midi": 74,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 6.315789473684211,
+      "duration": 2.2105263157894735,
+      "midi": 79,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 6.315789473684211,
+      "duration": 3.1578947368421053,
+      "midi": 48,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 6.37578947368421,
+      "duration": 3,
+      "midi": 67,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 7.894736842105264,
+      "duration": 2.2105263157894735,
+      "midi": 76,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 9.473684210526317,
+      "duration": 2.2105263157894735,
+      "midi": 81,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 9.473684210526317,
+      "duration": 3.1578947368421053,
+      "midi": 55,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 9.533684210526317,
+      "duration": 3,
+      "midi": 67,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 11.05263157894737,
+      "duration": 2.2105263157894735,
+      "midi": 79,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 12.631578947368423,
+      "duration": 2.2105263157894735,
+      "midi": 72,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 12.631578947368423,
+      "duration": 3.1578947368421053,
+      "midi": 48,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 12.691578947368424,
+      "duration": 3,
+      "midi": 67,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 14.210526315789476,
+      "duration": 1.7894736842105239,
+      "midi": 74,
+      "velocity": 0.24,
+      "timbre": "felt"
+    }
+  ]
+}

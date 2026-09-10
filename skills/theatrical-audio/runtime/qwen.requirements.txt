@@ -1,0 +1,2 @@
+# Verified top-level upstream release. The installer writes a full platform-specific resolved lock.
+qwen-tts==0.1.1

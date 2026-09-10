@@ -1,0 +1,98 @@
+[
+  {
+    "id": "curiosity",
+    "file": "curiosity.wav",
+    "score": "curiosity.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "wonder",
+    "file": "wonder.wav",
+    "score": "wonder.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "calm",
+    "file": "calm.wav",
+    "score": "calm.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "tension",
+    "file": "tension.wav",
+    "score": "tension.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "melancholy",
+    "file": "melancholy.wav",
+    "score": "melancholy.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "hope",
+    "file": "hope.wav",
+    "score": "hope.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "discovery",
+    "file": "discovery.wav",
+    "score": "discovery.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "resolve",
+    "file": "resolve.wav",
+    "score": "resolve.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "warmth",
+    "file": "warmth.wav",
+    "score": "warmth.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "intrigue",
+    "file": "intrigue.wav",
+    "score": "intrigue.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "clarity",
+    "file": "clarity.wav",
+    "score": "clarity.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  },
+  {
+    "id": "playful",
+    "file": "playful.wav",
+    "score": "playful.score.json",
+    "license": "MIT",
+    "original": true,
+    "kind": "procedural underscore, not a classical recording"
+  }
+]

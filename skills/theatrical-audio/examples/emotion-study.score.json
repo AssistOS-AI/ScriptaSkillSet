@@ -1,0 +1,151 @@
+{
+  "format": "theatrical-audio/1",
+  "id": "emotion-study",
+  "title": "Same words, different intentions",
+  "language": "en",
+  "notes": "Designed for Qwen/OpenAI instruction-following backends. Blind listening, not an automatic emotion benchmark. Same text and speaker across five intentions. For ElevenLabs/Azure, author matching supported provider-specific direction fields first. Score naturalness, emotion recognition, word accuracy and identity separately.",
+  "voices": {
+    "narrator": {
+      "label": "Narrator",
+      "qwenSpeaker": "Ryan",
+      "kokoroVoice": "bm_george",
+      "description": "Mature English-speaking narrator, warm low register, restrained and clear.",
+      "geminiVoice": "Charon",
+      "groqVoice": "troy",
+      "cartesiaVoice": "47c38ca4-5f35-497b-b1a3-415245fb35e1",
+      "cloudflareVoice": "orion",
+      "googleVoice": "en-US-Neural2-D",
+      "pollyVoice": "Matthew",
+      "voicerssVoice": "John",
+      "deepgramVoice": "aura-2-draco-en"
+    }
+  },
+  "settings": {
+    "sampleRate": 24000,
+    "takes": 2,
+    "seed": 1623,
+    "tailSeconds": 0.5
+  },
+  "beats": [
+    {
+      "id": "condition0",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "You came back. I thought I had lost you.",
+      "direction": {
+        "emotion": "neutral",
+        "intensity": 0.6,
+        "pace": 1,
+        "delivery": "State a fact without emotional coloring.",
+        "cartesia": {
+          "emotion": "neutral"
+        },
+        "groq": {
+          "tags": [
+            "neutral"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gap1",
+      "type": "pause",
+      "seconds": 1.5
+    },
+    {
+      "id": "condition1",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "You came back. I thought I had lost you.",
+      "direction": {
+        "emotion": "relieved joy",
+        "intensity": 0.6,
+        "pace": 1,
+        "delivery": "An intimate reunion. Start disbelieving, then let relief arrive. Do not laugh.",
+        "cartesia": {
+          "emotion": "happy"
+        },
+        "groq": {
+          "tags": [
+            "happy"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gap2",
+      "type": "pause",
+      "seconds": 1.5
+    },
+    {
+      "id": "condition2",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "You came back. I thought I had lost you.",
+      "direction": {
+        "emotion": "restrained fear",
+        "intensity": 0.6,
+        "pace": 1,
+        "delivery": "You are frightened by the return. Keep the voice low and controlled.",
+        "cartesia": {
+          "emotion": "sad"
+        },
+        "groq": {
+          "tags": [
+            "sad"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gap3",
+      "type": "pause",
+      "seconds": 1.5
+    },
+    {
+      "id": "condition3",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "You came back. I thought I had lost you.",
+      "direction": {
+        "emotion": "hurt anger",
+        "intensity": 0.6,
+        "pace": 1,
+        "delivery": "The return reopens a wound. Controlled anger, not shouting.",
+        "cartesia": {
+          "emotion": "scared"
+        },
+        "groq": {
+          "tags": [
+            "whisper"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gap4",
+      "type": "pause",
+      "seconds": 1.5
+    },
+    {
+      "id": "condition4",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "You came back. I thought I had lost you.",
+      "direction": {
+        "emotion": "tender sadness",
+        "intensity": 0.6,
+        "pace": 1,
+        "delivery": "Speak tenderly through sadness. Do not cry or add words.",
+        "cartesia": {
+          "emotion": "angry"
+        },
+        "groq": {
+          "tags": [
+            "angry"
+          ]
+        }
+      }
+    }
+  ]
+}

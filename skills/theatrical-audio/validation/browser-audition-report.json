@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "checks": [
+    "Export limitation is visible",
+    "No horizontal overflow at 412px",
+    "Load/refresh/stop produce no page errors or HTTP requests",
+    "Mocked Web Speech receives exact text, selected voice locale, rate and pitch",
+    "Speaking status does not claim a WAV; no key/network code is invoked"
+  ],
+  "realSpeechGenerated": false,
+  "limitations": [
+    "This tests UI and Web Speech argument routing, not actual voice availability/quality or successful file:// opening."
+  ],
+  "pageErrors": [],
+  "httpRequests": []
+}

@@ -1,0 +1,16 @@
+{
+  "name": "theatrical-audio-skill",
+  "version": "3.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Clip-based theatrical TTS skill; local Python or native Node cloud adapters, no server.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "doctor": "node bin/audio.mjs doctor",
+    "demo": "node bin/audio.mjs render examples/the-last-light.score.json --engine gemini --free-tier-only --max-requests 7 --out output/demo"
+  },
+  "license": "MIT"
+}

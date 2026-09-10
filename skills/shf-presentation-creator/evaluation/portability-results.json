@@ -1,0 +1,71 @@
+{
+  "checks": 10,
+  "passed": 10,
+  "results": [
+    {
+      "name": "cold rebuild using only copied skill",
+      "pass": true,
+      "exitCode": 0,
+      "log": "Built portable player, 4 films and 12 original music cues.\n",
+      "error": ""
+    },
+    {
+      "name": "cold-copy Node test suite",
+      "pass": true,
+      "exitCode": 0,
+      "log": " (1.653306ms)\n✔ duplicate receipt fails (1.219656ms)\n✔ wrong audio hash fails (1.252202ms)\n✔ path escape fails (0.115868ms)\n✔ symlink escape fails (0.389231ms)\n✔ original cue: curiosity (32.492292ms)\n✔ original cue: wonder (20.722545ms)\n✔ original cue: calm (21.184203ms)\n✔ original cue: tension (21.894079ms)\n✔ original cue: melancholy (21.346656ms)\n✔ original cue: hope (25.290927ms)\n✔ original cue: discovery (26.16633ms)\n✔ original cue: resolve (19.745592ms)\n✔ original cue: warmth (21.293785ms)\n✔ original cue: intrigue (22.215074ms)\n✔ original cue: clarity (21.598576ms)\n✔ original cue: playful (23.019168ms)\n✔ music rejects invalid velocity, time and duration (0.54882ms)\n✔ editorial span/hash example passes exact text checks (0.533315ms)\n✔ editorial cannot invent quote or field novelty (0.251851ms)\n✔ analyzer is explicit about extractive draft and preserves source hash (9.635647ms)\n✔ player installer works in unrelated path with spaces, refuses overwrite (1.555526ms)\n✔ player contains no viewer feedback or notes controls (0.230968ms)\n✔ skill entry includes complete relative dependencies (0.255483ms)\n✔ bundled film round trip: visual-lab (153.013547ms)\n✔ bundled film round trip: mars-library (127.448768ms)\n✔ bundled film round trip: freedom-practice (69.088165ms)\n✔ bundled film round trip: governable-ai (80.053608ms)\n✔ CLI catalog queries actual library (44.503832ms)\n✔ repeated moves preserve previous endpoint without snap (0.692905ms)\n✔ compiler does not mutate a cue action supplied by the author (0.669159ms)\n✔ voice discovery finds an actual allowed skill without claiming availability (36.106908ms)\n✔ voice discovery without roots asks for host discovery (28.302944ms)\nℹ tests 571\nℹ suites 0\nℹ pass 571\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1401.236289\n",
+      "error": ""
+    },
+    {
+      "name": "player copied to unrelated project",
+      "pass": true,
+      "exitCode": 0,
+      "log": "{\n  \"directory\": \"/tmp/shf portable test Z7m4md/unrelated app/public/shf\",\n  \"files\": [\n    \"shf-player.js\",\n    \"LICENSE\",\n    \"embed.html\"\n  ],\n  \"runtimeSha256\": \"1aca7893046936642271b5df457c28059d1db66ea0aa9c5bd6565110e6bf95d7\"\n}\n",
+      "error": ""
+    },
+    {
+      "name": "minimal presentation compiled from unrelated working directory",
+      "pass": true,
+      "exitCode": 0,
+      "log": "{\n  \"id\": \"first-scene\",\n  \"durationMs\": 15000,\n  \"output\": \"/tmp/shf portable test Z7m4md/unrelated app/public/films\"\n}\n",
+      "error": ""
+    },
+    {
+      "name": "compiled presentation validates from unrelated working directory",
+      "pass": true,
+      "exitCode": 0,
+      "log": "{\n  \"valid\": true,\n  \"errors\": [],\n  \"warnings\": [],\n  \"durationMs\": 15000,\n  \"nodeCount\": 132\n}\n",
+      "error": ""
+    },
+    {
+      "name": "custom vector example compiles without library mutation",
+      "pass": true,
+      "exitCode": 0,
+      "log": "{\n  \"id\": \"custom-memory-crystal\",\n  \"durationMs\": 15000,\n  \"output\": \"/tmp/shf portable test Z7m4md/custom-output\"\n}\n",
+      "error": ""
+    },
+    {
+      "name": "native WAV voice attacher in cold copy",
+      "pass": true,
+      "exitCode": 0,
+      "log": "visual-lab 12 measured lines 68368 ms\n",
+      "error": ""
+    },
+    {
+      "name": "editorial checker example",
+      "pass": true,
+      "exitCode": 0,
+      "log": "{\n  \"valid\": true,\n  \"errors\": [],\n  \"warnings\": [],\n  \"sourceSha256\": \"6c422237540a980b19bdb6580c3fb5068b0d744ecab48dc3e463ed0c7ae84140\",\n  \"scope\": \"Structural provenance check only; entailment, completeness, interest and artistic quality still require review.\"\n}\n",
+      "error": ""
+    },
+    {
+      "name": "installed runtime exactly matches distribution",
+      "pass": true,
+      "sha256": "1aca7893046936642271b5df457c28059d1db66ea0aa9c5bd6565110e6bf95d7"
+    },
+    {
+      "name": "cold build reproduces identical Mars archive",
+      "pass": true
+    }
+  ]
+}

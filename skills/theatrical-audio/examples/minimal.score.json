@@ -1,0 +1,78 @@
+{
+  "format": "theatrical-audio/1",
+  "id": "hello",
+  "title": "One voice, two beats",
+  "language": "en",
+  "voices": {
+    "narrator": {
+      "label": "Narrator",
+      "qwenSpeaker": "Ryan",
+      "kokoroVoice": "bm_george",
+      "description": "Mature English-speaking narrator, warm low register, restrained and clear.",
+      "geminiVoice": "Charon",
+      "groqVoice": "troy",
+      "cartesiaVoice": "47c38ca4-5f35-497b-b1a3-415245fb35e1",
+      "cloudflareVoice": "orion",
+      "googleVoice": "en-US-Neural2-D",
+      "pollyVoice": "Matthew",
+      "voicerssVoice": "John",
+      "deepgramVoice": "aura-2-draco-en"
+    }
+  },
+  "beats": [
+    {
+      "id": "hello",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "There is still time.",
+      "direction": {
+        "emotion": "calm reassurance",
+        "intensity": 0.3,
+        "pace": 0.9,
+        "cartesia": {
+          "emotion": "neutral"
+        },
+        "groq": {
+          "tags": [
+            "neutral"
+          ]
+        }
+      }
+    },
+    {
+      "id": "silence",
+      "type": "pause",
+      "seconds": 1.2
+    },
+    {
+      "id": "end",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "We can begin again.",
+      "direction": {
+        "emotion": "gentle hope",
+        "intensity": 0.45,
+        "cartesia": {
+          "emotion": "happy"
+        },
+        "groq": {
+          "tags": [
+            "happy"
+          ]
+        }
+      }
+    }
+  ],
+  "visuals": [
+    {
+      "id": "light",
+      "at": {
+        "beat": "end",
+        "edge": "start"
+      },
+      "target": "scene",
+      "action": "reveal",
+      "durationSeconds": 1.5
+    }
+  ]
+}

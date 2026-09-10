@@ -1,0 +1,71 @@
+{
+  "format": "SHF-Editorial",
+  "version": "1",
+  "title": "Useful is not the same as justified",
+  "sourceSha256": "6c422237540a980b19bdb6580c3fb5068b0d744ecab48dc3e463ed0c7ae84140",
+  "genre": "technical",
+  "targetMinutes": 1,
+  "audience": "general adult",
+  "centralQuestion": "Why is a trace not a proof?",
+  "thesis": "A visible process helps inspection but does not replace evidence about the answer.",
+  "claims": [
+    {
+      "id": "c1",
+      "statement": "A trace alone does not establish truth.",
+      "kind": "source-claim",
+      "noveltyScope": "audience-surprise",
+      "spans": [
+        {
+          "start": 0,
+          "end": 102,
+          "quote": "A trace records the steps a system performed. It does not by itself prove that the final answer is tru"
+        }
+      ],
+      "qualifiers": [
+        "by itself"
+      ],
+      "score": {
+        "relevance": 4,
+        "explanatoryPower": 4,
+        "surprise": 3,
+        "consequence": 3,
+        "visualizability": 4
+      }
+    }
+  ],
+  "scenePlan": [
+    {
+      "id": "question",
+      "purpose": "Show a plausible answer with a trace but missing evidence"
+    },
+    {
+      "id": "mechanism",
+      "purpose": "Separate record of steps from support for a claim"
+    },
+    {
+      "id": "payoff",
+      "purpose": "Explain what checks can add and what remains uncertain"
+    }
+  ],
+  "hooks": [
+    {
+      "question": "Why might a recorded answer still need checking?",
+      "introducedSceneId": "question",
+      "resolvedSceneId": "payoff",
+      "resolution": "Recording execution and verifying a claim are different operations.",
+      "sourceClaimIds": [
+        "c1"
+      ],
+      "status": "resolved"
+    }
+  ],
+  "omissions": [
+    "Implementation details absent from source"
+  ],
+  "limitations": [
+    "This short source makes no measured performance claim."
+  ],
+  "spoilerBudget": "not-applicable",
+  "rights": "original demonstration text",
+  "purpose": "explanation"
+}

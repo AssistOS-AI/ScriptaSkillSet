@@ -1,0 +1,174 @@
+{
+  "checks": 39,
+  "passed": 39,
+  "failed": 0,
+  "metrics": {
+    "browser": "144.0.7559.96",
+    "fileURL": false,
+    "fileURLLimitation": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at file:///mnt/data/SHF_Skill_v0.4/shf-director/SHF_Cinema_Demo.html\nCall log:\n  - navigating to \"file:///mnt/data/SHF_Skill_v0.4/shf-director/SHF_Cinema_Demo.html\", waiting u",
+    "renderedSceneThemeTimeStates": 336
+  },
+  "results": [
+    {
+      "name": "standalone includes four films and 28 scenes",
+      "pass": true
+    },
+    {
+      "name": "no autoplay and no audio context until requested",
+      "pass": true
+    },
+    {
+      "name": "no viewer notes or feedback interface",
+      "pass": true
+    },
+    {
+      "name": "paused clock and vector state stay fixed",
+      "pass": true
+    },
+    {
+      "name": "seek A-B-A yields exact SVG state",
+      "pass": true
+    },
+    {
+      "name": "narrated film uses audio clock",
+      "pass": true
+    },
+    {
+      "name": "mute does not restart/stop voice schedule",
+      "pass": true
+    },
+    {
+      "name": "mute master gain approaches zero",
+      "pass": true
+    },
+    {
+      "name": "volume zero retains an advancing audio clock",
+      "pass": true
+    },
+    {
+      "name": "pause stops sources, RAF and clock",
+      "pass": true
+    },
+    {
+      "name": "music and voice scheduled together",
+      "pass": true
+    },
+    {
+      "name": "music ducking during spoken line",
+      "pass": true
+    },
+    {
+      "name": "2x audio-derived rate advances approximately twice as fast",
+      "pass": true,
+      "detail": {
+        "timeMs": 1611.7687074829937
+      }
+    },
+    {
+      "name": "scene transition waits with old scene visible while audio prepares",
+      "pass": true
+    },
+    {
+      "name": "prepared next scene resumes on audio clock",
+      "pass": true
+    },
+    {
+      "name": "late async audio completion cannot restart paused player",
+      "pass": true
+    },
+    {
+      "name": "invalid required narration stops without drifting",
+      "pass": true
+    },
+    {
+      "name": "film ends exactly at its measured duration",
+      "pass": true
+    },
+    {
+      "name": "theme color",
+      "pass": true
+    },
+    {
+      "name": "theme paper",
+      "pass": true
+    },
+    {
+      "name": "theme night",
+      "pass": true
+    },
+    {
+      "name": "subtitles live over the animation stage",
+      "pass": true
+    },
+    {
+      "name": "transcript opens from transport",
+      "pass": true
+    },
+    {
+      "name": "chapters remain available",
+      "pass": true
+    },
+    {
+      "name": "336 scene-theme-time samples render",
+      "pass": true
+    },
+    {
+      "name": "connections follow real transformed named anchors",
+      "pass": true
+    },
+    {
+      "name": "direct SHF import restores every media file",
+      "pass": true
+    },
+    {
+      "name": "independent player instance has separate state",
+      "pass": true
+    },
+    {
+      "name": "no horizontal overflow phone",
+      "pass": true
+    },
+    {
+      "name": "all visible transport icons fit phone",
+      "pass": true
+    },
+    {
+      "name": "no horizontal overflow small",
+      "pass": true
+    },
+    {
+      "name": "all visible transport icons fit small",
+      "pass": true
+    },
+    {
+      "name": "no horizontal overflow landscape",
+      "pass": true
+    },
+    {
+      "name": "all visible transport icons fit landscape",
+      "pass": true
+    },
+    {
+      "name": "narrow desktop embed also fits its controls",
+      "pass": true
+    },
+    {
+      "name": "catalog search finds a specific object",
+      "pass": true
+    },
+    {
+      "name": "catalog includes 288 character expression entries",
+      "pass": true
+    },
+    {
+      "name": "all browser tests made no HTTP requests",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no unhandled JavaScript errors",
+      "pass": true,
+      "detail": []
+    }
+  ]
+}

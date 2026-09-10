@@ -1,0 +1,1088 @@
+{
+  "format": "SHF-Direction",
+  "version": "0.4",
+  "id": "freedom-practice",
+  "title": "Libertatea nu este doar o ușă deschisă",
+  "language": "ro",
+  "genreLabel": "FILOSOFIE • eseu",
+  "description": "De la impuls la reflecție: o idee abstractă, pusă în mișcare.",
+  "stage": {
+    "width": 1200,
+    "height": 760
+  },
+  "durationMs": 179000,
+  "visualIdentity": "illustrated-theatre",
+  "assets": {},
+  "editorial": {
+    "mode": "visual-essence",
+    "disclosure": "Eseu demonstrativ original. Prezintă o perspectivă filosofică, nu o concluzie stabilită și nici o atribuire unei cărți publicate. Firele și balanța sunt metafore.",
+    "novelty": {
+      "kind": "argument-framing",
+      "claim": "Libertatea ca practică a examinării dorințelor.",
+      "verification": "not-assessed-against-external-literature"
+    },
+    "spoilers": "original-demo; premise and thematic arc disclosed",
+    "qualityStatus": "authored-demonstration-not-an-automatic-book-adaptation"
+  },
+  "sources": [
+    {
+      "id": "src-strings",
+      "kind": "original-demo-text",
+      "text": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem? Obiceiul, frica și privirea celorlalți ne influențează alegerile. Uneori, firele se văd abia după ce ne-am mișcat. Libertatea ar putea începe nu prin negarea acestor influențe, ci prin capacitatea de a le observa."
+    },
+    {
+      "id": "src-two-doors",
+      "kind": "original-demo-text",
+      "text": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste. O preferință poate fi repetată din obișnuință. O alta poate fi examinată, discutată și schimbată. Diferența propusă aici este între a urma o dorință și a putea întreba dacă acea dorință merită urmată."
+    },
+    {
+      "id": "src-mirror",
+      "kind": "original-demo-text",
+      "text": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit. De ce vreau asta? Ce teamă încerc să evit? Ce s-ar schimba dacă aș privi situația din alt loc? Reflecția nu șterge dorințele. Le face vizibile și lasă loc pentru o relație diferită cu ele."
+    },
+    {
+      "id": "src-balance",
+      "kind": "original-demo-text",
+      "text": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi. În această perspectivă, a fi liber înseamnă și a putea pune în balanță consecințele, valorile și relațiile. Nu există o formulă care decide întotdeauna corect. Există însă un exercițiu de judecată pe care îl putem învăța."
+    },
+    {
+      "id": "src-conditions",
+      "kind": "original-demo-text",
+      "text": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica. Un mediu bun oferă timp, explicații și posibilitatea de a spune nu. Nu doar mai multe butoane de apăsat. Putem judeca un sistem și prin întrebarea: îi ajută pe oameni să înțeleagă și să-și revizuiască propriile alegeri?"
+    },
+    {
+      "id": "src-freedom",
+      "kind": "original-demo-text",
+      "text": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele. Învățăm să observăm, să întrebăm și uneori să ne schimbăm direcția. Această practică rămâne imperfectă și deschisă. Cât din ceea ce numim alegere este repetiție? Și unde am putea crea un mic spațiu pentru o decizie cu adevărat a noastră?"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "strings",
+      "title": "Alegerile noastre vin de undeva",
+      "emotionLabel": "întrebare",
+      "alt": "Alegerile noastre vin de undeva. character, Obicei, Frică, Privirea altora",
+      "promise": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem?",
+      "durationMs": 30000,
+      "beats": [
+        {
+          "label": "Punctul de plecare",
+          "text": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem?",
+          "startMs": 800,
+          "endMs": 10353,
+          "sourceRefs": [
+            "src-strings"
+          ],
+          "spokenEndMs": 7866,
+          "id": "freedom-practice-strings-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Forțe invizibile",
+          "text": "Obiceiul, frica și privirea celorlalți ne influențează alegerile. Uneori, firele se văd abia după ce ne-am mișcat.",
+          "startMs": 10533,
+          "endMs": 20087,
+          "sourceRefs": [
+            "src-strings"
+          ],
+          "spokenEndMs": 19004,
+          "id": "freedom-practice-strings-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Întrebarea",
+          "text": "Libertatea ar putea începe nu prin negarea acestor influențe, ci prin capacitatea de a le observa.",
+          "startMs": 20267,
+          "endMs": 29820,
+          "sourceRefs": [
+            "src-strings"
+          ],
+          "spokenEndMs": 27298,
+          "id": "freedom-practice-strings-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "mira",
+          "asset": "person-02-curious",
+          "x": 600,
+          "y": 646,
+          "scale": 1.22,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "habit",
+          "asset": "plaque",
+          "x": 270,
+          "y": 339,
+          "scale": 0.87,
+          "options": {
+            "label": "Obicei",
+            "color": "$ink"
+          },
+          "meaning": "Obicei"
+        },
+        {
+          "id": "fear",
+          "asset": "plaque",
+          "x": 930,
+          "y": 339,
+          "scale": 0.87,
+          "options": {
+            "label": "Frică",
+            "color": "$ink"
+          },
+          "meaning": "Frică"
+        },
+        {
+          "id": "others",
+          "asset": "plaque",
+          "x": 600,
+          "y": 240,
+          "scale": 0.87,
+          "options": {
+            "label": "Privirea altora",
+            "color": "$ink"
+          },
+          "meaning": "Privirea altora"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "habitLine",
+          "action": "connection.draw",
+          "atMs": 10533,
+          "durationMs": 1800,
+          "cue": {
+            "beatId": "freedom-practice-strings-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "fearLine",
+          "action": "connection.draw",
+          "atMs": 12733,
+          "durationMs": 1800
+        },
+        {
+          "actor": "socialLine",
+          "action": "connection.draw",
+          "atMs": 15033,
+          "durationMs": 1800
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 20267,
+          "durationMs": 1100,
+          "target": "fear",
+          "up": true,
+          "cue": {
+            "beatId": "freedom-practice-strings-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 22567,
+          "durationMs": 2000
+        }
+      ],
+      "connections": [
+        {
+          "id": "habitLine",
+          "from": {
+            "node": "habit",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "mira",
+            "anchor": "left"
+          },
+          "meaning": "Influence of habit",
+          "bend": -15
+        },
+        {
+          "id": "fearLine",
+          "from": {
+            "node": "fear",
+            "anchor": "left"
+          },
+          "to": {
+            "node": "mira",
+            "anchor": "right"
+          },
+          "meaning": "Influence of fear",
+          "bend": -15
+        },
+        {
+          "id": "socialLine",
+          "from": {
+            "node": "others",
+            "anchor": "bottom"
+          },
+          "to": {
+            "node": "mira",
+            "anchor": "top"
+          },
+          "meaning": "Social influence",
+          "bend": 0
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "two-doors",
+      "title": "Două uși nu sunt încă libertate",
+      "emotionLabel": "paradox",
+      "alt": "Două uși nu sunt încă libertate. door, door, character",
+      "promise": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste.",
+      "durationMs": 27000,
+      "beats": [
+        {
+          "label": "O distincție",
+          "text": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste.",
+          "startMs": 800,
+          "endMs": 9353,
+          "sourceRefs": [
+            "src-two-doors"
+          ],
+          "spokenEndMs": 8437,
+          "id": "freedom-practice-two-doors-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "În spatele alegerii",
+          "text": "O preferință poate fi repetată din obișnuință. O alta poate fi examinată, discutată și schimbată.",
+          "startMs": 9533,
+          "endMs": 18087,
+          "sourceRefs": [
+            "src-two-doors"
+          ],
+          "spokenEndMs": 17123,
+          "id": "freedom-practice-two-doors-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Ideea",
+          "text": "Diferența propusă aici este între a urma o dorință și a putea întreba dacă acea dorință merită urmată.",
+          "startMs": 18267,
+          "endMs": 26820,
+          "sourceRefs": [
+            "src-two-doors"
+          ],
+          "spokenEndMs": 25397,
+          "id": "freedom-practice-two-doors-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "habit",
+          "asset": "door",
+          "x": 314,
+          "y": 576,
+          "scale": 0.96,
+          "options": {
+            "color": "$blue",
+            "label": "Din obișnuință"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "choice",
+          "asset": "door",
+          "x": 886,
+          "y": 576,
+          "scale": 0.96,
+          "options": {
+            "color": "$teal",
+            "label": "După reflecție"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-determined",
+          "x": 600,
+          "y": 682,
+          "scale": 1.02,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "habit",
+          "action": "door.open",
+          "atMs": 1600,
+          "durationMs": 1700
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 9533,
+          "durationMs": 900,
+          "target": "habit",
+          "cue": {
+            "beatId": "freedom-practice-two-doors-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "choice",
+          "action": "door.open",
+          "atMs": 18267,
+          "durationMs": 2300,
+          "cue": {
+            "beatId": "freedom-practice-two-doors-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 21367,
+          "durationMs": 1200,
+          "target": "choice"
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "mirror",
+      "title": "O pauză între impuls și gest",
+      "emotionLabel": "luciditate",
+      "alt": "O pauză între impuls și gest. character, mirror, bulb",
+      "promise": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit.",
+      "durationMs": 29000,
+      "beats": [
+        {
+          "label": "Un gest mic",
+          "text": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit.",
+          "startMs": 800,
+          "endMs": 10020,
+          "sourceRefs": [
+            "src-mirror"
+          ],
+          "spokenEndMs": 9181,
+          "id": "freedom-practice-mirror-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Întrebări",
+          "text": "De ce vreau asta? Ce teamă încerc să evit? Ce s-ar schimba dacă aș privi situația din alt loc?",
+          "startMs": 10200,
+          "endMs": 19420,
+          "sourceRefs": [
+            "src-mirror"
+          ],
+          "spokenEndMs": 17526,
+          "id": "freedom-practice-mirror-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Mecanismul",
+          "text": "Reflecția nu șterge dorințele. Le face vizibile și lasă loc pentru o relație diferită cu ele.",
+          "startMs": 19600,
+          "endMs": 28820,
+          "sourceRefs": [
+            "src-mirror"
+          ],
+          "spokenEndMs": 26596,
+          "id": "freedom-practice-mirror-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "mira",
+          "asset": "person-02-surprised",
+          "x": 365,
+          "y": 641,
+          "scale": 1.23,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "mirror",
+          "asset": "mirror",
+          "x": 864,
+          "y": 624,
+          "scale": 1.16,
+          "options": {},
+          "meaning": "mirror"
+        },
+        {
+          "id": "thought",
+          "asset": "bulb",
+          "x": 613,
+          "y": 380,
+          "scale": 0.4,
+          "options": {},
+          "meaning": "bulb"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 2600,
+          "durationMs": 900,
+          "target": "mirror"
+        },
+        {
+          "actor": "thought",
+          "action": "appear",
+          "atMs": 10200,
+          "durationMs": 1800,
+          "cue": {
+            "beatId": "freedom-practice-mirror-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "thought",
+          "action": "light.warm",
+          "atMs": 12600,
+          "durationMs": 3700
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 19600,
+          "durationMs": 2400,
+          "cue": {
+            "beatId": "freedom-practice-mirror-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "balance",
+      "title": "Nu orice impuls trebuie urmat",
+      "emotionLabel": "discernământ",
+      "alt": "Nu orice impuls trebuie urmat. balance, character, Impuls, Valori",
+      "promise": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi.",
+      "durationMs": 30000,
+      "beats": [
+        {
+          "label": "Examinarea",
+          "text": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi.",
+          "startMs": 800,
+          "endMs": 10353,
+          "sourceRefs": [
+            "src-balance"
+          ],
+          "spokenEndMs": 6648,
+          "id": "freedom-practice-balance-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Criteriul",
+          "text": "În această perspectivă, a fi liber înseamnă și a putea pune în balanță consecințele, valorile și relațiile.",
+          "startMs": 10533,
+          "endMs": 20087,
+          "sourceRefs": [
+            "src-balance"
+          ],
+          "spokenEndMs": 18396,
+          "id": "freedom-practice-balance-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Limita",
+          "text": "Nu există o formulă care decide întotdeauna corect. Există însă un exercițiu de judecată pe care îl putem învăța.",
+          "startMs": 20267,
+          "endMs": 29820,
+          "sourceRefs": [
+            "src-balance"
+          ],
+          "spokenEndMs": 28794,
+          "id": "freedom-practice-balance-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "balance",
+          "asset": "balance",
+          "x": 800,
+          "y": 568,
+          "scale": 1.19,
+          "options": {},
+          "meaning": "balance"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-worried",
+          "x": 315,
+          "y": 641,
+          "scale": 1.23,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "impulse",
+          "asset": "plaque",
+          "x": 639,
+          "y": 277,
+          "scale": 0.87,
+          "options": {
+            "label": "Impuls",
+            "color": "$ink"
+          },
+          "meaning": "Impuls"
+        },
+        {
+          "id": "value",
+          "asset": "plaque",
+          "x": 976,
+          "y": 277,
+          "scale": 0.87,
+          "options": {
+            "label": "Valori",
+            "color": "$ink"
+          },
+          "meaning": "Valori"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "balance",
+          "action": "balance.weigh",
+          "atMs": 10533,
+          "durationMs": 5000,
+          "cue": {
+            "beatId": "freedom-practice-balance-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 12033,
+          "durationMs": 1200,
+          "target": "balance"
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 20267,
+          "durationMs": 2500,
+          "cue": {
+            "beatId": "freedom-practice-balance-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "conditions",
+      "title": "Libertatea are nevoie și de condiții",
+      "emotionLabel": "deschidere",
+      "alt": "Libertatea are nevoie și de condiții. shelf, mirror, character, bulb",
+      "promise": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica.",
+      "durationMs": 32000,
+      "beats": [
+        {
+          "label": "Dincolo de individ",
+          "text": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica.",
+          "startMs": 800,
+          "endMs": 11020,
+          "sourceRefs": [
+            "src-conditions"
+          ],
+          "spokenEndMs": 10065,
+          "id": "freedom-practice-conditions-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Spațiul posibilului",
+          "text": "Un mediu bun oferă timp, explicații și posibilitatea de a spune nu. Nu doar mai multe butoane de apăsat.",
+          "startMs": 11200,
+          "endMs": 21420,
+          "sourceRefs": [
+            "src-conditions"
+          ],
+          "spokenEndMs": 18624,
+          "id": "freedom-practice-conditions-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Consecința",
+          "text": "Putem judeca un sistem și prin întrebarea: îi ajută pe oameni să înțeleagă și să-și revizuiască propriile alegeri?",
+          "startMs": 21600,
+          "endMs": 31820,
+          "sourceRefs": [
+            "src-conditions"
+          ],
+          "spokenEndMs": 29602,
+          "id": "freedom-practice-conditions-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "shelf",
+          "asset": "shelf",
+          "x": 266,
+          "y": 621,
+          "scale": 0.91,
+          "options": {},
+          "meaning": "shelf"
+        },
+        {
+          "id": "mirror",
+          "asset": "mirror",
+          "x": 956,
+          "y": 626,
+          "scale": 0.96,
+          "options": {},
+          "meaning": "mirror"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-inspired",
+          "x": 600,
+          "y": 651,
+          "scale": 1.17,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "idea",
+          "asset": "bulb",
+          "x": 754,
+          "y": 375,
+          "scale": 0.4,
+          "options": {},
+          "meaning": "bulb"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 2500,
+          "durationMs": 1100,
+          "target": "shelf"
+        },
+        {
+          "actor": "idea",
+          "action": "appear",
+          "atMs": 11200,
+          "durationMs": 1800,
+          "cue": {
+            "beatId": "freedom-practice-conditions-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 21600,
+          "durationMs": 1300,
+          "target": "mirror",
+          "cue": {
+            "beatId": "freedom-practice-conditions-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    },
+    {
+      "id": "freedom",
+      "title": "A fi autorul unei alegeri",
+      "emotionLabel": "rezonanță",
+      "alt": "A fi autorul unei alegeri. tree, door, character",
+      "promise": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele.",
+      "durationMs": 31000,
+      "beats": [
+        {
+          "label": "Esența",
+          "text": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele.",
+          "startMs": 800,
+          "endMs": 10687,
+          "sourceRefs": [
+            "src-freedom"
+          ],
+          "spokenEndMs": 9238,
+          "id": "freedom-practice-freedom-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "O practică",
+          "text": "Învățăm să observăm, să întrebăm și uneori să ne schimbăm direcția. Această practică rămâne imperfectă și deschisă.",
+          "startMs": 10867,
+          "endMs": 20753,
+          "sourceRefs": [
+            "src-freedom"
+          ],
+          "spokenEndMs": 19604,
+          "id": "freedom-practice-freedom-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Întrebarea finală",
+          "text": "Cât din ceea ce numim alegere este repetiție? Și unde am putea crea un mic spațiu pentru o decizie cu adevărat a noastră?",
+          "startMs": 20933,
+          "endMs": 30820,
+          "sourceRefs": [
+            "src-freedom"
+          ],
+          "spokenEndMs": 29757,
+          "id": "freedom-practice-freedom-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "tree",
+          "asset": "tree",
+          "x": 216,
+          "y": 621,
+          "scale": 0.72,
+          "options": {},
+          "meaning": "tree"
+        },
+        {
+          "id": "door",
+          "asset": "door",
+          "x": 900,
+          "y": 621,
+          "scale": 1.12,
+          "options": {
+            "color": "$teal"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-relieved",
+          "x": 432,
+          "y": 647,
+          "scale": 1.2,
+          "options": {},
+          "meaning": "character"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "door",
+          "action": "door.open",
+          "atMs": 3000,
+          "durationMs": 2600
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 6000,
+          "durationMs": 1000,
+          "target": "door"
+        },
+        {
+          "actor": "mira",
+          "action": "walkTo",
+          "atMs": 12667,
+          "durationMs": 4200,
+          "x": 628
+        },
+        {
+          "actor": "tree",
+          "action": "tree.sway",
+          "atMs": 20933,
+          "durationMs": 4500,
+          "cue": {
+            "beatId": "freedom-practice-freedom-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [],
+      "setting": "studio"
+    }
+  ],
+  "audioDemo": true,
+  "audioDisclosure": "Voce eSpeak demonstrativă; nu este o mostră de narațiune neuronală profesională.",
+  "visualLibrary": "shf-repertory@2.0",
+  "voice": {
+    "id": "espeak-ro-demonstration",
+    "language": "ro",
+    "quality": "demonstration-only"
+  }
+}

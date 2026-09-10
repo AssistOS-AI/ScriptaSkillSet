@@ -1,0 +1,27 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Browser voice audition · Theatrical Audio</title>
+<style>body{font:16px/1.55 system-ui,sans-serif;max-width:860px;margin:40px auto;padding:0 22px;background:#f4f6fa;color:#14243b}h1{font-size:2rem;line-height:1.2}section{background:white;border:1px solid #ccd6e5;border-radius:14px;padding:22px;margin:20px 0}textarea,select{box-sizing:border-box;width:100%;padding:12px;font:inherit;border:1px solid #a9b6c9;border-radius:8px}textarea{min-height:140px}label{display:block;margin:16px 0 5px}button{font:inherit;padding:10px 18px;margin:16px 10px 0 0;border:1px solid #163b78;border-radius:8px;background:#163b78;color:white;cursor:pointer}button:disabled{opacity:.45;cursor:default}.note{font-size:.93rem;color:#46566e}.warning{border-left:4px solid #bd7627;padding-left:14px}input{vertical-align:middle;width:210px}#status{min-height:1.6em;white-space:pre-wrap}</style>
+<h1>Browser voice audition</h1><p>No API key, installation or server is needed for this page. Available voices come from your browser or operating system.</p>
+<p class="warning"><strong>Listening only — not a file-export backend.</strong> Web Speech synthesis does not provide a standard WAV download. Its event timing and emotional control are not suitable as the authoritative animation timeline. Use the CLI to generate production clips.</p>
+<section><label for="voice">Voice</label><select id="voice"></select><p class="note">“Local” reflects the browser's localService flag, not an independently audited privacy guarantee. A “remote” voice can send the text to its provider when you press Speak. No API keys are collected or stored.</p>
+<label for="text">Text to speak</label><textarea id="text">David... don't turn around. I know that voice. It has been calling us for years.</textarea>
+<label for="rate">Rate <output id="rate-value">0.9</output></label><input id="rate" type="range" min="0.5" max="1.5" step="0.05" value="0.9">
+<label for="pitch">Pitch <output id="pitch-value">1</output></label><input id="pitch" type="range" min="0.5" max="1.5" step="0.05" value="1">
+<div><button id="speak">Speak</button><button id="stop">Stop</button><button id="refresh">Refresh voices</button></div><p role="status" id="status"></p></section>
+<p class="note">Rate and pitch are not emotion knobs. There is no guaranteed whisper, anger, character identity across devices, or neural-quality voice. No cloud website is scraped and no undocumented browser service is accessed by this page.</p>
+<script>
+'use strict';const el=id=>document.getElementById(id);let available=[],current=null;
+function refresh(){if(!('speechSynthesis'in window)){el('status').textContent='This browser has no Web Speech synthesis API.';el('speak').disabled=true;return;}
+ const prior=el('voice').value;available=speechSynthesis.getVoices().filter(v=>/^en(?:-|_)/i.test(v.lang)||v.lang==='en');
+ el('voice').replaceChildren(...available.map((v,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${v.name} · ${v.lang} · ${v.localService?'local':'remote'}`;return o;}));
+ if(prior&&Number(prior)<available.length)el('voice').value=prior;
+ el('speak').disabled=!available.length;el('status').textContent=available.length?`${available.length} English voices available. Choose a voice, then Speak.`:'No English voices available yet. Install/enable an English system voice or try another browser; then refresh. Headless browsers may have no voices.';
+}
+for(const name of ['rate','pitch'])el(name).oninput=()=>el(name+'-value').value=el(name).value;
+el('speak').onclick=()=>{const voice=available[Number(el('voice').value)],text=el('text').value.trim();if(!voice||!text)return;speechSynthesis.cancel();
+ current=new SpeechSynthesisUtterance(text);current.voice=voice;current.lang=voice.lang;current.rate=Number(el('rate').value);current.pitch=Number(el('pitch').value);
+ current.onstart=()=>el('status').textContent='Speaking. No downloadable file is being produced.';
+ current.onend=()=>el('status').textContent='Finished.';current.onerror=e=>el('status').textContent='Browser synthesis error: '+e.error;
+ speechSynthesis.speak(current);};
+el('stop').onclick=()=>{if('speechSynthesis'in window)speechSynthesis.cancel();el('status').textContent='Stopped.';};el('refresh').onclick=refresh;
+if('speechSynthesis'in window)speechSynthesis.addEventListener('voiceschanged',refresh);window.addEventListener('pagehide',()=>{if('speechSynthesis'in window)speechSynthesis.cancel();});refresh();
+</script></html>

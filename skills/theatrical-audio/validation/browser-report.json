@@ -1,0 +1,24 @@
+{
+  "browser": "Chromium",
+  "mode": "headless",
+  "urlKind": "inline markup via set_content",
+  "checks": [
+    "Loaded single-file HTML markup without a server",
+    "Decoded and scheduled 12 separate playback assets",
+    "Pause freezes transport time",
+    "Seek updates caption and actor from the selected clip boundary",
+    "Resumed playback advances from the seek offset",
+    "412-pixel viewport has no horizontal overflow",
+    "No HTTP(S) requests during load, play, pause or seek",
+    "No uncaught browser JavaScript errors"
+  ],
+  "limitations": [
+    "Audio clock and scheduling tested; this is not a human listening evaluation.",
+    "Physical Android/iOS audio latency was not measured.",
+    "Sandbox Chromium policy blocked file:// navigation. The same HTML was tested in memory without a server."
+  ],
+  "fileNavigationTested": false,
+  "passed": true,
+  "networkRequests": [],
+  "pageErrors": []
+}

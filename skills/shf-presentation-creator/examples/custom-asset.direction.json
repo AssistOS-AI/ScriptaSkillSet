@@ -1,0 +1,153 @@
+{
+  "format": "SHF-Direction",
+  "version": "0.4",
+  "id": "custom-memory-crystal",
+  "title": "A familiar cast, one unique object",
+  "language": "en",
+  "stage": {
+    "width": 1200,
+    "height": 760
+  },
+  "assets": {},
+  "sources": [
+    {
+      "id": "original",
+      "kind": "original-demo-text",
+      "text": "An original demonstration of a custom visual metaphor."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "crystal",
+      "title": "A new idea has a shape",
+      "durationMs": 15000,
+      "setting": "studio",
+      "objects": [
+        {
+          "id": "mira",
+          "asset": "person-02-curious",
+          "x": 350,
+          "y": 640,
+          "scale": 1.2
+        },
+        {
+          "id": "core",
+          "asset": "custom",
+          "x": 800,
+          "y": 555,
+          "scale": 1.4,
+          "meaning": "an explicitly metaphorical memory crystal",
+          "visual": {
+            "id": "$asset",
+            "type": "g",
+            "attrs": {},
+            "anchors": {
+              "left": [
+                -72,
+                -60
+              ],
+              "right": [
+                72,
+                -60
+              ],
+              "top": [
+                0,
+                -180
+              ],
+              "center": [
+                0,
+                -70
+              ]
+            },
+            "children": [
+              {
+                "id": "$asset.shadow",
+                "type": "ellipse",
+                "attrs": {
+                  "cx": 0,
+                  "cy": 12,
+                  "rx": 84,
+                  "ry": 12,
+                  "fill": "$shadow"
+                }
+              },
+              {
+                "id": "$asset.body",
+                "type": "path",
+                "attrs": {
+                  "d": "M0 -180 L76 -85 L45 0 L-45 0 L-76 -85Z",
+                  "fill": "$teal",
+                  "stroke": "$edge",
+                  "stroke-width": 2
+                }
+              },
+              {
+                "id": "$asset.light",
+                "type": "path",
+                "attrs": {
+                  "d": "M0 -180 L0 0 L-45 0 L-76 -85Z",
+                  "fill": "$blue"
+                }
+              },
+              {
+                "id": "$asset.facet",
+                "type": "path",
+                "attrs": {
+                  "d": "M0 -180 L76 -85 L0 -65 L-76 -85Z",
+                  "fill": "$glass"
+                }
+              },
+              {
+                "id": "$asset.shine",
+                "type": "path",
+                "attrs": {
+                  "d": "M0 -145 L45 -91 L0 -77",
+                  "fill": "none",
+                  "stroke": "$page",
+                  "stroke-width": 4
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "actions": [
+        {
+          "actor": "core",
+          "action": "appear",
+          "atMs": 800,
+          "durationMs": 1600
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "target": "core",
+          "atMs": 2600,
+          "durationMs": 900
+        }
+      ],
+      "beats": [
+        {
+          "id": "custom-line-01",
+          "startMs": 700,
+          "endMs": 7200,
+          "text": "A unique object can share the same visual world as a familiar character.",
+          "sourceRefs": [
+            "original"
+          ]
+        },
+        {
+          "id": "custom-line-02",
+          "startMs": 7600,
+          "endMs": 14500,
+          "text": "This crystal is a visual metaphor, not a scientific diagram of memory.",
+          "sourceRefs": [
+            "original"
+          ]
+        }
+      ]
+    }
+  ],
+  "visualLibrary": "shf-repertory@2.0",
+  "visualIdentity": "illustrated-theatre"
+}

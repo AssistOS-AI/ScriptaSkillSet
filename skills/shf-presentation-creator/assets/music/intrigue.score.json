@@ -1,0 +1,156 @@
+{
+  "format": "SHF-Score",
+  "version": "1",
+  "id": "original-intrigue",
+  "title": "SHF · intrigue",
+  "mood": "intrigue",
+  "original": true,
+  "composer": "Procedural SHF score generator",
+  "license": "MIT",
+  "seed": "deterministic-1",
+  "bpm": 78,
+  "durationSeconds": 16,
+  "maxPolyphony": 6,
+  "events": [
+    {
+      "time": 0,
+      "duration": 2.1538461538461537,
+      "midi": 65,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 0,
+      "duration": 3.076923076923077,
+      "midi": 41,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 0.06,
+      "duration": 2.923076923076923,
+      "midi": 60,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 1.5384615384615385,
+      "duration": 2.1538461538461537,
+      "midi": 68,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 3.076923076923077,
+      "duration": 2.1538461538461537,
+      "midi": 67,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 3.076923076923077,
+      "duration": 3.076923076923077,
+      "midi": 48,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 3.136923076923077,
+      "duration": 2.923076923076923,
+      "midi": 60,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 4.615384615384616,
+      "duration": 2.1538461538461537,
+      "midi": 65,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 6.153846153846154,
+      "duration": 2.1538461538461537,
+      "midi": 75,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 6.153846153846154,
+      "duration": 3.076923076923077,
+      "midi": 41,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 6.213846153846154,
+      "duration": 2.923076923076923,
+      "midi": 60,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 7.6923076923076925,
+      "duration": 2.1538461538461537,
+      "midi": 68,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 9.230769230769232,
+      "duration": 2.1538461538461537,
+      "midi": 72,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 9.230769230769232,
+      "duration": 3.076923076923077,
+      "midi": 48,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 9.290769230769232,
+      "duration": 2.923076923076923,
+      "midi": 60,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 10.76923076923077,
+      "duration": 2.1538461538461537,
+      "midi": 67,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 12.307692307692308,
+      "duration": 2.1538461538461537,
+      "midi": 65,
+      "velocity": 0.24,
+      "timbre": "felt"
+    },
+    {
+      "time": 12.307692307692308,
+      "duration": 3.076923076923077,
+      "midi": 41,
+      "velocity": 0.19,
+      "timbre": "pad"
+    },
+    {
+      "time": 12.367692307692309,
+      "duration": 2.923076923076923,
+      "midi": 60,
+      "velocity": 0.1,
+      "timbre": "pad"
+    },
+    {
+      "time": 13.846153846153847,
+      "duration": 2.1538461538461533,
+      "midi": 68,
+      "velocity": 0.24,
+      "timbre": "felt"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "shf-presentation-creator",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "description": "Portable SHF presentation authoring, standalone HTML export and embeddable browser player",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/core.test.mjs",
+    "build": "node scripts/build.mjs",
+    "catalog": "node scripts/build-catalog.mjs",
+    "test:portability": "node tests/portability.mjs"
+  }
+}

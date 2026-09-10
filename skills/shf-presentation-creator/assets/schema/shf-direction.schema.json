@@ -1,0 +1,1392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SHF-Direction 0.4",
+  "description": "Authoring structure; compile and run runtime validation for reference and time checks.",
+  "type": "object",
+  "required": [
+    "format",
+    "version",
+    "id",
+    "title",
+    "stage",
+    "scenes"
+  ],
+  "properties": {
+    "format": {
+      "const": "SHF-Direction"
+    },
+    "version": {
+      "enum": [
+        "0.3",
+        "0.4"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,79}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "stage": {
+      "type": "object",
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "number",
+          "minimum": 1
+        },
+        "height": {
+          "type": "number",
+          "minimum": 1
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "durationMs",
+          "objects",
+          "actions"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "durationMs": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 600000
+          },
+          "objects": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "asset",
+                "x",
+                "y"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "asset": {
+                  "enum": [
+                    "character",
+                    "book",
+                    "city",
+                    "paper",
+                    "stack",
+                    "desk",
+                    "door",
+                    "shelf",
+                    "machine",
+                    "bulb",
+                    "tree",
+                    "planet",
+                    "balance",
+                    "mirror",
+                    "plaque",
+                    "stamp",
+                    "microscope",
+                    "telescope",
+                    "flask",
+                    "beaker",
+                    "test-tubes",
+                    "petri-dish",
+                    "dna",
+                    "atom",
+                    "magnet",
+                    "thermometer",
+                    "molecule",
+                    "brain",
+                    "heart-organ",
+                    "cell",
+                    "bacteria",
+                    "centrifuge",
+                    "pipette",
+                    "prism",
+                    "fossil",
+                    "sample-box",
+                    "laptop",
+                    "desktop",
+                    "phone",
+                    "tablet",
+                    "server",
+                    "database",
+                    "chip",
+                    "keyboard",
+                    "mouse",
+                    "headphones",
+                    "microphone",
+                    "camera",
+                    "projector",
+                    "printer",
+                    "router",
+                    "cloud-storage",
+                    "battery",
+                    "solar-panel",
+                    "circuit-board",
+                    "robot",
+                    "closed-book",
+                    "notebook",
+                    "scroll",
+                    "quill",
+                    "pencil",
+                    "pen",
+                    "school-bag",
+                    "graduation-cap",
+                    "globe",
+                    "map",
+                    "compass",
+                    "abacus",
+                    "blackboard",
+                    "paint-palette",
+                    "violin",
+                    "piano",
+                    "theatre-masks",
+                    "chess",
+                    "house",
+                    "school",
+                    "hospital",
+                    "courthouse",
+                    "bank",
+                    "museum",
+                    "library-building",
+                    "workshop",
+                    "shop",
+                    "post-office",
+                    "factory",
+                    "castle",
+                    "lighthouse",
+                    "windmill",
+                    "bridge",
+                    "tent",
+                    "skyscraper",
+                    "fountain",
+                    "pine-tree",
+                    "palm-tree",
+                    "cactus",
+                    "flower",
+                    "seedling",
+                    "mushroom",
+                    "mountain",
+                    "volcano",
+                    "island",
+                    "river",
+                    "waterfall",
+                    "cloud",
+                    "rain-cloud",
+                    "snowflake",
+                    "sun",
+                    "moon",
+                    "star",
+                    "rainbow",
+                    "butterfly",
+                    "bird",
+                    "fish",
+                    "cat",
+                    "dog",
+                    "owl",
+                    "rocket",
+                    "satellite",
+                    "ufo",
+                    "ringed-planet",
+                    "earth",
+                    "comet",
+                    "moon-rover",
+                    "space-station",
+                    "observatory",
+                    "astronaut-helmet",
+                    "star-chart",
+                    "wormhole",
+                    "car",
+                    "taxi",
+                    "ambulance",
+                    "police-car",
+                    "delivery-van",
+                    "bus",
+                    "train",
+                    "bicycle",
+                    "scooter",
+                    "airplane",
+                    "helicopter",
+                    "sailboat",
+                    "ship",
+                    "hot-air-balloon",
+                    "traffic-light",
+                    "road-sign",
+                    "chair",
+                    "sofa",
+                    "bed",
+                    "lamp",
+                    "candle",
+                    "cup",
+                    "teapot",
+                    "bottle",
+                    "clock",
+                    "alarm-clock",
+                    "key",
+                    "lock",
+                    "umbrella",
+                    "suitcase",
+                    "gift",
+                    "window",
+                    "envelope",
+                    "basket",
+                    "watering-can",
+                    "plant-pot",
+                    "hammer",
+                    "wrench",
+                    "screwdriver",
+                    "saw",
+                    "scissors",
+                    "ruler",
+                    "gear",
+                    "toolbox",
+                    "paintbrush",
+                    "shovel",
+                    "ladder",
+                    "hard-hat",
+                    "safety-goggles",
+                    "scale",
+                    "sewing-machine",
+                    "wheelbarrow",
+                    "coins",
+                    "wallet",
+                    "piggy-bank",
+                    "briefcase",
+                    "contract",
+                    "gavel",
+                    "ballot-box",
+                    "megaphone",
+                    "shield",
+                    "certificate",
+                    "hourglass",
+                    "calendar",
+                    "handshake",
+                    "safe",
+                    "shopping-cart",
+                    "package",
+                    "treasure-chest",
+                    "crown",
+                    "sword",
+                    "dragon",
+                    "feather",
+                    "lantern",
+                    "puzzle",
+                    "infinity",
+                    "question",
+                    "warning",
+                    "target",
+                    "flag",
+                    "thought-bubble",
+                    "speech-bubble",
+                    "fingerprint",
+                    "chain",
+                    "broken-chain",
+                    "open-lock",
+                    "person-01-neutral",
+                    "person-01-happy",
+                    "person-01-curious",
+                    "person-01-worried",
+                    "person-01-sad",
+                    "person-01-angry",
+                    "person-01-surprised",
+                    "person-01-determined",
+                    "person-01-tired",
+                    "person-01-skeptical",
+                    "person-01-relieved",
+                    "person-01-inspired",
+                    "person-02-neutral",
+                    "person-02-happy",
+                    "person-02-curious",
+                    "person-02-worried",
+                    "person-02-sad",
+                    "person-02-angry",
+                    "person-02-surprised",
+                    "person-02-determined",
+                    "person-02-tired",
+                    "person-02-skeptical",
+                    "person-02-relieved",
+                    "person-02-inspired",
+                    "person-03-neutral",
+                    "person-03-happy",
+                    "person-03-curious",
+                    "person-03-worried",
+                    "person-03-sad",
+                    "person-03-angry",
+                    "person-03-surprised",
+                    "person-03-determined",
+                    "person-03-tired",
+                    "person-03-skeptical",
+                    "person-03-relieved",
+                    "person-03-inspired",
+                    "person-04-neutral",
+                    "person-04-happy",
+                    "person-04-curious",
+                    "person-04-worried",
+                    "person-04-sad",
+                    "person-04-angry",
+                    "person-04-surprised",
+                    "person-04-determined",
+                    "person-04-tired",
+                    "person-04-skeptical",
+                    "person-04-relieved",
+                    "person-04-inspired",
+                    "person-05-neutral",
+                    "person-05-happy",
+                    "person-05-curious",
+                    "person-05-worried",
+                    "person-05-sad",
+                    "person-05-angry",
+                    "person-05-surprised",
+                    "person-05-determined",
+                    "person-05-tired",
+                    "person-05-skeptical",
+                    "person-05-relieved",
+                    "person-05-inspired",
+                    "person-06-neutral",
+                    "person-06-happy",
+                    "person-06-curious",
+                    "person-06-worried",
+                    "person-06-sad",
+                    "person-06-angry",
+                    "person-06-surprised",
+                    "person-06-determined",
+                    "person-06-tired",
+                    "person-06-skeptical",
+                    "person-06-relieved",
+                    "person-06-inspired",
+                    "person-07-neutral",
+                    "person-07-happy",
+                    "person-07-curious",
+                    "person-07-worried",
+                    "person-07-sad",
+                    "person-07-angry",
+                    "person-07-surprised",
+                    "person-07-determined",
+                    "person-07-tired",
+                    "person-07-skeptical",
+                    "person-07-relieved",
+                    "person-07-inspired",
+                    "person-08-neutral",
+                    "person-08-happy",
+                    "person-08-curious",
+                    "person-08-worried",
+                    "person-08-sad",
+                    "person-08-angry",
+                    "person-08-surprised",
+                    "person-08-determined",
+                    "person-08-tired",
+                    "person-08-skeptical",
+                    "person-08-relieved",
+                    "person-08-inspired",
+                    "person-09-neutral",
+                    "person-09-happy",
+                    "person-09-curious",
+                    "person-09-worried",
+                    "person-09-sad",
+                    "person-09-angry",
+                    "person-09-surprised",
+                    "person-09-determined",
+                    "person-09-tired",
+                    "person-09-skeptical",
+                    "person-09-relieved",
+                    "person-09-inspired",
+                    "person-10-neutral",
+                    "person-10-happy",
+                    "person-10-curious",
+                    "person-10-worried",
+                    "person-10-sad",
+                    "person-10-angry",
+                    "person-10-surprised",
+                    "person-10-determined",
+                    "person-10-tired",
+                    "person-10-skeptical",
+                    "person-10-relieved",
+                    "person-10-inspired",
+                    "person-11-neutral",
+                    "person-11-happy",
+                    "person-11-curious",
+                    "person-11-worried",
+                    "person-11-sad",
+                    "person-11-angry",
+                    "person-11-surprised",
+                    "person-11-determined",
+                    "person-11-tired",
+                    "person-11-skeptical",
+                    "person-11-relieved",
+                    "person-11-inspired",
+                    "person-12-neutral",
+                    "person-12-happy",
+                    "person-12-curious",
+                    "person-12-worried",
+                    "person-12-sad",
+                    "person-12-angry",
+                    "person-12-surprised",
+                    "person-12-determined",
+                    "person-12-tired",
+                    "person-12-skeptical",
+                    "person-12-relieved",
+                    "person-12-inspired",
+                    "person-13-neutral",
+                    "person-13-happy",
+                    "person-13-curious",
+                    "person-13-worried",
+                    "person-13-sad",
+                    "person-13-angry",
+                    "person-13-surprised",
+                    "person-13-determined",
+                    "person-13-tired",
+                    "person-13-skeptical",
+                    "person-13-relieved",
+                    "person-13-inspired",
+                    "person-14-neutral",
+                    "person-14-happy",
+                    "person-14-curious",
+                    "person-14-worried",
+                    "person-14-sad",
+                    "person-14-angry",
+                    "person-14-surprised",
+                    "person-14-determined",
+                    "person-14-tired",
+                    "person-14-skeptical",
+                    "person-14-relieved",
+                    "person-14-inspired",
+                    "person-15-neutral",
+                    "person-15-happy",
+                    "person-15-curious",
+                    "person-15-worried",
+                    "person-15-sad",
+                    "person-15-angry",
+                    "person-15-surprised",
+                    "person-15-determined",
+                    "person-15-tired",
+                    "person-15-skeptical",
+                    "person-15-relieved",
+                    "person-15-inspired",
+                    "person-16-neutral",
+                    "person-16-happy",
+                    "person-16-curious",
+                    "person-16-worried",
+                    "person-16-sad",
+                    "person-16-angry",
+                    "person-16-surprised",
+                    "person-16-determined",
+                    "person-16-tired",
+                    "person-16-skeptical",
+                    "person-16-relieved",
+                    "person-16-inspired",
+                    "person-17-neutral",
+                    "person-17-happy",
+                    "person-17-curious",
+                    "person-17-worried",
+                    "person-17-sad",
+                    "person-17-angry",
+                    "person-17-surprised",
+                    "person-17-determined",
+                    "person-17-tired",
+                    "person-17-skeptical",
+                    "person-17-relieved",
+                    "person-17-inspired",
+                    "person-18-neutral",
+                    "person-18-happy",
+                    "person-18-curious",
+                    "person-18-worried",
+                    "person-18-sad",
+                    "person-18-angry",
+                    "person-18-surprised",
+                    "person-18-determined",
+                    "person-18-tired",
+                    "person-18-skeptical",
+                    "person-18-relieved",
+                    "person-18-inspired",
+                    "person-19-neutral",
+                    "person-19-happy",
+                    "person-19-curious",
+                    "person-19-worried",
+                    "person-19-sad",
+                    "person-19-angry",
+                    "person-19-surprised",
+                    "person-19-determined",
+                    "person-19-tired",
+                    "person-19-skeptical",
+                    "person-19-relieved",
+                    "person-19-inspired",
+                    "person-20-neutral",
+                    "person-20-happy",
+                    "person-20-curious",
+                    "person-20-worried",
+                    "person-20-sad",
+                    "person-20-angry",
+                    "person-20-surprised",
+                    "person-20-determined",
+                    "person-20-tired",
+                    "person-20-skeptical",
+                    "person-20-relieved",
+                    "person-20-inspired",
+                    "person-21-neutral",
+                    "person-21-happy",
+                    "person-21-curious",
+                    "person-21-worried",
+                    "person-21-sad",
+                    "person-21-angry",
+                    "person-21-surprised",
+                    "person-21-determined",
+                    "person-21-tired",
+                    "person-21-skeptical",
+                    "person-21-relieved",
+                    "person-21-inspired",
+                    "person-22-neutral",
+                    "person-22-happy",
+                    "person-22-curious",
+                    "person-22-worried",
+                    "person-22-sad",
+                    "person-22-angry",
+                    "person-22-surprised",
+                    "person-22-determined",
+                    "person-22-tired",
+                    "person-22-skeptical",
+                    "person-22-relieved",
+                    "person-22-inspired",
+                    "person-23-neutral",
+                    "person-23-happy",
+                    "person-23-curious",
+                    "person-23-worried",
+                    "person-23-sad",
+                    "person-23-angry",
+                    "person-23-surprised",
+                    "person-23-determined",
+                    "person-23-tired",
+                    "person-23-skeptical",
+                    "person-23-relieved",
+                    "person-23-inspired",
+                    "person-24-neutral",
+                    "person-24-happy",
+                    "person-24-curious",
+                    "person-24-worried",
+                    "person-24-sad",
+                    "person-24-angry",
+                    "person-24-surprised",
+                    "person-24-determined",
+                    "person-24-tired",
+                    "person-24-skeptical",
+                    "person-24-relieved",
+                    "person-24-inspired",
+                    "custom"
+                  ]
+                },
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "scale": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "options": {
+                  "type": "object"
+                },
+                "meaning": {
+                  "type": "string"
+                },
+                "visual": {
+                  "$ref": "#/$defs/node"
+                }
+              }
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "actor",
+                "action",
+                "durationMs"
+              ],
+              "properties": {
+                "actor": {
+                  "type": "string"
+                },
+                "action": {
+                  "enum": [
+                    "appear",
+                    "disappear",
+                    "moveTo",
+                    "lookAt",
+                    "react",
+                    "walkTo",
+                    "reach",
+                    "book.open",
+                    "book.turnPage",
+                    "city.grow",
+                    "stack.grow",
+                    "stack.wobble",
+                    "door.open",
+                    "door.close",
+                    "machine.think",
+                    "machine.approve",
+                    "paper.verify",
+                    "balance.weigh",
+                    "stamp.press",
+                    "tree.sway",
+                    "light.warm",
+                    "connection.draw"
+                  ]
+                },
+                "atMs": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "durationMs": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "cue": {
+                  "type": "object",
+                  "required": [
+                    "beatId"
+                  ],
+                  "properties": {
+                    "beatId": {
+                      "type": "string"
+                    },
+                    "edge": {
+                      "enum": [
+                        "start",
+                        "end"
+                      ]
+                    },
+                    "offsetMs": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "anyOf": [
+                {
+                  "required": [
+                    "atMs"
+                  ]
+                },
+                {
+                  "required": [
+                    "cue"
+                  ]
+                }
+              ]
+            }
+          },
+          "beats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/beat"
+            }
+          },
+          "audioClips": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "assetId",
+                "startMs",
+                "durationMs"
+              ],
+              "properties": {
+                "assetId": {
+                  "type": "string"
+                },
+                "beatId": {
+                  "type": "string"
+                },
+                "startMs": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "durationMs": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "speakerId": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "music": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "assetId": {
+                "type": "string"
+              },
+              "gain": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 0.3
+              },
+              "loop": {
+                "type": "boolean"
+              },
+              "offsetMs": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          },
+          "captions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "startMs",
+                "endMs",
+                "text"
+              ],
+              "properties": {
+                "startMs": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "endMs": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "text": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "required": [
+        "mime"
+      ],
+      "properties": {
+        "mime": {
+          "enum": [
+            "audio/mpeg",
+            "audio/wav",
+            "audio/ogg"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 239
+        },
+        "data": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/=\\s]*$"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "path"
+          ]
+        },
+        {
+          "required": [
+            "data"
+          ]
+        }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "g",
+            "path",
+            "rect",
+            "circle",
+            "ellipse",
+            "line",
+            "polygon",
+            "text"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "origin": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "transform": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "scale": {
+              "type": "number"
+            },
+            "rotate": {
+              "type": "number"
+            },
+            "scaleX": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "scaleY": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "attrs": {
+          "type": "object",
+          "properties": {
+            "d": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "x": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "y": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "x1": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "x2": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "y1": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "y2": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "cx": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "cy": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "r": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "rx": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "ry": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "width": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "height": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "points": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "fill": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "stroke": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "stroke-width": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "stroke-linecap": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "stroke-linejoin": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "stroke-dasharray": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "fill-rule": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "font-size": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "font-family": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "font-weight": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "text-anchor": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "letter-spacing": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "opacity": {
+              "type": [
+                "string",
+                "number"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "visibleThemes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "color",
+              "paper",
+              "night"
+            ]
+          }
+        },
+        "themeAttrs": {
+          "type": "object"
+        },
+        "anchors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "paint": {
+          "type": "string"
+        },
+        "asset": {
+          "type": "string"
+        },
+        "meaning": {
+          "type": "string"
+        }
+      }
+    },
+    "track": {
+      "type": "object",
+      "required": [
+        "target",
+        "property",
+        "keys"
+      ],
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "property": {
+          "enum": [
+            "x",
+            "y",
+            "scale",
+            "rotate",
+            "opacity",
+            "draw",
+            "scaleX",
+            "scaleY"
+          ]
+        },
+        "essential": {
+          "type": "boolean"
+        },
+        "keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": {
+            "type": "object",
+            "required": [
+              "t",
+              "v"
+            ],
+            "properties": {
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "v": {
+                "type": "number"
+              },
+              "ease": {
+                "enum": [
+                  "linear",
+                  "inOut",
+                  "out",
+                  "hold"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "beat": {
+      "type": "object",
+      "required": [
+        "startMs",
+        "endMs",
+        "text"
+      ],
+      "properties": {
+        "startMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "endMs": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "spokenEndMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "label": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "durationMs",
+        "nodes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "durationMs": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 600000
+        },
+        "alt": {
+          "type": "string"
+        },
+        "promise": {
+          "type": "string"
+        },
+        "emotionLabel": {
+          "type": "string"
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1500,
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/track"
+          }
+        },
+        "beats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/beat"
+          }
+        },
+        "audio": {
+          "type": "object",
+          "required": [
+            "assetId"
+          ],
+          "properties": {
+            "assetId": {
+              "type": "string"
+            },
+            "offsetMs": {
+              "const": 0
+            },
+            "durationMs": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "direction": {
+          "type": "object"
+        },
+        "connections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "from",
+              "to"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "from": {
+                "$ref": "#/$defs/endpoint"
+              },
+              "to": {
+                "$ref": "#/$defs/endpoint"
+              },
+              "bend": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "audioClips": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "assetId",
+              "startMs",
+              "durationMs"
+            ],
+            "properties": {
+              "assetId": {
+                "type": "string"
+              },
+              "beatId": {
+                "type": "string"
+              },
+              "startMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "durationMs": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "speakerId": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "music": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "assetId": {
+              "type": "string"
+            },
+            "gain": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.3
+            },
+            "loop": {
+              "type": "boolean"
+            },
+            "offsetMs": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "captions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "startMs",
+              "endMs",
+              "text"
+            ],
+            "properties": {
+              "startMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "required": [
+        "node",
+        "anchor"
+      ],
+      "properties": {
+        "node": {
+          "type": "string"
+        },
+        "anchor": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

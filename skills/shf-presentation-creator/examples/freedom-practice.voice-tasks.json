@@ -1,0 +1,818 @@
+{
+  "format": "SHF-VoiceTasks",
+  "version": "1",
+  "filmId": "freedom-practice",
+  "selection": "Inspect actual environment skills/tools; choose an available compatible TTS provider. Do not invent a skill or API.",
+  "tasks": [
+    {
+      "id": "freedom-practice-strings-line-01",
+      "sceneId": "strings",
+      "text": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Alegerile noastre vin de undeva",
+        "sceneIntent": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem?",
+        "previousLine": "",
+        "nextLine": "Obiceiul, frica și privirea celorlalți ne influențează alegerile. Uneori, firele se văd abia după ce ne-am mișcat."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-strings-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-strings-line-02",
+      "sceneId": "strings",
+      "text": "Obiceiul, frica și privirea celorlalți ne influențează alegerile. Uneori, firele se văd abia după ce ne-am mișcat.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Alegerile noastre vin de undeva",
+        "sceneIntent": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem?",
+        "previousLine": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem?",
+        "nextLine": "Libertatea ar putea începe nu prin negarea acestor influențe, ci prin capacitatea de a le observa."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-strings-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-strings-line-03",
+      "sceneId": "strings",
+      "text": "Libertatea ar putea începe nu prin negarea acestor influențe, ci prin capacitatea de a le observa.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Alegerile noastre vin de undeva",
+        "sceneIntent": "Spunem că suntem liberi atunci când facem ce vrem. Dar de unde vin lucrurile pe care le vrem?",
+        "previousLine": "Obiceiul, frica și privirea celorlalți ne influențează alegerile. Uneori, firele se văd abia după ce ne-am mișcat.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-strings-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-two-doors-line-01",
+      "sceneId": "two-doors",
+      "text": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Două uși nu sunt încă libertate",
+        "sceneIntent": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste.",
+        "previousLine": "",
+        "nextLine": "O preferință poate fi repetată din obișnuință. O alta poate fi examinată, discutată și schimbată."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-two-doors-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-two-doors-line-02",
+      "sceneId": "two-doors",
+      "text": "O preferință poate fi repetată din obișnuință. O alta poate fi examinată, discutată și schimbată.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Două uși nu sunt încă libertate",
+        "sceneIntent": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste.",
+        "previousLine": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste.",
+        "nextLine": "Diferența propusă aici este între a urma o dorință și a putea întreba dacă acea dorință merită urmată."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-two-doors-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-two-doors-line-03",
+      "sceneId": "two-doors",
+      "text": "Diferența propusă aici este între a urma o dorință și a putea întreba dacă acea dorință merită urmată.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Două uși nu sunt încă libertate",
+        "sceneIntent": "Poți avea două opțiuni și totuși să nu înțelegi de ce una te atrage. Numărul ușilor nu spune întreaga poveste.",
+        "previousLine": "O preferință poate fi repetată din obișnuință. O alta poate fi examinată, discutată și schimbată.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-two-doors-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-mirror-line-01",
+      "sceneId": "mirror",
+      "text": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "O pauză între impuls și gest",
+        "sceneIntent": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit.",
+        "previousLine": "",
+        "nextLine": "De ce vreau asta? Ce teamă încerc să evit? Ce s-ar schimba dacă aș privi situația din alt loc?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-mirror-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-mirror-line-02",
+      "sceneId": "mirror",
+      "text": "De ce vreau asta? Ce teamă încerc să evit? Ce s-ar schimba dacă aș privi situația din alt loc?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "O pauză între impuls și gest",
+        "sceneIntent": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit.",
+        "previousLine": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit.",
+        "nextLine": "Reflecția nu șterge dorințele. Le face vizibile și lasă loc pentru o relație diferită cu ele."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-mirror-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-mirror-line-03",
+      "sceneId": "mirror",
+      "text": "Reflecția nu șterge dorințele. Le face vizibile și lasă loc pentru o relație diferită cu ele.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "O pauză între impuls și gest",
+        "sceneIntent": "Nu trebuie să ieșim din lume pentru a reflecta. Uneori, schimbarea începe printr-o pauză înaintea unui gest obișnuit.",
+        "previousLine": "De ce vreau asta? Ce teamă încerc să evit? Ce s-ar schimba dacă aș privi situația din alt loc?",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-mirror-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-balance-line-01",
+      "sceneId": "balance",
+      "text": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Nu orice impuls trebuie urmat",
+        "sceneIntent": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi.",
+        "previousLine": "",
+        "nextLine": "În această perspectivă, a fi liber înseamnă și a putea pune în balanță consecințele, valorile și relațiile."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-balance-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-balance-line-02",
+      "sceneId": "balance",
+      "text": "În această perspectivă, a fi liber înseamnă și a putea pune în balanță consecințele, valorile și relațiile.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Nu orice impuls trebuie urmat",
+        "sceneIntent": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi.",
+        "previousLine": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi.",
+        "nextLine": "Nu există o formulă care decide întotdeauna corect. Există însă un exercițiu de judecată pe care îl putem învăța."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-balance-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-balance-line-03",
+      "sceneId": "balance",
+      "text": "Nu există o formulă care decide întotdeauna corect. Există însă un exercițiu de judecată pe care îl putem învăța.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Nu orice impuls trebuie urmat",
+        "sceneIntent": "O dorință poate părea urgentă și totuși să contrazică ceva mai important pentru noi.",
+        "previousLine": "În această perspectivă, a fi liber înseamnă și a putea pune în balanță consecințele, valorile și relațiile.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-balance-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-conditions-line-01",
+      "sceneId": "conditions",
+      "text": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Libertatea are nevoie și de condiții",
+        "sceneIntent": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica.",
+        "previousLine": "",
+        "nextLine": "Un mediu bun oferă timp, explicații și posibilitatea de a spune nu. Nu doar mai multe butoane de apăsat."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-conditions-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-conditions-line-02",
+      "sceneId": "conditions",
+      "text": "Un mediu bun oferă timp, explicații și posibilitatea de a spune nu. Nu doar mai multe butoane de apăsat.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Libertatea are nevoie și de condiții",
+        "sceneIntent": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica.",
+        "previousLine": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica.",
+        "nextLine": "Putem judeca un sistem și prin întrebarea: îi ajută pe oameni să înțeleagă și să-și revizuiască propriile alegeri?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-conditions-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-conditions-line-03",
+      "sceneId": "conditions",
+      "text": "Putem judeca un sistem și prin întrebarea: îi ajută pe oameni să înțeleagă și să-și revizuiască propriile alegeri?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "Libertatea are nevoie și de condiții",
+        "sceneIntent": "Luciditatea nu este doar o problemă personală. Educația, instituțiile și tehnologia pot ajuta reflecția sau o pot împiedica.",
+        "previousLine": "Un mediu bun oferă timp, explicații și posibilitatea de a spune nu. Nu doar mai multe butoane de apăsat.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-conditions-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-freedom-line-01",
+      "sceneId": "freedom",
+      "text": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "A fi autorul unei alegeri",
+        "sceneIntent": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele.",
+        "previousLine": "",
+        "nextLine": "Învățăm să observăm, să întrebăm și uneori să ne schimbăm direcția. Această practică rămâne imperfectă și deschisă."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-freedom-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-freedom-line-02",
+      "sceneId": "freedom",
+      "text": "Învățăm să observăm, să întrebăm și uneori să ne schimbăm direcția. Această practică rămâne imperfectă și deschisă.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "A fi autorul unei alegeri",
+        "sceneIntent": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele.",
+        "previousLine": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele.",
+        "nextLine": "Cât din ceea ce numim alegere este repetiție? Și unde am putea crea un mic spațiu pentru o decizie cu adevărat a noastră?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-freedom-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "freedom-practice-freedom-line-03",
+      "sceneId": "freedom",
+      "text": "Cât din ceea ce numim alegere este repetiție? Și unde am putea crea un mic spațiu pentru o decizie cu adevărat a noastră?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Libertatea nu este doar o ușă deschisă",
+        "sceneTitle": "A fi autorul unei alegeri",
+        "sceneIntent": "Libertatea nu este prezentată aici ca absență totală a influențelor. Este o capacitate de a lucra conștient cu ele.",
+        "previousLine": "Învățăm să observăm, să întrebăm și uneori să ne schimbăm direcția. Această practică rămâne imperfectă și deschisă.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/freedom-practice-freedom-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    }
+  ]
+}

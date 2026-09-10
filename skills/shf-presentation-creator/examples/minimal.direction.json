@@ -1,0 +1,94 @@
+{
+  "format": "SHF-Direction",
+  "version": "0.3",
+  "id": "first-scene",
+  "title": "A world in a book",
+  "language": "en",
+  "stage": {
+    "width": 1200,
+    "height": 760
+  },
+  "assets": {},
+  "sources": [
+    {
+      "id": "original",
+      "kind": "original-demo-text",
+      "text": "A book opens and a possible city emerges. This is a visual metaphor, not a factual claim."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "reveal",
+      "title": "A world in a book",
+      "durationMs": 15000,
+      "setting": "studio",
+      "objects": [
+        {
+          "id": "city",
+          "asset": "city",
+          "x": 775,
+          "y": 543,
+          "scale": 0.91
+        },
+        {
+          "id": "book",
+          "asset": "book",
+          "x": 775,
+          "y": 550,
+          "scale": 1.15
+        },
+        {
+          "id": "mira",
+          "asset": "character",
+          "x": 306,
+          "y": 640,
+          "scale": 1.26
+        }
+      ],
+      "actions": [
+        {
+          "actor": "book",
+          "action": "book.open",
+          "atMs": 1000,
+          "durationMs": 2200
+        },
+        {
+          "actor": "city",
+          "action": "city.grow",
+          "atMs": 5000,
+          "durationMs": 4000
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "target": "city",
+          "up": true,
+          "atMs": 7500,
+          "durationMs": 1000
+        }
+      ],
+      "beats": [
+        {
+          "startMs": 500,
+          "endMs": 7200,
+          "label": "A world in a book",
+          "text": "The pages open, and a possible city rises from them.",
+          "sourceRefs": [
+            "original"
+          ]
+        },
+        {
+          "startMs": 7500,
+          "endMs": 14500,
+          "label": "A visual metaphor",
+          "text": "This illustrates imagination; it does not claim that a book physically creates buildings.",
+          "sourceRefs": [
+            "original"
+          ]
+        }
+      ]
+    }
+  ],
+  "visualLibrary": "shf-repertory@2.0",
+  "visualIdentity": "illustrated-theatre"
+}

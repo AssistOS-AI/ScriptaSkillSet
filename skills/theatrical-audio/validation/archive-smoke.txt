@@ -1,0 +1,66 @@
+Fresh candidate ZIP extracted in an isolated temporary directory. ZIP CRC and per-file SHA-256 verified. No source-working-tree files used. No API credentials or neural inference.
+
+$ bash -lc node --test tests/*.test.mjs
+s an altered audio file
+      ---
+      duration_ms: 3.527531
+      type: 'test'
+      ...
+    # Subtest: no silent fallback to a diagnostic engine
+    ok 10 - no silent fallback to a diagnostic engine
+      ---
+      duration_ms: 1.524383
+      type: 'test'
+      ...
+    # Subtest: failed backend initialization releases the output lock
+    ok 11 - failed backend initialization releases the output lock
+      ---
+      duration_ms: 2.696164
+      type: 'test'
+      ...
+    # Subtest: concurrent output lock is respected
+    ok 12 - concurrent output lock is respected
+      ---
+      duration_ms: 1.476278
+      type: 'test'
+      ...
+    1..12
+ok 161 - Render, pause-only revision, take selection, cache corruption and bundle audit
+  ---
+  duration_ms: 796.71272
+  type: 'test'
+  ...
+1..161
+# tests 193
+# suites 0
+# pass 193
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2587.695292
+
+EXIT 0
+
+$ python tests/test_backends.py
+ent (__main__.BackendContracts.test_kokoro_receives_native_speed_but_not_fake_emotion_argument) ... ok
+test_qwen_load_is_local_and_occurs_once_per_worker (__main__.BackendContracts.test_qwen_load_is_local_and_occurs_once_per_worker) ... ok
+test_rejects_06b_instead_of_ignoring_emotion (__main__.BackendContracts.test_rejects_06b_instead_of_ignoring_emotion) ... ok
+test_rejects_base_instead_of_pretending_clone_is_instruction_control (__main__.BackendContracts.test_rejects_base_instead_of_pretending_clone_is_instruction_control) ... ok
+test_unknown_custom_speaker_is_an_error (__main__.BackendContracts.test_unknown_custom_speaker_is_an_error) ... ok
+test_worker_errors_are_json_and_worker_can_close_cleanly (__main__.BackendContracts.test_worker_errors_are_json_and_worker_can_close_cleanly) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.198s
+
+OK
+
+EXIT 0
+
+$ node bin/audio.mjs providers --free-only
+9 recurring profiles; no API calls
+EXIT 0
+
+$ node bin/audio.mjs plan examples/the-last-light.score.json --engine gemini --free-tier-only
+7 upper-bound synthesis requests; no network calls
+EXIT 0

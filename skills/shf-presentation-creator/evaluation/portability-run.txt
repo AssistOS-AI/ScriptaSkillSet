@@ -1,0 +1,60 @@
+[
+  {
+    "name": "cold rebuild using only copied skill",
+    "pass": true,
+    "exitCode": 0,
+    "log": "Built portable player, 4 films and 12 original music cues.\n",
+    "error": ""
+  },
+  {
+    "name": "cold-copy Node test suite",
+    "pass": true,
+    "exitCode": 0,
+    "log": " skill entry includes complete relative dependencies\nok 562 - skill entry includes complete relative dependencies\n  ---\n  duration_ms: 0.439355\n  type: 'test'\n  ...\n# Subtest: bundled film round trip: visual-lab\nok 563 - bundled film round trip: visual-lab\n  ---\n  duration_ms: 743.179087\n  type: 'test'\n  ...\n# Subtest: bundled film round trip: mars-library\nok 564 - bundled film round trip: mars-library\n  ---\n  duration_ms: 548.285646\n  type: 'test'\n  ...\n# Subtest: bundled film round trip: freedom-practice\nok 565 - bundled film round trip: freedom-practice\n  ---\n  duration_ms: 288.137417\n  type: 'test'\n  ...\n# Subtest: bundled film round trip: governable-ai\nok 566 - bundled film round trip: governable-ai\n  ---\n  duration_ms: 294.204923\n  type: 'test'\n  ...\n# Subtest: CLI catalog queries actual library\nok 567 - CLI catalog queries actual library\n  ---\n  duration_ms: 199.441278\n  type: 'test'\n  ...\n# Subtest: repeated moves preserve previous endpoint without snap\nok 568 - repeated moves preserve previous endpoint without snap\n  ---\n  duration_ms: 1.696187\n  type: 'test'\n  ...\n# Subtest: compiler does not mutate a cue action supplied by the author\nok 569 - compiler does not mutate a cue action supplied by the author\n  ---\n  duration_ms: 1.967169\n  type: 'test'\n  ...\n# Subtest: voice discovery finds an actual allowed skill without claiming availability\nok 570 - voice discovery finds an actual allowed skill without claiming availability\n  ---\n  duration_ms: 173.639295\n  type: 'test'\n  ...\n# Subtest: voice discovery without roots asks for host discovery\nok 571 - voice discovery without roots asks for host discovery\n  ---\n  duration_ms: 156.846177\n  type: 'test'\n  ...\n1..571\n# tests 571\n# suites 0\n# pass 571\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 4334.97419\n",
+    "error": ""
+  },
+  {
+    "name": "player copied to unrelated project",
+    "pass": true,
+    "exitCode": 0,
+    "log": "{\n  \"directory\": \"/tmp/shf portable test EAWC17/unrelated app/public/shf\",\n  \"files\": [\n    \"shf-player.js\",\n    \"LICENSE\",\n    \"embed.html\"\n  ],\n  \"runtimeSha256\": \"1aca7893046936642271b5df457c28059d1db66ea0aa9c5bd6565110e6bf95d7\"\n}\n",
+    "error": ""
+  },
+  {
+    "name": "minimal film compilation in new project",
+    "pass": true,
+    "exitCode": 0,
+    "log": "{\n  \"id\": \"first-scene\",\n  \"durationMs\": 15000,\n  \"output\": \"/tmp/shf portable test EAWC17/unrelated app/public/films\"\n}\n",
+    "error": ""
+  },
+  {
+    "name": "custom vector example compiles without library mutation",
+    "pass": true,
+    "exitCode": 0,
+    "log": "{\n  \"id\": \"custom-memory-crystal\",\n  \"durationMs\": 15000,\n  \"output\": \"/tmp/shf portable test EAWC17/custom-output\"\n}\n",
+    "error": ""
+  },
+  {
+    "name": "native WAV voice attacher in cold copy",
+    "pass": true,
+    "exitCode": 0,
+    "log": "visual-lab 12 measured lines 68368 ms\n",
+    "error": ""
+  },
+  {
+    "name": "editorial checker example",
+    "pass": true,
+    "exitCode": 0,
+    "log": "{\n  \"valid\": true,\n  \"errors\": [],\n  \"warnings\": [],\n  \"sourceSha256\": \"6c422237540a980b19bdb6580c3fb5068b0d744ecab48dc3e463ed0c7ae84140\",\n  \"scope\": \"Structural provenance check only; entailment, completeness, interest and artistic quality still require review.\"\n}\n",
+    "error": ""
+  },
+  {
+    "name": "installed runtime exactly matches distribution",
+    "pass": true,
+    "sha256": "1aca7893046936642271b5df457c28059d1db66ea0aa9c5bd6565110e6bf95d7"
+  },
+  {
+    "name": "cold build reproduces identical Mars archive",
+    "pass": true
+  }
+]

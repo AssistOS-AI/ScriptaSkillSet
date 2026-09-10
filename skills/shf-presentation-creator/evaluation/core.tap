@@ -1,0 +1,3436 @@
+TAP version 13
+# Subtest: minimal and custom examples compile without a service
+ok 1 - minimal and custom examples compile without a service
+  ---
+  duration_ms: 22.660996
+  type: 'test'
+  ...
+# Subtest: custom IDs remap to instance IDs and do not require arbitrary SVG
+ok 2 - custom IDs remap to instance IDs and do not require arbitrary SVG
+  ---
+  duration_ms: 2.96283
+  type: 'test'
+  ...
+# Subtest: 502 entries = 16 core +198 recipes +24×12 expressions
+ok 3 - 502 entries = 16 core +198 recipes +24×12 expressions
+  ---
+  duration_ms: 0.616885
+  type: 'test'
+  ...
+# Subtest: asset: character
+ok 4 - asset: character
+  ---
+  duration_ms: 6.290483
+  type: 'test'
+  ...
+# Subtest: asset: book
+ok 5 - asset: book
+  ---
+  duration_ms: 3.507466
+  type: 'test'
+  ...
+# Subtest: asset: city
+ok 6 - asset: city
+  ---
+  duration_ms: 4.552111
+  type: 'test'
+  ...
+# Subtest: asset: paper
+ok 7 - asset: paper
+  ---
+  duration_ms: 2.534226
+  type: 'test'
+  ...
+# Subtest: asset: stack
+ok 8 - asset: stack
+  ---
+  duration_ms: 5.584536
+  type: 'test'
+  ...
+# Subtest: asset: desk
+ok 9 - asset: desk
+  ---
+  duration_ms: 3.455517
+  type: 'test'
+  ...
+# Subtest: asset: door
+ok 10 - asset: door
+  ---
+  duration_ms: 4.353084
+  type: 'test'
+  ...
+# Subtest: asset: shelf
+ok 11 - asset: shelf
+  ---
+  duration_ms: 7.093392
+  type: 'test'
+  ...
+# Subtest: asset: machine
+ok 12 - asset: machine
+  ---
+  duration_ms: 1.481447
+  type: 'test'
+  ...
+# Subtest: asset: bulb
+ok 13 - asset: bulb
+  ---
+  duration_ms: 1.072482
+  type: 'test'
+  ...
+# Subtest: asset: tree
+ok 14 - asset: tree
+  ---
+  duration_ms: 0.946514
+  type: 'test'
+  ...
+# Subtest: asset: planet
+ok 15 - asset: planet
+  ---
+  duration_ms: 1.394755
+  type: 'test'
+  ...
+# Subtest: asset: balance
+ok 16 - asset: balance
+  ---
+  duration_ms: 1.46139
+  type: 'test'
+  ...
+# Subtest: asset: mirror
+ok 17 - asset: mirror
+  ---
+  duration_ms: 0.898188
+  type: 'test'
+  ...
+# Subtest: asset: plaque
+ok 18 - asset: plaque
+  ---
+  duration_ms: 0.883594
+  type: 'test'
+  ...
+# Subtest: asset: stamp
+ok 19 - asset: stamp
+  ---
+  duration_ms: 1.41715
+  type: 'test'
+  ...
+# Subtest: asset: microscope
+ok 20 - asset: microscope
+  ---
+  duration_ms: 1.37617
+  type: 'test'
+  ...
+# Subtest: asset: telescope
+ok 21 - asset: telescope
+  ---
+  duration_ms: 0.91073
+  type: 'test'
+  ...
+# Subtest: asset: flask
+ok 22 - asset: flask
+  ---
+  duration_ms: 0.884302
+  type: 'test'
+  ...
+# Subtest: asset: beaker
+ok 23 - asset: beaker
+  ---
+  duration_ms: 1.247049
+  type: 'test'
+  ...
+# Subtest: asset: test-tubes
+ok 24 - asset: test-tubes
+  ---
+  duration_ms: 1.393982
+  type: 'test'
+  ...
+# Subtest: asset: petri-dish
+ok 25 - asset: petri-dish
+  ---
+  duration_ms: 0.991305
+  type: 'test'
+  ...
+# Subtest: asset: dna
+ok 26 - asset: dna
+  ---
+  duration_ms: 1.64567
+  type: 'test'
+  ...
+# Subtest: asset: atom
+ok 27 - asset: atom
+  ---
+  duration_ms: 0.852374
+  type: 'test'
+  ...
+# Subtest: asset: magnet
+ok 28 - asset: magnet
+  ---
+  duration_ms: 1.528954
+  type: 'test'
+  ...
+# Subtest: asset: thermometer
+ok 29 - asset: thermometer
+  ---
+  duration_ms: 1.045552
+  type: 'test'
+  ...
+# Subtest: asset: molecule
+ok 30 - asset: molecule
+  ---
+  duration_ms: 1.020817
+  type: 'test'
+  ...
+# Subtest: asset: brain
+ok 31 - asset: brain
+  ---
+  duration_ms: 0.798553
+  type: 'test'
+  ...
+# Subtest: asset: heart-organ
+ok 32 - asset: heart-organ
+  ---
+  duration_ms: 0.7679
+  type: 'test'
+  ...
+# Subtest: asset: cell
+ok 33 - asset: cell
+  ---
+  duration_ms: 0.70445
+  type: 'test'
+  ...
+# Subtest: asset: bacteria
+ok 34 - asset: bacteria
+  ---
+  duration_ms: 0.9118
+  type: 'test'
+  ...
+# Subtest: asset: centrifuge
+ok 35 - asset: centrifuge
+  ---
+  duration_ms: 0.991234
+  type: 'test'
+  ...
+# Subtest: asset: pipette
+ok 36 - asset: pipette
+  ---
+  duration_ms: 0.715291
+  type: 'test'
+  ...
+# Subtest: asset: prism
+ok 37 - asset: prism
+  ---
+  duration_ms: 0.843205
+  type: 'test'
+  ...
+# Subtest: asset: fossil
+ok 38 - asset: fossil
+  ---
+  duration_ms: 0.686767
+  type: 'test'
+  ...
+# Subtest: asset: sample-box
+ok 39 - asset: sample-box
+  ---
+  duration_ms: 2.574184
+  type: 'test'
+  ...
+# Subtest: asset: laptop
+ok 40 - asset: laptop
+  ---
+  duration_ms: 3.5254
+  type: 'test'
+  ...
+# Subtest: asset: desktop
+ok 41 - asset: desktop
+  ---
+  duration_ms: 0.860906
+  type: 'test'
+  ...
+# Subtest: asset: phone
+ok 42 - asset: phone
+  ---
+  duration_ms: 0.758343
+  type: 'test'
+  ...
+# Subtest: asset: tablet
+ok 43 - asset: tablet
+  ---
+  duration_ms: 2.870833
+  type: 'test'
+  ...
+# Subtest: asset: server
+ok 44 - asset: server
+  ---
+  duration_ms: 3.406087
+  type: 'test'
+  ...
+# Subtest: asset: database
+ok 45 - asset: database
+  ---
+  duration_ms: 0.884445
+  type: 'test'
+  ...
+# Subtest: asset: chip
+ok 46 - asset: chip
+  ---
+  duration_ms: 2.226182
+  type: 'test'
+  ...
+# Subtest: asset: keyboard
+ok 47 - asset: keyboard
+  ---
+  duration_ms: 1.647755
+  type: 'test'
+  ...
+# Subtest: asset: mouse
+ok 48 - asset: mouse
+  ---
+  duration_ms: 0.759217
+  type: 'test'
+  ...
+# Subtest: asset: headphones
+ok 49 - asset: headphones
+  ---
+  duration_ms: 1.356873
+  type: 'test'
+  ...
+# Subtest: asset: microphone
+ok 50 - asset: microphone
+  ---
+  duration_ms: 1.038388
+  type: 'test'
+  ...
+# Subtest: asset: camera
+ok 51 - asset: camera
+  ---
+  duration_ms: 0.860835
+  type: 'test'
+  ...
+# Subtest: asset: projector
+ok 52 - asset: projector
+  ---
+  duration_ms: 0.951653
+  type: 'test'
+  ...
+# Subtest: asset: printer
+ok 53 - asset: printer
+  ---
+  duration_ms: 0.964307
+  type: 'test'
+  ...
+# Subtest: asset: router
+ok 54 - asset: router
+  ---
+  duration_ms: 0.920201
+  type: 'test'
+  ...
+# Subtest: asset: cloud-storage
+ok 55 - asset: cloud-storage
+  ---
+  duration_ms: 0.792505
+  type: 'test'
+  ...
+# Subtest: asset: battery
+ok 56 - asset: battery
+  ---
+  duration_ms: 0.706783
+  type: 'test'
+  ...
+# Subtest: asset: solar-panel
+ok 57 - asset: solar-panel
+  ---
+  duration_ms: 0.907421
+  type: 'test'
+  ...
+# Subtest: asset: circuit-board
+ok 58 - asset: circuit-board
+  ---
+  duration_ms: 0.929856
+  type: 'test'
+  ...
+# Subtest: asset: robot
+ok 59 - asset: robot
+  ---
+  duration_ms: 0.962316
+  type: 'test'
+  ...
+# Subtest: asset: closed-book
+ok 60 - asset: closed-book
+  ---
+  duration_ms: 1.424494
+  type: 'test'
+  ...
+# Subtest: asset: notebook
+ok 61 - asset: notebook
+  ---
+  duration_ms: 1.308802
+  type: 'test'
+  ...
+# Subtest: asset: scroll
+ok 62 - asset: scroll
+  ---
+  duration_ms: 0.964327
+  type: 'test'
+  ...
+# Subtest: asset: quill
+ok 63 - asset: quill
+  ---
+  duration_ms: 2.939973
+  type: 'test'
+  ...
+# Subtest: asset: pencil
+ok 64 - asset: pencil
+  ---
+  duration_ms: 0.819423
+  type: 'test'
+  ...
+# Subtest: asset: pen
+ok 65 - asset: pen
+  ---
+  duration_ms: 0.807236
+  type: 'test'
+  ...
+# Subtest: asset: school-bag
+ok 66 - asset: school-bag
+  ---
+  duration_ms: 0.778083
+  type: 'test'
+  ...
+# Subtest: asset: graduation-cap
+ok 67 - asset: graduation-cap
+  ---
+  duration_ms: 0.745033
+  type: 'test'
+  ...
+# Subtest: asset: globe
+ok 68 - asset: globe
+  ---
+  duration_ms: 1.330323
+  type: 'test'
+  ...
+# Subtest: asset: map
+ok 69 - asset: map
+  ---
+  duration_ms: 0.912016
+  type: 'test'
+  ...
+# Subtest: asset: compass
+ok 70 - asset: compass
+  ---
+  duration_ms: 0.856519
+  type: 'test'
+  ...
+# Subtest: asset: abacus
+ok 71 - asset: abacus
+  ---
+  duration_ms: 2.304991
+  type: 'test'
+  ...
+# Subtest: asset: blackboard
+ok 72 - asset: blackboard
+  ---
+  duration_ms: 0.920766
+  type: 'test'
+  ...
+# Subtest: asset: paint-palette
+ok 73 - asset: paint-palette
+  ---
+  duration_ms: 0.852184
+  type: 'test'
+  ...
+# Subtest: asset: violin
+ok 74 - asset: violin
+  ---
+  duration_ms: 0.717534
+  type: 'test'
+  ...
+# Subtest: asset: piano
+ok 75 - asset: piano
+  ---
+  duration_ms: 1.47472
+  type: 'test'
+  ...
+# Subtest: asset: theatre-masks
+ok 76 - asset: theatre-masks
+  ---
+  duration_ms: 0.756452
+  type: 'test'
+  ...
+# Subtest: asset: chess
+ok 77 - asset: chess
+  ---
+  duration_ms: 0.690221
+  type: 'test'
+  ...
+# Subtest: asset: house
+ok 78 - asset: house
+  ---
+  duration_ms: 1.380954
+  type: 'test'
+  ...
+# Subtest: asset: school
+ok 79 - asset: school
+  ---
+  duration_ms: 0.973011
+  type: 'test'
+  ...
+# Subtest: asset: hospital
+ok 80 - asset: hospital
+  ---
+  duration_ms: 2.063452
+  type: 'test'
+  ...
+# Subtest: asset: courthouse
+ok 81 - asset: courthouse
+  ---
+  duration_ms: 1.200724
+  type: 'test'
+  ...
+# Subtest: asset: bank
+ok 82 - asset: bank
+  ---
+  duration_ms: 1.687987
+  type: 'test'
+  ...
+# Subtest: asset: museum
+ok 83 - asset: museum
+  ---
+  duration_ms: 1.111697
+  type: 'test'
+  ...
+# Subtest: asset: library-building
+ok 84 - asset: library-building
+  ---
+  duration_ms: 0.99193
+  type: 'test'
+  ...
+# Subtest: asset: workshop
+ok 85 - asset: workshop
+  ---
+  duration_ms: 1.084412
+  type: 'test'
+  ...
+# Subtest: asset: shop
+ok 86 - asset: shop
+  ---
+  duration_ms: 1.249887
+  type: 'test'
+  ...
+# Subtest: asset: post-office
+ok 87 - asset: post-office
+  ---
+  duration_ms: 0.86183
+  type: 'test'
+  ...
+# Subtest: asset: factory
+ok 88 - asset: factory
+  ---
+  duration_ms: 0.838663
+  type: 'test'
+  ...
+# Subtest: asset: castle
+ok 89 - asset: castle
+  ---
+  duration_ms: 1.001128
+  type: 'test'
+  ...
+# Subtest: asset: lighthouse
+ok 90 - asset: lighthouse
+  ---
+  duration_ms: 1.307988
+  type: 'test'
+  ...
+# Subtest: asset: windmill
+ok 91 - asset: windmill
+  ---
+  duration_ms: 0.847984
+  type: 'test'
+  ...
+# Subtest: asset: bridge
+ok 92 - asset: bridge
+  ---
+  duration_ms: 0.80918
+  type: 'test'
+  ...
+# Subtest: asset: tent
+ok 93 - asset: tent
+  ---
+  duration_ms: 0.727166
+  type: 'test'
+  ...
+# Subtest: asset: skyscraper
+ok 94 - asset: skyscraper
+  ---
+  duration_ms: 1.443147
+  type: 'test'
+  ...
+# Subtest: asset: fountain
+ok 95 - asset: fountain
+  ---
+  duration_ms: 0.77934
+  type: 'test'
+  ...
+# Subtest: asset: pine-tree
+ok 96 - asset: pine-tree
+  ---
+  duration_ms: 0.700304
+  type: 'test'
+  ...
+# Subtest: asset: palm-tree
+ok 97 - asset: palm-tree
+  ---
+  duration_ms: 0.940039
+  type: 'test'
+  ...
+# Subtest: asset: cactus
+ok 98 - asset: cactus
+  ---
+  duration_ms: 0.691265
+  type: 'test'
+  ...
+# Subtest: asset: flower
+ok 99 - asset: flower
+  ---
+  duration_ms: 0.871882
+  type: 'test'
+  ...
+# Subtest: asset: seedling
+ok 100 - asset: seedling
+  ---
+  duration_ms: 0.692716
+  type: 'test'
+  ...
+# Subtest: asset: mushroom
+ok 101 - asset: mushroom
+  ---
+  duration_ms: 2.318388
+  type: 'test'
+  ...
+# Subtest: asset: mountain
+ok 102 - asset: mountain
+  ---
+  duration_ms: 0.706044
+  type: 'test'
+  ...
+# Subtest: asset: volcano
+ok 103 - asset: volcano
+  ---
+  duration_ms: 0.724718
+  type: 'test'
+  ...
+# Subtest: asset: island
+ok 104 - asset: island
+  ---
+  duration_ms: 0.687389
+  type: 'test'
+  ...
+# Subtest: asset: river
+ok 105 - asset: river
+  ---
+  duration_ms: 0.6703
+  type: 'test'
+  ...
+# Subtest: asset: waterfall
+ok 106 - asset: waterfall
+  ---
+  duration_ms: 1.715268
+  type: 'test'
+  ...
+# Subtest: asset: cloud
+ok 107 - asset: cloud
+  ---
+  duration_ms: 0.603065
+  type: 'test'
+  ...
+# Subtest: asset: rain-cloud
+ok 108 - asset: rain-cloud
+  ---
+  duration_ms: 0.728998
+  type: 'test'
+  ...
+# Subtest: asset: snowflake
+ok 109 - asset: snowflake
+  ---
+  duration_ms: 1.133861
+  type: 'test'
+  ...
+# Subtest: asset: sun
+ok 110 - asset: sun
+  ---
+  duration_ms: 0.967644
+  type: 'test'
+  ...
+# Subtest: asset: moon
+ok 111 - asset: moon
+  ---
+  duration_ms: 0.573431
+  type: 'test'
+  ...
+# Subtest: asset: star
+ok 112 - asset: star
+  ---
+  duration_ms: 0.521382
+  type: 'test'
+  ...
+# Subtest: asset: rainbow
+ok 113 - asset: rainbow
+  ---
+  duration_ms: 0.807083
+  type: 'test'
+  ...
+# Subtest: asset: butterfly
+ok 114 - asset: butterfly
+  ---
+  duration_ms: 1.352309
+  type: 'test'
+  ...
+# Subtest: asset: bird
+ok 115 - asset: bird
+  ---
+  duration_ms: 0.76756
+  type: 'test'
+  ...
+# Subtest: asset: fish
+ok 116 - asset: fish
+  ---
+  duration_ms: 0.674175
+  type: 'test'
+  ...
+# Subtest: asset: cat
+ok 117 - asset: cat
+  ---
+  duration_ms: 0.796314
+  type: 'test'
+  ...
+# Subtest: asset: dog
+ok 118 - asset: dog
+  ---
+  duration_ms: 0.811509
+  type: 'test'
+  ...
+# Subtest: asset: owl
+ok 119 - asset: owl
+  ---
+  duration_ms: 0.741328
+  type: 'test'
+  ...
+# Subtest: asset: rocket
+ok 120 - asset: rocket
+  ---
+  duration_ms: 0.651695
+  type: 'test'
+  ...
+# Subtest: asset: satellite
+ok 121 - asset: satellite
+  ---
+  duration_ms: 0.934028
+  type: 'test'
+  ...
+# Subtest: asset: ufo
+ok 122 - asset: ufo
+  ---
+  duration_ms: 0.821029
+  type: 'test'
+  ...
+# Subtest: asset: ringed-planet
+ok 123 - asset: ringed-planet
+  ---
+  duration_ms: 0.660328
+  type: 'test'
+  ...
+# Subtest: asset: earth
+ok 124 - asset: earth
+  ---
+  duration_ms: 0.618707
+  type: 'test'
+  ...
+# Subtest: asset: comet
+ok 125 - asset: comet
+  ---
+  duration_ms: 0.601114
+  type: 'test'
+  ...
+# Subtest: asset: moon-rover
+ok 126 - asset: moon-rover
+  ---
+  duration_ms: 1.548732
+  type: 'test'
+  ...
+# Subtest: asset: space-station
+ok 127 - asset: space-station
+  ---
+  duration_ms: 1.040033
+  type: 'test'
+  ...
+# Subtest: asset: observatory
+ok 128 - asset: observatory
+  ---
+  duration_ms: 0.707683
+  type: 'test'
+  ...
+# Subtest: asset: astronaut-helmet
+ok 129 - asset: astronaut-helmet
+  ---
+  duration_ms: 0.702498
+  type: 'test'
+  ...
+# Subtest: asset: star-chart
+ok 130 - asset: star-chart
+  ---
+  duration_ms: 0.78399
+  type: 'test'
+  ...
+# Subtest: asset: wormhole
+ok 131 - asset: wormhole
+  ---
+  duration_ms: 0.666725
+  type: 'test'
+  ...
+# Subtest: asset: car
+ok 132 - asset: car
+  ---
+  duration_ms: 0.91093
+  type: 'test'
+  ...
+# Subtest: asset: taxi
+ok 133 - asset: taxi
+  ---
+  duration_ms: 0.800765
+  type: 'test'
+  ...
+# Subtest: asset: ambulance
+ok 134 - asset: ambulance
+  ---
+  duration_ms: 0.798525
+  type: 'test'
+  ...
+# Subtest: asset: police-car
+ok 135 - asset: police-car
+  ---
+  duration_ms: 0.862861
+  type: 'test'
+  ...
+# Subtest: asset: delivery-van
+ok 136 - asset: delivery-van
+  ---
+  duration_ms: 0.914011
+  type: 'test'
+  ...
+# Subtest: asset: bus
+ok 137 - asset: bus
+  ---
+  duration_ms: 5.854216
+  type: 'test'
+  ...
+# Subtest: asset: train
+ok 138 - asset: train
+  ---
+  duration_ms: 0.926577
+  type: 'test'
+  ...
+# Subtest: asset: bicycle
+ok 139 - asset: bicycle
+  ---
+  duration_ms: 0.734545
+  type: 'test'
+  ...
+# Subtest: asset: scooter
+ok 140 - asset: scooter
+  ---
+  duration_ms: 0.858104
+  type: 'test'
+  ...
+# Subtest: asset: airplane
+ok 141 - asset: airplane
+  ---
+  duration_ms: 0.610799
+  type: 'test'
+  ...
+# Subtest: asset: helicopter
+ok 142 - asset: helicopter
+  ---
+  duration_ms: 0.708199
+  type: 'test'
+  ...
+# Subtest: asset: sailboat
+ok 143 - asset: sailboat
+  ---
+  duration_ms: 0.590497
+  type: 'test'
+  ...
+# Subtest: asset: ship
+ok 144 - asset: ship
+  ---
+  duration_ms: 0.901535
+  type: 'test'
+  ...
+# Subtest: asset: hot-air-balloon
+ok 145 - asset: hot-air-balloon
+  ---
+  duration_ms: 0.75618
+  type: 'test'
+  ...
+# Subtest: asset: traffic-light
+ok 146 - asset: traffic-light
+  ---
+  duration_ms: 0.693257
+  type: 'test'
+  ...
+# Subtest: asset: road-sign
+ok 147 - asset: road-sign
+  ---
+  duration_ms: 0.607336
+  type: 'test'
+  ...
+# Subtest: asset: chair
+ok 148 - asset: chair
+  ---
+  duration_ms: 0.661081
+  type: 'test'
+  ...
+# Subtest: asset: sofa
+ok 149 - asset: sofa
+  ---
+  duration_ms: 1.385861
+  type: 'test'
+  ...
+# Subtest: asset: bed
+ok 150 - asset: bed
+  ---
+  duration_ms: 2.170148
+  type: 'test'
+  ...
+# Subtest: asset: lamp
+ok 151 - asset: lamp
+  ---
+  duration_ms: 1.792603
+  type: 'test'
+  ...
+# Subtest: asset: candle
+ok 152 - asset: candle
+  ---
+  duration_ms: 1.809429
+  type: 'test'
+  ...
+# Subtest: asset: cup
+ok 153 - asset: cup
+  ---
+  duration_ms: 1.776947
+  type: 'test'
+  ...
+# Subtest: asset: teapot
+ok 154 - asset: teapot
+  ---
+  duration_ms: 1.924202
+  type: 'test'
+  ...
+# Subtest: asset: bottle
+ok 155 - asset: bottle
+  ---
+  duration_ms: 1.800629
+  type: 'test'
+  ...
+# Subtest: asset: clock
+ok 156 - asset: clock
+  ---
+  duration_ms: 2.93309
+  type: 'test'
+  ...
+# Subtest: asset: alarm-clock
+ok 157 - asset: alarm-clock
+  ---
+  duration_ms: 2.115999
+  type: 'test'
+  ...
+# Subtest: asset: key
+ok 158 - asset: key
+  ---
+  duration_ms: 1.76739
+  type: 'test'
+  ...
+# Subtest: asset: lock
+ok 159 - asset: lock
+  ---
+  duration_ms: 1.875771
+  type: 'test'
+  ...
+# Subtest: asset: umbrella
+ok 160 - asset: umbrella
+  ---
+  duration_ms: 1.768156
+  type: 'test'
+  ...
+# Subtest: asset: suitcase
+ok 161 - asset: suitcase
+  ---
+  duration_ms: 2.00482
+  type: 'test'
+  ...
+# Subtest: asset: gift
+ok 162 - asset: gift
+  ---
+  duration_ms: 1.796521
+  type: 'test'
+  ...
+# Subtest: asset: window
+ok 163 - asset: window
+  ---
+  duration_ms: 0.707957
+  type: 'test'
+  ...
+# Subtest: asset: envelope
+ok 164 - asset: envelope
+  ---
+  duration_ms: 0.648282
+  type: 'test'
+  ...
+# Subtest: asset: basket
+ok 165 - asset: basket
+  ---
+  duration_ms: 0.887732
+  type: 'test'
+  ...
+# Subtest: asset: watering-can
+ok 166 - asset: watering-can
+  ---
+  duration_ms: 0.650804
+  type: 'test'
+  ...
+# Subtest: asset: plant-pot
+ok 167 - asset: plant-pot
+  ---
+  duration_ms: 0.630907
+  type: 'test'
+  ...
+# Subtest: asset: hammer
+ok 168 - asset: hammer
+  ---
+  duration_ms: 0.572318
+  type: 'test'
+  ...
+# Subtest: asset: wrench
+ok 169 - asset: wrench
+  ---
+  duration_ms: 0.58554
+  type: 'test'
+  ...
+# Subtest: asset: screwdriver
+ok 170 - asset: screwdriver
+  ---
+  duration_ms: 0.543542
+  type: 'test'
+  ...
+# Subtest: asset: saw
+ok 171 - asset: saw
+  ---
+  duration_ms: 0.641509
+  type: 'test'
+  ...
+# Subtest: asset: scissors
+ok 172 - asset: scissors
+  ---
+  duration_ms: 0.647761
+  type: 'test'
+  ...
+# Subtest: asset: ruler
+ok 173 - asset: ruler
+  ---
+  duration_ms: 0.889912
+  type: 'test'
+  ...
+# Subtest: asset: gear
+ok 174 - asset: gear
+  ---
+  duration_ms: 1.356171
+  type: 'test'
+  ...
+# Subtest: asset: toolbox
+ok 175 - asset: toolbox
+  ---
+  duration_ms: 1.973616
+  type: 'test'
+  ...
+# Subtest: asset: paintbrush
+ok 176 - asset: paintbrush
+  ---
+  duration_ms: 1.737237
+  type: 'test'
+  ...
+# Subtest: asset: shovel
+ok 177 - asset: shovel
+  ---
+  duration_ms: 1.916947
+  type: 'test'
+  ...
+# Subtest: asset: ladder
+ok 178 - asset: ladder
+  ---
+  duration_ms: 2.172058
+  type: 'test'
+  ...
+# Subtest: asset: hard-hat
+ok 179 - asset: hard-hat
+  ---
+  duration_ms: 1.979141
+  type: 'test'
+  ...
+# Subtest: asset: safety-goggles
+ok 180 - asset: safety-goggles
+  ---
+  duration_ms: 1.904281
+  type: 'test'
+  ...
+# Subtest: asset: scale
+ok 181 - asset: scale
+  ---
+  duration_ms: 1.83667
+  type: 'test'
+  ...
+# Subtest: asset: sewing-machine
+ok 182 - asset: sewing-machine
+  ---
+  duration_ms: 1.833455
+  type: 'test'
+  ...
+# Subtest: asset: wheelbarrow
+ok 183 - asset: wheelbarrow
+  ---
+  duration_ms: 2.075429
+  type: 'test'
+  ...
+# Subtest: asset: coins
+ok 184 - asset: coins
+  ---
+  duration_ms: 2.458577
+  type: 'test'
+  ...
+# Subtest: asset: wallet
+ok 185 - asset: wallet
+  ---
+  duration_ms: 1.780773
+  type: 'test'
+  ...
+# Subtest: asset: piggy-bank
+ok 186 - asset: piggy-bank
+  ---
+  duration_ms: 2.095677
+  type: 'test'
+  ...
+# Subtest: asset: briefcase
+ok 187 - asset: briefcase
+  ---
+  duration_ms: 2.153593
+  type: 'test'
+  ...
+# Subtest: asset: contract
+ok 188 - asset: contract
+  ---
+  duration_ms: 0.782928
+  type: 'test'
+  ...
+# Subtest: asset: gavel
+ok 189 - asset: gavel
+  ---
+  duration_ms: 0.630105
+  type: 'test'
+  ...
+# Subtest: asset: ballot-box
+ok 190 - asset: ballot-box
+  ---
+  duration_ms: 0.702496
+  type: 'test'
+  ...
+# Subtest: asset: megaphone
+ok 191 - asset: megaphone
+  ---
+  duration_ms: 0.583289
+  type: 'test'
+  ...
+# Subtest: asset: shield
+ok 192 - asset: shield
+  ---
+  duration_ms: 0.578025
+  type: 'test'
+  ...
+# Subtest: asset: certificate
+ok 193 - asset: certificate
+  ---
+  duration_ms: 0.798289
+  type: 'test'
+  ...
+# Subtest: asset: hourglass
+ok 194 - asset: hourglass
+  ---
+  duration_ms: 0.622514
+  type: 'test'
+  ...
+# Subtest: asset: calendar
+ok 195 - asset: calendar
+  ---
+  duration_ms: 1.309365
+  type: 'test'
+  ...
+# Subtest: asset: handshake
+ok 196 - asset: handshake
+  ---
+  duration_ms: 0.602273
+  type: 'test'
+  ...
+# Subtest: asset: safe
+ok 197 - asset: safe
+  ---
+  duration_ms: 0.745871
+  type: 'test'
+  ...
+# Subtest: asset: shopping-cart
+ok 198 - asset: shopping-cart
+  ---
+  duration_ms: 0.821409
+  type: 'test'
+  ...
+# Subtest: asset: package
+ok 199 - asset: package
+  ---
+  duration_ms: 0.679834
+  type: 'test'
+  ...
+# Subtest: asset: treasure-chest
+ok 200 - asset: treasure-chest
+  ---
+  duration_ms: 0.695955
+  type: 'test'
+  ...
+# Subtest: asset: crown
+ok 201 - asset: crown
+  ---
+  duration_ms: 0.657713
+  type: 'test'
+  ...
+# Subtest: asset: sword
+ok 202 - asset: sword
+  ---
+  duration_ms: 0.608939
+  type: 'test'
+  ...
+# Subtest: asset: dragon
+ok 203 - asset: dragon
+  ---
+  duration_ms: 0.55376
+  type: 'test'
+  ...
+# Subtest: asset: feather
+ok 204 - asset: feather
+  ---
+  duration_ms: 0.579462
+  type: 'test'
+  ...
+# Subtest: asset: lantern
+ok 205 - asset: lantern
+  ---
+  duration_ms: 0.619756
+  type: 'test'
+  ...
+# Subtest: asset: puzzle
+ok 206 - asset: puzzle
+  ---
+  duration_ms: 0.478842
+  type: 'test'
+  ...
+# Subtest: asset: infinity
+ok 207 - asset: infinity
+  ---
+  duration_ms: 0.561307
+  type: 'test'
+  ...
+# Subtest: asset: question
+ok 208 - asset: question
+  ---
+  duration_ms: 0.976681
+  type: 'test'
+  ...
+# Subtest: asset: warning
+ok 209 - asset: warning
+  ---
+  duration_ms: 0.818835
+  type: 'test'
+  ...
+# Subtest: asset: target
+ok 210 - asset: target
+  ---
+  duration_ms: 0.644931
+  type: 'test'
+  ...
+# Subtest: asset: flag
+ok 211 - asset: flag
+  ---
+  duration_ms: 0.744683
+  type: 'test'
+  ...
+# Subtest: asset: thought-bubble
+ok 212 - asset: thought-bubble
+  ---
+  duration_ms: 0.676683
+  type: 'test'
+  ...
+# Subtest: asset: speech-bubble
+ok 213 - asset: speech-bubble
+  ---
+  duration_ms: 1.511207
+  type: 'test'
+  ...
+# Subtest: asset: fingerprint
+ok 214 - asset: fingerprint
+  ---
+  duration_ms: 0.664173
+  type: 'test'
+  ...
+# Subtest: asset: chain
+ok 215 - asset: chain
+  ---
+  duration_ms: 0.666501
+  type: 'test'
+  ...
+# Subtest: asset: broken-chain
+ok 216 - asset: broken-chain
+  ---
+  duration_ms: 0.671718
+  type: 'test'
+  ...
+# Subtest: asset: open-lock
+ok 217 - asset: open-lock
+  ---
+  duration_ms: 0.621531
+  type: 'test'
+  ...
+# Subtest: asset: person-01-neutral
+ok 218 - asset: person-01-neutral
+  ---
+  duration_ms: 1.473628
+  type: 'test'
+  ...
+# Subtest: asset: person-01-happy
+ok 219 - asset: person-01-happy
+  ---
+  duration_ms: 1.310211
+  type: 'test'
+  ...
+# Subtest: asset: person-01-curious
+ok 220 - asset: person-01-curious
+  ---
+  duration_ms: 1.299412
+  type: 'test'
+  ...
+# Subtest: asset: person-01-worried
+ok 221 - asset: person-01-worried
+  ---
+  duration_ms: 1.27061
+  type: 'test'
+  ...
+# Subtest: asset: person-01-sad
+ok 222 - asset: person-01-sad
+  ---
+  duration_ms: 1.243072
+  type: 'test'
+  ...
+# Subtest: asset: person-01-angry
+ok 223 - asset: person-01-angry
+  ---
+  duration_ms: 1.296416
+  type: 'test'
+  ...
+# Subtest: asset: person-01-surprised
+ok 224 - asset: person-01-surprised
+  ---
+  duration_ms: 1.30466
+  type: 'test'
+  ...
+# Subtest: asset: person-01-determined
+ok 225 - asset: person-01-determined
+  ---
+  duration_ms: 1.253476
+  type: 'test'
+  ...
+# Subtest: asset: person-01-tired
+ok 226 - asset: person-01-tired
+  ---
+  duration_ms: 1.377494
+  type: 'test'
+  ...
+# Subtest: asset: person-01-skeptical
+ok 227 - asset: person-01-skeptical
+  ---
+  duration_ms: 1.389142
+  type: 'test'
+  ...
+# Subtest: asset: person-01-relieved
+ok 228 - asset: person-01-relieved
+  ---
+  duration_ms: 2.912026
+  type: 'test'
+  ...
+# Subtest: asset: person-01-inspired
+ok 229 - asset: person-01-inspired
+  ---
+  duration_ms: 1.295981
+  type: 'test'
+  ...
+# Subtest: asset: person-02-neutral
+ok 230 - asset: person-02-neutral
+  ---
+  duration_ms: 1.708121
+  type: 'test'
+  ...
+# Subtest: asset: person-02-happy
+ok 231 - asset: person-02-happy
+  ---
+  duration_ms: 1.32389
+  type: 'test'
+  ...
+# Subtest: asset: person-02-curious
+ok 232 - asset: person-02-curious
+  ---
+  duration_ms: 1.270414
+  type: 'test'
+  ...
+# Subtest: asset: person-02-worried
+ok 233 - asset: person-02-worried
+  ---
+  duration_ms: 1.33309
+  type: 'test'
+  ...
+# Subtest: asset: person-02-sad
+ok 234 - asset: person-02-sad
+  ---
+  duration_ms: 1.326828
+  type: 'test'
+  ...
+# Subtest: asset: person-02-angry
+ok 235 - asset: person-02-angry
+  ---
+  duration_ms: 1.317559
+  type: 'test'
+  ...
+# Subtest: asset: person-02-surprised
+ok 236 - asset: person-02-surprised
+  ---
+  duration_ms: 1.305854
+  type: 'test'
+  ...
+# Subtest: asset: person-02-determined
+ok 237 - asset: person-02-determined
+  ---
+  duration_ms: 1.285029
+  type: 'test'
+  ...
+# Subtest: asset: person-02-tired
+ok 238 - asset: person-02-tired
+  ---
+  duration_ms: 1.352756
+  type: 'test'
+  ...
+# Subtest: asset: person-02-skeptical
+ok 239 - asset: person-02-skeptical
+  ---
+  duration_ms: 1.744448
+  type: 'test'
+  ...
+# Subtest: asset: person-02-relieved
+ok 240 - asset: person-02-relieved
+  ---
+  duration_ms: 2.217666
+  type: 'test'
+  ...
+# Subtest: asset: person-02-inspired
+ok 241 - asset: person-02-inspired
+  ---
+  duration_ms: 1.344517
+  type: 'test'
+  ...
+# Subtest: asset: person-03-neutral
+ok 242 - asset: person-03-neutral
+  ---
+  duration_ms: 1.266225
+  type: 'test'
+  ...
+# Subtest: asset: person-03-happy
+ok 243 - asset: person-03-happy
+  ---
+  duration_ms: 1.376877
+  type: 'test'
+  ...
+# Subtest: asset: person-03-curious
+ok 244 - asset: person-03-curious
+  ---
+  duration_ms: 1.301458
+  type: 'test'
+  ...
+# Subtest: asset: person-03-worried
+ok 245 - asset: person-03-worried
+  ---
+  duration_ms: 1.232945
+  type: 'test'
+  ...
+# Subtest: asset: person-03-sad
+ok 246 - asset: person-03-sad
+  ---
+  duration_ms: 1.327843
+  type: 'test'
+  ...
+# Subtest: asset: person-03-angry
+ok 247 - asset: person-03-angry
+  ---
+  duration_ms: 1.382458
+  type: 'test'
+  ...
+# Subtest: asset: person-03-surprised
+ok 248 - asset: person-03-surprised
+  ---
+  duration_ms: 1.226792
+  type: 'test'
+  ...
+# Subtest: asset: person-03-determined
+ok 249 - asset: person-03-determined
+  ---
+  duration_ms: 1.27631
+  type: 'test'
+  ...
+# Subtest: asset: person-03-tired
+ok 250 - asset: person-03-tired
+  ---
+  duration_ms: 1.328984
+  type: 'test'
+  ...
+# Subtest: asset: person-03-skeptical
+ok 251 - asset: person-03-skeptical
+  ---
+  duration_ms: 1.253188
+  type: 'test'
+  ...
+# Subtest: asset: person-03-relieved
+ok 252 - asset: person-03-relieved
+  ---
+  duration_ms: 2.186935
+  type: 'test'
+  ...
+# Subtest: asset: person-03-inspired
+ok 253 - asset: person-03-inspired
+  ---
+  duration_ms: 1.398816
+  type: 'test'
+  ...
+# Subtest: asset: person-04-neutral
+ok 254 - asset: person-04-neutral
+  ---
+  duration_ms: 1.239013
+  type: 'test'
+  ...
+# Subtest: asset: person-04-happy
+ok 255 - asset: person-04-happy
+  ---
+  duration_ms: 1.301554
+  type: 'test'
+  ...
+# Subtest: asset: person-04-curious
+ok 256 - asset: person-04-curious
+  ---
+  duration_ms: 1.246332
+  type: 'test'
+  ...
+# Subtest: asset: person-04-worried
+ok 257 - asset: person-04-worried
+  ---
+  duration_ms: 1.324773
+  type: 'test'
+  ...
+# Subtest: asset: person-04-sad
+ok 258 - asset: person-04-sad
+  ---
+  duration_ms: 1.259164
+  type: 'test'
+  ...
+# Subtest: asset: person-04-angry
+ok 259 - asset: person-04-angry
+  ---
+  duration_ms: 1.317874
+  type: 'test'
+  ...
+# Subtest: asset: person-04-surprised
+ok 260 - asset: person-04-surprised
+  ---
+  duration_ms: 1.217017
+  type: 'test'
+  ...
+# Subtest: asset: person-04-determined
+ok 261 - asset: person-04-determined
+  ---
+  duration_ms: 1.216745
+  type: 'test'
+  ...
+# Subtest: asset: person-04-tired
+ok 262 - asset: person-04-tired
+  ---
+  duration_ms: 1.716384
+  type: 'test'
+  ...
+# Subtest: asset: person-04-skeptical
+ok 263 - asset: person-04-skeptical
+  ---
+  duration_ms: 1.30703
+  type: 'test'
+  ...
+# Subtest: asset: person-04-relieved
+ok 264 - asset: person-04-relieved
+  ---
+  duration_ms: 4.919671
+  type: 'test'
+  ...
+# Subtest: asset: person-04-inspired
+ok 265 - asset: person-04-inspired
+  ---
+  duration_ms: 1.319297
+  type: 'test'
+  ...
+# Subtest: asset: person-05-neutral
+ok 266 - asset: person-05-neutral
+  ---
+  duration_ms: 1.278823
+  type: 'test'
+  ...
+# Subtest: asset: person-05-happy
+ok 267 - asset: person-05-happy
+  ---
+  duration_ms: 1.353024
+  type: 'test'
+  ...
+# Subtest: asset: person-05-curious
+ok 268 - asset: person-05-curious
+  ---
+  duration_ms: 1.296901
+  type: 'test'
+  ...
+# Subtest: asset: person-05-worried
+ok 269 - asset: person-05-worried
+  ---
+  duration_ms: 1.274672
+  type: 'test'
+  ...
+# Subtest: asset: person-05-sad
+ok 270 - asset: person-05-sad
+  ---
+  duration_ms: 1.308804
+  type: 'test'
+  ...
+# Subtest: asset: person-05-angry
+ok 271 - asset: person-05-angry
+  ---
+  duration_ms: 1.320265
+  type: 'test'
+  ...
+# Subtest: asset: person-05-surprised
+ok 272 - asset: person-05-surprised
+  ---
+  duration_ms: 1.241734
+  type: 'test'
+  ...
+# Subtest: asset: person-05-determined
+ok 273 - asset: person-05-determined
+  ---
+  duration_ms: 1.269992
+  type: 'test'
+  ...
+# Subtest: asset: person-05-tired
+ok 274 - asset: person-05-tired
+  ---
+  duration_ms: 1.303342
+  type: 'test'
+  ...
+# Subtest: asset: person-05-skeptical
+ok 275 - asset: person-05-skeptical
+  ---
+  duration_ms: 1.318823
+  type: 'test'
+  ...
+# Subtest: asset: person-05-relieved
+ok 276 - asset: person-05-relieved
+  ---
+  duration_ms: 2.756949
+  type: 'test'
+  ...
+# Subtest: asset: person-05-inspired
+ok 277 - asset: person-05-inspired
+  ---
+  duration_ms: 1.399302
+  type: 'test'
+  ...
+# Subtest: asset: person-06-neutral
+ok 278 - asset: person-06-neutral
+  ---
+  duration_ms: 1.343928
+  type: 'test'
+  ...
+# Subtest: asset: person-06-happy
+ok 279 - asset: person-06-happy
+  ---
+  duration_ms: 1.551712
+  type: 'test'
+  ...
+# Subtest: asset: person-06-curious
+ok 280 - asset: person-06-curious
+  ---
+  duration_ms: 1.339676
+  type: 'test'
+  ...
+# Subtest: asset: person-06-worried
+ok 281 - asset: person-06-worried
+  ---
+  duration_ms: 1.427705
+  type: 'test'
+  ...
+# Subtest: asset: person-06-sad
+ok 282 - asset: person-06-sad
+  ---
+  duration_ms: 1.280889
+  type: 'test'
+  ...
+# Subtest: asset: person-06-angry
+ok 283 - asset: person-06-angry
+  ---
+  duration_ms: 1.280532
+  type: 'test'
+  ...
+# Subtest: asset: person-06-surprised
+ok 284 - asset: person-06-surprised
+  ---
+  duration_ms: 1.262329
+  type: 'test'
+  ...
+# Subtest: asset: person-06-determined
+ok 285 - asset: person-06-determined
+  ---
+  duration_ms: 1.249895
+  type: 'test'
+  ...
+# Subtest: asset: person-06-tired
+ok 286 - asset: person-06-tired
+  ---
+  duration_ms: 1.375288
+  type: 'test'
+  ...
+# Subtest: asset: person-06-skeptical
+ok 287 - asset: person-06-skeptical
+  ---
+  duration_ms: 2.166008
+  type: 'test'
+  ...
+# Subtest: asset: person-06-relieved
+ok 288 - asset: person-06-relieved
+  ---
+  duration_ms: 1.385676
+  type: 'test'
+  ...
+# Subtest: asset: person-06-inspired
+ok 289 - asset: person-06-inspired
+  ---
+  duration_ms: 2.117989
+  type: 'test'
+  ...
+# Subtest: asset: person-07-neutral
+ok 290 - asset: person-07-neutral
+  ---
+  duration_ms: 1.294567
+  type: 'test'
+  ...
+# Subtest: asset: person-07-happy
+ok 291 - asset: person-07-happy
+  ---
+  duration_ms: 1.257603
+  type: 'test'
+  ...
+# Subtest: asset: person-07-curious
+ok 292 - asset: person-07-curious
+  ---
+  duration_ms: 1.246175
+  type: 'test'
+  ...
+# Subtest: asset: person-07-worried
+ok 293 - asset: person-07-worried
+  ---
+  duration_ms: 1.957276
+  type: 'test'
+  ...
+# Subtest: asset: person-07-sad
+ok 294 - asset: person-07-sad
+  ---
+  duration_ms: 1.288573
+  type: 'test'
+  ...
+# Subtest: asset: person-07-angry
+ok 295 - asset: person-07-angry
+  ---
+  duration_ms: 1.3259
+  type: 'test'
+  ...
+# Subtest: asset: person-07-surprised
+ok 296 - asset: person-07-surprised
+  ---
+  duration_ms: 1.270693
+  type: 'test'
+  ...
+# Subtest: asset: person-07-determined
+ok 297 - asset: person-07-determined
+  ---
+  duration_ms: 1.20418
+  type: 'test'
+  ...
+# Subtest: asset: person-07-tired
+ok 298 - asset: person-07-tired
+  ---
+  duration_ms: 1.291781
+  type: 'test'
+  ...
+# Subtest: asset: person-07-skeptical
+ok 299 - asset: person-07-skeptical
+  ---
+  duration_ms: 1.522583
+  type: 'test'
+  ...
+# Subtest: asset: person-07-relieved
+ok 300 - asset: person-07-relieved
+  ---
+  duration_ms: 1.159728
+  type: 'test'
+  ...
+# Subtest: asset: person-07-inspired
+ok 301 - asset: person-07-inspired
+  ---
+  duration_ms: 1.11776
+  type: 'test'
+  ...
+# Subtest: asset: person-08-neutral
+ok 302 - asset: person-08-neutral
+  ---
+  duration_ms: 1.790764
+  type: 'test'
+  ...
+# Subtest: asset: person-08-happy
+ok 303 - asset: person-08-happy
+  ---
+  duration_ms: 1.166411
+  type: 'test'
+  ...
+# Subtest: asset: person-08-curious
+ok 304 - asset: person-08-curious
+  ---
+  duration_ms: 1.130751
+  type: 'test'
+  ...
+# Subtest: asset: person-08-worried
+ok 305 - asset: person-08-worried
+  ---
+  duration_ms: 1.195297
+  type: 'test'
+  ...
+# Subtest: asset: person-08-sad
+ok 306 - asset: person-08-sad
+  ---
+  duration_ms: 1.172529
+  type: 'test'
+  ...
+# Subtest: asset: person-08-angry
+ok 307 - asset: person-08-angry
+  ---
+  duration_ms: 1.138333
+  type: 'test'
+  ...
+# Subtest: asset: person-08-surprised
+ok 308 - asset: person-08-surprised
+  ---
+  duration_ms: 1.125415
+  type: 'test'
+  ...
+# Subtest: asset: person-08-determined
+ok 309 - asset: person-08-determined
+  ---
+  duration_ms: 1.286533
+  type: 'test'
+  ...
+# Subtest: asset: person-08-tired
+ok 310 - asset: person-08-tired
+  ---
+  duration_ms: 1.190807
+  type: 'test'
+  ...
+# Subtest: asset: person-08-skeptical
+ok 311 - asset: person-08-skeptical
+  ---
+  duration_ms: 1.11102
+  type: 'test'
+  ...
+# Subtest: asset: person-08-relieved
+ok 312 - asset: person-08-relieved
+  ---
+  duration_ms: 1.299198
+  type: 'test'
+  ...
+# Subtest: asset: person-08-inspired
+ok 313 - asset: person-08-inspired
+  ---
+  duration_ms: 1.16224
+  type: 'test'
+  ...
+# Subtest: asset: person-09-neutral
+ok 314 - asset: person-09-neutral
+  ---
+  duration_ms: 1.738233
+  type: 'test'
+  ...
+# Subtest: asset: person-09-happy
+ok 315 - asset: person-09-happy
+  ---
+  duration_ms: 1.131354
+  type: 'test'
+  ...
+# Subtest: asset: person-09-curious
+ok 316 - asset: person-09-curious
+  ---
+  duration_ms: 1.157512
+  type: 'test'
+  ...
+# Subtest: asset: person-09-worried
+ok 317 - asset: person-09-worried
+  ---
+  duration_ms: 1.101007
+  type: 'test'
+  ...
+# Subtest: asset: person-09-sad
+ok 318 - asset: person-09-sad
+  ---
+  duration_ms: 1.090125
+  type: 'test'
+  ...
+# Subtest: asset: person-09-angry
+ok 319 - asset: person-09-angry
+  ---
+  duration_ms: 1.161413
+  type: 'test'
+  ...
+# Subtest: asset: person-09-surprised
+ok 320 - asset: person-09-surprised
+  ---
+  duration_ms: 1.137391
+  type: 'test'
+  ...
+# Subtest: asset: person-09-determined
+ok 321 - asset: person-09-determined
+  ---
+  duration_ms: 1.107765
+  type: 'test'
+  ...
+# Subtest: asset: person-09-tired
+ok 322 - asset: person-09-tired
+  ---
+  duration_ms: 1.113086
+  type: 'test'
+  ...
+# Subtest: asset: person-09-skeptical
+ok 323 - asset: person-09-skeptical
+  ---
+  duration_ms: 1.143476
+  type: 'test'
+  ...
+# Subtest: asset: person-09-relieved
+ok 324 - asset: person-09-relieved
+  ---
+  duration_ms: 1.046393
+  type: 'test'
+  ...
+# Subtest: asset: person-09-inspired
+ok 325 - asset: person-09-inspired
+  ---
+  duration_ms: 1.023812
+  type: 'test'
+  ...
+# Subtest: asset: person-10-neutral
+ok 326 - asset: person-10-neutral
+  ---
+  duration_ms: 1.03604
+  type: 'test'
+  ...
+# Subtest: asset: person-10-happy
+ok 327 - asset: person-10-happy
+  ---
+  duration_ms: 1.79229
+  type: 'test'
+  ...
+# Subtest: asset: person-10-curious
+ok 328 - asset: person-10-curious
+  ---
+  duration_ms: 1.114483
+  type: 'test'
+  ...
+# Subtest: asset: person-10-worried
+ok 329 - asset: person-10-worried
+  ---
+  duration_ms: 1.148066
+  type: 'test'
+  ...
+# Subtest: asset: person-10-sad
+ok 330 - asset: person-10-sad
+  ---
+  duration_ms: 1.12696
+  type: 'test'
+  ...
+# Subtest: asset: person-10-angry
+ok 331 - asset: person-10-angry
+  ---
+  duration_ms: 1.130556
+  type: 'test'
+  ...
+# Subtest: asset: person-10-surprised
+ok 332 - asset: person-10-surprised
+  ---
+  duration_ms: 1.05233
+  type: 'test'
+  ...
+# Subtest: asset: person-10-determined
+ok 333 - asset: person-10-determined
+  ---
+  duration_ms: 1.069244
+  type: 'test'
+  ...
+# Subtest: asset: person-10-tired
+ok 334 - asset: person-10-tired
+  ---
+  duration_ms: 1.070042
+  type: 'test'
+  ...
+# Subtest: asset: person-10-skeptical
+ok 335 - asset: person-10-skeptical
+  ---
+  duration_ms: 1.009124
+  type: 'test'
+  ...
+# Subtest: asset: person-10-relieved
+ok 336 - asset: person-10-relieved
+  ---
+  duration_ms: 1.054305
+  type: 'test'
+  ...
+# Subtest: asset: person-10-inspired
+ok 337 - asset: person-10-inspired
+  ---
+  duration_ms: 1.362878
+  type: 'test'
+  ...
+# Subtest: asset: person-11-neutral
+ok 338 - asset: person-11-neutral
+  ---
+  duration_ms: 0.996181
+  type: 'test'
+  ...
+# Subtest: asset: person-11-happy
+ok 339 - asset: person-11-happy
+  ---
+  duration_ms: 1.182974
+  type: 'test'
+  ...
+# Subtest: asset: person-11-curious
+ok 340 - asset: person-11-curious
+  ---
+  duration_ms: 1.857304
+  type: 'test'
+  ...
+# Subtest: asset: person-11-worried
+ok 341 - asset: person-11-worried
+  ---
+  duration_ms: 1.205157
+  type: 'test'
+  ...
+# Subtest: asset: person-11-sad
+ok 342 - asset: person-11-sad
+  ---
+  duration_ms: 1.339287
+  type: 'test'
+  ...
+# Subtest: asset: person-11-angry
+ok 343 - asset: person-11-angry
+  ---
+  duration_ms: 1.110381
+  type: 'test'
+  ...
+# Subtest: asset: person-11-surprised
+ok 344 - asset: person-11-surprised
+  ---
+  duration_ms: 1.106411
+  type: 'test'
+  ...
+# Subtest: asset: person-11-determined
+ok 345 - asset: person-11-determined
+  ---
+  duration_ms: 1.099417
+  type: 'test'
+  ...
+# Subtest: asset: person-11-tired
+ok 346 - asset: person-11-tired
+  ---
+  duration_ms: 1.160528
+  type: 'test'
+  ...
+# Subtest: asset: person-11-skeptical
+ok 347 - asset: person-11-skeptical
+  ---
+  duration_ms: 1.143147
+  type: 'test'
+  ...
+# Subtest: asset: person-11-relieved
+ok 348 - asset: person-11-relieved
+  ---
+  duration_ms: 1.130726
+  type: 'test'
+  ...
+# Subtest: asset: person-11-inspired
+ok 349 - asset: person-11-inspired
+  ---
+  duration_ms: 1.097608
+  type: 'test'
+  ...
+# Subtest: asset: person-12-neutral
+ok 350 - asset: person-12-neutral
+  ---
+  duration_ms: 1.255344
+  type: 'test'
+  ...
+# Subtest: asset: person-12-happy
+ok 351 - asset: person-12-happy
+  ---
+  duration_ms: 1.089366
+  type: 'test'
+  ...
+# Subtest: asset: person-12-curious
+ok 352 - asset: person-12-curious
+  ---
+  duration_ms: 1.06052
+  type: 'test'
+  ...
+# Subtest: asset: person-12-worried
+ok 353 - asset: person-12-worried
+  ---
+  duration_ms: 1.833946
+  type: 'test'
+  ...
+# Subtest: asset: person-12-sad
+ok 354 - asset: person-12-sad
+  ---
+  duration_ms: 1.132904
+  type: 'test'
+  ...
+# Subtest: asset: person-12-angry
+ok 355 - asset: person-12-angry
+  ---
+  duration_ms: 1.07327
+  type: 'test'
+  ...
+# Subtest: asset: person-12-surprised
+ok 356 - asset: person-12-surprised
+  ---
+  duration_ms: 1.101107
+  type: 'test'
+  ...
+# Subtest: asset: person-12-determined
+ok 357 - asset: person-12-determined
+  ---
+  duration_ms: 1.379089
+  type: 'test'
+  ...
+# Subtest: asset: person-12-tired
+ok 358 - asset: person-12-tired
+  ---
+  duration_ms: 1.117676
+  type: 'test'
+  ...
+# Subtest: asset: person-12-skeptical
+ok 359 - asset: person-12-skeptical
+  ---
+  duration_ms: 1.14771
+  type: 'test'
+  ...
+# Subtest: asset: person-12-relieved
+ok 360 - asset: person-12-relieved
+  ---
+  duration_ms: 1.090994
+  type: 'test'
+  ...
+# Subtest: asset: person-12-inspired
+ok 361 - asset: person-12-inspired
+  ---
+  duration_ms: 1.122881
+  type: 'test'
+  ...
+# Subtest: asset: person-13-neutral
+ok 362 - asset: person-13-neutral
+  ---
+  duration_ms: 1.110371
+  type: 'test'
+  ...
+# Subtest: asset: person-13-happy
+ok 363 - asset: person-13-happy
+  ---
+  duration_ms: 1.076339
+  type: 'test'
+  ...
+# Subtest: asset: person-13-curious
+ok 364 - asset: person-13-curious
+  ---
+  duration_ms: 1.196665
+  type: 'test'
+  ...
+# Subtest: asset: person-13-worried
+ok 365 - asset: person-13-worried
+  ---
+  duration_ms: 1.84491
+  type: 'test'
+  ...
+# Subtest: asset: person-13-sad
+ok 366 - asset: person-13-sad
+  ---
+  duration_ms: 1.122918
+  type: 'test'
+  ...
+# Subtest: asset: person-13-angry
+ok 367 - asset: person-13-angry
+  ---
+  duration_ms: 1.076814
+  type: 'test'
+  ...
+# Subtest: asset: person-13-surprised
+ok 368 - asset: person-13-surprised
+  ---
+  duration_ms: 1.084311
+  type: 'test'
+  ...
+# Subtest: asset: person-13-determined
+ok 369 - asset: person-13-determined
+  ---
+  duration_ms: 1.12753
+  type: 'test'
+  ...
+# Subtest: asset: person-13-tired
+ok 370 - asset: person-13-tired
+  ---
+  duration_ms: 1.077136
+  type: 'test'
+  ...
+# Subtest: asset: person-13-skeptical
+ok 371 - asset: person-13-skeptical
+  ---
+  duration_ms: 1.243177
+  type: 'test'
+  ...
+# Subtest: asset: person-13-relieved
+ok 372 - asset: person-13-relieved
+  ---
+  duration_ms: 1.171512
+  type: 'test'
+  ...
+# Subtest: asset: person-13-inspired
+ok 373 - asset: person-13-inspired
+  ---
+  duration_ms: 1.069691
+  type: 'test'
+  ...
+# Subtest: asset: person-14-neutral
+ok 374 - asset: person-14-neutral
+  ---
+  duration_ms: 1.072119
+  type: 'test'
+  ...
+# Subtest: asset: person-14-happy
+ok 375 - asset: person-14-happy
+  ---
+  duration_ms: 1.078382
+  type: 'test'
+  ...
+# Subtest: asset: person-14-curious
+ok 376 - asset: person-14-curious
+  ---
+  duration_ms: 1.16679
+  type: 'test'
+  ...
+# Subtest: asset: person-14-worried
+ok 377 - asset: person-14-worried
+  ---
+  duration_ms: 1.180095
+  type: 'test'
+  ...
+# Subtest: asset: person-14-sad
+ok 378 - asset: person-14-sad
+  ---
+  duration_ms: 1.671461
+  type: 'test'
+  ...
+# Subtest: asset: person-14-angry
+ok 379 - asset: person-14-angry
+  ---
+  duration_ms: 1.186569
+  type: 'test'
+  ...
+# Subtest: asset: person-14-surprised
+ok 380 - asset: person-14-surprised
+  ---
+  duration_ms: 1.139578
+  type: 'test'
+  ...
+# Subtest: asset: person-14-determined
+ok 381 - asset: person-14-determined
+  ---
+  duration_ms: 1.12328
+  type: 'test'
+  ...
+# Subtest: asset: person-14-tired
+ok 382 - asset: person-14-tired
+  ---
+  duration_ms: 1.158945
+  type: 'test'
+  ...
+# Subtest: asset: person-14-skeptical
+ok 383 - asset: person-14-skeptical
+  ---
+  duration_ms: 1.109984
+  type: 'test'
+  ...
+# Subtest: asset: person-14-relieved
+ok 384 - asset: person-14-relieved
+  ---
+  duration_ms: 1.104947
+  type: 'test'
+  ...
+# Subtest: asset: person-14-inspired
+ok 385 - asset: person-14-inspired
+  ---
+  duration_ms: 1.107362
+  type: 'test'
+  ...
+# Subtest: asset: person-15-neutral
+ok 386 - asset: person-15-neutral
+  ---
+  duration_ms: 1.107162
+  type: 'test'
+  ...
+# Subtest: asset: person-15-happy
+ok 387 - asset: person-15-happy
+  ---
+  duration_ms: 1.114317
+  type: 'test'
+  ...
+# Subtest: asset: person-15-curious
+ok 388 - asset: person-15-curious
+  ---
+  duration_ms: 1.069441
+  type: 'test'
+  ...
+# Subtest: asset: person-15-worried
+ok 389 - asset: person-15-worried
+  ---
+  duration_ms: 1.114018
+  type: 'test'
+  ...
+# Subtest: asset: person-15-sad
+ok 390 - asset: person-15-sad
+  ---
+  duration_ms: 1.073765
+  type: 'test'
+  ...
+# Subtest: asset: person-15-angry
+ok 391 - asset: person-15-angry
+  ---
+  duration_ms: 1.828008
+  type: 'test'
+  ...
+# Subtest: asset: person-15-surprised
+ok 392 - asset: person-15-surprised
+  ---
+  duration_ms: 1.151562
+  type: 'test'
+  ...
+# Subtest: asset: person-15-determined
+ok 393 - asset: person-15-determined
+  ---
+  duration_ms: 1.041349
+  type: 'test'
+  ...
+# Subtest: asset: person-15-tired
+ok 394 - asset: person-15-tired
+  ---
+  duration_ms: 1.068183
+  type: 'test'
+  ...
+# Subtest: asset: person-15-skeptical
+ok 395 - asset: person-15-skeptical
+  ---
+  duration_ms: 1.033507
+  type: 'test'
+  ...
+# Subtest: asset: person-15-relieved
+ok 396 - asset: person-15-relieved
+  ---
+  duration_ms: 1.11731
+  type: 'test'
+  ...
+# Subtest: asset: person-15-inspired
+ok 397 - asset: person-15-inspired
+  ---
+  duration_ms: 1.067782
+  type: 'test'
+  ...
+# Subtest: asset: person-16-neutral
+ok 398 - asset: person-16-neutral
+  ---
+  duration_ms: 0.963391
+  type: 'test'
+  ...
+# Subtest: asset: person-16-happy
+ok 399 - asset: person-16-happy
+  ---
+  duration_ms: 1.048591
+  type: 'test'
+  ...
+# Subtest: asset: person-16-curious
+ok 400 - asset: person-16-curious
+  ---
+  duration_ms: 0.999584
+  type: 'test'
+  ...
+# Subtest: asset: person-16-worried
+ok 401 - asset: person-16-worried
+  ---
+  duration_ms: 1.009369
+  type: 'test'
+  ...
+# Subtest: asset: person-16-sad
+ok 402 - asset: person-16-sad
+  ---
+  duration_ms: 0.985169
+  type: 'test'
+  ...
+# Subtest: asset: person-16-angry
+ok 403 - asset: person-16-angry
+  ---
+  duration_ms: 0.993594
+  type: 'test'
+  ...
+# Subtest: asset: person-16-surprised
+ok 404 - asset: person-16-surprised
+  ---
+  duration_ms: 1.658635
+  type: 'test'
+  ...
+# Subtest: asset: person-16-determined
+ok 405 - asset: person-16-determined
+  ---
+  duration_ms: 1.147902
+  type: 'test'
+  ...
+# Subtest: asset: person-16-tired
+ok 406 - asset: person-16-tired
+  ---
+  duration_ms: 1.154677
+  type: 'test'
+  ...
+# Subtest: asset: person-16-skeptical
+ok 407 - asset: person-16-skeptical
+  ---
+  duration_ms: 1.074723
+  type: 'test'
+  ...
+# Subtest: asset: person-16-relieved
+ok 408 - asset: person-16-relieved
+  ---
+  duration_ms: 1.221944
+  type: 'test'
+  ...
+# Subtest: asset: person-16-inspired
+ok 409 - asset: person-16-inspired
+  ---
+  duration_ms: 1.066987
+  type: 'test'
+  ...
+# Subtest: asset: person-17-neutral
+ok 410 - asset: person-17-neutral
+  ---
+  duration_ms: 1.165506
+  type: 'test'
+  ...
+# Subtest: asset: person-17-happy
+ok 411 - asset: person-17-happy
+  ---
+  duration_ms: 1.078586
+  type: 'test'
+  ...
+# Subtest: asset: person-17-curious
+ok 412 - asset: person-17-curious
+  ---
+  duration_ms: 1.243233
+  type: 'test'
+  ...
+# Subtest: asset: person-17-worried
+ok 413 - asset: person-17-worried
+  ---
+  duration_ms: 1.150463
+  type: 'test'
+  ...
+# Subtest: asset: person-17-sad
+ok 414 - asset: person-17-sad
+  ---
+  duration_ms: 1.130124
+  type: 'test'
+  ...
+# Subtest: asset: person-17-angry
+ok 415 - asset: person-17-angry
+  ---
+  duration_ms: 1.066835
+  type: 'test'
+  ...
+# Subtest: asset: person-17-surprised
+ok 416 - asset: person-17-surprised
+  ---
+  duration_ms: 1.066721
+  type: 'test'
+  ...
+# Subtest: asset: person-17-determined
+ok 417 - asset: person-17-determined
+  ---
+  duration_ms: 1.754265
+  type: 'test'
+  ...
+# Subtest: asset: person-17-tired
+ok 418 - asset: person-17-tired
+  ---
+  duration_ms: 1.114956
+  type: 'test'
+  ...
+# Subtest: asset: person-17-skeptical
+ok 419 - asset: person-17-skeptical
+  ---
+  duration_ms: 1.176554
+  type: 'test'
+  ...
+# Subtest: asset: person-17-relieved
+ok 420 - asset: person-17-relieved
+  ---
+  duration_ms: 1.16906
+  type: 'test'
+  ...
+# Subtest: asset: person-17-inspired
+ok 421 - asset: person-17-inspired
+  ---
+  duration_ms: 1.088561
+  type: 'test'
+  ...
+# Subtest: asset: person-18-neutral
+ok 422 - asset: person-18-neutral
+  ---
+  duration_ms: 1.092021
+  type: 'test'
+  ...
+# Subtest: asset: person-18-happy
+ok 423 - asset: person-18-happy
+  ---
+  duration_ms: 1.087794
+  type: 'test'
+  ...
+# Subtest: asset: person-18-curious
+ok 424 - asset: person-18-curious
+  ---
+  duration_ms: 1.042168
+  type: 'test'
+  ...
+# Subtest: asset: person-18-worried
+ok 425 - asset: person-18-worried
+  ---
+  duration_ms: 1.033186
+  type: 'test'
+  ...
+# Subtest: asset: person-18-sad
+ok 426 - asset: person-18-sad
+  ---
+  duration_ms: 1.113424
+  type: 'test'
+  ...
+# Subtest: asset: person-18-angry
+ok 427 - asset: person-18-angry
+  ---
+  duration_ms: 1.060919
+  type: 'test'
+  ...
+# Subtest: asset: person-18-surprised
+ok 428 - asset: person-18-surprised
+  ---
+  duration_ms: 1.060187
+  type: 'test'
+  ...
+# Subtest: asset: person-18-determined
+ok 429 - asset: person-18-determined
+  ---
+  duration_ms: 1.611466
+  type: 'test'
+  ...
+# Subtest: asset: person-18-tired
+ok 430 - asset: person-18-tired
+  ---
+  duration_ms: 1.193398
+  type: 'test'
+  ...
+# Subtest: asset: person-18-skeptical
+ok 431 - asset: person-18-skeptical
+  ---
+  duration_ms: 1.170628
+  type: 'test'
+  ...
+# Subtest: asset: person-18-relieved
+ok 432 - asset: person-18-relieved
+  ---
+  duration_ms: 1.109963
+  type: 'test'
+  ...
+# Subtest: asset: person-18-inspired
+ok 433 - asset: person-18-inspired
+  ---
+  duration_ms: 1.158973
+  type: 'test'
+  ...
+# Subtest: asset: person-19-neutral
+ok 434 - asset: person-19-neutral
+  ---
+  duration_ms: 1.266612
+  type: 'test'
+  ...
+# Subtest: asset: person-19-happy
+ok 435 - asset: person-19-happy
+  ---
+  duration_ms: 1.189131
+  type: 'test'
+  ...
+# Subtest: asset: person-19-curious
+ok 436 - asset: person-19-curious
+  ---
+  duration_ms: 1.193561
+  type: 'test'
+  ...
+# Subtest: asset: person-19-worried
+ok 437 - asset: person-19-worried
+  ---
+  duration_ms: 1.133188
+  type: 'test'
+  ...
+# Subtest: asset: person-19-sad
+ok 438 - asset: person-19-sad
+  ---
+  duration_ms: 1.195183
+  type: 'test'
+  ...
+# Subtest: asset: person-19-angry
+ok 439 - asset: person-19-angry
+  ---
+  duration_ms: 1.132654
+  type: 'test'
+  ...
+# Subtest: asset: person-19-surprised
+ok 440 - asset: person-19-surprised
+  ---
+  duration_ms: 1.185094
+  type: 'test'
+  ...
+# Subtest: asset: person-19-determined
+ok 441 - asset: person-19-determined
+  ---
+  duration_ms: 1.400025
+  type: 'test'
+  ...
+# Subtest: asset: person-19-tired
+ok 442 - asset: person-19-tired
+  ---
+  duration_ms: 1.86975
+  type: 'test'
+  ...
+# Subtest: asset: person-19-skeptical
+ok 443 - asset: person-19-skeptical
+  ---
+  duration_ms: 1.198129
+  type: 'test'
+  ...
+# Subtest: asset: person-19-relieved
+ok 444 - asset: person-19-relieved
+  ---
+  duration_ms: 1.247219
+  type: 'test'
+  ...
+# Subtest: asset: person-19-inspired
+ok 445 - asset: person-19-inspired
+  ---
+  duration_ms: 1.329422
+  type: 'test'
+  ...
+# Subtest: asset: person-20-neutral
+ok 446 - asset: person-20-neutral
+  ---
+  duration_ms: 1.196338
+  type: 'test'
+  ...
+# Subtest: asset: person-20-happy
+ok 447 - asset: person-20-happy
+  ---
+  duration_ms: 1.174343
+  type: 'test'
+  ...
+# Subtest: asset: person-20-curious
+ok 448 - asset: person-20-curious
+  ---
+  duration_ms: 1.349827
+  type: 'test'
+  ...
+# Subtest: asset: person-20-worried
+ok 449 - asset: person-20-worried
+  ---
+  duration_ms: 1.248608
+  type: 'test'
+  ...
+# Subtest: asset: person-20-sad
+ok 450 - asset: person-20-sad
+  ---
+  duration_ms: 1.184183
+  type: 'test'
+  ...
+# Subtest: asset: person-20-angry
+ok 451 - asset: person-20-angry
+  ---
+  duration_ms: 1.159229
+  type: 'test'
+  ...
+# Subtest: asset: person-20-surprised
+ok 452 - asset: person-20-surprised
+  ---
+  duration_ms: 1.248541
+  type: 'test'
+  ...
+# Subtest: asset: person-20-determined
+ok 453 - asset: person-20-determined
+  ---
+  duration_ms: 1.219871
+  type: 'test'
+  ...
+# Subtest: asset: person-20-tired
+ok 454 - asset: person-20-tired
+  ---
+  duration_ms: 1.9291
+  type: 'test'
+  ...
+# Subtest: asset: person-20-skeptical
+ok 455 - asset: person-20-skeptical
+  ---
+  duration_ms: 1.352641
+  type: 'test'
+  ...
+# Subtest: asset: person-20-relieved
+ok 456 - asset: person-20-relieved
+  ---
+  duration_ms: 1.321408
+  type: 'test'
+  ...
+# Subtest: asset: person-20-inspired
+ok 457 - asset: person-20-inspired
+  ---
+  duration_ms: 1.327806
+  type: 'test'
+  ...
+# Subtest: asset: person-21-neutral
+ok 458 - asset: person-21-neutral
+  ---
+  duration_ms: 1.270292
+  type: 'test'
+  ...
+# Subtest: asset: person-21-happy
+ok 459 - asset: person-21-happy
+  ---
+  duration_ms: 1.308271
+  type: 'test'
+  ...
+# Subtest: asset: person-21-curious
+ok 460 - asset: person-21-curious
+  ---
+  duration_ms: 1.408874
+  type: 'test'
+  ...
+# Subtest: asset: person-21-worried
+ok 461 - asset: person-21-worried
+  ---
+  duration_ms: 1.224241
+  type: 'test'
+  ...
+# Subtest: asset: person-21-sad
+ok 462 - asset: person-21-sad
+  ---
+  duration_ms: 1.201471
+  type: 'test'
+  ...
+# Subtest: asset: person-21-angry
+ok 463 - asset: person-21-angry
+  ---
+  duration_ms: 1.262917
+  type: 'test'
+  ...
+# Subtest: asset: person-21-surprised
+ok 464 - asset: person-21-surprised
+  ---
+  duration_ms: 1.169487
+  type: 'test'
+  ...
+# Subtest: asset: person-21-determined
+ok 465 - asset: person-21-determined
+  ---
+  duration_ms: 1.201552
+  type: 'test'
+  ...
+# Subtest: asset: person-21-tired
+ok 466 - asset: person-21-tired
+  ---
+  duration_ms: 2.137041
+  type: 'test'
+  ...
+# Subtest: asset: person-21-skeptical
+ok 467 - asset: person-21-skeptical
+  ---
+  duration_ms: 1.260214
+  type: 'test'
+  ...
+# Subtest: asset: person-21-relieved
+ok 468 - asset: person-21-relieved
+  ---
+  duration_ms: 1.456938
+  type: 'test'
+  ...
+# Subtest: asset: person-21-inspired
+ok 469 - asset: person-21-inspired
+  ---
+  duration_ms: 1.236222
+  type: 'test'
+  ...
+# Subtest: asset: person-22-neutral
+ok 470 - asset: person-22-neutral
+  ---
+  duration_ms: 1.17586
+  type: 'test'
+  ...
+# Subtest: asset: person-22-happy
+ok 471 - asset: person-22-happy
+  ---
+  duration_ms: 1.203503
+  type: 'test'
+  ...
+# Subtest: asset: person-22-curious
+ok 472 - asset: person-22-curious
+  ---
+  duration_ms: 1.170235
+  type: 'test'
+  ...
+# Subtest: asset: person-22-worried
+ok 473 - asset: person-22-worried
+  ---
+  duration_ms: 1.126605
+  type: 'test'
+  ...
+# Subtest: asset: person-22-sad
+ok 474 - asset: person-22-sad
+  ---
+  duration_ms: 1.148363
+  type: 'test'
+  ...
+# Subtest: asset: person-22-angry
+ok 475 - asset: person-22-angry
+  ---
+  duration_ms: 1.187067
+  type: 'test'
+  ...
+# Subtest: asset: person-22-surprised
+ok 476 - asset: person-22-surprised
+  ---
+  duration_ms: 1.168367
+  type: 'test'
+  ...
+# Subtest: asset: person-22-determined
+ok 477 - asset: person-22-determined
+  ---
+  duration_ms: 1.160531
+  type: 'test'
+  ...
+# Subtest: asset: person-22-tired
+ok 478 - asset: person-22-tired
+  ---
+  duration_ms: 1.772281
+  type: 'test'
+  ...
+# Subtest: asset: person-22-skeptical
+ok 479 - asset: person-22-skeptical
+  ---
+  duration_ms: 1.221122
+  type: 'test'
+  ...
+# Subtest: asset: person-22-relieved
+ok 480 - asset: person-22-relieved
+  ---
+  duration_ms: 1.209953
+  type: 'test'
+  ...
+# Subtest: asset: person-22-inspired
+ok 481 - asset: person-22-inspired
+  ---
+  duration_ms: 1.167748
+  type: 'test'
+  ...
+# Subtest: asset: person-23-neutral
+ok 482 - asset: person-23-neutral
+  ---
+  duration_ms: 1.183686
+  type: 'test'
+  ...
+# Subtest: asset: person-23-happy
+ok 483 - asset: person-23-happy
+  ---
+  duration_ms: 1.218032
+  type: 'test'
+  ...
+# Subtest: asset: person-23-curious
+ok 484 - asset: person-23-curious
+  ---
+  duration_ms: 1.154082
+  type: 'test'
+  ...
+# Subtest: asset: person-23-worried
+ok 485 - asset: person-23-worried
+  ---
+  duration_ms: 1.194688
+  type: 'test'
+  ...
+# Subtest: asset: person-23-sad
+ok 486 - asset: person-23-sad
+  ---
+  duration_ms: 1.183075
+  type: 'test'
+  ...
+# Subtest: asset: person-23-angry
+ok 487 - asset: person-23-angry
+  ---
+  duration_ms: 1.152485
+  type: 'test'
+  ...
+# Subtest: asset: person-23-surprised
+ok 488 - asset: person-23-surprised
+  ---
+  duration_ms: 1.26577
+  type: 'test'
+  ...
+# Subtest: asset: person-23-determined
+ok 489 - asset: person-23-determined
+  ---
+  duration_ms: 1.238167
+  type: 'test'
+  ...
+# Subtest: asset: person-23-tired
+ok 490 - asset: person-23-tired
+  ---
+  duration_ms: 1.742033
+  type: 'test'
+  ...
+# Subtest: asset: person-23-skeptical
+ok 491 - asset: person-23-skeptical
+  ---
+  duration_ms: 1.235158
+  type: 'test'
+  ...
+# Subtest: asset: person-23-relieved
+ok 492 - asset: person-23-relieved
+  ---
+  duration_ms: 1.272253
+  type: 'test'
+  ...
+# Subtest: asset: person-23-inspired
+ok 493 - asset: person-23-inspired
+  ---
+  duration_ms: 1.197264
+  type: 'test'
+  ...
+# Subtest: asset: person-24-neutral
+ok 494 - asset: person-24-neutral
+  ---
+  duration_ms: 1.183931
+  type: 'test'
+  ...
+# Subtest: asset: person-24-happy
+ok 495 - asset: person-24-happy
+  ---
+  duration_ms: 2.010207
+  type: 'test'
+  ...
+# Subtest: asset: person-24-curious
+ok 496 - asset: person-24-curious
+  ---
+  duration_ms: 1.158053
+  type: 'test'
+  ...
+# Subtest: asset: person-24-worried
+ok 497 - asset: person-24-worried
+  ---
+  duration_ms: 1.181922
+  type: 'test'
+  ...
+# Subtest: asset: person-24-sad
+ok 498 - asset: person-24-sad
+  ---
+  duration_ms: 1.111502
+  type: 'test'
+  ...
+# Subtest: asset: person-24-angry
+ok 499 - asset: person-24-angry
+  ---
+  duration_ms: 1.157387
+  type: 'test'
+  ...
+# Subtest: asset: person-24-surprised
+ok 500 - asset: person-24-surprised
+  ---
+  duration_ms: 1.167162
+  type: 'test'
+  ...
+# Subtest: asset: person-24-determined
+ok 501 - asset: person-24-determined
+  ---
+  duration_ms: 1.104268
+  type: 'test'
+  ...
+# Subtest: asset: person-24-tired
+ok 502 - asset: person-24-tired
+  ---
+  duration_ms: 1.345613
+  type: 'test'
+  ...
+# Subtest: asset: person-24-skeptical
+ok 503 - asset: person-24-skeptical
+  ---
+  duration_ms: 1.912598
+  type: 'test'
+  ...
+# Subtest: asset: person-24-relieved
+ok 504 - asset: person-24-relieved
+  ---
+  duration_ms: 1.243723
+  type: 'test'
+  ...
+# Subtest: asset: person-24-inspired
+ok 505 - asset: person-24-inspired
+  ---
+  duration_ms: 1.107949
+  type: 'test'
+  ...
+# Subtest: same character identity with different expressions changes face data
+ok 506 - same character identity with different expressions changes face data
+  ---
+  duration_ms: 1.973275
+  type: 'test'
+  ...
+# Subtest: semantic vocabulary remains bounded
+ok 507 - semantic vocabulary remains bounded
+  ---
+  duration_ms: 0.09301
+  type: 'test'
+  ...
+# Subtest: unknown action rejected
+ok 508 - unknown action rejected
+  ---
+  duration_ms: 1.061823
+  type: 'test'
+  ...
+# Subtest: wrong rig action rejected
+ok 509 - wrong rig action rejected
+  ---
+  duration_ms: 0.540633
+  type: 'test'
+  ...
+# Subtest: missing anchor rejected
+ok 510 - missing anchor rejected
+  ---
+  duration_ms: 0.470665
+  type: 'test'
+  ...
+# Subtest: cue uses actual beat position
+ok 511 - cue uses actual beat position
+  ---
+  duration_ms: 0.546136
+  type: 'test'
+  ...
+# Subtest: missing cue rejected
+ok 512 - missing cue rejected
+  ---
+  duration_ms: 0.509951
+  type: 'test'
+  ...
+# Subtest: state is seek-order-independent
+ok 513 - state is seek-order-independent
+  ---
+  duration_ms: 1.904529
+  type: 'test'
+  ...
+# Subtest: scene boundary selects next scene exactly
+ok 514 - scene boundary selects next scene exactly
+  ---
+  duration_ms: 1.237761
+  type: 'test'
+  ...
+# Subtest: key easing endpoints exact
+ok 515 - key easing endpoints exact
+  ---
+  duration_ms: 0.183082
+  type: 'test'
+  ...
+# Subtest: rejects script
+ok 516 - rejects script
+  ---
+  duration_ms: 0.894638
+  type: 'test'
+  ...
+# Subtest: rejects event
+ok 517 - rejects event
+  ---
+  duration_ms: 0.902287
+  type: 'test'
+  ...
+# Subtest: rejects url
+ok 518 - rejects url
+  ---
+  duration_ms: 0.851921
+  type: 'test'
+  ...
+# Subtest: rejects nan
+ok 519 - rejects nan
+  ---
+  duration_ms: 0.905852
+  type: 'test'
+  ...
+# Subtest: rejects filename
+ok 520 - rejects filename
+  ---
+  duration_ms: 0.884267
+  type: 'test'
+  ...
+# Subtest: rejects badSource
+ok 521 - rejects badSource
+  ---
+  duration_ms: 0.892265
+  type: 'test'
+  ...
+# Subtest: rejects badSpoken
+ok 522 - rejects badSpoken
+  ---
+  duration_ms: 1.112461
+  type: 'test'
+  ...
+# Subtest: rejects captionOverlap
+ok 523 - rejects captionOverlap
+  ---
+  duration_ms: 1.660334
+  type: 'test'
+  ...
+# Subtest: rejects musicTooLoud
+ok 524 - rejects musicTooLoud
+  ---
+  duration_ms: 0.931726
+  type: 'test'
+  ...
+# Subtest: rejects totalMismatch
+ok 525 - rejects totalMismatch
+  ---
+  duration_ms: 3.221406
+  type: 'test'
+  ...
+# Subtest: rejects duplicateScene
+ok 526 - rejects duplicateScene
+  ---
+  duration_ms: 1.820523
+  type: 'test'
+  ...
+# Subtest: rejects unknownTrack
+ok 527 - rejects unknownTrack
+  ---
+  duration_ms: 3.037039
+  type: 'test'
+  ...
+# Subtest: malformed inputs return invalid rather than throw
+ok 528 - malformed inputs return invalid rather than throw
+  ---
+  duration_ms: 4.017441
+  type: 'test'
+  ...
+# Subtest: archive round trip retains nodes and metadata
+ok 529 - archive round trip retains nodes and metadata
+  ---
+  duration_ms: 14.582679
+  type: 'test'
+  ...
+# Subtest: archive CRC rejects changed bytes
+ok 530 - archive CRC rejects changed bytes
+  ---
+  duration_ms: 4.468568
+  type: 'test'
+  ...
+# Subtest: archive traversal rejected at writer
+ok 531 - archive traversal rejected at writer
+  ---
+  duration_ms: 0.217442
+  type: 'test'
+  ...
+# Subtest: archive unsupported bytes fail
+ok 532 - archive unsupported bytes fail
+  ---
+  duration_ms: 0.185176
+  type: 'test'
+  ...
+# Subtest: offline movie missing bytes fails packing
+ok 533 - offline movie missing bytes fails packing
+  ---
+  duration_ms: 1.55863
+  type: 'test'
+  ...
+# Subtest: clip overlap and scene overrun rejected
+ok 534 - clip overlap and scene overrun rejected
+  ---
+  duration_ms: 7.92547
+  type: 'test'
+  ...
+# Subtest: voice tasks contain every line and separate performance metadata
+ok 535 - voice tasks contain every line and separate performance metadata
+  ---
+  duration_ms: 1.468498
+  type: 'test'
+  ...
+# Subtest: native WAV measurement is exact
+ok 536 - native WAV measurement is exact
+  ---
+  duration_ms: 2.947835
+  type: 'test'
+  ...
+# Subtest: line audio retimes beats, actions, total and packs
+ok 537 - line audio retimes beats, actions, total and packs
+  ---
+  duration_ms: 5.443467
+  type: 'test'
+  ...
+# Subtest: longer narration extends scene rather than truncating it
+ok 538 - longer narration extends scene rather than truncating it
+  ---
+  duration_ms: 32.906178
+  type: 'test'
+  ...
+# Subtest: missing receipt fails
+ok 539 - missing receipt fails
+  ---
+  duration_ms: 3.679125
+  type: 'test'
+  ...
+# Subtest: duplicate receipt fails
+ok 540 - duplicate receipt fails
+  ---
+  duration_ms: 3.039955
+  type: 'test'
+  ...
+# Subtest: wrong audio hash fails
+ok 541 - wrong audio hash fails
+  ---
+  duration_ms: 3.762874
+  type: 'test'
+  ...
+# Subtest: path escape fails
+ok 542 - path escape fails
+  ---
+  duration_ms: 0.184515
+  type: 'test'
+  ...
+# Subtest: symlink escape fails
+ok 543 - symlink escape fails
+  ---
+  duration_ms: 1.227325
+  type: 'test'
+  ...
+# Subtest: original cue: curiosity
+ok 544 - original cue: curiosity
+  ---
+  duration_ms: 81.700133
+  type: 'test'
+  ...
+# Subtest: original cue: wonder
+ok 545 - original cue: wonder
+  ---
+  duration_ms: 39.311385
+  type: 'test'
+  ...
+# Subtest: original cue: calm
+ok 546 - original cue: calm
+  ---
+  duration_ms: 43.857484
+  type: 'test'
+  ...
+# Subtest: original cue: tension
+ok 547 - original cue: tension
+  ---
+  duration_ms: 48.375833
+  type: 'test'
+  ...
+# Subtest: original cue: melancholy
+ok 548 - original cue: melancholy
+  ---
+  duration_ms: 45.242753
+  type: 'test'
+  ...
+# Subtest: original cue: hope
+ok 549 - original cue: hope
+  ---
+  duration_ms: 54.764462
+  type: 'test'
+  ...
+# Subtest: original cue: discovery
+ok 550 - original cue: discovery
+  ---
+  duration_ms: 64.06073
+  type: 'test'
+  ...
+# Subtest: original cue: resolve
+ok 551 - original cue: resolve
+  ---
+  duration_ms: 33.893423
+  type: 'test'
+  ...
+# Subtest: original cue: warmth
+ok 552 - original cue: warmth
+  ---
+  duration_ms: 35.43268
+  type: 'test'
+  ...
+# Subtest: original cue: intrigue
+ok 553 - original cue: intrigue
+  ---
+  duration_ms: 39.424765
+  type: 'test'
+  ...
+# Subtest: original cue: clarity
+ok 554 - original cue: clarity
+  ---
+  duration_ms: 44.387454
+  type: 'test'
+  ...
+# Subtest: original cue: playful
+ok 555 - original cue: playful
+  ---
+  duration_ms: 45.101038
+  type: 'test'
+  ...
+# Subtest: music rejects invalid velocity, time and duration
+ok 556 - music rejects invalid velocity, time and duration
+  ---
+  duration_ms: 1.741391
+  type: 'test'
+  ...
+# Subtest: editorial span/hash example passes exact text checks
+ok 557 - editorial span/hash example passes exact text checks
+  ---
+  duration_ms: 0.707955
+  type: 'test'
+  ...
+# Subtest: editorial cannot invent quote or field novelty
+ok 558 - editorial cannot invent quote or field novelty
+  ---
+  duration_ms: 0.462582
+  type: 'test'
+  ...
+# Subtest: analyzer is explicit about extractive draft and preserves source hash
+ok 559 - analyzer is explicit about extractive draft and preserves source hash
+  ---
+  duration_ms: 25.624936
+  type: 'test'
+  ...
+# Subtest: player installer works in unrelated path with spaces, refuses overwrite
+ok 560 - player installer works in unrelated path with spaces, refuses overwrite
+  ---
+  duration_ms: 3.100414
+  type: 'test'
+  ...
+# Subtest: player contains no viewer feedback or notes controls
+ok 561 - player contains no viewer feedback or notes controls
+  ---
+  duration_ms: 0.383545
+  type: 'test'
+  ...
+# Subtest: skill entry includes complete relative dependencies
+ok 562 - skill entry includes complete relative dependencies
+  ---
+  duration_ms: 0.428894
+  type: 'test'
+  ...
+# Subtest: bundled film round trip: visual-lab
+ok 563 - bundled film round trip: visual-lab
+  ---
+  duration_ms: 735.851817
+  type: 'test'
+  ...
+# Subtest: bundled film round trip: mars-library
+ok 564 - bundled film round trip: mars-library
+  ---
+  duration_ms: 555.90429
+  type: 'test'
+  ...
+# Subtest: bundled film round trip: freedom-practice
+ok 565 - bundled film round trip: freedom-practice
+  ---
+  duration_ms: 278.759231
+  type: 'test'
+  ...
+# Subtest: bundled film round trip: governable-ai
+ok 566 - bundled film round trip: governable-ai
+  ---
+  duration_ms: 289.762199
+  type: 'test'
+  ...
+# Subtest: CLI catalog queries actual library
+ok 567 - CLI catalog queries actual library
+  ---
+  duration_ms: 227.562747
+  type: 'test'
+  ...
+# Subtest: repeated moves preserve previous endpoint without snap
+ok 568 - repeated moves preserve previous endpoint without snap
+  ---
+  duration_ms: 1.88397
+  type: 'test'
+  ...
+# Subtest: compiler does not mutate a cue action supplied by the author
+ok 569 - compiler does not mutate a cue action supplied by the author
+  ---
+  duration_ms: 6.268077
+  type: 'test'
+  ...
+# Subtest: voice discovery finds an actual allowed skill without claiming availability
+ok 570 - voice discovery finds an actual allowed skill without claiming availability
+  ---
+  duration_ms: 166.258574
+  type: 'test'
+  ...
+# Subtest: voice discovery without roots asks for host discovery
+ok 571 - voice discovery without roots asks for host discovery
+  ---
+  duration_ms: 160.666799
+  type: 'test'
+  ...
+1..571
+# tests 571
+# suites 0
+# pass 571
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4366.311282

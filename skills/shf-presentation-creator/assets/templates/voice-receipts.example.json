@@ -1,0 +1,15 @@
+{
+  "format": "SHF-VoiceReceipts",
+  "version": "1",
+  "provider": "REPLACE_WITH_ACTUAL_PROVIDER",
+  "lines": [
+    {
+      "id": "scene-01-line-01",
+      "file": "audio/scene-01-line-01.wav",
+      "voiceId": "ACTUAL_STABLE_VOICE_ID",
+      "quality": "requires-listening-review",
+      "alignmentQuality": "line-only",
+      "rights": "REPLACE_WITH_ACTUAL_PERMISSION_EVIDENCE"
+    }
+  ]
+}

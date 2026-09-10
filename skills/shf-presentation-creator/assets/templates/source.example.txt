@@ -1,0 +1,1 @@
+A trace records the steps a system performed. It does not by itself prove that the final answer is true. A reviewer may use sources and checks to assess the answer.

@@ -1,0 +1,129 @@
+{
+  "engine": "test-tone",
+  "initial": {
+    "cloud": false,
+    "cacheHits": 0,
+    "generatedTakes": 7,
+    "modelLoadsUpperBound": 0,
+    "sentTextCharacters": 0,
+    "remainingProviderQuotaKnown": false
+  },
+  "repeated": {
+    "cloud": false,
+    "cacheHits": 7,
+    "generatedTakes": 0,
+    "modelLoadsUpperBound": 0,
+    "sentTextCharacters": 0,
+    "remainingProviderQuotaKnown": false
+  },
+  "cachedAudioIdentical": true,
+  "audit": {
+    "valid": true,
+    "assets": [
+      {
+        "id": "b1_dry_t0",
+        "valid": true,
+        "frames": 30000
+      },
+      {
+        "id": "b1_playback",
+        "valid": true,
+        "frames": 39357
+      },
+      {
+        "id": "b2_dry_t0",
+        "valid": true,
+        "frames": 21467
+      },
+      {
+        "id": "b2_playback",
+        "valid": true,
+        "frames": 30824
+      },
+      {
+        "id": "b3_dry_t0",
+        "valid": true,
+        "frames": 17200
+      },
+      {
+        "id": "b3_playback",
+        "valid": true,
+        "frames": 26557
+      },
+      {
+        "id": "b4_dry_t0",
+        "valid": true,
+        "frames": 36933
+      },
+      {
+        "id": "b4_playback",
+        "valid": true,
+        "frames": 46290
+      },
+      {
+        "id": "b5_dry_t0",
+        "valid": true,
+        "frames": 9733
+      },
+      {
+        "id": "b5_playback",
+        "valid": true,
+        "frames": 19090
+      },
+      {
+        "id": "b6_dry_t0",
+        "valid": true,
+        "frames": 19867
+      },
+      {
+        "id": "b6_playback",
+        "valid": true,
+        "frames": 29224
+      },
+      {
+        "id": "b7_dry_t0",
+        "valid": true,
+        "frames": 33733
+      },
+      {
+        "id": "b7_playback",
+        "valid": true,
+        "frames": 43090
+      },
+      {
+        "id": "arrival_effect",
+        "valid": true,
+        "frames": 26400
+      },
+      {
+        "id": "awakening_effect",
+        "valid": true,
+        "frames": 43200
+      },
+      {
+        "id": "glow_effect",
+        "valid": true,
+        "frames": 52800
+      },
+      {
+        "id": "station_bed",
+        "valid": true,
+        "frames": 192000
+      },
+      {
+        "id": "horizon_bed",
+        "valid": true,
+        "frames": 288000
+      }
+    ],
+    "warning": "Technical validation does not certify acting, transcript correctness or naturalness."
+  },
+  "listeningRequired": [
+    "Are all words present, once, without hallucinated speech?",
+    "Are characters distinguishable and consistent?",
+    "Do neutral, fearful and reassuring instructions sound different without changing speaker identity?",
+    "Are pauses and visual anchors artistically appropriate?"
+  ],
+  "passedTechnicalAcceptance": true,
+  "passedArtisticAcceptance": null
+}

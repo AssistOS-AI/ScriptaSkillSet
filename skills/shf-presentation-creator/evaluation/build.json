@@ -1,0 +1,34 @@
+{
+  "runtimeSha256": "d7a88a9d1b2b563e902448156e9d77db2976b8fc51ab44e8f333c1c7fc0e2c81",
+  "films": [
+    {
+      "id": "visual-lab",
+      "scenes": 4,
+      "lines": 12,
+      "durationMs": 68368,
+      "nodes": 376
+    },
+    {
+      "id": "mars-library",
+      "scenes": 12,
+      "lines": 36,
+      "durationMs": 413634,
+      "nodes": 1598
+    },
+    {
+      "id": "freedom-practice",
+      "scenes": 6,
+      "lines": 18,
+      "durationMs": 183317,
+      "nodes": 431
+    },
+    {
+      "id": "governable-ai",
+      "scenes": 6,
+      "lines": 18,
+      "durationMs": 199286,
+      "nodes": 524
+    }
+  ],
+  "musicCues": 12
+}

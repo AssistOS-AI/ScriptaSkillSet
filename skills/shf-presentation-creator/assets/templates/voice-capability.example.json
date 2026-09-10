@@ -1,0 +1,19 @@
+{
+  "status": "pending-discovery",
+  "selectedSkill": null,
+  "instructionPathOrToolId": null,
+  "available": false,
+  "language": "ro",
+  "voiceId": null,
+  "supports": {
+    "styleInstructions": null,
+    "SSML": null,
+    "wordTimestamps": null
+  },
+  "auditions": [],
+  "selectionReason": null,
+  "privacyReview": "pending",
+  "rightsEvidence": null,
+  "costAuthorization": "required-if-paid",
+  "limitations": []
+}

@@ -1,0 +1,389 @@
+{
+  "format": "theatrical-audio/1",
+  "id": "the-last-light",
+  "title": "The Last Light",
+  "language": "en",
+  "sourceText": "The station had been silent for thirty years.\nHello? Is anyone still awake?\nI kept the lights on.\nBeyond the glass, a thousand frozen windows began to glow.\nFor us?\nNo. For whoever came next.\nShe lowered her hand. The dark no longer felt empty.",
+  "notes": "Original microfiction. A human visitor hears the station archive. The shipped audio is a diagnostic formant-TTS rendering, not a neural-quality showcase. For a Qwen CustomVoice cast, Serena speaks English but is not an English-native preset. All procedural ambience and effects are created by this package.",
+  "voices": {
+    "narrator": {
+      "label": "Narrator",
+      "qwenSpeaker": "Ryan",
+      "kokoroVoice": "bm_george",
+      "description": "Mature English-speaking narrator, warm low register, restrained and clear.",
+      "openaiVoice": "cedar",
+      "azureVoice": "en-US-GuyNeural",
+      "geminiVoice": "Charon",
+      "groqVoice": "troy",
+      "cartesiaVoice": "47c38ca4-5f35-497b-b1a3-415245fb35e1",
+      "cloudflareVoice": "orion",
+      "googleVoice": "en-US-Neural2-D",
+      "pollyVoice": "Matthew",
+      "voicerssVoice": "John",
+      "deepgramVoice": "aura-2-draco-en"
+    },
+    "mara": {
+      "label": "Mara",
+      "qwenSpeaker": "Serena",
+      "kokoroVoice": "bf_emma",
+      "description": "Adult woman speaking English, composed but emotionally vulnerable, clear articulation.",
+      "openaiVoice": "marin",
+      "azureVoice": "en-US-JennyNeural",
+      "geminiVoice": "Kore",
+      "groqVoice": "diana",
+      "cartesiaVoice": "db6b0ed5-d5d3-463d-ae85-518a07d3c2b4",
+      "cloudflareVoice": "asteria",
+      "googleVoice": "en-US-Neural2-F",
+      "pollyVoice": "Joanna",
+      "voicerssVoice": "Linda",
+      "deepgramVoice": "aura-2-thalia-en"
+    },
+    "archive": {
+      "label": "The Archive",
+      "qwenSpeaker": "Aiden",
+      "kokoroVoice": "am_michael",
+      "description": "A quiet adult male voice, patient, intimate, gently reassuring; never a caricature.",
+      "openaiVoice": "ash",
+      "azureVoice": "en-US-AriaNeural",
+      "geminiVoice": "Orus",
+      "groqVoice": "austin",
+      "cartesiaVoice": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "cloudflareVoice": "arcas",
+      "googleVoice": "en-US-Neural2-J",
+      "pollyVoice": "Joey",
+      "voicerssVoice": "Mike",
+      "deepgramVoice": "aura-2-apollo-en"
+    }
+  },
+  "settings": {
+    "sampleRate": 24000,
+    "takes": 1,
+    "seed": 8817,
+    "tailSeconds": 1.3,
+    "ceilingDbFS": -1,
+    "maxSceneSeconds": 120,
+    "room": {
+      "wet": 0.085,
+      "delayMs": 76
+    }
+  },
+  "beats": [
+    {
+      "id": "opening",
+      "type": "pause",
+      "seconds": 1.1
+    },
+    {
+      "id": "b1",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "The station had been silent for thirty years.",
+      "sourceSpan": {
+        "start": 0,
+        "end": 45
+      },
+      "direction": {
+        "emotion": "quiet wonder",
+        "intensity": 0.22,
+        "pace": 0.9,
+        "delivery": "Measured, intimate narration. Let the final words settle.",
+        "elevenlabs": {
+          "tags": [
+            "curious"
+          ],
+          "stability": 0.5
+        },
+        "cartesia": {
+          "emotion": "curious"
+        },
+        "groq": {
+          "tags": [
+            "curious"
+          ]
+        }
+      },
+      "pan": 0,
+      "gainDb": 0
+    },
+    {
+      "id": "pause_1",
+      "type": "pause",
+      "seconds": 0.9
+    },
+    {
+      "id": "b2",
+      "type": "speech",
+      "speaker": "mara",
+      "text": "Hello? Is anyone still awake?",
+      "sourceSpan": {
+        "start": 46,
+        "end": 75
+      },
+      "direction": {
+        "emotion": "cautious uncertainty",
+        "intensity": 0.4,
+        "pace": 0.93,
+        "delivery": "Call softly into a vast room. Curiosity is stronger than fear.",
+        "cartesia": {
+          "emotion": "hesitant"
+        },
+        "groq": {
+          "tags": [
+            "whisper"
+          ]
+        }
+      },
+      "pan": -0.25,
+      "gainDb": -1
+    },
+    {
+      "id": "pause_2",
+      "type": "pause",
+      "seconds": 1.1
+    },
+    {
+      "id": "b3",
+      "type": "speech",
+      "speaker": "archive",
+      "text": "I kept the lights on.",
+      "sourceSpan": {
+        "start": 76,
+        "end": 97
+      },
+      "direction": {
+        "emotion": "tender reassurance",
+        "intensity": 0.5,
+        "pace": 0.82,
+        "delivery": "Very calm, with a small emotional weight on kept. Do not sound cheerful.",
+        "cartesia": {
+          "emotion": "sympathetic"
+        },
+        "groq": {
+          "tags": [
+            "sympathetic"
+          ]
+        }
+      },
+      "pan": 0.25,
+      "gainDb": -1
+    },
+    {
+      "id": "pause_3",
+      "type": "pause",
+      "seconds": 1.0
+    },
+    {
+      "id": "b4",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "Beyond the glass, a thousand frozen windows began to glow.",
+      "sourceSpan": {
+        "start": 98,
+        "end": 156
+      },
+      "direction": {
+        "emotion": "awe",
+        "intensity": 0.42,
+        "pace": 0.94,
+        "delivery": "Build a little wonder without raising the volume.",
+        "cartesia": {
+          "emotion": "amazed"
+        },
+        "groq": {
+          "tags": [
+            "amazed"
+          ]
+        }
+      },
+      "pan": 0,
+      "gainDb": 0
+    },
+    {
+      "id": "pause_4",
+      "type": "pause",
+      "seconds": 0.8
+    },
+    {
+      "id": "b5",
+      "type": "speech",
+      "speaker": "mara",
+      "text": "For us?",
+      "sourceSpan": {
+        "start": 157,
+        "end": 164
+      },
+      "direction": {
+        "emotion": "surprised hope",
+        "intensity": 0.6,
+        "pace": 0.88,
+        "delivery": "Almost a whisper. It is a question she is afraid to ask.",
+        "cartesia": {
+          "emotion": "surprised"
+        },
+        "groq": {
+          "tags": [
+            "surprised"
+          ]
+        }
+      },
+      "pan": -0.25,
+      "gainDb": -1
+    },
+    {
+      "id": "pause_5",
+      "type": "pause",
+      "seconds": 1.3
+    },
+    {
+      "id": "b6",
+      "type": "speech",
+      "speaker": "archive",
+      "text": "No. For whoever came next.",
+      "sourceSpan": {
+        "start": 165,
+        "end": 191
+      },
+      "direction": {
+        "emotion": "gentle resolve",
+        "intensity": 0.58,
+        "pace": 0.83,
+        "delivery": "No is gentle, not a rejection. A natural acting pause after it.",
+        "cartesia": {
+          "emotion": "determined"
+        },
+        "groq": {
+          "tags": [
+            "determined"
+          ]
+        }
+      },
+      "pan": 0.25,
+      "gainDb": -1
+    },
+    {
+      "id": "pause_6",
+      "type": "pause",
+      "seconds": 1.0
+    },
+    {
+      "id": "b7",
+      "type": "speech",
+      "speaker": "narrator",
+      "text": "She lowered her hand. The dark no longer felt empty.",
+      "sourceSpan": {
+        "start": 192,
+        "end": 244
+      },
+      "direction": {
+        "emotion": "peace after loneliness",
+        "intensity": 0.35,
+        "pace": 0.9,
+        "delivery": "A quiet final thought; soften the final phrase.",
+        "cartesia": {
+          "emotion": "peaceful"
+        },
+        "groq": {
+          "tags": [
+            "peaceful"
+          ]
+        }
+      },
+      "pan": 0,
+      "gainDb": 0
+    }
+  ],
+  "effects": [
+    {
+      "id": "arrival",
+      "preset": "airlock",
+      "seconds": 1.1,
+      "at": 0.0,
+      "gainDb": -24,
+      "pan": -0.4,
+      "seed": 82
+    },
+    {
+      "id": "awakening",
+      "preset": "chime",
+      "seconds": 1.8,
+      "at": {
+        "beat": "b3",
+        "edge": "end",
+        "offsetSeconds": 0.12
+      },
+      "gainDb": -23,
+      "pan": 0.25
+    },
+    {
+      "id": "glow",
+      "preset": "chime",
+      "seconds": 2.2,
+      "at": {
+        "beat": "b6",
+        "edge": "end",
+        "offsetSeconds": 0.35
+      },
+      "gainDb": -26,
+      "pan": -0.2
+    }
+  ],
+  "beds": [
+    {
+      "id": "station",
+      "preset": "space-hum",
+      "seconds": 8,
+      "gainDb": -26,
+      "duckDb": -9,
+      "fadeSeconds": 0.5,
+      "seed": 41
+    },
+    {
+      "id": "horizon",
+      "preset": "drone",
+      "seconds": 12,
+      "gainDb": -29,
+      "duckDb": -7,
+      "fadeSeconds": 1.0,
+      "seed": 4
+    }
+  ],
+  "visuals": [
+    {
+      "id": "station_reveal",
+      "at": {
+        "beat": "b3",
+        "edge": "end",
+        "offsetSeconds": 0.05
+      },
+      "target": "windows",
+      "action": "reveal",
+      "durationSeconds": 4.0,
+      "params": {
+        "from": 0,
+        "to": 1
+      }
+    },
+    {
+      "id": "mara_reacts",
+      "at": {
+        "beat": "b5",
+        "edge": "start"
+      },
+      "target": "mara",
+      "action": "raise-head",
+      "durationSeconds": 0.7,
+      "params": {}
+    },
+    {
+      "id": "soften",
+      "at": {
+        "beat": "b7",
+        "edge": "start"
+      },
+      "target": "scene",
+      "action": "warm-light",
+      "durationSeconds": 3,
+      "params": {}
+    }
+  ]
+}

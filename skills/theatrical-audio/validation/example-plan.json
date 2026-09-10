@@ -1,0 +1,98 @@
+{
+  "engine": "gemini",
+  "networkRequests": 0,
+  "credentialsChecked": false,
+  "cacheInspected": false,
+  "remainingQuotaKnown": false,
+  "upperBoundSynthesisRequests": 7,
+  "upperBoundTextCharacters": 238,
+  "offer": {
+    "id": "gemini",
+    "name": "Gemini Developer API",
+    "execution": "cloud",
+    "freeKind": "recurring",
+    "offer": "Free input/output for Gemini Flash TTS; account/model rate limits apply. Pro TTS is not free.",
+    "requiredEnvironment": [
+      "GEMINI_API_KEY"
+    ],
+    "defaultModel": "gemini-2.5-flash-preview-tts",
+    "defaultVoice": "Kore",
+    "control": "natural-language-instructions",
+    "pricingUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+    "apiUrl": "https://ai.google.dev/gemini-api/docs/speech-generation",
+    "accountUrl": "https://aistudio.google.com/apikey",
+    "cautions": "Account/region eligibility applies. Review applicable data-use terms; do not submit sensitive material to a demo account.",
+    "checkedAt": "2026-09-10",
+    "liveTested": false
+  },
+  "clips": [
+    {
+      "id": "b1",
+      "speaker": "narrator",
+      "textCharacters": 45,
+      "takes": 1,
+      "requestBytes": 792,
+      "control": "natural-language-instructions",
+      "warnings": []
+    },
+    {
+      "id": "b2",
+      "speaker": "mara",
+      "textCharacters": 29,
+      "takes": 1,
+      "requestBytes": 799,
+      "control": "natural-language-instructions",
+      "warnings": []
+    },
+    {
+      "id": "b3",
+      "speaker": "archive",
+      "textCharacters": 21,
+      "takes": 1,
+      "requestBytes": 792,
+      "control": "natural-language-instructions",
+      "warnings": []
+    },
+    {
+      "id": "b4",
+      "speaker": "narrator",
+      "textCharacters": 58,
+      "takes": 1,
+      "requestBytes": 788,
+      "control": "natural-language-instructions",
+      "warnings": []
+    },
+    {
+      "id": "b5",
+      "speaker": "mara",
+      "textCharacters": 7,
+      "takes": 1,
+      "requestBytes": 761,
+      "control": "natural-language-instructions",
+      "warnings": []
+    },
+    {
+      "id": "b6",
+      "speaker": "archive",
+      "textCharacters": 26,
+      "takes": 1,
+      "requestBytes": 784,
+      "control": "natural-language-instructions",
+      "warnings": []
+    },
+    {
+      "id": "b7",
+      "speaker": "narrator",
+      "textCharacters": 52,
+      "takes": 1,
+      "requestBytes": 799,
+      "control": "natural-language-instructions",
+      "warnings": []
+    }
+  ],
+  "notes": [
+    "Counts assume cache misses. They are not a quote: providers bill tokens/characters/credits differently.",
+    "Directions/tags/SSML may contribute to provider accounting. No remaining-quota or monetary cap is inferred.",
+    "Environment/account/voice settings may still be needed to construct valid requests, but no secret is read into the result."
+  ]
+}

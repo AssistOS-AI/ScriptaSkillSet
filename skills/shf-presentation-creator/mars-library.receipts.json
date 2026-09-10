@@ -1,0 +1,331 @@
+{
+  "format": "SHF-VoiceReceipts",
+  "version": "1",
+  "provider": "eSpeak demonstration, inherited and segmented",
+  "lines": [
+    {
+      "id": "mars-library-mars-line-01",
+      "file": "assets/voice-demo/mars-library-mars-line-01.mp3",
+      "sha256": "61f7f4f353799ca3ccb29df73c2e12a81b6cb9164a0f9d75007b49c73e35081e",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-mars-line-02",
+      "file": "assets/voice-demo/mars-library-mars-line-02.mp3",
+      "sha256": "ea4d9ca171eaa5b3ed1b158824fa5db3a374d2c598b5edda34fd3a1bf7159e48",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-mars-line-03",
+      "file": "assets/voice-demo/mars-library-mars-line-03.mp3",
+      "sha256": "ce193e290b66ed59cae118028b1c002f6c8a5eb32c95e1f196e8eaa32fcb5d46",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-archivist-line-01",
+      "file": "assets/voice-demo/mars-library-archivist-line-01.mp3",
+      "sha256": "5276179ab8a254676eb26c480242edb23f5acfe70af13be1b7185b7dae79c704",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-archivist-line-02",
+      "file": "assets/voice-demo/mars-library-archivist-line-02.mp3",
+      "sha256": "4c3ac22fd6b6cc73e320dd73054998e5fb9c34cb4b6f3ffbf2910f3678ae2a22",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-archivist-line-03",
+      "file": "assets/voice-demo/mars-library-archivist-line-03.mp3",
+      "sha256": "e08c45d519d60a522629ab7c52d265ca9dcd586ae651ccb22b1f00d75c973f7b",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-signal-line-01",
+      "file": "assets/voice-demo/mars-library-signal-line-01.mp3",
+      "sha256": "875a9c4b8b249162ca122cde77253f715124a7f59cc4cd3c52fcaf6891bd15b1",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-signal-line-02",
+      "file": "assets/voice-demo/mars-library-signal-line-02.mp3",
+      "sha256": "0b345fe80d8f944650196fd812fecb1844dd3165975d6a630359b84121508dd1",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-signal-line-03",
+      "file": "assets/voice-demo/mars-library-signal-line-03.mp3",
+      "sha256": "f7228071f55b43aa441df9b27087394fa4af11464a4e0483843bd670bf73fb05",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-connections-line-01",
+      "file": "assets/voice-demo/mars-library-connections-line-01.mp3",
+      "sha256": "4bc71d17825ac7019980bd89b451d01e8880a4a51a024086aa9ce020a4d27fe4",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-connections-line-02",
+      "file": "assets/voice-demo/mars-library-connections-line-02.mp3",
+      "sha256": "4011620fba21b03aa1617f47189d1a6115415b3df2d6eb7e3a8907148a7f9bdc",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-connections-line-03",
+      "file": "assets/voice-demo/mars-library-connections-line-03.mp3",
+      "sha256": "e0e5f4639bf8a2810c4b5cc850edf69054913f3d0fdac870c586e0c409f4e178",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-simulation-line-01",
+      "file": "assets/voice-demo/mars-library-simulation-line-01.mp3",
+      "sha256": "a33cb87423172cca04761fe228a92258cc097e76e3c552fdd23e813087a8ad77",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-simulation-line-02",
+      "file": "assets/voice-demo/mars-library-simulation-line-02.mp3",
+      "sha256": "9274d7f117dabf207442043fbe12760b6ccc30c4067611d0b7becdc0a2af1cb2",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-simulation-line-03",
+      "file": "assets/voice-demo/mars-library-simulation-line-03.mp3",
+      "sha256": "69977bfa17aca03144004ec7a2b4d4ff8cbe2f6268274a0d1b1c6c04bd1f9551",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-branches-line-01",
+      "file": "assets/voice-demo/mars-library-branches-line-01.mp3",
+      "sha256": "730e3e8c033534da5912b8e23598ba59806ae6e0a57ba1f37c3e7b8e42ab5737",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-branches-line-02",
+      "file": "assets/voice-demo/mars-library-branches-line-02.mp3",
+      "sha256": "424961fb4cb7b62e5e8aba4bfa47ed6e256fca656e3ba23141c8c8df6a0261cf",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-branches-line-03",
+      "file": "assets/voice-demo/mars-library-branches-line-03.mp3",
+      "sha256": "390c0221ab3726c7882f2b3d827d24afd36c784f4786413ffe20ee8a3e14d4ae",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-uncertainty-line-01",
+      "file": "assets/voice-demo/mars-library-uncertainty-line-01.mp3",
+      "sha256": "d9265a59c56c2ad0a69eb0ce23e9b83cad46272764fa9db830af62578b14b5a7",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-uncertainty-line-02",
+      "file": "assets/voice-demo/mars-library-uncertainty-line-02.mp3",
+      "sha256": "f855706b80b1389465ddb49b70cbee94af759cca083a7ba896dcd83e9f20fe94",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-uncertainty-line-03",
+      "file": "assets/voice-demo/mars-library-uncertainty-line-03.mp3",
+      "sha256": "1822cfdece85df1d3a44b2513c27665478008f180f3a7d80c323f124be1cdd67",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-authority-line-01",
+      "file": "assets/voice-demo/mars-library-authority-line-01.mp3",
+      "sha256": "f26194f31cb304853f5d76a67e58c398356b6c837a1537f4bb0b11e5617098b5",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-authority-line-02",
+      "file": "assets/voice-demo/mars-library-authority-line-02.mp3",
+      "sha256": "0c4001c3506e076cd014f08c4b70e3f48909ff86d88e310cd7a2f8b946602150",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-authority-line-03",
+      "file": "assets/voice-demo/mars-library-authority-line-03.mp3",
+      "sha256": "c96b9250c70a4496a14eb5c908365678e22196b44fbc2f44ac5147c6e77deb7b",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-decision-line-01",
+      "file": "assets/voice-demo/mars-library-decision-line-01.mp3",
+      "sha256": "21f561b4aa866f6bd9c7aee8c376324b34cef75d468b406de1487998160d9be3",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-decision-line-02",
+      "file": "assets/voice-demo/mars-library-decision-line-02.mp3",
+      "sha256": "d4bf7b57776e41d78e818381a3d2d2a3b86e3991f4a1007820a7ff9ed8fd5105",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-decision-line-03",
+      "file": "assets/voice-demo/mars-library-decision-line-03.mp3",
+      "sha256": "bc68fd0fac4a59c2161647cf68ffc0f4f8eb724ad739ff36c55f6ed88151c584",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-distinction-line-01",
+      "file": "assets/voice-demo/mars-library-distinction-line-01.mp3",
+      "sha256": "3fad193beb29d76724358fa63706820ad26026523b27840dfcbb761df703f2da",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-distinction-line-02",
+      "file": "assets/voice-demo/mars-library-distinction-line-02.mp3",
+      "sha256": "1492ef81f48ec246bd0884f51301060c14f8cf1a836aa705c72386d9022a9183",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-distinction-line-03",
+      "file": "assets/voice-demo/mars-library-distinction-line-03.mp3",
+      "sha256": "b6669ae5dc57078d2c442ffb9111ec8f8bc4cbf275d376678921bed6706f98b4",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-shared-line-01",
+      "file": "assets/voice-demo/mars-library-shared-line-01.mp3",
+      "sha256": "f104ab477c3c16c1a0da3c6db75fecb688bd2574646da4b480ecfacaad2d0ecf",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-shared-line-02",
+      "file": "assets/voice-demo/mars-library-shared-line-02.mp3",
+      "sha256": "44eb1c477a228a537dc65048294f318615f30d21268d28d0fadfb80f359011b8",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-shared-line-03",
+      "file": "assets/voice-demo/mars-library-shared-line-03.mp3",
+      "sha256": "169fe69fb9543d2fbc5450ff167bc0b3dda902f98dabfa5398dcd7ea79c93e65",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-question-line-01",
+      "file": "assets/voice-demo/mars-library-question-line-01.mp3",
+      "sha256": "bd59bc58136c35cc967168ff60186792e66ee35b13778605ab02791d49bb28fa",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-question-line-02",
+      "file": "assets/voice-demo/mars-library-question-line-02.mp3",
+      "sha256": "6aa88e1e2e18a6c50766741eeec953da09bd2c7adf556e0ccaac7956be881727",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    },
+    {
+      "id": "mars-library-question-line-03",
+      "file": "assets/voice-demo/mars-library-question-line-03.mp3",
+      "sha256": "ceea573514d0a22d671a602ebd3dabf675d5fcfa209483b6f698fbbd1a367d31",
+      "rights": "original demonstration text and synthetic eSpeak output; no cloned person",
+      "provider": "eSpeak demonstration, inherited and segmented",
+      "quality": "demonstration-only",
+      "alignmentQuality": "line-only"
+    }
+  ]
+}

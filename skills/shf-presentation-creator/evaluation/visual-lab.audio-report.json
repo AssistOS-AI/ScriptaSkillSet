@@ -1,0 +1,74 @@
+[
+  {
+    "id": "visual-lab-paperwork-line-01",
+    "durationMs": 3675,
+    "sha256": "f0edbc56530d94045ff3ae992683f84914749ab5a893d3698a097516cf86c471",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-paperwork-line-02",
+    "durationMs": 3960,
+    "sha256": "c22403d50dffe48d72d5c5dcfcebfe404441c031a359c8a229d40db5bebea1a9",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-paperwork-line-03",
+    "durationMs": 4627,
+    "sha256": "93caaec865815f6b92c96526a0865b582b5305a4b90c873682b170d096466448",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-world-in-book-line-01",
+    "durationMs": 4715,
+    "sha256": "a9834710ea8cdba92e209cbb27936f96e41315f5c8d99852b8be47592982e137",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-world-in-book-line-02",
+    "durationMs": 4555,
+    "sha256": "e99a8afce19d167e90525bfefb329437c55584e116d7b8750ce697be8b693857",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-world-in-book-line-03",
+    "durationMs": 4994,
+    "sha256": "7a0ed905c62a0288bf8448d80fb06e927f5c1d00981cd5f5cc15d856290ab376",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-show-the-source-line-01",
+    "durationMs": 3903,
+    "sha256": "22c5ed214d0340a4401a28a2dee3cea5b42400d0e78324a214f544f8dc9e9ac4",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-show-the-source-line-02",
+    "durationMs": 6456,
+    "sha256": "38012ddd970b4945a8fa5edc229dc349f33b77962ccc956c1e8218586e6e66b2",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-show-the-source-line-03",
+    "durationMs": 5327,
+    "sha256": "dae248297bbdf61052e24e8904daf5edf36657292c61c23bd5ba92124f922e82",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-room-to-choose-line-01",
+    "durationMs": 5271,
+    "sha256": "4b05c30bd84c57dd2a86b4baee881541104fadb707431fd36ca7a8364601d612",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-room-to-choose-line-02",
+    "durationMs": 4762,
+    "sha256": "0c340f91933b9f4528506e93149c18efa8a3e00d851f14a00c2d3a157a2a7080",
+    "alignmentQuality": "line-only"
+  },
+  {
+    "id": "visual-lab-room-to-choose-line-03",
+    "durationMs": 4223,
+    "sha256": "287a91d72aa493a9a3c651c4debd36a5b0bb801d3d87afe191d613074d699f78",
+    "alignmentQuality": "line-only"
+  }
+]

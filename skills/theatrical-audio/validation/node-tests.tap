@@ -1,0 +1,1208 @@
+TAP version 13
+# Subtest: CLI help needs no runtime or credential
+ok 1 - CLI help needs no runtime or credential
+  ---
+  duration_ms: 209.506843
+  type: 'test'
+  ...
+# Subtest: CLI OpenAI voice names are available without calling a provider
+ok 2 - CLI OpenAI voice names are available without calling a provider
+  ---
+  duration_ms: 212.51964
+  type: 'test'
+  ...
+# Subtest: CLI rejects cloud under offline before credential/network access
+ok 3 - CLI rejects cloud under offline before credential/network access
+  ---
+  duration_ms: 201.77272
+  type: 'test'
+  ...
+# Subtest: CLI rejects misspelled flags
+ok 4 - CLI rejects misspelled flags
+  ---
+  duration_ms: 215.744512
+  type: 'test'
+  ...
+# Subtest: CLI never silently renders diagnostic signals as speech
+ok 5 - CLI never silently renders diagnostic signals as speech
+  ---
+  duration_ms: 347.368529
+  type: 'test'
+  ...
+# Subtest: CLI one-line diagnostic export is a real standalone WAV and verified scene
+ok 6 - CLI one-line diagnostic export is a real standalone WAV and verified scene
+  ---
+  duration_ms: 597.52885
+  type: 'test'
+  ...
+# Subtest: CLI draft creates a schema-valid mechanical score without provider access
+ok 7 - CLI draft creates a schema-valid mechanical score without provider access
+  ---
+  duration_ms: 511.451083
+  type: 'test'
+  ...
+# Subtest: OpenAI request separates exact text, voice and acting instruction
+ok 8 - OpenAI request separates exact text, voice and acting instruction
+  ---
+  duration_ms: 3.579218
+  type: 'test'
+  ...
+# Subtest: OpenAI voice identity comes from score before configured default
+ok 9 - OpenAI voice identity comes from score before configured default
+  ---
+  duration_ms: 0.931829
+  type: 'test'
+  ...
+# Subtest: OpenAI persona is included without inserting it into spoken text
+ok 10 - OpenAI persona is included without inserting it into spoken text
+  ---
+  duration_ms: 0.411193
+  type: 'test'
+  ...
+# Subtest: OpenAI unknown voice fails rather than silently replacing it
+ok 11 - OpenAI unknown voice fails rather than silently replacing it
+  ---
+  duration_ms: 0.947641
+  type: 'test'
+  ...
+# Subtest: Legacy OpenAI model must explicitly acknowledge degraded control
+ok 12 - Legacy OpenAI model must explicitly acknowledge degraded control
+  ---
+  duration_ms: 0.378977
+  type: 'test'
+  ...
+# Subtest: Legacy OpenAI model rejects a voice absent from its own catalogue
+ok 13 - Legacy OpenAI model rejects a voice absent from its own catalogue
+  ---
+  duration_ms: 0.321235
+  type: 'test'
+  ...
+# Subtest: Eleven v3 prefixes explicit tags and keeps stage direction out of the transcript
+ok 14 - Eleven v3 prefixes explicit tags and keeps stage direction out of the transcript
+  ---
+  duration_ms: 1.18689
+  type: 'test'
+  ...
+# Subtest: Eleven v3 refuses invented continuous stability values
+ok 15 - Eleven v3 refuses invented continuous stability values
+  ---
+  duration_ms: 0.529029
+  type: 'test'
+  ...
+# Subtest: ElevenLabs numeric speed out of supported range fails before network
+ok 16 - ElevenLabs numeric speed out of supported range fails before network
+  ---
+  duration_ms: 0.777063
+  type: 'test'
+  ...
+# Subtest: ElevenLabs direction-only request explicitly warns that no tags were translated
+ok 17 - ElevenLabs direction-only request explicitly warns that no tags were translated
+  ---
+  duration_ms: 0.92631
+  type: 'test'
+  ...
+# Subtest: ElevenLabs unsupported-model tags are not sent as spoken text
+ok 18 - ElevenLabs unsupported-model tags are not sent as spoken text
+  ---
+  duration_ms: 0.909119
+  type: 'test'
+  ...
+# Subtest: ElevenLabs malformed tag syntax is rejected
+ok 19 - ElevenLabs malformed tag syntax is rejected
+  ---
+  duration_ms: 0.290486
+  type: 'test'
+  ...
+# Subtest: Azure escapes markup and uses only documented SSML controls
+ok 20 - Azure escapes markup and uses only documented SSML controls
+  ---
+  duration_ms: 0.6539
+  type: 'test'
+  ...
+# Subtest: Azure requires a real resource region
+ok 21 - Azure requires a real resource region
+  ---
+  duration_ms: 0.176479
+  type: 'test'
+  ...
+# Subtest: Azure cannot use a style degree without a style
+ok 22 - Azure cannot use a style degree without a style
+  ---
+  duration_ms: 0.493071
+  type: 'test'
+  ...
+# Subtest: Cloud endpoint refuses insecure URLs and inline credentials
+ok 23 - Cloud endpoint refuses insecure URLs and inline credentials
+  ---
+  duration_ms: 0.356955
+  type: 'test'
+  ...
+# Subtest: Cloud timeout is validated
+ok 24 - Cloud timeout is validated
+  ---
+  duration_ms: 0.168542
+  type: 'test'
+  ...
+# Subtest: Raw PCM is wrapped as mono 24 kHz PCM16 with no external codec
+ok 25 - Raw PCM is wrapped as mono 24 kHz PCM16 with no external codec
+  ---
+  duration_ms: 10.462467
+  type: 'test'
+  ...
+# Subtest: Odd-sized PCM is rejected
+ok 26 - Odd-sized PCM is rejected
+  ---
+  duration_ms: 0.682119
+  type: 'test'
+  ...
+# Subtest: Empty PCM is rejected
+ok 27 - Empty PCM is rejected
+  ---
+  duration_ms: 0.281362
+  type: 'test'
+  ...
+# Subtest: JSON or compressed audio must not become fake noisy WAV files
+ok 28 - JSON or compressed audio must not become fake noisy WAV files
+  ---
+  duration_ms: 0.33433
+  type: 'test'
+  ...
+# Subtest: HTTP 401 fails once without leaking the provider body or secret
+ok 29 - HTTP 401 fails once without leaking the provider body or secret
+  ---
+  duration_ms: 40.178172
+  type: 'test'
+  ...
+# Subtest: HTTP 429 is not automatically retried (avoid unexpected charges)
+ok 30 - HTTP 429 is not automatically retried (avoid unexpected charges)
+  ---
+  duration_ms: 0.593368
+  type: 'test'
+  ...
+# Subtest: Large declared response is rejected before allocating it
+ok 31 - Large declared response is rejected before allocating it
+  ---
+  duration_ms: 1.381012
+  type: 'test'
+  ...
+# Subtest: Streaming response size limit is enforced without a content-length
+ok 32 - Streaming response size limit is enforced without a content-length
+  ---
+  duration_ms: 2.181752
+  type: 'test'
+  ...
+# Subtest: Request timeout aborts the request and reports billing uncertainty
+ok 33 - Request timeout aborts the request and reports billing uncertainty
+  ---
+  duration_ms: 27.134612
+  type: 'test'
+  ...
+# Subtest: Missing cloud API key fails without making a network request
+ok 34 - Missing cloud API key fails without making a network request
+  ---
+  duration_ms: 0.586542
+  type: 'test'
+  ...
+# Subtest: Backend offline mode blocks cloud even when credentials are supplied
+ok 35 - Backend offline mode blocks cloud even when credentials are supplied
+  ---
+  duration_ms: 0.236156
+  type: 'test'
+  ...
+# Subtest: Cloud preflight does not make a request and does not claim successful inference
+ok 36 - Cloud preflight does not make a request and does not claim successful inference
+  ---
+  duration_ms: 14.973732
+  type: 'test'
+  ...
+# Subtest: Cloud generation sends authorization only in headers and returns real PCM metadata
+ok 37 - Cloud generation sends authorization only in headers and returns real PCM metadata
+  ---
+  duration_ms: 15.472998
+  type: 'test'
+  ...
+# Subtest: API key rotation does not invalidate the audio cache
+ok 38 - API key rotation does not invalidate the audio cache
+  ---
+  duration_ms: 4.009423
+  type: 'test'
+  ...
+# Subtest: Cache salt invalidates remote mutable-model results explicitly
+ok 39 - Cache salt invalidates remote mutable-model results explicitly
+  ---
+  duration_ms: 14.559095
+  type: 'test'
+  ...
+# Subtest: Unrelated backend voice settings do not invalidate OpenAI speech
+ok 40 - Unrelated backend voice settings do not invalidate OpenAI speech
+  ---
+  duration_ms: 2.251494
+  type: 'test'
+  ...
+# Subtest: .env loading never overrides an existing shell key or executes substitutions
+ok 41 - .env loading never overrides an existing shell key or executes substitutions
+  ---
+  duration_ms: 8.542018
+  type: 'test'
+  ...
+# Subtest: .env rejects unrelated process environment variables
+ok 42 - .env rejects unrelated process environment variables
+  ---
+  duration_ms: 7.91578
+  type: 'test'
+  ...
+# Subtest: Settings reject plaintext secret fields
+ok 43 - Settings reject plaintext secret fields
+  ---
+  duration_ms: 11.242546
+  type: 'test'
+  ...
+# Subtest: Engine selection priority is flag, environment, settings, local default
+ok 44 - Engine selection priority is flag, environment, settings, local default
+  ---
+  duration_ms: 3.458427
+  type: 'test'
+  ...
+# Subtest: Configured cloud is still blocked by offline mode
+ok 45 - Configured cloud is still blocked by offline mode
+  ---
+  duration_ms: 5.977619
+  type: 'test'
+  ...
+# Subtest: ElevenLabs voice catalogue carries pagination instead of claiming completeness
+ok 46 - ElevenLabs voice catalogue carries pagination instead of claiming completeness
+  ---
+  duration_ms: 3.098482
+  type: 'test'
+  ...
+# Subtest: Azure voice discovery exposes supported styles
+ok 47 - Azure voice discovery exposes supported styles
+  ---
+  duration_ms: 5.119425
+  type: 'test'
+  ...
+# Synthesize hello, take 1/1 [openai]
+# Synthesize end, take 1/1 [openai]
+# Subtest: Cloud scene integration: preflight, cache, request limits, and no large audition export
+    # Subtest: renders real waveform fixtures through the cloud adapter
+    ok 1 - renders real waveform fixtures through the cloud adapter
+      ---
+      duration_ms: 146.461728
+      type: 'test'
+      ...
+    # Subtest: pause-only change uses cache and shifts the measured timeline exactly
+    ok 2 - pause-only change uses cache and shifts the measured timeline exactly
+      ---
+      duration_ms: 47.626339
+      type: 'test'
+      ...
+    # Subtest: cache/report files do not contain the API key
+    ok 3 - cache/report files do not contain the API key
+      ---
+      duration_ms: 1.876452
+      type: 'test'
+      ...
+    # Subtest: missing late-scene voice fails before generating earlier clips
+    ok 4 - missing late-scene voice fails before generating earlier clips
+      ---
+      duration_ms: 6.97634
+      type: 'test'
+      ...
+# Synthesize hello, take 1/1 [openai]
+# Synthesize end, take 1/1 [openai]
+    # Subtest: explicit refresh obeys a one-request spending limit
+    ok 5 - explicit refresh obeys a one-request spending limit
+      ---
+      duration_ms: 21.147361
+      type: 'test'
+      ...
+    # Subtest: render resumes without re-requesting completed clips
+    ok 6 - render resumes without re-requesting completed clips
+      ---
+      duration_ms: 40.705731
+      type: 'test'
+      ...
+    1..6
+ok 48 - Cloud scene integration: preflight, cache, request limits, and no large audition export
+  ---
+  duration_ms: 269.451754
+  type: 'test'
+  ...
+# Subtest: canonical keys have a stable order
+ok 49 - canonical keys have a stable order
+  ---
+  duration_ms: 7.136137
+  type: 'test'
+  ...
+# Subtest: CLI rejects duplicate options
+ok 50 - CLI rejects duplicate options
+  ---
+  duration_ms: 0.88346
+  type: 'test'
+  ...
+# Subtest: CLI parses explicit boolean flags
+ok 51 - CLI parses explicit boolean flags
+  ---
+  duration_ms: 1.754873
+  type: 'test'
+  ...
+# Subtest: relative paths cannot escape a playback bundle
+ok 52 - relative paths cannot escape a playback bundle
+  ---
+  duration_ms: 0.294529
+  type: 'test'
+  ...
+# Subtest: WAV mono PCM16 round trip preserves frame count and precision
+ok 53 - WAV mono PCM16 round trip preserves frame count and precision
+  ---
+  duration_ms: 6.323615
+  type: 'test'
+  ...
+# Subtest: WAV stereo does not accidentally swap channels
+ok 54 - WAV stereo does not accidentally swap channels
+  ---
+  duration_ms: 0.668681
+  type: 'test'
+  ...
+# Subtest: WAV truncation is rejected
+ok 55 - WAV truncation is rejected
+  ---
+  duration_ms: 6.16374
+  type: 'test'
+  ...
+# Subtest: Non-finite PCM input is rejected
+ok 56 - Non-finite PCM input is rejected
+  ---
+  duration_ms: 0.615253
+  type: 'test'
+  ...
+# Subtest: Mismatched stereo channel sizes are rejected
+ok 57 - Mismatched stereo channel sizes are rejected
+  ---
+  duration_ms: 0.73882
+  type: 'test'
+  ...
+# Subtest: WAV parser skips unknown padded chunks
+ok 58 - WAV parser skips unknown padded chunks
+  ---
+  duration_ms: 1.383268
+  type: 'test'
+  ...
+# Subtest: Stereo-to-mono average is explicit
+ok 59 - Stereo-to-mono average is explicit
+  ---
+  duration_ms: 0.743326
+  type: 'test'
+  ...
+# Subtest: Resampling preserves exact duration on integral ratios
+ok 60 - Resampling preserves exact duration on integral ratios
+  ---
+  duration_ms: 57.360284
+  type: 'test'
+  ...
+# Subtest: Windowed-sinc resampler preserves DC
+ok 61 - Windowed-sinc resampler preserves DC
+  ---
+  duration_ms: 10.341386
+  type: 'test'
+  ...
+# Subtest: Downsampling attenuates a frequency above the output Nyquist limit
+ok 62 - Downsampling attenuates a frequency above the output Nyquist limit
+  ---
+  duration_ms: 10.9549
+  type: 'test'
+  ...
+# Subtest: Amplitude envelopes are explicitly not phoneme alignment
+ok 63 - Amplitude envelopes are explicitly not phoneme alignment
+  ---
+  duration_ms: 0.852027
+  type: 'test'
+  ...
+# Subtest: Minimal score validates
+ok 64 - Minimal score validates
+  ---
+  duration_ms: 2.652958
+  type: 'test'
+  ...
+# Subtest: Unknown score properties are rejected instead of ignored
+ok 65 - Unknown score properties are rejected instead of ignored
+  ---
+  duration_ms: 0.513277
+  type: 'test'
+  ...
+# Subtest: Unknown voice is rejected
+ok 66 - Unknown voice is rejected
+  ---
+  duration_ms: 0.479613
+  type: 'test'
+  ...
+# Subtest: Duplicate IDs are rejected
+ok 67 - Duplicate IDs are rejected
+  ---
+  duration_ms: 0.542007
+  type: 'test'
+  ...
+# Subtest: Emotion intensity is bounded
+ok 68 - Emotion intensity is bounded
+  ---
+  duration_ms: 0.779957
+  type: 'test'
+  ...
+# Subtest: Selected take uses a checked zero-based index
+ok 69 - Selected take uses a checked zero-based index
+  ---
+  duration_ms: 0.740909
+  type: 'test'
+  ...
+# Subtest: Source spans must match exact spoken text
+ok 70 - Source spans must match exact spoken text
+  ---
+  duration_ms: 0.963258
+  type: 'test'
+  ...
+# Subtest: Source spans use JavaScript UTF-16 indices, including emoji
+ok 71 - Source spans use JavaScript UTF-16 indices, including emoji
+  ---
+  duration_ms: 0.701582
+  type: 'test'
+  ...
+# Subtest: Timing cycles are caught before synthesis
+ok 72 - Timing cycles are caught before synthesis
+  ---
+  duration_ms: 0.477021
+  type: 'test'
+  ...
+# Subtest: Unknown anchors are rejected
+ok 73 - Unknown anchors are rejected
+  ---
+  duration_ms: 1.119203
+  type: 'test'
+  ...
+# Subtest: Procedural effects require a duration
+ok 74 - Procedural effects require a duration
+  ---
+  duration_ms: 0.730906
+  type: 'test'
+  ...
+# Subtest: External assets cannot also specify a procedural preset
+ok 75 - External assets cannot also specify a procedural preset
+  ---
+  duration_ms: 0.525271
+  type: 'test'
+  ...
+# Subtest: Pause duration belongs to the scene, not to speech frames
+ok 76 - Pause duration belongs to the scene, not to speech frames
+  ---
+  duration_ms: 1.050379
+  type: 'test'
+  ...
+# Subtest: Changing one speech duration shifts dependent visuals exactly
+ok 77 - Changing one speech duration shifts dependent visuals exactly
+  ---
+  duration_ms: 0.432126
+  type: 'test'
+  ...
+# Subtest: Absolute anchors stay absolute when preceding audio changes
+ok 78 - Absolute anchors stay absolute when preceding audio changes
+  ---
+  duration_ms: 0.540135
+  type: 'test'
+  ...
+# Subtest: Forward anchors work when they are acyclic
+ok 79 - Forward anchors work when they are acyclic
+  ---
+  duration_ms: 0.383859
+  type: 'test'
+  ...
+# Subtest: Negative resolved start times are rejected
+ok 80 - Negative resolved start times are rejected
+  ---
+  duration_ms: 0.386399
+  type: 'test'
+  ...
+# Subtest: Reverb tails do not move the semantic speech-end anchor
+ok 81 - Reverb tails do not move the semantic speech-end anchor
+  ---
+  duration_ms: 0.232552
+  type: 'test'
+  ...
+# Subtest: Verified markers resolve to frame-accurate anchors
+ok 82 - Verified markers resolve to frame-accurate anchors
+  ---
+  duration_ms: 1.0064
+  type: 'test'
+  ...
+# Subtest: Markers from a different audio file are rejected
+ok 83 - Markers from a different audio file are rejected
+  ---
+  duration_ms: 0.349812
+  type: 'test'
+  ...
+# Subtest: Markers cannot point past the dry clip end
+ok 84 - Markers cannot point past the dry clip end
+  ---
+  duration_ms: 0.400613
+  type: 'test'
+  ...
+# Subtest: Sound presets are deterministic for a fixed seed
+ok 85 - Sound presets are deterministic for a fixed seed
+  ---
+  duration_ms: 13.792314
+  type: 'test'
+  ...
+# Subtest: Noise seeds alter procedural ambience
+ok 86 - Noise seeds alter procedural ambience
+  ---
+  duration_ms: 1.577261
+  type: 'test'
+  ...
+# Subtest: All sound presets have finite samples and exact lengths
+ok 87 - All sound presets have finite samples and exact lengths
+  ---
+  duration_ms: 23.146904
+  type: 'test'
+  ...
+# Subtest: Loop edges are tapered to avoid discontinuities
+ok 88 - Loop edges are tapered to avoid discontinuities
+  ---
+  duration_ms: 4.736444
+  type: 'test'
+  ...
+# Subtest: Dry input remains unmodified by the room processor
+ok 89 - Dry input remains unmodified by the room processor
+  ---
+  duration_ms: 0.72638
+  type: 'test'
+  ...
+# Subtest: Room reflections preserve the initial voice and add an explicit tail
+ok 90 - Room reflections preserve the initial voice and add an explicit tail
+  ---
+  duration_ms: 2.955761
+  type: 'test'
+  ...
+# Subtest: Ducking recovers to unity outside speech
+ok 91 - Ducking recovers to unity outside speech
+  ---
+  duration_ms: 0.292077
+  type: 'test'
+  ...
+# Subtest: Overlap ducking takes the maximum activation, not stacked attenuation
+ok 92 - Overlap ducking takes the maximum activation, not stacked attenuation
+  ---
+  duration_ms: 0.134363
+  type: 'test'
+  ...
+# Subtest: Hard-left panning does not leak into the right channel
+ok 93 - Hard-left panning does not leak into the right channel
+  ---
+  duration_ms: 2.68349
+  type: 'test'
+  ...
+# Subtest: Scene silence is truly empty when no bed is present
+ok 94 - Scene silence is truly empty when no bed is present
+  ---
+  duration_ms: 1.159537
+  type: 'test'
+  ...
+# Subtest: Sample-peak ceiling is enforced for overlapping voices
+ok 95 - Sample-peak ceiling is enforced for overlapping voices
+  ---
+  duration_ms: 3.652922
+  type: 'test'
+  ...
+# Subtest: Drafting preserves source text without inventing dialogue
+ok 96 - Drafting preserves source text without inventing dialogue
+  ---
+  duration_ms: 32.916366
+  type: 'test'
+  ...
+# Subtest: Empty input is rejected by the draft command
+ok 97 - Empty input is rejected by the draft command
+  ---
+  duration_ms: 0.190841
+  type: 'test'
+  ...
+# Subtest: Acting instruction includes emotion and does not change source text
+ok 98 - Acting instruction includes emotion and does not change source text
+  ---
+  duration_ms: 0.644689
+  type: 'test'
+  ...
+# Subtest: Registry has 13 cloud providers, ten new adapters, and every engine has a voice field
+ok 99 - Registry has 13 cloud providers, ten new adapters, and every engine has a voice field
+  ---
+  duration_ms: 4.017099
+  type: 'test'
+  ...
+# Subtest: gemini: credential-free request construction and valid audio decoding
+ok 100 - gemini: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 13.844963
+  type: 'test'
+  ...
+# Subtest: gemini: native fetch auth, file creation, secret-free cache identity and metadata
+ok 101 - gemini: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 83.103411
+  type: 'test'
+  ...
+# Subtest: gemini: missing credentials and offline do not call network
+ok 102 - gemini: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.96897
+  type: 'test'
+  ...
+# Subtest: gemini: non-OK status aborts once without retry or provider fallback
+ok 103 - gemini: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 5.25026
+  type: 'test'
+  ...
+# Subtest: groq: credential-free request construction and valid audio decoding
+ok 104 - groq: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 8.958793
+  type: 'test'
+  ...
+# Subtest: groq: native fetch auth, file creation, secret-free cache identity and metadata
+ok 105 - groq: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 13.823571
+  type: 'test'
+  ...
+# Subtest: groq: missing credentials and offline do not call network
+ok 106 - groq: missing credentials and offline do not call network
+  ---
+  duration_ms: 1.16233
+  type: 'test'
+  ...
+# Subtest: groq: non-OK status aborts once without retry or provider fallback
+ok 107 - groq: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 4.973971
+  type: 'test'
+  ...
+# Subtest: hume: credential-free request construction and valid audio decoding
+ok 108 - hume: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 6.103264
+  type: 'test'
+  ...
+# Subtest: hume: native fetch auth, file creation, secret-free cache identity and metadata
+ok 109 - hume: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 20.490382
+  type: 'test'
+  ...
+# Subtest: hume: missing credentials and offline do not call network
+ok 110 - hume: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.41914
+  type: 'test'
+  ...
+# Subtest: hume: non-OK status aborts once without retry or provider fallback
+ok 111 - hume: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 2.130206
+  type: 'test'
+  ...
+# Subtest: cartesia: credential-free request construction and valid audio decoding
+ok 112 - cartesia: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 0.546499
+  type: 'test'
+  ...
+# Subtest: cartesia: native fetch auth, file creation, secret-free cache identity and metadata
+ok 113 - cartesia: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 3.978333
+  type: 'test'
+  ...
+# Subtest: cartesia: missing credentials and offline do not call network
+ok 114 - cartesia: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.183467
+  type: 'test'
+  ...
+# Subtest: cartesia: non-OK status aborts once without retry or provider fallback
+ok 115 - cartesia: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 3.002322
+  type: 'test'
+  ...
+# Subtest: cloudflare: credential-free request construction and valid audio decoding
+ok 116 - cloudflare: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 1.026651
+  type: 'test'
+  ...
+# Subtest: cloudflare: native fetch auth, file creation, secret-free cache identity and metadata
+ok 117 - cloudflare: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 18.54182
+  type: 'test'
+  ...
+# Subtest: cloudflare: missing credentials and offline do not call network
+ok 118 - cloudflare: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.305692
+  type: 'test'
+  ...
+# Subtest: cloudflare: non-OK status aborts once without retry or provider fallback
+ok 119 - cloudflare: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 2.583026
+  type: 'test'
+  ...
+# Subtest: google: credential-free request construction and valid audio decoding
+ok 120 - google: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 1.967734
+  type: 'test'
+  ...
+# Subtest: google: native fetch auth, file creation, secret-free cache identity and metadata
+ok 121 - google: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 8.599911
+  type: 'test'
+  ...
+# Subtest: google: missing credentials and offline do not call network
+ok 122 - google: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.264952
+  type: 'test'
+  ...
+# Subtest: google: non-OK status aborts once without retry or provider fallback
+ok 123 - google: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 3.582609
+  type: 'test'
+  ...
+# Subtest: voicerss: credential-free request construction and valid audio decoding
+ok 124 - voicerss: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 0.705205
+  type: 'test'
+  ...
+# Subtest: voicerss: native fetch auth, file creation, secret-free cache identity and metadata
+ok 125 - voicerss: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 5.847691
+  type: 'test'
+  ...
+# Subtest: voicerss: missing credentials and offline do not call network
+ok 126 - voicerss: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.262453
+  type: 'test'
+  ...
+# Subtest: voicerss: non-OK status aborts once without retry or provider fallback
+ok 127 - voicerss: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 2.650532
+  type: 'test'
+  ...
+# Subtest: deepgram: credential-free request construction and valid audio decoding
+ok 128 - deepgram: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 0.983609
+  type: 'test'
+  ...
+# Subtest: deepgram: native fetch auth, file creation, secret-free cache identity and metadata
+ok 129 - deepgram: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 4.259129
+  type: 'test'
+  ...
+# Subtest: deepgram: missing credentials and offline do not call network
+ok 130 - deepgram: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.340307
+  type: 'test'
+  ...
+# Subtest: deepgram: non-OK status aborts once without retry or provider fallback
+ok 131 - deepgram: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 4.154301
+  type: 'test'
+  ...
+# Subtest: polly: credential-free request construction and valid audio decoding
+ok 132 - polly: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 1.228792
+  type: 'test'
+  ...
+# Subtest: polly: native fetch auth, file creation, secret-free cache identity and metadata
+ok 133 - polly: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 16.02715
+  type: 'test'
+  ...
+# Subtest: polly: missing credentials and offline do not call network
+ok 134 - polly: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.503423
+  type: 'test'
+  ...
+# Subtest: polly: non-OK status aborts once without retry or provider fallback
+ok 135 - polly: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 4.205146
+  type: 'test'
+  ...
+# Subtest: mistral: credential-free request construction and valid audio decoding
+ok 136 - mistral: credential-free request construction and valid audio decoding
+  ---
+  duration_ms: 1.815889
+  type: 'test'
+  ...
+# Subtest: mistral: native fetch auth, file creation, secret-free cache identity and metadata
+ok 137 - mistral: native fetch auth, file creation, secret-free cache identity and metadata
+  ---
+  duration_ms: 4.720227
+  type: 'test'
+  ...
+# Subtest: mistral: missing credentials and offline do not call network
+ok 138 - mistral: missing credentials and offline do not call network
+  ---
+  duration_ms: 0.34993
+  type: 'test'
+  ...
+# Subtest: mistral: non-OK status aborts once without retry or provider fallback
+ok 139 - mistral: non-OK status aborts once without retry or provider fallback
+  ---
+  duration_ms: 5.195569
+  type: 'test'
+  ...
+# Subtest: Gemini supports 30 distinct documented voices and sends direction outside transcript
+ok 140 - Gemini supports 30 distinct documented voices and sends direction outside transcript
+  ---
+  duration_ms: 0.401393
+  type: 'test'
+  ...
+# Subtest: Gemini refuses empty, blocked, truncated, wrong-encoding or bad-base64 responses
+ok 141 - Gemini refuses empty, blocked, truncated, wrong-encoding or bad-base64 responses
+  ---
+  duration_ms: 0.695971
+  type: 'test'
+  ...
+# Subtest: Groq cap includes directions, with no silent text truncation
+ok 142 - Groq cap includes directions, with no silent text truncation
+  ---
+  duration_ms: 0.483584
+  type: 'test'
+  ...
+# Subtest: Hume defaults to Octave 1 with a saved named voice and never creates a dynamic voice
+ok 143 - Hume defaults to Octave 1 with a saved named voice and never creates a dynamic voice
+  ---
+  duration_ms: 1.104245
+  type: 'test'
+  ...
+# Subtest: Cartesia pins the current API schema, validates enumerated emotion, and preserves text
+ok 144 - Cartesia pins the current API schema, validates enumerated emotion, and preserves text
+  ---
+  duration_ms: 0.462109
+  type: 'test'
+  ...
+# Subtest: Mistral JSON base64 is not confused with binary audio or PCM32
+ok 145 - Mistral JSON base64 is not confused with binary audio or PCM32
+  ---
+  duration_ms: 0.176445
+  type: 'test'
+  ...
+# Subtest: VoiceRSS HTTP-200 error text and compressed audio are never saved as WAV
+ok 146 - VoiceRSS HTTP-200 error text and compressed audio are never saved as WAV
+  ---
+  duration_ms: 0.253658
+  type: 'test'
+  ...
+# Subtest: Open-ended streaming WAV sizes can be normalized; ordinary truncation cannot
+ok 147 - Open-ended streaming WAV sizes can be normalized; ordinary truncation cannot
+  ---
+  duration_ms: 0.357068
+  type: 'test'
+  ...
+# Subtest: PCM16 16k Polly output is wrapped at 16k, not wrongly labeled 24k
+ok 148 - PCM16 16k Polly output is wrapped at 16k, not wrongly labeled 24k
+  ---
+  duration_ms: 0.791141
+  type: 'test'
+  ...
+# Subtest: Polly signs session tokens and is stable for a frozen timestamp without leaking secret
+ok 149 - Polly signs session tokens and is stable for a frozen timestamp without leaking secret
+  ---
+  duration_ms: 0.392614
+  type: 'test'
+  ...
+# Subtest: Free-tier guard blocks paid, trial, uncertain and unsupported model profiles
+ok 150 - Free-tier guard blocks paid, trial, uncertain and unsupported model profiles
+  ---
+  duration_ms: 3.737586
+  type: 'test'
+  ...
+# Subtest: All cloud engines are blocked by --offline at config resolution
+ok 151 - All cloud engines are blocked by --offline at config resolution
+  ---
+  duration_ms: 5.073783
+  type: 'test'
+  ...
+# Subtest: .env loader accepts new provider settings without global packages
+ok 152 - .env loader accepts new provider settings without global packages
+  ---
+  duration_ms: 2.405416
+  type: 'test'
+  ...
+# Subtest: Google supports OAuth without a Google API key; auth is never in request/cache payload
+ok 153 - Google supports OAuth without a Google API key; auth is never in request/cache payload
+  ---
+  duration_ms: 12.376089
+  type: 'test'
+  ...
+# Subtest: Hume and Mistral voice listing do not require voice selection or synthesize text
+ok 154 - Hume and Mistral voice listing do not require voice selection or synthesize text
+  ---
+  duration_ms: 4.726289
+  type: 'test'
+  ...
+# Subtest: plan is network-free and validates all beats before generating anything
+ok 155 - plan is network-free and validates all beats before generating anything
+  ---
+  duration_ms: 7.102634
+  type: 'test'
+  ...
+# Synthesize one, take 1/1 [gemini]
+# Synthesize two, take 1/1 [gemini]
+# Subtest: End-to-end mocked rendering, schema, cached pause edits and timeline audit on all ten new providers
+    # Subtest: gemini
+    ok 1 - gemini
+      ---
+      duration_ms: 187.551237
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [groq]
+# Synthesize two, take 1/1 [groq]
+    # Subtest: groq
+    ok 2 - groq
+      ---
+      duration_ms: 106.989187
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [hume]
+# Synthesize two, take 1/1 [hume]
+    # Subtest: hume
+    ok 3 - hume
+      ---
+      duration_ms: 95.780082
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [cartesia]
+# Synthesize two, take 1/1 [cartesia]
+    # Subtest: cartesia
+    ok 4 - cartesia
+      ---
+      duration_ms: 88.726081
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [cloudflare]
+# Synthesize two, take 1/1 [cloudflare]
+    # Subtest: cloudflare
+    ok 5 - cloudflare
+      ---
+      duration_ms: 85.231758
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [google]
+# Synthesize two, take 1/1 [google]
+    # Subtest: google
+    ok 6 - google
+      ---
+      duration_ms: 91.94414
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [voicerss]
+# Synthesize two, take 1/1 [voicerss]
+    # Subtest: voicerss
+    ok 7 - voicerss
+      ---
+      duration_ms: 99.98122
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [deepgram]
+# Synthesize two, take 1/1 [deepgram]
+    # Subtest: deepgram
+    ok 8 - deepgram
+      ---
+      duration_ms: 97.76711
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [polly]
+# Synthesize two, take 1/1 [polly]
+    # Subtest: polly
+    ok 9 - polly
+      ---
+      duration_ms: 180.665068
+      type: 'test'
+      ...
+# Synthesize one, take 1/1 [mistral]
+# Synthesize two, take 1/1 [mistral]
+    # Subtest: mistral
+    ok 10 - mistral
+      ---
+      duration_ms: 137.515121
+      type: 'test'
+      ...
+    1..10
+ok 156 - End-to-end mocked rendering, schema, cached pause edits and timeline audit on all ten new providers
+  ---
+  duration_ms: 1174.419357
+  type: 'test'
+  ...
+# Synthesize a, take 1/1 [groq]
+# Synthesize b, take 1/1 [groq]
+# Subtest: Preflight, budgets and deliberate pacing protect free quotas without automatic retries
+    # Subtest: one-request cap stops before second request
+    ok 1 - one-request cap stops before second request
+      ---
+      duration_ms: 16.65341
+      type: 'test'
+      ...
+# Synthesize a, take 1/1 [groq]
+    # Subtest: character cap stops before any request when first clip exceeds it
+    ok 2 - character cap stops before any request when first clip exceeds it
+      ---
+      duration_ms: 5.369032
+      type: 'test'
+      ...
+    # Subtest: bad later Groq beat is detected before the first paid request
+    ok 3 - bad later Groq beat is detected before the first paid request
+      ---
+      duration_ms: 10.923456
+      type: 'test'
+      ...
+# Synthesize a, take 1/1 [groq]
+# Synthesize b, take 1/1 [groq]
+    # Subtest: configured interval separates request start times; cache does not wait
+    ok 4 - configured interval separates request start times; cache does not wait
+      ---
+      duration_ms: 117.883817
+      type: 'test'
+      ...
+    1..4
+ok 157 - Preflight, budgets and deliberate pacing protect free quotas without automatic retries
+  ---
+  duration_ms: 155.735958
+  type: 'test'
+  ...
+# Subtest: AWS SigV4 matches an independently computed botocore golden fixture
+ok 158 - AWS SigV4 matches an independently computed botocore golden fixture
+  ---
+  duration_ms: 4.347402
+  type: 'test'
+  ...
+# Subtest: Packaged three-character example preflights with eight new publicly documented casts
+ok 159 - Packaged three-character example preflights with eight new publicly documented casts
+  ---
+  duration_ms: 41.102111
+  type: 'test'
+  ...
+# Subtest: New adapters reject missing per-character voices instead of collapsing the cast
+ok 160 - New adapters reject missing per-character voices instead of collapsing the cast
+  ---
+  duration_ms: 2.888743
+  type: 'test'
+  ...
+# Synthesize hello, take 1/1 [test-tone]
+# Synthesize end, take 1/1 [test-tone]
+# Subtest: Render, pause-only revision, take selection, cache corruption and bundle audit
+    # Subtest: first render creates two independent speech files and no pause file
+    ok 1 - first render creates two independent speech files and no pause file
+      ---
+      duration_ms: 266.229752
+      type: 'test'
+      ...
+    # Subtest: identical rerender uses cache and produces byte-identical audition audio
+    ok 2 - identical rerender uses cache and produces byte-identical audition audio
+      ---
+      duration_ms: 54.794448
+      type: 'test'
+      ...
+    # Subtest: changing a pause shifts only the timeline without regenerating speech
+    ok 3 - changing a pause shifts only the timeline without regenerating speech
+      ---
+      duration_ms: 85.190705
+      type: 'test'
+      ...
+# Synthesize hello, take 2/2 [test-tone]
+# Synthesize end, take 2/2 [test-tone]
+    # Subtest: requesting a second take generates only missing takes
+    ok 4 - requesting a second take generates only missing takes
+      ---
+      duration_ms: 120.06815
+      type: 'test'
+      ...
+    # Subtest: changing selectedTake reuses all generated performances
+    ok 5 - changing selectedTake reuses all generated performances
+      ---
+      duration_ms: 126.288075
+      type: 'test'
+      ...
+# Synthesize end, take 1/2 [test-tone]
+# Synthesize end, take 2/2 [test-tone]
+    # Subtest: editing one spoken line invalidates that line only
+    ok 6 - editing one spoken line invalidates that line only
+      ---
+      duration_ms: 71.795842
+      type: 'test'
+      ...
+# Synthesize hello, take 1/2 [test-tone]
+    # Subtest: a corrupt cache entry is detected and regenerated
+    ok 7 - a corrupt cache entry is detected and regenerated
+      ---
+      duration_ms: 75.5563
+      type: 'test'
+      ...
+    # Subtest: preview embeds assets and safely escapes executable HTML in score data
+    ok 8 - preview embeds assets and safely escapes executable HTML in score data
+      ---
+      duration_ms: 106.829499
+      type: 'test'
+      ...
+    # Subtest: bundle audit detects an altered audio file
+    ok 9 - bundle audit detects an altered audio file
+      ---
+      duration_ms: 5.294069
+      type: 'test'
+      ...
+    # Subtest: no silent fallback to a diagnostic engine
+    ok 10 - no silent fallback to a diagnostic engine
+      ---
+      duration_ms: 3.935108
+      type: 'test'
+      ...
+    # Subtest: failed backend initialization releases the output lock
+    ok 11 - failed backend initialization releases the output lock
+      ---
+      duration_ms: 5.769738
+      type: 'test'
+      ...
+    # Subtest: concurrent output lock is respected
+    ok 12 - concurrent output lock is respected
+      ---
+      duration_ms: 2.745069
+      type: 'test'
+      ...
+    1..12
+ok 161 - Render, pause-only revision, take selection, cache corruption and bundle audit
+  ---
+  duration_ms: 954.039849
+  type: 'test'
+  ...
+1..161
+# tests 193
+# suites 0
+# pass 193
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2670.395753

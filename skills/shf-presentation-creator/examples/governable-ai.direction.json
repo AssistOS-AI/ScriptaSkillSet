@@ -1,0 +1,1237 @@
+{
+  "format": "SHF-Direction",
+  "version": "0.4",
+  "id": "governable-ai",
+  "title": "AI pe care îl poți întreba „de ce?”",
+  "language": "ro",
+  "genreLabel": "TEHNIC • explicație",
+  "description": "Surse, urme de execuție și intervenție umană, explicate vizual.",
+  "stage": {
+    "width": 1200,
+    "height": 760
+  },
+  "durationMs": 195000,
+  "visualIdentity": "illustrated-theatre",
+  "assets": {},
+  "editorial": {
+    "mode": "visual-essence",
+    "disclosure": "Explicație conceptuală originală, nu evaluarea unui sistem implementat. Nu sunt prezentate performanțe măsurate. Diagramele sunt schematice; proveniența nu garantează corectitudinea.",
+    "novelty": {
+      "kind": "design-premise",
+      "claim": "Tratarea muncii AI ca proces inspectabil. Noutatea științifică nu este revendicată.",
+      "verification": "not-assessed-against-external-literature"
+    },
+    "spoilers": "original-demo; premise and thematic arc disclosed",
+    "qualityStatus": "authored-demonstration-not-an-automatic-book-adaptation"
+  },
+  "sources": [
+    {
+      "id": "src-blackbox",
+      "kind": "original-demo-text",
+      "text": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie. Într-un proces important, calitatea textului nu rezolvă singură problema controlului. Trebuie să putem pune întrebări despre muncă. Cum transformăm un rezultat greu de inspectat într-un proces pe care oamenii îl pot urmări și corecta?"
+    },
+    {
+      "id": "src-trace",
+      "kind": "original-demo-text",
+      "text": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor. Fiecare rezultat păstrează o legătură cu intrările sale. Putem vedea unde a apărut o afirmație și ce o susține. O urmă explicită face procesul mai inspectabil. Nu dovedește, prin simpla ei existență, că fiecare pas a fost corect."
+    },
+    {
+      "id": "src-source-link",
+      "kind": "original-demo-text",
+      "text": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează. Un cititor poate verifica dacă acel pasaj spune într-adevăr ceea ce pretinde analiza. Poate observa o omisiune sau o interpretare prea puternică. Legătura nu certifică adevărul sursei. Face doar posibilă o verificare care altfel ar fi mult mai dificilă."
+    },
+    {
+      "id": "src-approval",
+      "kind": "original-demo-text",
+      "text": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul. Un buton de aprobare nu este suficient. Alegerea trebuie să producă o schimbare observabilă în ceea ce se întâmplă mai departe. Un sistem controlabil face vizibile aceste puncte de decizie și păstrează contextul în care persoana a intervenit."
+    },
+    {
+      "id": "src-limits",
+      "kind": "original-demo-text",
+      "text": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale. Avem nevoie de teste care introduc erori și verifică dacă ele sunt detectate, explicate și corectate la timp. Schema de aici ilustrează un principiu de proiectare. Nu este un rezultat experimental și nu promite eliminarea erorilor."
+    },
+    {
+      "id": "src-governable",
+      "kind": "original-demo-text",
+      "text": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate. De unde vine afirmația? Ce s-a schimbat pe parcurs? Unde poate interveni un om? Valoarea practică apare atunci când răspunsurile la aceste întrebări pot fi testate în sarcini concrete, nu doar desenate într-o arhitectură."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "blackbox",
+      "title": "Un răspuns bun nu este suficient",
+      "emotionLabel": "problemă",
+      "alt": "Un răspuns bun nu este suficient. machine, character, paper",
+      "promise": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.",
+      "durationMs": 33000,
+      "beats": [
+        {
+          "label": "Situația",
+          "text": "Un asistent produce un răspuns convingător. Dar nu vedem clar ce surse a folosit sau cum a ajuns la concluzie.",
+          "startMs": 800,
+          "endMs": 11353,
+          "sourceRefs": [
+            "src-blackbox"
+          ],
+          "spokenEndMs": 8994,
+          "id": "governable-ai-blackbox-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Ce lipsește",
+          "text": "Într-un proces important, calitatea textului nu rezolvă singură problema controlului. Trebuie să putem pune întrebări despre muncă.",
+          "startMs": 11533,
+          "endMs": 22087,
+          "sourceRefs": [
+            "src-blackbox"
+          ],
+          "spokenEndMs": 20998,
+          "id": "governable-ai-blackbox-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Miza",
+          "text": "Cum transformăm un rezultat greu de inspectat într-un proces pe care oamenii îl pot urmări și corecta?",
+          "startMs": 22267,
+          "endMs": 32820,
+          "sourceRefs": [
+            "src-blackbox"
+          ],
+          "spokenEndMs": 29086,
+          "id": "governable-ai-blackbox-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "machine",
+          "asset": "machine",
+          "x": 665,
+          "y": 589,
+          "scale": 1.18,
+          "options": {},
+          "meaning": "machine"
+        },
+        {
+          "id": "mira",
+          "asset": "person-02-curious",
+          "x": 249,
+          "y": 641,
+          "scale": 1.22,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "claim",
+          "asset": "paper",
+          "x": 1003,
+          "y": 555,
+          "scale": 0.89,
+          "options": {
+            "label": "Răspuns"
+          },
+          "meaning": "paper"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "machine",
+          "action": "machine.think",
+          "atMs": 1300,
+          "durationMs": 2900
+        },
+        {
+          "actor": "claim",
+          "action": "appear",
+          "atMs": 4500,
+          "durationMs": 1600
+        },
+        {
+          "actor": "output",
+          "action": "connection.draw",
+          "atMs": 11533,
+          "durationMs": 1700,
+          "cue": {
+            "beatId": "governable-ai-blackbox-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "mira",
+          "action": "lookAt",
+          "atMs": 13933,
+          "durationMs": 1000,
+          "target": "claim"
+        },
+        {
+          "actor": "mira",
+          "action": "react",
+          "atMs": 22267,
+          "durationMs": 2400,
+          "emotion": "surprised",
+          "cue": {
+            "beatId": "governable-ai-blackbox-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "output",
+          "from": {
+            "node": "machine",
+            "anchor": "output"
+          },
+          "to": {
+            "node": "claim",
+            "anchor": "left"
+          },
+          "meaning": "Generated answer",
+          "bend": 0
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "trace",
+      "title": "Munca devine o succesiune vizibilă",
+      "emotionLabel": "mecanism",
+      "alt": "Munca devine o succesiune vizibilă. book, machine, paper, character, Surse",
+      "promise": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.",
+      "durationMs": 32000,
+      "beats": [
+        {
+          "label": "Descompunerea",
+          "text": "În loc să cerem doar un răspuns final, descriem pași: alegerea surselor, extragerea afirmațiilor și verificarea lor.",
+          "startMs": 800,
+          "endMs": 11020,
+          "sourceRefs": [
+            "src-trace"
+          ],
+          "spokenEndMs": 9424,
+          "id": "governable-ai-trace-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Legături",
+          "text": "Fiecare rezultat păstrează o legătură cu intrările sale. Putem vedea unde a apărut o afirmație și ce o susține.",
+          "startMs": 11200,
+          "endMs": 21420,
+          "sourceRefs": [
+            "src-trace"
+          ],
+          "spokenEndMs": 19448,
+          "id": "governable-ai-trace-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Controlul",
+          "text": "O urmă explicită face procesul mai inspectabil. Nu dovedește, prin simpla ei existență, că fiecare pas a fost corect.",
+          "startMs": 21600,
+          "endMs": 31820,
+          "sourceRefs": [
+            "src-trace"
+          ],
+          "spokenEndMs": 30829,
+          "id": "governable-ai-trace-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "source",
+          "asset": "book",
+          "x": 240,
+          "y": 516,
+          "scale": 0.67,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "machine",
+          "asset": "machine",
+          "x": 619,
+          "y": 557,
+          "scale": 0.86,
+          "options": {},
+          "meaning": "machine"
+        },
+        {
+          "id": "claim",
+          "asset": "paper",
+          "x": 992,
+          "y": 557,
+          "scale": 0.82,
+          "options": {
+            "label": "Afirmație"
+          },
+          "meaning": "paper"
+        },
+        {
+          "id": "reviewer",
+          "asset": "person-02-determined",
+          "x": 622,
+          "y": 694,
+          "scale": 0.71,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "sourceLabel",
+          "asset": "plaque",
+          "x": 238,
+          "y": 628,
+          "scale": 0.87,
+          "options": {
+            "label": "Surse",
+            "color": "$ink"
+          },
+          "meaning": "Surse"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "source",
+          "action": "book.open",
+          "atMs": 1200,
+          "durationMs": 1700
+        },
+        {
+          "actor": "input",
+          "action": "connection.draw",
+          "atMs": 4000,
+          "durationMs": 1600
+        },
+        {
+          "actor": "machine",
+          "action": "machine.think",
+          "atMs": 6500,
+          "durationMs": 2800
+        },
+        {
+          "actor": "output",
+          "action": "connection.draw",
+          "atMs": 12200,
+          "durationMs": 2000
+        },
+        {
+          "actor": "reviewer",
+          "action": "lookAt",
+          "atMs": 21600,
+          "durationMs": 1200,
+          "target": "claim",
+          "cue": {
+            "beatId": "governable-ai-trace-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "input",
+          "from": {
+            "node": "source",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "machine",
+            "anchor": "input"
+          },
+          "meaning": "Evidence input",
+          "bend": -40
+        },
+        {
+          "id": "output",
+          "from": {
+            "node": "machine",
+            "anchor": "output"
+          },
+          "to": {
+            "node": "claim",
+            "anchor": "left"
+          },
+          "meaning": "Traceable output",
+          "bend": -40
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "source-link",
+      "title": "Afirmația rămâne lângă sursă",
+      "emotionLabel": "explicație",
+      "alt": "Afirmația rămâne lângă sursă. paper, book, character, Pasajul sursă",
+      "promise": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.",
+      "durationMs": 36000,
+      "beats": [
+        {
+          "label": "Un exemplu schematic",
+          "text": "Într-o analiză, asistentul formulează o afirmație. Lângă ea păstrează pasajul pe care se bazează.",
+          "startMs": 800,
+          "endMs": 12353,
+          "sourceRefs": [
+            "src-source-link"
+          ],
+          "spokenEndMs": 8239,
+          "id": "governable-ai-source-link-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Inspecția",
+          "text": "Un cititor poate verifica dacă acel pasaj spune într-adevăr ceea ce pretinde analiza. Poate observa o omisiune sau o interpretare prea puternică.",
+          "startMs": 12533,
+          "endMs": 24087,
+          "sourceRefs": [
+            "src-source-link"
+          ],
+          "spokenEndMs": 23012,
+          "id": "governable-ai-source-link-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Fără garanții false",
+          "text": "Legătura nu certifică adevărul sursei. Face doar posibilă o verificare care altfel ar fi mult mai dificilă.",
+          "startMs": 24267,
+          "endMs": 35820,
+          "sourceRefs": [
+            "src-source-link"
+          ],
+          "spokenEndMs": 32147,
+          "id": "governable-ai-source-link-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "claim",
+          "asset": "paper",
+          "x": 280,
+          "y": 557,
+          "scale": 1.16,
+          "options": {
+            "label": "Afirmație"
+          },
+          "meaning": "paper"
+        },
+        {
+          "id": "source",
+          "asset": "book",
+          "x": 954,
+          "y": 547,
+          "scale": 0.96,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "reviewer",
+          "asset": "person-03-surprised",
+          "x": 597,
+          "y": 680,
+          "scale": 0.89,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "sourceLabel",
+          "asset": "plaque",
+          "x": 950,
+          "y": 643,
+          "scale": 0.87,
+          "options": {
+            "label": "Pasajul sursă",
+            "color": "$ink"
+          },
+          "meaning": "Pasajul sursă"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "source",
+          "action": "book.open",
+          "atMs": 1600,
+          "durationMs": 2000
+        },
+        {
+          "actor": "evidence",
+          "action": "connection.draw",
+          "atMs": 12533,
+          "durationMs": 2700,
+          "cue": {
+            "beatId": "governable-ai-source-link-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "reviewer",
+          "action": "lookAt",
+          "atMs": 15333,
+          "durationMs": 1300,
+          "target": "source"
+        },
+        {
+          "actor": "reviewer",
+          "action": "react",
+          "atMs": 24267,
+          "durationMs": 2100,
+          "cue": {
+            "beatId": "governable-ai-source-link-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "evidence",
+          "from": {
+            "node": "claim",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "source",
+            "anchor": "left"
+          },
+          "meaning": "Claim points to its supporting passage",
+          "bend": -112
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "approval",
+      "title": "Aprobarea trebuie să schimbe traseul",
+      "emotionLabel": "intervenție",
+      "alt": "Aprobarea trebuie să schimbe traseul. machine, character, door, paper",
+      "promise": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.",
+      "durationMs": 31000,
+      "beats": [
+        {
+          "label": "Punctul de control",
+          "text": "Înainte de publicare, un om poate aproba, poate cere o corecție sau poate opri procesul.",
+          "startMs": 800,
+          "endMs": 10687,
+          "sourceRefs": [
+            "src-approval"
+          ],
+          "spokenEndMs": 7560,
+          "id": "governable-ai-approval-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Intervenție reală",
+          "text": "Un buton de aprobare nu este suficient. Alegerea trebuie să producă o schimbare observabilă în ceea ce se întâmplă mai departe.",
+          "startMs": 10867,
+          "endMs": 20753,
+          "sourceRefs": [
+            "src-approval"
+          ],
+          "spokenEndMs": 19967,
+          "id": "governable-ai-approval-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Responsabilitate",
+          "text": "Un sistem controlabil face vizibile aceste puncte de decizie și păstrează contextul în care persoana a intervenit.",
+          "startMs": 20933,
+          "endMs": 30820,
+          "sourceRefs": [
+            "src-approval"
+          ],
+          "spokenEndMs": 29097,
+          "id": "governable-ai-approval-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "machine",
+          "asset": "machine",
+          "x": 267,
+          "y": 580,
+          "scale": 1,
+          "options": {},
+          "meaning": "machine"
+        },
+        {
+          "id": "reviewer",
+          "asset": "person-04-worried",
+          "x": 548,
+          "y": 667,
+          "scale": 1,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "gate",
+          "asset": "door",
+          "x": 790,
+          "y": 569,
+          "scale": 0.68,
+          "options": {
+            "color": "$teal"
+          },
+          "meaning": "door"
+        },
+        {
+          "id": "claim",
+          "asset": "paper",
+          "x": 1050,
+          "y": 554,
+          "scale": 0.73,
+          "options": {
+            "label": "Publicare"
+          },
+          "meaning": "paper"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "request",
+          "action": "connection.draw",
+          "atMs": 2200,
+          "durationMs": 2000
+        },
+        {
+          "actor": "reviewer",
+          "action": "lookAt",
+          "atMs": 6000,
+          "durationMs": 1000,
+          "target": "gate"
+        },
+        {
+          "actor": "reviewer",
+          "action": "react",
+          "atMs": 10867,
+          "durationMs": 1600,
+          "cue": {
+            "beatId": "governable-ai-approval-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "gate",
+          "action": "door.open",
+          "atMs": 12867,
+          "durationMs": 2000
+        },
+        {
+          "actor": "route",
+          "action": "connection.draw",
+          "atMs": 15167,
+          "durationMs": 2100
+        },
+        {
+          "actor": "claim",
+          "action": "paper.verify",
+          "atMs": 20933,
+          "durationMs": 1400,
+          "cue": {
+            "beatId": "governable-ai-approval-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "request",
+          "from": {
+            "node": "machine",
+            "anchor": "output"
+          },
+          "to": {
+            "node": "gate",
+            "anchor": "left"
+          },
+          "meaning": "Request awaiting authorization",
+          "bend": -70
+        },
+        {
+          "id": "route",
+          "from": {
+            "node": "gate",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "claim",
+            "anchor": "left"
+          },
+          "meaning": "Human-authorized publication",
+          "bend": 0
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "limits",
+      "title": "Vizibil nu înseamnă infailibil",
+      "emotionLabel": "prudență",
+      "alt": "Vizibil nu înseamnă infailibil. machine, paper, character, De verificat",
+      "promise": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.",
+      "durationMs": 29000,
+      "beats": [
+        {
+          "label": "Limitele",
+          "text": "Un proces bine documentat poate conține în continuare surse greșite, evaluări slabe sau aprobări superficiale.",
+          "startMs": 800,
+          "endMs": 10020,
+          "sourceRefs": [
+            "src-limits"
+          ],
+          "spokenEndMs": 8890,
+          "id": "governable-ai-limits-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Ce trebuie testat",
+          "text": "Avem nevoie de teste care introduc erori și verifică dacă ele sunt detectate, explicate și corectate la timp.",
+          "startMs": 10200,
+          "endMs": 19420,
+          "sourceRefs": [
+            "src-limits"
+          ],
+          "spokenEndMs": 18248,
+          "id": "governable-ai-limits-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Statutul demonstrației",
+          "text": "Schema de aici ilustrează un principiu de proiectare. Nu este un rezultat experimental și nu promite eliminarea erorilor.",
+          "startMs": 19600,
+          "endMs": 28820,
+          "sourceRefs": [
+            "src-limits"
+          ],
+          "spokenEndMs": 27767,
+          "id": "governable-ai-limits-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "machine",
+          "asset": "machine",
+          "x": 372,
+          "y": 584,
+          "scale": 1.05,
+          "options": {},
+          "meaning": "machine"
+        },
+        {
+          "id": "claim",
+          "asset": "paper",
+          "x": 796,
+          "y": 544,
+          "scale": 1.02,
+          "options": {},
+          "meaning": "paper"
+        },
+        {
+          "id": "reviewer",
+          "asset": "person-05-inspired",
+          "x": 1044,
+          "y": 652,
+          "scale": 0.93,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "uncertainty",
+          "asset": "plaque",
+          "x": 798,
+          "y": 314,
+          "scale": 0.87,
+          "options": {
+            "label": "De verificat",
+            "color": "$ink"
+          },
+          "meaning": "De verificat"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "output",
+          "action": "connection.draw",
+          "atMs": 1500,
+          "durationMs": 1600
+        },
+        {
+          "actor": "machine",
+          "action": "machine.think",
+          "atMs": 4500,
+          "durationMs": 2600
+        },
+        {
+          "actor": "reviewer",
+          "action": "lookAt",
+          "atMs": 10200,
+          "durationMs": 1400,
+          "target": "claim",
+          "cue": {
+            "beatId": "governable-ai-limits-line-02",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        },
+        {
+          "actor": "reviewer",
+          "action": "react",
+          "atMs": 19600,
+          "durationMs": 2300,
+          "emotion": "surprised",
+          "cue": {
+            "beatId": "governable-ai-limits-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "output",
+          "from": {
+            "node": "machine",
+            "anchor": "output"
+          },
+          "to": {
+            "node": "claim",
+            "anchor": "left"
+          },
+          "meaning": "Inspect this output",
+          "bend": 0
+        }
+      ],
+      "setting": "studio"
+    },
+    {
+      "id": "governable",
+      "title": "Nu doar rezultate. Muncă verificabilă.",
+      "emotionLabel": "sinteză",
+      "alt": "Nu doar rezultate. Muncă verificabilă.. book, machine, paper, character, Surse",
+      "promise": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.",
+      "durationMs": 34000,
+      "beats": [
+        {
+          "label": "Esența",
+          "text": "Ideea este să tratăm munca AI ca pe un proces inspectabil, nu ca pe o succesiune de răspunsuri izolate.",
+          "startMs": 800,
+          "endMs": 11687,
+          "sourceRefs": [
+            "src-governable"
+          ],
+          "spokenEndMs": 8127,
+          "id": "governable-ai-governable-line-01",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Trei întrebări",
+          "text": "De unde vine afirmația? Ce s-a schimbat pe parcurs? Unde poate interveni un om?",
+          "startMs": 11867,
+          "endMs": 22753,
+          "sourceRefs": [
+            "src-governable"
+          ],
+          "spokenEndMs": 17963,
+          "id": "governable-ai-governable-line-02",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "curiosity",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        },
+        {
+          "label": "Următorul pas",
+          "text": "Valoarea practică apare atunci când răspunsurile la aceste întrebări pot fi testate în sarcini concrete, nu doar desenate într-o arhitectură.",
+          "startMs": 22933,
+          "endMs": 33820,
+          "sourceRefs": [
+            "src-governable"
+          ],
+          "spokenEndMs": 32732,
+          "id": "governable-ai-governable-line-03",
+          "performance": {
+            "delivery": "caldă, clară, implicată; nu promoțională",
+            "emotion": "reflective",
+            "intensity": 0.3,
+            "targetWpm": 140,
+            "pauseBeforeMs": 200,
+            "pauseAfterMs": 350,
+            "emphasize": [],
+            "pronunciations": {},
+            "avoid": [
+              "intonare mecanică",
+              "strigăt",
+              "citirea indicațiilor regizorale"
+            ]
+          }
+        }
+      ],
+      "objects": [
+        {
+          "id": "source",
+          "asset": "book",
+          "x": 240,
+          "y": 516,
+          "scale": 0.67,
+          "options": {},
+          "meaning": "book"
+        },
+        {
+          "id": "machine",
+          "asset": "machine",
+          "x": 619,
+          "y": 557,
+          "scale": 0.86,
+          "options": {},
+          "meaning": "machine"
+        },
+        {
+          "id": "claim",
+          "asset": "paper",
+          "x": 992,
+          "y": 557,
+          "scale": 0.82,
+          "options": {
+            "label": "Afirmație"
+          },
+          "meaning": "paper"
+        },
+        {
+          "id": "reviewer",
+          "asset": "person-06-relieved",
+          "x": 622,
+          "y": 694,
+          "scale": 0.71,
+          "options": {},
+          "meaning": "character"
+        },
+        {
+          "id": "sourceLabel",
+          "asset": "plaque",
+          "x": 238,
+          "y": 628,
+          "scale": 0.87,
+          "options": {
+            "label": "Surse",
+            "color": "$ink"
+          },
+          "meaning": "Surse"
+        }
+      ],
+      "actions": [
+        {
+          "actor": "source",
+          "action": "book.open",
+          "atMs": 1200,
+          "durationMs": 1700
+        },
+        {
+          "actor": "input",
+          "action": "connection.draw",
+          "atMs": 4000,
+          "durationMs": 1600
+        },
+        {
+          "actor": "machine",
+          "action": "machine.think",
+          "atMs": 6500,
+          "durationMs": 2800
+        },
+        {
+          "actor": "output",
+          "action": "connection.draw",
+          "atMs": 12867,
+          "durationMs": 2000
+        },
+        {
+          "actor": "reviewer",
+          "action": "lookAt",
+          "atMs": 22933,
+          "durationMs": 1200,
+          "target": "claim",
+          "cue": {
+            "beatId": "governable-ai-governable-line-03",
+            "edge": "start",
+            "offsetMs": 0
+          }
+        }
+      ],
+      "connections": [
+        {
+          "id": "input",
+          "from": {
+            "node": "source",
+            "anchor": "right"
+          },
+          "to": {
+            "node": "machine",
+            "anchor": "input"
+          },
+          "meaning": "Evidence input",
+          "bend": -40
+        },
+        {
+          "id": "output",
+          "from": {
+            "node": "machine",
+            "anchor": "output"
+          },
+          "to": {
+            "node": "claim",
+            "anchor": "left"
+          },
+          "meaning": "Traceable output",
+          "bend": -40
+        }
+      ],
+      "setting": "studio"
+    }
+  ],
+  "audioDemo": true,
+  "audioDisclosure": "Voce eSpeak demonstrativă; nu este o mostră de narațiune neuronală profesională.",
+  "visualLibrary": "shf-repertory@2.0",
+  "voice": {
+    "id": "espeak-ro-demonstration",
+    "language": "ro",
+    "quality": "demonstration-only"
+  }
+}

@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Theatrical Audio · Local scene preview</title>
+<style>
+:root{color-scheme:dark;--bg:#10151c;--panel:#171f2a;--line:#304151;--text:#e9eee9;--muted:#acbac5;--accent:#ddc598}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,sans-serif}main{max-width:1080px;margin:0 auto;padding:26px 22px 38px}header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border-bottom:1px solid var(--line);padding-bottom:20px}small,.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--accent)}h1{font:38px/1.1 Georgia,serif;margin:8px 0}p{margin:8px 0;color:var(--muted)}.badge{border:1px solid var(--line);border-radius:20px;padding:5px 12px;font-size:11px;white-space:nowrap}.grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(260px,1fr);gap:20px;margin-top:22px}.stage{border:1px solid var(--line);border-radius:14px;background:#091118;overflow:hidden;position:relative}canvas{display:block;width:100%;aspect-ratio:1.7}.caption{min-height:106px;padding:16px 22px;border-top:1px solid #233443;background:#111c25}.speaker{color:var(--accent);font-size:11px;letter-spacing:.15em;text-transform:uppercase}.quote{font:21px/1.4 Georgia,serif;min-height:32px;margin:6px 0}.direction{font-size:11px;color:#9dabb5}.controls{padding:18px 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}button{font:inherit;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 15px;cursor:pointer}button:hover{border-color:var(--accent)}button:disabled{opacity:.5}.primary{background:var(--accent);color:#18232a;font-weight:650;border-color:var(--accent);min-width:96px}.time{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}input[type=range]{accent-color:var(--accent);width:100%}.seek{flex:1;min-width:120px}.panel{border:1px solid var(--line);border-radius:12px;padding:19px;background:var(--panel)}h2{font-size:14px;letter-spacing:.02em;margin:0 0 13px}.line{border-bottom:1px solid #293645;padding:10px 0;cursor:pointer}.line:last-child{border:0}.line.active{color:var(--accent)}.line small{display:block;font-size:9px;color:var(--muted);letter-spacing:.12em}.line p{font-size:12px;color:inherit;margin:3px 0}.notice{font-size:12px;color:#dbcdb0;background:#29281f;border:1px solid #514a35;padding:12px 15px;border-radius:10px;margin-top:16px}.stats{display:flex;gap:26px;margin:18px 0}.stats strong{display:block;font-size:20px;font-weight:500}.stats span{font-size:11px;color:var(--muted)}.foot{font-size:11px;color:var(--muted);margin-top:18px}.legend{display:flex;gap:14px;font-size:11px;color:var(--muted);margin:10px 0}.swatch{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}#error{color:#ffb7a5;white-space:pre-wrap}.toolbar{display:flex;justify-content:space-between;gap:16px;align-items:center}.volume{max-width:100px}.check{font-size:11px;color:var(--muted)}@media(max-width:750px){main{padding:20px 15px}.grid{grid-template-columns:1fr}h1{font-size:31px}.caption{min-height:116px;padding:14px 16px}.quote{font-size:20px}header{display:block}.badge{display:inline-block;margin-top:10px}canvas{aspect-ratio:1.35}.transcript{max-height:280px;overflow:auto}.controls{gap:10px}.stats{gap:22px}}
+</style></head><body><main>
+<header><div><div class="eyebrow">Theatrical Audio · Scene laboratory</div><h1 id="title">Local scene</h1><p>Independent voices. Measured timing. One shared audio clock.</p></div><div class="badge" id="engine">Local playback</div></header>
+<div class="grid"><section><div class="stage"><canvas id="scene" width="1000" height="590" aria-label="Schematic animation synchronized to the voices"></canvas><div class="caption"><div class="speaker" id="speaker">Ready</div><div class="quote" id="quote">A signal in the dark.</div><div class="direction" id="direction">Press Play to begin.</div></div></div>
+<div class="controls"><button class="primary" id="play">Play</button><button id="restart" aria-label="Restart scene">↺</button><div class="seek"><input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek scene"></div><span id="time" class="time">0:00 / 0:00</span></div>
+<div class="toolbar"><span class="check">Voice activity is amplitude-based, not phoneme lip-sync.</span><label class="volume"><small>Volume</small><input id="volume" type="range" min="0" max="1" step=".01" value=".85" aria-label="Volume"></label></div>
+<div class="stats"><div><strong id="clips">—</strong><span>separate speech clips</span></div><div><strong id="seconds">—</strong><span>seconds in the scene</span></div><div><strong>0</strong><span>external requests</span></div></div>
+<div id="notice" class="notice"></div><p id="error" role="alert"></p></section>
+<aside class="panel"><h2>Performance score</h2><p style="font-size:12px">Select a line to seek to its measured start.</p><div class="transcript" id="transcript"></div></aside></div>
+<div class="foot">Audio files are embedded in this HTML. No server or model is needed for playback. Synthesis uses the selected local model or cloud backend. The resulting playback assets work offline. Browser playback and the offline mix may differ slightly in resampling and automation.</div>
+</main>
+<script>__PLAYER__</script><script>
+'use strict';
+const bundle=__BUNDLE__;
+const timeline=bundle.timeline,$=id=>document.getElementById(id),canvas=$('scene'),ctx=canvas.getContext('2d');
+const speech=timeline.events.filter(e=>e.kind==='speech'),cast=Object.keys(timeline.voices);
+const colors=['#ddc598','#8fd0c6','#b8afd7','#9cbdde'];
+$('title').textContent=timeline.title;$('engine').textContent=timeline.provenance.engine.engine.toUpperCase()+' · offline assets';
+$('clips').textContent=speech.length;$('seconds').textContent=timeline.durationSeconds.toFixed(1);
+const engine=timeline.provenance.engine.engine;
+$('notice').textContent=engine==='test-tone'?'TEST SIGNALS ONLY. This file verifies transport and timing; it does not contain speech.':engine==='kokoro'?'Kokoro CPU preview: voice and speed are controllable. Free-form emotional instructions are not executed.':'AI-generated voice · '+engine+'. Emotional fidelity and intelligibility require a listening review. Mouth motion is amplitude-based, not phoneme alignment.';
+const rows=new Map();for(const e of speech){const row=document.createElement('div');row.className='line';const small=document.createElement('small');small.textContent=(timeline.voices[e.speaker]?.label??e.speaker)+' · '+(e.startFrame/timeline.sampleRate).toFixed(2)+'s';const p=document.createElement('p');p.textContent=e.text;row.append(small,p);$('transcript').append(row);rows.set(e.id,row);row.onclick=async()=>{await player.seek(e.startFrame/timeline.sampleRate);if(!player.playing)await safePlay();};}
+function bytes(base64){const raw=atob(base64),b=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)b[i]=raw.charCodeAt(i);return b.buffer;}
+const format=t=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+let dragging=false;
+function draw(state){
+  const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#09131c';ctx.fillRect(0,0,w,h);
+  // A deliberately schematic stage; every visual state is recomputed from absolute time, including on seek.
+  for(let i=0;i<48;i++){const x=(i*227+53)%w,y=(i*137+19)%Math.round(h*.65);ctx.globalAlpha=.15+.3*((i%5)/5);ctx.fillStyle='#bdd1dd';ctx.fillRect(x,y,i%4?1.3:2,1.3);}ctx.globalAlpha=1;
+  const doorCue=state.visuals.find(v=>v.action==='reveal');const reveal=doorCue?.hasStarted?doorCue.progress:0;
+  ctx.strokeStyle='#294353';ctx.lineWidth=2;ctx.strokeRect(w*.37,h*.14,w*.26,h*.53);
+  ctx.fillStyle='#172c37';ctx.fillRect(w*.38,h*.16,w*.24,h*.49);
+  if(reveal){const g=ctx.createLinearGradient(w*.4,0,w*.6,0);g.addColorStop(0,'#214a50');g.addColorStop(.5,'#7da79a');g.addColorStop(1,'#214a50');ctx.globalAlpha=.25+reveal*.4;ctx.fillStyle=g;ctx.fillRect(w*.5-w*.11*reveal,h*.17,w*.22*reveal,h*.47);ctx.globalAlpha=1;}
+  const warmth=state.visuals.find(v=>v.action==='warm-light');
+  if(warmth?.hasStarted){ctx.fillStyle='#d2b27a';ctx.globalAlpha=.06*warmth.progress;ctx.fillRect(0,0,w,h);ctx.globalAlpha=1;}
+  ctx.strokeStyle='#263c4b';for(let i=0;i<6;i++){const y=h*.67+i*i*3.9;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  for(let i=0;i<7;i++){ctx.beginPath();ctx.moveTo(w*.5,h*.62);ctx.lineTo((i-1)*w/4,h);ctx.stroke();}
+  cast.slice(0,4).forEach((id,i)=>{
+    const reaction=state.visuals.find(v=>v.target===id && v.action==='raise-head');
+    const lift=reaction?.hasStarted?reaction.progress*8:0;
+    const x=w*(.18+i*.64/Math.max(1,Math.min(4,cast.length)-1)),y=h*.72-lift;
+    const active=state.active.find(e=>e.speaker===id),energy=active?.mouthOpen??0;
+    ctx.strokeStyle=colors[i%4];ctx.fillStyle='#102330';ctx.lineWidth=active?3:1.5;
+    ctx.beginPath();ctx.arc(x,y,29+energy*4,0,Math.PI*2);ctx.fill();ctx.stroke();
+    if(active){ctx.globalAlpha=.2;ctx.beginPath();ctx.arc(x,y,40+energy*13,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;}
+    ctx.fillStyle=colors[i%4];ctx.beginPath();ctx.arc(x-8,y-6,2,0,7);ctx.arc(x+8,y-6,2,0,7);ctx.fill();
+    ctx.fillRect(x-9,y+8,18,Math.max(2,energy*12));ctx.font='15px system-ui';ctx.textAlign='center';ctx.fillText(timeline.voices[id].label,x,y+62);
+    ctx.fillStyle='#91a5b3';ctx.font='10px system-ui';ctx.fillText(active?'SPEAKING':'',x,y+83);
+  });
+  ctx.textAlign='left';ctx.fillStyle='#88a5b5';ctx.font='12px system-ui';ctx.fillText('SCHEMATIC STAGE / FRAME '+state.frame,24,29);
+  const event=state.active[0];$('speaker').textContent=event?(timeline.voices[event.speaker]?.label??event.speaker):(state.playing?'Scene pause':'Ready');
+  $('quote').textContent=event?.text??(state.seconds>=timeline.durationSeconds?'End of scene.':'');
+  $('direction').textContent=event?(event.direction.emotion??'')+(event.direction.delivery?' · '+event.direction.delivery:''):'Silence belongs to the timeline, not to padded speech files.';
+  for(const [id,row] of rows)row.classList.toggle('active',state.active.some(e=>e.id===id));
+  $('play').textContent=state.playing?'Pause':'Play';$('time').textContent=format(state.seconds)+' / '+format(timeline.durationSeconds);
+  if(!dragging)$('seek').value=Math.round(state.seconds/timeline.durationSeconds*1000);
+}
+const player=new TheatricalAudioPlayer(timeline,async(file,id)=>{if(!bundle.audio[id])throw new Error('Embedded asset missing: '+id);return bytes(bundle.audio[id]);},draw);
+player.setVolume(.85);globalThis.scenePlayer=player;globalThis.sceneTimeline=timeline;
+async function safePlay(){try{$('error').textContent='';$('play').disabled=true;await player.play();}catch(e){$('error').textContent=e.message;}finally{$('play').disabled=false;}}
+$('play').onclick=()=>player.playing?player.pause():safePlay();$('restart').onclick=async()=>{player.pause();await player.seek(0);await safePlay();};
+$('seek').oninput=()=>{dragging=true;};$('seek').onchange=async()=>{await player.seek(Number($('seek').value)/1000*timeline.durationSeconds);dragging=false;};
+$('volume').oninput=()=>player.setVolume(Number($('volume').value));
+draw({seconds:0,frame:0,playing:false,active:[],visuals:[]});
+</script></body></html>

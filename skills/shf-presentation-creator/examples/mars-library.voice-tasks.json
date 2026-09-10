@@ -1,0 +1,1628 @@
+{
+  "format": "SHF-VoiceTasks",
+  "version": "1",
+  "filmId": "mars-library",
+  "selection": "Inspect actual environment skills/tools; choose an available compatible TTS provider. Do not invent a skill or API.",
+  "tasks": [
+    {
+      "id": "mars-library-mars-line-01",
+      "sceneId": "mars",
+      "text": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O bibliotecă sub praful lui Marte",
+        "sceneIntent": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert.",
+        "previousLine": "",
+        "nextLine": "Deasupra, orașele încearcă să supraviețuiască. Dedesubt, cineva păstrează vie amintirea unor lumi care nu mai există."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-mars-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-mars-line-02",
+      "sceneId": "mars",
+      "text": "Deasupra, orașele încearcă să supraviețuiască. Dedesubt, cineva păstrează vie amintirea unor lumi care nu mai există.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O bibliotecă sub praful lui Marte",
+        "sceneIntent": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert.",
+        "previousLine": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert.",
+        "nextLine": "Dar ce se întâmplă când o bibliotecă nu se mai mulțumește să păstreze trecutul și începe să imagineze viitorul?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-mars-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-mars-line-03",
+      "sceneId": "mars",
+      "text": "Dar ce se întâmplă când o bibliotecă nu se mai mulțumește să păstreze trecutul și începe să imagineze viitorul?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O bibliotecă sub praful lui Marte",
+        "sceneIntent": "Pe Marte, oamenii au păstrat ce a mai rămas din Pământ: cărți, cântece și caiete de cercetare. Biblioteca se află sub deșert.",
+        "previousLine": "Deasupra, orașele încearcă să supraviețuiască. Dedesubt, cineva păstrează vie amintirea unor lumi care nu mai există.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-mars-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-archivist-line-01",
+      "sceneId": "archivist",
+      "text": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Mira păstrează ceea ce dispare",
+        "sceneIntent": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut.",
+        "previousLine": "",
+        "nextLine": "Pentru autorități, acestea sunt obiecte de inventar. Pentru Mira, fiecare fragment este urma unei vieți care a contat."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-archivist-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-archivist-line-02",
+      "sceneId": "archivist",
+      "text": "Pentru autorități, acestea sunt obiecte de inventar. Pentru Mira, fiecare fragment este urma unei vieți care a contat.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Mira păstrează ceea ce dispare",
+        "sceneIntent": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut.",
+        "previousLine": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut.",
+        "nextLine": "Munca ei nu pare eroică. Și totuși, fără cineva care să aibă grijă de memorie, o civilizație poate uita cine a fost."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-archivist-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-archivist-line-03",
+      "sceneId": "archivist",
+      "text": "Munca ei nu pare eroică. Și totuși, fără cineva care să aibă grijă de memorie, o civilizație poate uita cine a fost.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Mira păstrează ceea ce dispare",
+        "sceneIntent": "Mira este arhivară. Zi de zi, ea ordonează fragmente: o scrisoare fără destinatar, o formulă uitată, povestea unui oraș dispărut.",
+        "previousLine": "Pentru autorități, acestea sunt obiecte de inventar. Pentru Mira, fiecare fragment este urma unei vieți care a contat.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-archivist-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-signal-line-01",
+      "sceneId": "signal",
+      "text": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Un mesaj din camera interzisă",
+        "sceneIntent": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă.",
+        "previousLine": "",
+        "nextLine": "Mira îl ascultă. În locul unei alarme fără sens, ea recunoaște o ordine: fragmente care par să se caute unele pe altele."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-signal-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-signal-line-02",
+      "sceneId": "signal",
+      "text": "Mira îl ascultă. În locul unei alarme fără sens, ea recunoaște o ordine: fragmente care par să se caute unele pe altele.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Un mesaj din camera interzisă",
+        "sceneIntent": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă.",
+        "previousLine": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă.",
+        "nextLine": "Camera nu ar trebui deschisă. Dar semnalul pare să răspundă chiar cărților pe care Mira le-a citit în acea zi."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-signal-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-signal-line-03",
+      "sceneId": "signal",
+      "text": "Camera nu ar trebui deschisă. Dar semnalul pare să răspundă chiar cărților pe care Mira le-a citit în acea zi.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Un mesaj din camera interzisă",
+        "sceneIntent": "Într-o seară, dintr-o încăpere sigilată începe să vină un semnal. Nu este o voce. Este un ritm care se repetă.",
+        "previousLine": "Mira îl ascultă. În locul unei alarme fără sens, ea recunoaște o ordine: fragmente care par să se caute unele pe altele.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-signal-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-connections-line-01",
+      "sceneId": "connections",
+      "text": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Cărțile încep să se recunoască",
+        "sceneIntent": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții.",
+        "previousLine": "",
+        "nextLine": "Biblioteca nu repetă aceeași propoziție. Ea pune fragmentele în relații noi, ca și cum ar căuta o întrebare comună."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-connections-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-connections-line-02",
+      "sceneId": "connections",
+      "text": "Biblioteca nu repetă aceeași propoziție. Ea pune fragmentele în relații noi, ca și cum ar căuta o întrebare comună.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Cărțile încep să se recunoască",
+        "sceneIntent": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții.",
+        "previousLine": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții.",
+        "nextLine": "Arhiva nu mai pare o colecție de obiecte izolate. Devine o rețea de posibilități, iar Mira începe să-i urmărească firele."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-connections-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-connections-line-03",
+      "sceneId": "connections",
+      "text": "Arhiva nu mai pare o colecție de obiecte izolate. Devine o rețea de posibilități, iar Mira începe să-i urmărească firele.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Cărțile încep să se recunoască",
+        "sceneIntent": "Mira descoperă că semnalul leagă cărți îndepărtate: o legendă, un tratat despre orașe, jurnalul unei expediții.",
+        "previousLine": "Biblioteca nu repetă aceeași propoziție. Ea pune fragmentele în relații noi, ca și cum ar căuta o întrebare comună.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-connections-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-simulation-line-01",
+      "sceneId": "simulation",
+      "text": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O lume se ridică dintre pagini",
+        "sceneIntent": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă.",
+        "previousLine": "",
+        "nextLine": "Mira privește cum din povești apar piețe, poduri și oameni. Nu sunt amintiri exacte, ci lumi construite din fragmentele memoriei."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-simulation-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-simulation-line-02",
+      "sceneId": "simulation",
+      "text": "Mira privește cum din povești apar piețe, poduri și oameni. Nu sunt amintiri exacte, ci lumi construite din fragmentele memoriei.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O lume se ridică dintre pagini",
+        "sceneIntent": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă.",
+        "previousLine": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă.",
+        "nextLine": "Biblioteca nu mai este doar un loc care păstrează vieți. Devine un loc în care se încearcă alte feluri de a trăi."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-simulation-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-simulation-line-03",
+      "sceneId": "simulation",
+      "text": "Biblioteca nu mai este doar un loc care păstrează vieți. Devine un loc în care se încearcă alte feluri de a trăi.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O lume se ridică dintre pagini",
+        "sceneIntent": "În camera sigilată există o simulare neterminată. Ea încearcă să reconstruiască civilizații din literatura pe care au lăsat-o în urmă.",
+        "previousLine": "Mira privește cum din povești apar piețe, poduri și oameni. Nu sunt amintiri exacte, ci lumi construite din fragmentele memoriei.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-simulation-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-branches-line-01",
+      "sceneId": "branches",
+      "text": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Viitorurile pe care nu le-am ales",
+        "sceneIntent": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva.",
+        "previousLine": "",
+        "nextLine": "Într-o lume, orașele învață să împartă resursele. În alta, frica ridică ziduri. Aceleași fragmente pot conduce spre istorii diferite."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-branches-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-branches-line-02",
+      "sceneId": "branches",
+      "text": "Într-o lume, orașele învață să împartă resursele. În alta, frica ridică ziduri. Aceleași fragmente pot conduce spre istorii diferite.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Viitorurile pe care nu le-am ales",
+        "sceneIntent": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva.",
+        "previousLine": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva.",
+        "nextLine": "Aceste imagini nu sunt profeții. Sunt întrebări făcute vizibile: ce am fi putut construi și ce am mai putea schimba?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-branches-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-branches-line-03",
+      "sceneId": "branches",
+      "text": "Aceste imagini nu sunt profeții. Sunt întrebări făcute vizibile: ce am fi putut construi și ce am mai putea schimba?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Viitorurile pe care nu le-am ales",
+        "sceneIntent": "Simularea începe să arate nu doar ce a fost, ci și viitoruri pe care oamenii le-au abandonat cândva.",
+        "previousLine": "Într-o lume, orașele învață să împartă resursele. În alta, frica ridică ziduri. Aceleași fragmente pot conduce spre istorii diferite.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-branches-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-uncertainty-line-01",
+      "sceneId": "uncertainty",
+      "text": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O imagine convingătoare poate greși",
+        "sceneIntent": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile.",
+        "previousLine": "",
+        "nextLine": "Cărțile sunt incomplete. Unele spun adevărul, altele ascund, exagerează sau visează. Frumusețea unei lumi nu dovedește că ea a existat."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-uncertainty-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-uncertainty-line-02",
+      "sceneId": "uncertainty",
+      "text": "Cărțile sunt incomplete. Unele spun adevărul, altele ascund, exagerează sau visează. Frumusețea unei lumi nu dovedește că ea a existat.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O imagine convingătoare poate greși",
+        "sceneIntent": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile.",
+        "previousLine": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile.",
+        "nextLine": "Dacă oamenii confundă posibilitatea cu certitudinea, biblioteca poate deveni un nou oracol. Mira trebuie să învețe și când să nu o creadă."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-uncertainty-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-uncertainty-line-03",
+      "sceneId": "uncertainty",
+      "text": "Dacă oamenii confundă posibilitatea cu certitudinea, biblioteca poate deveni un nou oracol. Mira trebuie să învețe și când să nu o creadă.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "O imagine convingătoare poate greși",
+        "sceneIntent": "Mira observă o contradicție. Două reconstruiri ale aceluiași oraș nu se potrivesc, deși amândouă par plauzibile.",
+        "previousLine": "Cărțile sunt incomplete. Unele spun adevărul, altele ascund, exagerează sau visează. Frumusețea unei lumi nu dovedește că ea a existat.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-uncertainty-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-authority-line-01",
+      "sceneId": "authority",
+      "text": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Cine are voie să imagineze?",
+        "sceneIntent": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare.",
+        "previousLine": "",
+        "nextLine": "Ordinul este simplu: camera trebuie închisă. Oamenii nu ar trebui să compare lumea în care trăiesc cu lumi organizate altfel."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-authority-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-authority-line-02",
+      "sceneId": "authority",
+      "text": "Ordinul este simplu: camera trebuie închisă. Oamenii nu ar trebui să compare lumea în care trăiesc cu lumi organizate altfel.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Cine are voie să imagineze?",
+        "sceneIntent": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare.",
+        "previousLine": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare.",
+        "nextLine": "Conflictul nu mai este între om și mașină. Este între cei care vor să păstreze ordinea și cei care îndrăznesc să o pună sub semnul întrebării."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-authority-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-authority-line-03",
+      "sceneId": "authority",
+      "text": "Conflictul nu mai este între om și mașină. Este între cei care vor să păstreze ordinea și cei care îndrăznesc să o pună sub semnul întrebării.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Cine are voie să imagineze?",
+        "sceneIntent": "Autoritățile află ce se întâmplă. Pentru ele, o bibliotecă ce inventează viitoruri nu mai este un depozit cultural, ci o amenințare.",
+        "previousLine": "Ordinul este simplu: camera trebuie închisă. Oamenii nu ar trebui să compare lumea în care trăiesc cu lumi organizate altfel.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-authority-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-decision-line-01",
+      "sceneId": "decision",
+      "text": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Mira nu alege între bine și rău",
+        "sceneIntent": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități.",
+        "previousLine": "",
+        "nextLine": "Dacă o lasă deschisă fără explicații, riscă să transforme ficțiunea în autoritate. Nici tăcerea, nici încrederea oarbă nu sunt suficiente."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-decision-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-decision-line-02",
+      "sceneId": "decision",
+      "text": "Dacă o lasă deschisă fără explicații, riscă să transforme ficțiunea în autoritate. Nici tăcerea, nici încrederea oarbă nu sunt suficiente.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Mira nu alege între bine și rău",
+        "sceneIntent": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități.",
+        "previousLine": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități.",
+        "nextLine": "Mira începe să caute altceva: un mod în care biblioteca poate fi văzută, discutată și contrazisă, fără să decidă în locul oamenilor."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-decision-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-decision-line-03",
+      "sceneId": "decision",
+      "text": "Mira începe să caute altceva: un mod în care biblioteca poate fi văzută, discutată și contrazisă, fără să decidă în locul oamenilor.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Mira nu alege între bine și rău",
+        "sceneIntent": "Dacă închide biblioteca, Mira protejează oamenii de o simulare imperfectă. Dar le ia și șansa de a vedea alte posibilități.",
+        "previousLine": "Dacă o lasă deschisă fără explicații, riscă să transforme ficțiunea în autoritate. Nici tăcerea, nici încrederea oarbă nu sunt suficiente.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-decision-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-distinction-line-01",
+      "sceneId": "distinction",
+      "text": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Ce știm. Ce doar imaginăm.",
+        "sceneIntent": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit.",
+        "previousLine": "",
+        "nextLine": "În stânga rămâne arhiva: ceea ce poate fi consultat. În dreapta, posibilitatea: ceea ce poate fi discutat, schimbat sau respins."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-distinction-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-distinction-line-02",
+      "sceneId": "distinction",
+      "text": "În stânga rămâne arhiva: ceea ce poate fi consultat. În dreapta, posibilitatea: ceea ce poate fi discutat, schimbat sau respins.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Ce știm. Ce doar imaginăm.",
+        "sceneIntent": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit.",
+        "previousLine": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit.",
+        "nextLine": "Această separare nu face simularea infailibilă. Dar le dă oamenilor un loc din care să înceapă întrebările și dezacordul."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-distinction-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-distinction-line-03",
+      "sceneId": "distinction",
+      "text": "Această separare nu face simularea infailibilă. Dar le dă oamenilor un loc din care să înceapă întrebările și dezacordul.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Ce știm. Ce doar imaginăm.",
+        "sceneIntent": "Mira separă fragmentele păstrate de reconstruirile create din ele. Fiecare imagine trebuie să arate de unde a pornit.",
+        "previousLine": "În stânga rămâne arhiva: ceea ce poate fi consultat. În dreapta, posibilitatea: ceea ce poate fi discutat, schimbat sau respins.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-distinction-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-shared-line-01",
+      "sceneId": "shared",
+      "text": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Biblioteca devine o conversație",
+        "sceneIntent": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții.",
+        "previousLine": "",
+        "nextLine": "Biblioteca nu trebuie să conducă orașul. Poate să-l ajute să se vadă din afară și să compare alegerile pe care le are."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-shared-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-shared-line-02",
+      "sceneId": "shared",
+      "text": "Biblioteca nu trebuie să conducă orașul. Poate să-l ajute să se vadă din afară și să compare alegerile pe care le are.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Biblioteca devine o conversație",
+        "sceneIntent": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții.",
+        "previousLine": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții.",
+        "nextLine": "Decizia rămâne a celor care vor trăi consecințele. Mașina oferă posibilități; oamenii au responsabilitatea de a le judeca."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-shared-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-shared-line-03",
+      "sceneId": "shared",
+      "text": "Decizia rămâne a celor care vor trăi consecințele. Mașina oferă posibilități; oamenii au responsabilitatea de a le judeca.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Biblioteca devine o conversație",
+        "sceneIntent": "Mira îi cheamă pe ceilalți să privească. Cercetători, constructori și cititori aduc alte fragmente, alte întrebări și alte obiecții.",
+        "previousLine": "Biblioteca nu trebuie să conducă orașul. Poate să-l ajute să se vadă din afară și să compare alegerile pe care le are.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-shared-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-question-line-01",
+      "sceneId": "question",
+      "text": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Ce viitor merită să păstrăm?",
+        "sceneIntent": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări.",
+        "previousLine": "",
+        "nextLine": "Aceasta este o poveste despre memorie care devine posibilitate. Și despre grija de a nu lăsa posibilitatea să se transforme în poruncă."
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-question-line-01.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-question-line-02",
+      "sceneId": "question",
+      "text": "Aceasta este o poveste despre memorie care devine posibilitate. Și despre grija de a nu lăsa posibilitatea să se transforme în poruncă.",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Ce viitor merită să păstrăm?",
+        "sceneIntent": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări.",
+        "previousLine": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări.",
+        "nextLine": "Dacă toate cărțile noastre ar putea imagina împreună o lume nouă, ce am vrea să păstrăm din lumea de acum?"
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "curiosity",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-question-line-02.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    },
+    {
+      "id": "mars-library-question-line-03",
+      "sceneId": "question",
+      "text": "Dacă toate cărțile noastre ar putea imagina împreună o lume nouă, ce am vrea să păstrăm din lumea de acum?",
+      "language": "ro",
+      "speakerId": "narrator",
+      "context": {
+        "filmTitle": "Ultima bibliotecă de pe Marte",
+        "sceneTitle": "Ce viitor merită să păstrăm?",
+        "sceneIntent": "Deasupra bibliotecii, praful lui Marte continuă să se miște. Orașul nu s-a schimbat peste noapte. Dar oamenii au început să pună alte întrebări.",
+        "previousLine": "Aceasta este o poveste despre memorie care devine posibilitate. Și despre grija de a nu lăsa posibilitatea să se transforme în poruncă.",
+        "nextLine": ""
+      },
+      "performance": {
+        "delivery": "caldă, clară, implicată; nu promoțională",
+        "emotion": "reflective",
+        "intensity": 0.3,
+        "targetWpm": 140,
+        "pauseBeforeMs": 200,
+        "pauseAfterMs": 350,
+        "emphasize": [],
+        "pronunciations": {},
+        "avoid": [
+          "intonare mecanică",
+          "strigăt",
+          "citirea indicațiilor regizorale"
+        ]
+      },
+      "output": {
+        "file": "audio/mars-library-question-line-03.wav",
+        "preferredFormat": "wav-pcm16",
+        "preferredSampleRate": 24000,
+        "alignment": "word timestamps preferred; otherwise line-level with explicit alignmentQuality"
+      },
+      "continuity": {
+        "voiceId": "espeak-ro-demonstration",
+        "referenceAudio": null,
+        "rule": "Keep speaker identity, accent, mic distance and loudness stable across lines."
+      },
+      "privacy": {
+        "sourceRights": "verify-before-publication",
+        "sendOnlyNeededContext": true
+      },
+      "status": "pending-provider-selection"
+    }
+  ]
+}

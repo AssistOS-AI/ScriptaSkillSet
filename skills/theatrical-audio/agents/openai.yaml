@@ -1,0 +1,6 @@
+interface:
+  display_name: "Theatrical Audio"
+  short_description: "Directed voices, audio clips, animation timelines"
+  default_prompt: "Use $theatrical-audio to produce a scene in the requested language with distinct voices, independent clips and an offline HTML preview."
+policy:
+  allow_implicit_invocation: true
