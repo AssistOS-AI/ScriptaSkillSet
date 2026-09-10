@@ -194,3 +194,20 @@ self-contained, retain the font license and rebuild the player plus standalone
 exports. `scripts/build-fonts.mjs` packages the vendored original font files.
 Check actual loaded fonts, long headings, short labels and captions in all themes
 at desktop and phone sizes; font presence alone does not prove good composition.
+
+## Visual meaning before asset reuse
+
+For each scene, explain why its image makes this particular message intuitive.
+An asset related to a keyword is insufficient. Show a cause, choice, consequence,
+comparison or transformation that a viewer can understand while listening.
+Reject interchangeable cards, nodes, gates, lenses or a presenter with three
+props when they merely repeat an established pattern. A continuous motif may
+support the story, but cannot replace new scene-specific visual thinking.
+
+Vary scale, staging and visual verbs within each film and across a batch: a
+material close-up, a changing environment, a consequential encounter, an exposed
+mechanism, a before/after with an actual difference, or a source diagram adapted
+faithfully. Choose only those warranted by the source. Emotional motion should
+carry meaning rather than make generic assets busier. Review representative early
+and middle frames before mass rendering; require a rewrite of the composition
+when its relationship to the narration needs an additional verbal explanation.

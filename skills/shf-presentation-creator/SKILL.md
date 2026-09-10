@@ -97,6 +97,8 @@ node "$SKILL_ROOT/scripts/discover-skills.mjs" /actual/allowed/skills/root
 
 The analyzer proposes **extractive candidates**, not a finished film. Its genre and rankings require editorial review.
 
+For book introductions, the first scene explicitly identifies the book and its reading value before any detailed example. Apply the opening and narrative acceptance gate in BOOK_INTRODUCTION.md to the actual spoken script before generating voice; a compliant editorial.json alone is insufficient.
+
 ### 2. Plan the presentation before drawing
 
 For source adaptations, create `editorial.json` following `assets/templates/editorial.example.json` and the matching content playbook. Include the main question, indispensable claims, source spans, disagreements/limitations, curiosity hooks and their payoffs, novelty scope, spoiler budget, and what is deliberately omitted.

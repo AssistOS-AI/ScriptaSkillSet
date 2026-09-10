@@ -60,3 +60,19 @@ person-plus-three-prop compositions, weak utility-style scene titles and crude
 book silhouettes. Sample captions during the silent tail as well as speech;
 measure actual sentence gaps. A short visitor tour must explain a few useful
 choices clearly rather than pad its length with aspirations and generic claims.
+
+
+### Book-introduction regression checks
+
+Before voice, independently read the actual spoken script: the first scene must
+identify the book, why it deserves the reader's time, and its essential message
+and direction before detailed examples. Check the full why → how → what spine
+and transitions without hidden editorial annotations. An attractive isolated
+idea is not a coherent book introduction. Inspect source support and preserve
+fictional endings for reading.
+
+Verify loaded bundled fonts at runtime, not only font-family declarations.
+Check all scene headings at phone and embed sizes for strong display weight,
+readable size, containment and wrapping. Inspect artwork for competing secondary
+slogan headings; labels must identify actual objects or relationships. Treat
+screenshot review as required in addition to automated geometry checks.

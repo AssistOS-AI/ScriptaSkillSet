@@ -95,3 +95,53 @@ Also review whether the film sounds like a product pitch or a tutorial with
 of the subject, rework its editorial purpose, selection and visual framing.
 A structurally valid plan cannot establish reader curiosity; report actual
 review scope and distinguish it from audience feedback.
+
+
+## Opening and narrative acceptance gate (before voice)
+
+A book introduction is a reason to read THIS book, not a topical explainer with
+its title attached. In the first scene, name the book naturally, state the
+specific question or neglected need that warrants it, and give its essential
+message and direction without revealing a fictional resolution. Establish this
+before introducing a technical mechanism, invented example or unfamiliar term.
+An abstract aphorism is not a sufficient hook. A viewer must know why they are
+watching by the first 20–30 seconds.
+
+Write a one-sentence narrative spine before scene drafting: this book exists
+because X; it approaches X through Y; reading it gives Z. Derive all three from
+source evidence. Use why → how → what in the actual spoken sequence, not merely
+in editorial metadata. The opening promises a specific reading benefit; each
+scene advances that promise with an explicit causal or argumentative transition.
+Select details that demonstrate the book's distinctive treatment. After a content
+sample, return to what it reveals about the book and the reader's journey.
+Avoid a succession of disconnected “interesting ideas.” Do not repeatedly say
+“this book” as a substitute for a coherent argument about its value.
+
+Review the complete spoken script without its artwork or editorial labels.
+A reviewer must identify the book, why it merits time, its central message,
+how its approach differs, what reading develops beyond this introduction, and
+how each scene leads to the next. Reject and rewrite before voice production
+if any of those answers require reading the hidden plan. For fiction, explain
+premise, formal/character tensions and reading experience, not the resolution.
+For nonfiction, fairly state the central thesis while leaving its full argument
+and evidence for reading. End with a concrete invitation linked to that journey.
+
+## Presentation typography is an acceptance criterion
+
+Inspect rendered headings and short labels at actual embed and phone sizes.
+Confirm bundled display fonts loaded (not just declared in CSS), strong weight,
+intentional size/spacing, contrast and clean wrapping. One confident short title
+per scene; remove tiny redundant labels and prose disguised as a heading.
+A successful font choice from a reviewed film is a delivery standard across new
+films, not permission to clone its artwork. Every book gets its own composition
+sequence, motifs and visual meaning. Automated structure checks alone cannot
+approve typography, editorial coherence or visual appeal.
+
+Withhold spoilers by selecting material carefully, not by repeatedly narrating
+that endings or revelations are being withheld. Remove production commentary
+such as “those discoveries belong to the book, not this introduction.” Use that
+time to explain a source-specific reading experience or transition. Do not fill
+every scene with instructions to “notice,” “watch,” or “read”; the narration
+should establish the connections, saving direct invitations for useful moments.
+Across a batch, reject identical opening sentence templates and repeated closing
+formulas even when each individual script passes structural checks.
