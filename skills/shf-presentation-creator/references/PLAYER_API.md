@@ -129,3 +129,23 @@ the surrounding site theme, without an opaque caption panel. Settings expose Sub
 shown as visitor controls; existing APIs and system reduced-motion preference
 remain available. Verify both themes with pale and dark backgrounds, enlarged
 captions, and mobile wrapping when changing typography.
+
+
+### Scene transitions and transport visibility
+
+Automatic scene advance is a continuation of playback, not a new user Play
+action: preserve hidden controls and their interaction timer, and emit
+`shf-play` only for an actual playback start. Reveal transport for pointer
+interaction within its own area, a touch gesture, or keyboard focus/navigation.
+Do not reveal it for mouse movement elsewhere over the artwork. Preserve the
+mobile transport rail dimensions while hiding its controls, avoiding layout jumps.
+Prepare only the next scene's audio ahead of the boundary, retaining bounded
+decoded caching and authored sentence pauses. An automatic transition must not
+add the initial playback scheduling delay. Verify muted playback with deliberately
+slow preparation, plus desktop/mobile hover, touch and keyboard interactions.
+
+A pointer press outside the player immediately dismisses transport during playback.
+Pointer movement outside its control rail clears hover and pointer-era button
+focus as reasons to keep it open; it hides after 3.5 seconds without interaction.
+Keyboard navigation still reveals controls. Attach outside-pointer listeners only
+while connected and remove them on disconnect.

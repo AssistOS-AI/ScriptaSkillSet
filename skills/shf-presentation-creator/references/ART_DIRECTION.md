@@ -49,6 +49,24 @@ All semantic actions compile to deterministic tracks. A unique asset has no auto
 
 Keep repeated movement sequential and inspect joins. Do not command competing rotations on the same arm or position tracks on the same actor simultaneously. Use longer action windows for `stack.grow` so individual landings remain legible. Stop decorative motion during difficult narration or reflection.
 
+Check the current semantic-action implementation before authoring a route. In
+`scripts/lib/director.mjs`, `walkTo` currently interpolates horizontal `x` and
+adds a walking bounce around the existing `y`; supplying a destination `y`
+does not move the character vertically. For a turn, slope or depth change,
+author explicit supported position movement with coordinated foot phases,
+avoiding competing keys, and measure the actual rendered coordinates before,
+during and after the turn. A route drawn on the floor and a successful build
+do not prove that its character follows that route.
+
+Review visibility from the beginning of the scene when returning a pose or
+prop. The current `appear` action writes zero opacity at time zero, so a later
+`appear` on an initially visible arm or object can also hide its earlier state.
+Use a deliberately authored visibility track where supported, or a separate
+initially hidden return-pose object with a distinct ID and one clear handoff.
+Inspect the initial pose, disappearance, active replacement and settled return;
+assert that only the intended hand or prop is visible at each transition. Do
+not repair a late frame by unintentionally removing an earlier supporting arm.
+
 ## Connections and technical diagrams
 
 Every animated connection has named endpoints and a `meaning`. Distinguish evidence support, causal influence, temporal succession, communication and physical transport. An arrow direction must match the narrated claim. The player keeps anchors attached while objects move; it cannot decide whether the relationship itself is true.
