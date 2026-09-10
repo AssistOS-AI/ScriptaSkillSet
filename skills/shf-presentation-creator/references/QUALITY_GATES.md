@@ -76,3 +76,48 @@ Check all scene headings at phone and embed sizes for strong display weight,
 readable size, containment and wrapping. Inspect artwork for competing secondary
 slogan headings; labels must identify actual objects or relationships. Treat
 screenshot review as required in addition to automated geometry checks.
+
+In the real loaded host, measure visible artwork text against the active
+caption rectangle at sampled first, middle and final frames. Transport clearance
+alone does not establish subtitle clearance. Ignore fully hidden appearance
+states, but reject readable labels intersecting captions; move or remove
+redundant labels and recheck the exact final archive.
+
+### Review staging without corrupting provenance
+
+Compile revised candidates to a separate output directory while preserving the
+canonical source-book route and edition in production metadata. A staging path
+is an output location, never a substitute source identity. Keep the published
+archive intact until candidate review passes; record which script and receipts
+belong to the candidate so a temporary mismatch is not mistaken for a broken
+published film. Verify the installed bytes match the reviewed candidate.
+
+For labels, distinguish ink on a fixed pale object from ink directly on the
+stage. The former can remain dark; the latter must use a theme-aware color.
+Inspect both in Night, including captions that appear only early in a scene.
+
+Select connection ports from the visible spatial relationship, not a fixed
+right-to-left default. After actors move, verify that a relationship line does
+not cross its own participant merely to reach an object on the opposite side.
+Correct endpoint arithmetic alone does not establish a readable connection.
+
+### Rebuild and screenshot fidelity after revisions
+
+Run the documented canonical artwork command after a revision and confirm it
+reproduces the accepted scene count and imagery. A separate review module does
+not complete integration if the old entry point still regenerates obsolete
+scenes. Keep one authoritative entry and archive the superseded version.
+
+When checking several themes, use a fresh paused, muted player for each theme
+and allow the compositor to settle after deterministic seeking. Inspect actual
+captured pixels: valid DOM text and correct colors do not prove that a screenshot
+contains the completed render. If text disappears only in captures, compare a
+fresh settled capture before changing correct artwork or accepting missing text.
+For intermittent missing raster glyphs, increasing a delay or disabling GPU
+rendering is a diagnostic, not a guaranteed repair. Compare a fresh player per
+problem frame and an unscaled full-viewport capture; inspect the resulting
+pixels and retain the exact workaround and its scope in the review record.
+Use unique filenames for successive review images, and compare the raw files
+when a preview appears to lose content. A cached image preview, capture artifact
+and player-rendering defect are different hypotheses; do not change the runtime
+until evidence identifies that layer.

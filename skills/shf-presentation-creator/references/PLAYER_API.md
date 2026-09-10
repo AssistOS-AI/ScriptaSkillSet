@@ -108,3 +108,23 @@ Keep a localised accessible name, keyboard focus outline and at least a 44px
 hit target. Closing must pause playback; preserve Escape for modal hosts and
 prevent pending loads from restarting dismissed playback. Keep host navigation
 outside the reusable player stage.
+
+A player inside a centred flex/grid host needs an explicit usable width on its
+wrapper (`width:100%; min-width:0` with the intended max-width). The player’s
+inline-size containment cannot supply intrinsic width; an icon-only close
+control must never determine the width of the whole film. Test a loaded film
+in the actual host at desktop and phone widths, asserting stage width as well
+as close-control placement. Testing an empty player or standalone export alone
+does not validate the integrating page.
+
+## Subtitle presentation
+
+Default captions retain one whole sentence, centred within a narrower reading
+measure (52ch maximum) with balanced wrapping. Long captions should form two
+roughly even lines where space permits; narrow screens may need more lines,
+without clipping or shrinking below the selected size. White glyphs use a dark
+outline instead of an opaque caption panel. Settings expose Subtitle size
+(75–150%, locally remembered) and Music level. Speed and Reduced motion are not
+shown as visitor controls; existing APIs and system reduced-motion preference
+remain available. Verify both themes with pale and dark backgrounds, enlarged
+captions, and mobile wrapping when changing typography.

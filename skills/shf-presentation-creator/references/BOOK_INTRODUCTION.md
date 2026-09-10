@@ -145,3 +145,19 @@ every scene with instructions to “notice,” “watch,” or “read”; the n
 should establish the connections, saving direct invitations for useful moments.
 Across a batch, reject identical opening sentence templates and repeated closing
 formulas even when each individual script passes structural checks.
+
+## Preserve a positive explanatory payoff
+
+A sequence of correct qualifications can still make a poor introduction. After
+reading the full script, identify the specific mechanism, encounter or distinction
+the audience actually understands better. If most scenes explain what the book
+is not claiming, consolidate those cautions at their relevant point and use the
+freed time for a source-supported example. Keep limits that materially change
+meaning; do not replace them with overstated certainty.
+
+Review neighbouring films together as well as individually. Reusing the same
+people, palette, desk and three-object staging across unrelated titles is an
+artistic duplication even if file hashes and scene labels differ. A new colour
+is insufficient: show the particular action and consequence the narration names.
+Record editorial/visual defects separately from technical passes, and use an
+independent reviewer for batch approval when parallel agents are available.

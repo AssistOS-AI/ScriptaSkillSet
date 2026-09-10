@@ -135,3 +135,8 @@ separate from voice assets, so timing-only revisions reuse accepted recordings.
 Use an ordinary conversational pace; do not add tempo acceleration by default.
 If the film is long, shorten its scope and script. Confirm measured clip-to-clip
 gaps and scene transitions, not just total duration or a TTS speed setting.
+
+When an audio backend limits score identifiers, reserve space for generated
+batch suffixes before rendering. Derive a bounded stable identifier with a short
+hash when necessary; retain the full public book title and preserve existing
+valid cache keys. Test long titles before starting a catalogue batch.

@@ -216,7 +216,22 @@ A quiet background must not reduce a substantive scene to floating clipart.
 A decision, institution or relationship needs a visible situation: who acts,
 what changes, and who experiences the consequence. A collection of chairs,
 a bell and labelled rectangles does not by itself explain political correction.
+When illustrating transfer, teaching or exit, preserve the identity of the
+thing that changes hands: an attributed guide must reach its user, a learner
+must perform the demonstrated operation, and a departing branch must visibly
+retain the relevant history. A new label alone does not enact those processes.
 Review a complete early scene in actual rendered form before expanding a batch.
 For silent art inspection, temporarily hide the paused central Play overlay
 in the test capture, then restore it for normal interaction checks. Record
 this capture adjustment; never start audible playback to remove the overlay.
+
+For short reading invitations, prefer lively colour accents and moments of
+curiosity, discovery and warmth over uniformly sombre two-colour staging.
+Keep backgrounds quiet and contrast strong. Emotional brightness must fit
+the source: do not make suffering, horror or tragedy artificially cheerful.
+
+Check integrated labels after their appearance animation as well as at scene
+boundaries. Keep text fades brief enough that normal mid-sentence frames retain
+strong contrast. Reused character or creature assets must match the source
+referent: different species or roles may require distinct silhouettes, anatomy
+and staging rather than a colour swap.
