@@ -178,6 +178,14 @@ text on every filled object in every theme; a correct page colour alone does
 not establish contrast for its labels. Structural boundaries should describe
 the object and must not become decorative background linework.
 
+Apply the same rule to bodies: choose leg, foot and tool contrast against the
+surface actually behind them. Pale Night-theme limbs can disappear on authored
+snow, sand or a light floor even though they contrast with the outer stage.
+Override those materials in the relevant scene instead of changing a shared
+character palette for unrelated films. Check the visible hand and tool together
+at contact: matching coordinates do not help if the board or paper is painted
+over the hand and leaves only a detached tool tip visible.
+
 ## Presentation typography
 
 Use a deliberate display family for short scene headings, labels and key ideas,
@@ -220,6 +228,10 @@ When illustrating transfer, teaching or exit, preserve the identity of the
 thing that changes hands: an attributed guide must reach its user, a learner
 must perform the demonstrated operation, and a departing branch must visibly
 retain the relevant history. A new label alone does not enact those processes.
+Check physical support and scale in the rendered scene: a person beside a counter
+should stand on the implied floor, not accidentally on its worktop. Use deliberate
+occlusion for a person behind furniture, and keep feet, hands and interaction
+surfaces consistent with the intended action.
 Review a complete early scene in actual rendered form before expanding a batch.
 For silent art inspection, temporarily hide the paused central Play overlay
 in the test capture, then restore it for normal interaction checks. Record
@@ -234,4 +246,9 @@ Check integrated labels after their appearance animation as well as at scene
 boundaries. Keep text fades brief enough that normal mid-sentence frames retain
 strong contrast. Reused character or creature assets must match the source
 referent: different species or roles may require distinct silhouettes, anatomy
-and staging rather than a colour swap.
+and staging rather than a colour swap. Before drawing a source-described body,
+record its explicit physical constraints, including absent features (for example,
+no eyes), limb/base configuration and relative size. Check the actual silhouette
+against those constraints; a generic humanoid must not replace an intentionally
+nonhuman design whose form carries the story’s meaning. Do not infer identity
+or personhood merely from a familiar voice or appearance.

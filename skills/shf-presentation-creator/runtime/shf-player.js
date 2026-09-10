@@ -55,7 +55,8 @@ select{color:var(--shf-control-ink,#fff);background:var(--shf-control-bg,#101822
 .chaptergrid button.current{border-color:var(--shf-accent);background:color-mix(in srgb,var(--shf-accent) 12%,transparent)}
 .theme-controls span{border-color:var(--shf-control-line,#ffffff80)}
 /* Keep the eye near the centre; balance whole-sentence captions without a panel. */
-.caption{font-size:calc(var(--shf-caption-size) * var(--shf-caption-scale,1));max-width:min(100%,52ch);width:fit-content;text-wrap:balance;background:transparent;border-radius:0;padding:4px 3px;color:#fff;-webkit-text-stroke:3px #14202a;paint-order:stroke fill;text-shadow:0 1px 2px #14202a;font-weight:400;line-height:1.4}
+.caption{font-size:calc(var(--shf-caption-size) * var(--shf-caption-scale,1));max-width:min(100%,52ch);width:fit-content;text-wrap:balance;background:transparent;border-radius:0;padding:4px 3px;color:#111820;-webkit-text-stroke:3px #fff;paint-order:stroke fill;text-shadow:0 1px 2px #fff;font-weight:600;line-height:1.4}
+:host([data-theme="night"]) .caption{font-weight:400;color:#fff;-webkit-text-stroke-color:#111820;text-shadow:0 1px 2px #111820}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}`;
 
 /** Bounded decoded-audio cache. Loading does not advance the media clock. */

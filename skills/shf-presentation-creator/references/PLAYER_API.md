@@ -122,8 +122,9 @@ does not validate the integrating page.
 Default captions retain one whole sentence, centred within a narrower reading
 measure (52ch maximum) with balanced wrapping. Long captions should form two
 roughly even lines where space permits; narrow screens may need more lines,
-without clipping or shrinking below the selected size. White glyphs use a dark
-outline instead of an opaque caption panel. Settings expose Subtitle size
+without clipping or shrinking below the selected size. Colorful and Light use semibold (600) black glyphs with a white outline; Dark uses regular (400) weight and reverses this
+to white glyphs with a black outline. Follow the player artwork theme, not
+the surrounding site theme, without an opaque caption panel. Settings expose Subtitle size
 (75–150%, locally remembered) and Music level. Speed and Reduced motion are not
 shown as visitor controls; existing APIs and system reduced-motion preference
 remain available. Verify both themes with pale and dark backgrounds, enlarged

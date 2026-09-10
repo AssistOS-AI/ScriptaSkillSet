@@ -21,7 +21,14 @@ Pass evidence: a human/agent editorial review using the chosen playbook, not a n
 
 ## G3 — Visual causality and continuity
 
-Require a clean, flat background with no decorative panels, border lines or frames in Color, Light and Dark. Verify one short title and no collisions throughout motion. Inspect every scene at first/mid/last time in each theme, and inspect one phone-sized view. Verify named connections, legible objects, stable cast identity, plausible pivots, overlapping actions and caption safe areas. No synthetic data chart without explicit labels and provenance. Custom assets receive the same review as built-ins. For large custom shapes, place named connection ports at the visible boundary rather than retaining a generic small-object anchor that sends lines through the artwork. Reveal and remove a high-contrast label with the shape that supplies its background; inspect transition frames so white text never arrives alone on a light stage. Numeric chapter markers must reflect the source’s actual range; a few selected landmarks must not imply a different chapter count.
+Require a clean, flat background with no decorative panels, border lines or frames in Color, Light and Dark. Verify one short title and no collisions throughout motion. Inspect every scene at first/mid/last time in each theme, and inspect one phone-sized view. Verify named connections, legible objects, stable cast identity, plausible pivots, overlapping actions and caption safe areas. When a prop follows a person and then transfers, inspect the compiled movement times as well as the endpoint images. Finish the following motion before starting the transfer; overlapping move cues can insert an unintended hold or jump. Check intermediate frames so a badge, paper or token never passes over a face or label. No synthetic data chart without explicit labels and provenance. Custom assets receive the same review as built-ins. For large custom shapes, place named connection ports at the visible boundary rather than retaining a generic small-object anchor that sends lines through the artwork. Reveal and remove a high-contrast label with the shape that supplies its background; inspect transition frames so white text never arrives alone on a light stage. Numeric chapter markers must reflect the source’s actual range; a few selected landmarks must not imply a different chapter count.
+
+Keep already hidden objects hidden until an intentional new reveal. Do not add a
+second `disappear` cue merely to clean up the scene: this action authors an
+opacity-1 start key, which can make an earlier hidden object gradually reappear
+between cues. Remove duplicate hides from closing action lists and inspect the
+interval after the first disappearance, not only the final frame. A faint ghost
+can be an authored opacity track rather than a theme or screenshot defect.
 
 Automated support: all catalogue entries instantiate and validate; state sampling is deterministic; reference checks catch missing endpoints; browser tests check finite transforms and unresolved tokens. These checks do not certify beauty or anatomical realism.
 
@@ -121,3 +128,8 @@ Use unique filenames for successive review images, and compare the raw files
 when a preview appears to lose content. A cached image preview, capture artifact
 and player-rendering defect are different hypotheses; do not change the runtime
 until evidence identifies that layer.
+Check screenshot completeness before accepting a contact sheet: title, transport
+controls and expected foreground artwork must all be present in the raw raster.
+A blank stage can pass every DOM and geometry assertion. Retain failed captures,
+then compare sequential captures from a fresh muted player; do not call missing
+pixels a preview artifact until the original file itself has been inspected.
