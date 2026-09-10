@@ -12,12 +12,12 @@ The required input boundary is `main[data-reader-content]`. The converter reads 
 
 Source page wrappers before and including the contents page retain their page boundaries, so cover, copyright, title, note, and contents material do not collapse together. Body source wrappers remain reflowable. A sparse first page or full-page image becomes the cover. A structured contents block or a plain source page headed “Contents” is replaced by a static clickable contents list whose label and bold/regular emphasis come from the semantic source rather than technical PDF labels; otherwise one is inserted before the detected body. Each body chapter starts a new Word page inside the same body section, preventing page-number resets. No Word headers are generated. Every section contains only a centered native page-number field in its footer. Front matter uses lower-Roman numbering and the single body section restarts Arabic numbering once.
 
-Headings, paragraphs, inline emphasis, nested lists, figures, captions, tables, bookmarks, and links become native Word structures. Explicit semantic notes are installed through a narrowly scoped OOXML package extension because python-docx does not expose note creation.
+Headings, paragraphs, inline emphasis, nested lists, figures, captions, tables, bookmarks, and links become native Word structures. Explicit semantic notes are installed through a narrowly scoped OOXML package extension to preserve native note relationships and references.
 
 Heading line spacing follows the source up to a compact 1.15-line ceiling so long chapter titles remain visually cohesive when Word wraps them.
 
 ## Safety and validation
 
-The converter writes a sibling candidate, validates its ZIP and OOXML, reopens it with python-docx, and publishes atomically only after all error gates pass. Validation measures semantic text coverage and order and checks native fields, styles, relationships, images, tables, bookmarks, hyperlinks, notes, and ownership. Existing unrelated DOCX files are never overwritten.
+The converter writes a sibling candidate, validates its ZIP and OOXML, checks relationships and content using the bundled XML parser, and publishes atomically only after all error gates pass. Validation measures semantic text coverage and order and checks native fields, styles, relationships, images, tables, bookmarks, hyperlinks, notes, and ownership. Existing unrelated DOCX files are never overwritten.
 
 No visual renderer is used. Structural validation can establish document integrity and content fidelity, but cannot prove identical pagination or appearance across Microsoft Word, LibreOffice, and other editors.

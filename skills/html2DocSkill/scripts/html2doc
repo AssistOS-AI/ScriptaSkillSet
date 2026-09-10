@@ -1,17 +1,5 @@
 #!/bin/sh
 set -eu
-
-skill_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-if [ -z "${UV_CACHE_DIR:-}" ]; then
-  UV_CACHE_DIR="${TMPDIR:-/tmp}/html2doc-skill-uv-cache"
-  export UV_CACHE_DIR
-fi
-if ! command -v uv >/dev/null 2>&1; then
-  echo "html2doc setup: uv is required. Install it from https://docs.astral.sh/uv/." >&2
-  exit 1
-fi
-UV_PROJECT_ENVIRONMENT="$skill_root/.venv"
-export UV_PROJECT_ENVIRONMENT
-uv python install 3.12
-uv --project "$skill_root" sync --managed-python --python 3.12
-exec uv --project "$skill_root" run --no-sync html2doc "$@"
+command -v node >/dev/null 2>&1 || { echo 'Node.js >=22 is required; see dependencies.md.' >&2; exit 1; }
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec node "$SCRIPT_DIR/html2doc.mjs" "$@"

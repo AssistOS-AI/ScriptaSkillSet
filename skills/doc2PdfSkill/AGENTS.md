@@ -19,5 +19,5 @@ This directory is one portable Scripta DOC/DOCX-to-PDF skill. `SKILL.md` is the 
 - Never install system software as a side effect of `convert`; installation requires the explicit `install-deps` command.
 - Keep LibreOffice isolated in a temporary user profile and disable macro execution.
 - Update public documentation, `skill.json`, references, and tests when interfaces change.
-- Use Python 3.10 through 3.13, type hints, pathlib, atomic output, explicit subprocess arrays, and explicit errors.
-- Run tests, compile checks, `doctor`, and an end-to-end conversion after substantive changes.
+- Use Node.js >=22 ECMAScript modules in `.mjs` files, `node:` built-ins, explicit subprocess argument arrays, atomic publication, and useful errors. Keep dependency exceptions and license records in `dependencies.md`.
+- Run tests, syntax checks, `doctor`, and an end-to-end conversion after substantive changes.

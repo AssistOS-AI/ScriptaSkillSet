@@ -27,12 +27,12 @@ Resolve this skill directory from `SKILL.md` and invoke:
 <skill-directory>/scripts/doc2pdf convert manuscript.docx
 ```
 
-The launcher requires `uv`, provisions managed Python 3.12 and locked Python dependencies, then runs the skill. LibreOffice is required for conversion. Ghostscript is required only for `balanced` and `compact`.
+The launcher requires Node.js >=22, LibreOffice Writer, QPDF >=11.4 and Poppler utilities. Ghostscript is required for balanced and compact. JavaScript XML and ZIP helpers are bundled inside external/runtime. Copy the complete skill directory.
 
 If system dependencies are missing, request permission before running:
 
 ```bash
-<skill-directory>/scripts/doc2pdf install-deps
+<skill-directory>/scripts/doc2pdf install-deps --yes
 ```
 
 ## Workflow

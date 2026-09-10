@@ -14,7 +14,7 @@
   "entrypoints": [
     "SKILL.md",
     "scripts/html2doc",
-    "scripts/html2doc.py",
+    "scripts/html2doc.mjs",
     "references/compatibility.md",
     "references/validation.md"
   ],

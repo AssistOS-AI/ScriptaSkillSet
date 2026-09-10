@@ -19,5 +19,5 @@ This directory is one portable Scripta HTML-to-DOCX skill. `SKILL.md` is the ope
 - Never rewrite source prose or infer footnotes from presentation alone.
 - Preserve input HTML, assets, and unrelated output files.
 - Update public documentation, `skill.json`, references, and tests when interfaces change.
-- Use Python 3.10 through 3.13, type hints, pathlib, atomic output, and explicit error messages.
-- Run tests, compile checks, `doctor`, and an end-to-end conversion after substantive changes.
+- Use Node.js >=22 ECMAScript modules in `.mjs` files, `node:` built-ins, explicit subprocess argument arrays, atomic publication, and useful errors. Keep dependency exceptions and license records in `dependencies.md`.
+- Run tests, syntax checks, `doctor`, and an end-to-end conversion after substantive changes.
