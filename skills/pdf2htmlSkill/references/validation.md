@@ -15,6 +15,8 @@ Validation separates correctness gates from diagnostic evidence.
 
 ## Diagnostic evidence
 
+Renderer regression tests cover a title page both with and without a source stroke: the former retains its measured border and spacing, while the latter receives neither. Shared heading CSS must not introduce a decorative rule.
+
 Poppler renders the first, middle, and last source pages at 120 DPI. Chromium validates the complete semantic document in bounded-height screenshot segments at every viewport, so long books never become one oversized bitmap. The first, middle, and last HTML segments are retained as representative previews when detailed QA artifacts are enabled. The tool produces a side-by-side contact image and records a normalized pixel-distance score from these samples.
 
 The visual score is informational. Reflow, page-break movement, browser font substitution, and different rasterizers can lower it without indicating content loss. Browser and operating-system versions are recorded because screenshot output varies across environments.

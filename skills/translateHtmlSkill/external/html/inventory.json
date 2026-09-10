@@ -1,0 +1,87 @@
+[
+  {
+    "name": "dom-serializer",
+    "version": "2.0.0",
+    "license": "MIT",
+    "location": "external/html/node_modules/dom-serializer",
+    "licenseFile": "external/html/node_modules/dom-serializer/LICENSE",
+    "upstream": "git://github.com/cheeriojs/dom-serializer.git",
+    "resolved": "https://registry.npmjs.org/dom-serializer/-/dom-serializer-2.0.0.tgz",
+    "dependencies": {
+      "domelementtype": "^2.3.0",
+      "domhandler": "^5.0.2",
+      "entities": "^4.2.0"
+    }
+  },
+  {
+    "name": "entities",
+    "version": "4.5.0",
+    "license": "BSD-2-Clause",
+    "location": "external/html/node_modules/dom-serializer/node_modules/entities",
+    "licenseFile": "external/html/node_modules/dom-serializer/node_modules/entities/LICENSE",
+    "upstream": "git://github.com/fb55/entities.git",
+    "resolved": "https://registry.npmjs.org/entities/-/entities-4.5.0.tgz",
+    "dependencies": {}
+  },
+  {
+    "name": "domelementtype",
+    "version": "2.3.0",
+    "license": "BSD-2-Clause",
+    "location": "external/html/node_modules/domelementtype",
+    "licenseFile": "external/html/node_modules/domelementtype/LICENSE",
+    "upstream": "git://github.com/fb55/domelementtype.git",
+    "resolved": "https://registry.npmjs.org/domelementtype/-/domelementtype-2.3.0.tgz",
+    "dependencies": {}
+  },
+  {
+    "name": "domhandler",
+    "version": "5.0.3",
+    "license": "BSD-2-Clause",
+    "location": "external/html/node_modules/domhandler",
+    "licenseFile": "external/html/node_modules/domhandler/LICENSE",
+    "upstream": "git://github.com/fb55/domhandler.git",
+    "resolved": "https://registry.npmjs.org/domhandler/-/domhandler-5.0.3.tgz",
+    "dependencies": {
+      "domelementtype": "^2.3.0"
+    }
+  },
+  {
+    "name": "domutils",
+    "version": "3.2.2",
+    "license": "BSD-2-Clause",
+    "location": "external/html/node_modules/domutils",
+    "licenseFile": "external/html/node_modules/domutils/LICENSE",
+    "upstream": "git://github.com/fb55/domutils.git",
+    "resolved": "https://registry.npmjs.org/domutils/-/domutils-3.2.2.tgz",
+    "dependencies": {
+      "dom-serializer": "^2.0.0",
+      "domelementtype": "^2.3.0",
+      "domhandler": "^5.0.3"
+    }
+  },
+  {
+    "name": "entities",
+    "version": "6.0.1",
+    "license": "BSD-2-Clause",
+    "location": "external/html/node_modules/entities",
+    "licenseFile": "external/html/node_modules/entities/LICENSE",
+    "upstream": "git://github.com/fb55/entities.git",
+    "resolved": "https://registry.npmjs.org/entities/-/entities-6.0.1.tgz",
+    "dependencies": {}
+  },
+  {
+    "name": "htmlparser2",
+    "version": "10.0.0",
+    "license": "MIT",
+    "location": "external/html/node_modules/htmlparser2",
+    "licenseFile": "external/html/node_modules/htmlparser2/LICENSE",
+    "upstream": "git://github.com/fb55/htmlparser2.git",
+    "resolved": "https://registry.npmjs.org/htmlparser2/-/htmlparser2-10.0.0.tgz",
+    "dependencies": {
+      "domelementtype": "^2.3.0",
+      "domhandler": "^5.0.3",
+      "domutils": "^3.2.1",
+      "entities": "^6.0.0"
+    }
+  }
+]

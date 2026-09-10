@@ -7,7 +7,7 @@ description: Translate complete semantic HTML documents from one language to ano
 
 Use this skill when the user asks to translate an HTML document while preserving its formatting and behavior.
 
-The active host-provided LLM performs the translation. Never select, name, configure, or call another LLM or translation API. The Python runtime only extracts protected units, applies translations, rewrites local resource paths, validates the result, and publishes it atomically.
+The active host-provided LLM performs the translation. Never select, name, configure, or call another LLM or translation API. The Node.js runtime extracts protected units, applies translations, rewrites local resource paths, validates the result, and publishes it atomically.
 
 ## Required boundaries
 
@@ -29,7 +29,7 @@ Resolve this skill directory from `SKILL.md` and use only its launcher:
 <skill-directory>/scripts/translatehtml <command>
 ```
 
-The POSIX launcher supports macOS and Linux. It verifies `uv`, installs managed Python 3.12, and synchronizes the locked environment inside the skill directory. It does not install or select a translation model.
+The POSIX launcher supports macOS and Linux and requires Node.js 22 or newer. It checks the runtime and loads the bundled HTML parser. See [dependencies.md](dependencies.md).
 
 ## Translation workflow
 
@@ -170,3 +170,6 @@ remain in the local hidden job directory returned by `prepare`.
 ## Final response
 
 Send a final response only after `remainingBatches` is zero and `build` has published the validated document. Link the translated `index.html`. Report source and target languages, validation status, warnings, paragraph counts, and the most important limitation. Never claim that heuristic validation proves a perfect translation.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

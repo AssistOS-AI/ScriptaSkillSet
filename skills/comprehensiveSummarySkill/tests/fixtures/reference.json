@@ -1,0 +1,154 @@
+{
+  "source": "<!doctype html><html lang=\"en\"><head><title>Measured Arguments</title></head><body>\n        <main data-reader-content>\n        <h1 id=\"contents\">Contents</h1><p>Origins Methods Consequences</p>\n        <h1 id=\"origins\">Origins</h1><p>The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result.  The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result. </p>\n        <h1 id=\"methods\">Methods</h1><p>The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result.  The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result. </p>\n        <h1 id=\"consequences\">Consequences</h1><p>The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result.  The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result. </p>\n        <h1 id=\"references\">Selective Bibliography</h1><p>Author, A. Example source.</p>\n        </main><script>window.reader=true</script></body></html>",
+  "prepared": {
+    "status": "prepared",
+    "job": "__ROOT__/job",
+    "source": "__ROOT__/book/index.html",
+    "output": "__ROOT__/book/index.summary-1min.html",
+    "language": "en",
+    "minutes": 1,
+    "targetWords": 200,
+    "wordRange": [
+      180,
+      220
+    ],
+    "sourceWords": 303,
+    "contentChapters": 3,
+    "excludedChapters": [
+      {
+        "chapterId": "chapter-0001",
+        "reason": "contents"
+      },
+      {
+        "chapterId": "chapter-0005",
+        "reason": "bibliography"
+      }
+    ],
+    "batches": 3,
+    "readyAnalyses": [
+      "batch-0001.json",
+      "batch-0002.json",
+      "batch-0003.json"
+    ],
+    "recommendedParallelAnalyses": 3
+  },
+  "states": [
+    {
+      "status": "chapter_analysis",
+      "job": "__ROOT__/job",
+      "source": "__ROOT__/book/index.html",
+      "output": "__ROOT__/book/index.summary-1min.html",
+      "language": "en",
+      "minutes": 1,
+      "targetWords": 200,
+      "wordRange": [
+        180,
+        220
+      ],
+      "contentChapters": 3,
+      "batches": 3,
+      "completedAnalyses": 0,
+      "remainingAnalyses": 3,
+      "readyAnalyses": [
+        "batch-0001.json",
+        "batch-0002.json",
+        "batch-0003.json"
+      ],
+      "recommendedParallelAnalyses": 3,
+      "synthesisErrors": null,
+      "draftErrors": null
+    },
+    {
+      "status": "synthesis_required",
+      "job": "__ROOT__/job",
+      "source": "__ROOT__/book/index.html",
+      "output": "__ROOT__/book/index.summary-1min.html",
+      "language": "en",
+      "minutes": 1,
+      "targetWords": 200,
+      "wordRange": [
+        180,
+        220
+      ],
+      "contentChapters": 3,
+      "batches": 3,
+      "completedAnalyses": 3,
+      "remainingAnalyses": 0,
+      "readyAnalyses": [],
+      "recommendedParallelAnalyses": 0,
+      "synthesisErrors": null,
+      "draftErrors": null
+    },
+    {
+      "status": "draft_required",
+      "job": "__ROOT__/job",
+      "source": "__ROOT__/book/index.html",
+      "output": "__ROOT__/book/index.summary-1min.html",
+      "language": "en",
+      "minutes": 1,
+      "targetWords": 200,
+      "wordRange": [
+        180,
+        220
+      ],
+      "contentChapters": 3,
+      "batches": 3,
+      "completedAnalyses": 3,
+      "remainingAnalyses": 0,
+      "readyAnalyses": [],
+      "recommendedParallelAnalyses": 0,
+      "synthesisErrors": [],
+      "draftErrors": null
+    },
+    {
+      "status": "ready_to_build",
+      "job": "__ROOT__/job",
+      "source": "__ROOT__/book/index.html",
+      "output": "__ROOT__/book/index.summary-1min.html",
+      "language": "en",
+      "minutes": 1,
+      "targetWords": 200,
+      "wordRange": [
+        180,
+        220
+      ],
+      "contentChapters": 3,
+      "batches": 3,
+      "completedAnalyses": 3,
+      "remainingAnalyses": 0,
+      "readyAnalyses": [],
+      "recommendedParallelAnalyses": 0,
+      "synthesisErrors": [],
+      "draftErrors": []
+    }
+  ],
+  "files": {
+    "draft.json": "{\"title\": \"A measured account of evidence\", \"dek\": \"A unified summary of the book's argument, method, and implications.\", \"sections\": [{\"id\": \"section-01\", \"heading\": \"How the argument works\", \"paragraphs\": [{\"text\": \"The book asks readers to weigh evidence without hiding uncertainty. Its argument separates plausible observations from stronger causal claims, then compares the available explanations before accepting a conclusion. This approach makes method part of the message rather than a technical detail added after interpretation.\", \"clusterIds\": [\"cluster-001\", \"cluster-002\"], \"sourceUnitIds\": [\"u000004\", \"u000006\"], \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"noUnsupportedClaim\": true}}, {\"text\": \"Across the discussion, historical context explains why an idea can appear reasonable without proving that the idea is correct. Evidence matters most when it could change the conclusion, survives comparison with alternatives, and remains useful beyond the examples from which the initial interpretation was formed.\", \"clusterIds\": [\"cluster-001\", \"cluster-002\"], \"sourceUnitIds\": [\"u000004\", \"u000006\"], \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"noUnsupportedClaim\": true}}]}, {\"id\": \"section-02\", \"heading\": \"What follows from it\", \"paragraphs\": [{\"text\": \"The resulting judgment is measured. Incomplete records justify qualification rather than confidence, while practical consequences deserve attention even when causal claims remain unsettled. The strongest synthesis therefore preserves disagreement, identifies what is genuinely supported, and leaves open the questions that evidence cannot yet resolve.\", \"clusterIds\": [\"cluster-003\"], \"sourceUnitIds\": [\"u000008\"], \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"noUnsupportedClaim\": true}}]}], \"conclusion\": [{\"text\": \"The central lesson is a disciplined balance: understand why a claim attracts belief, test it against competing accounts, and state the conclusion no more strongly than the evidence permits. Context enriches judgment, but it does not replace proof.\", \"clusterIds\": [\"cluster-001\", \"cluster-002\", \"cluster-003\"], \"sourceUnitIds\": [\"u000004\", \"u000006\", \"u000008\"], \"audit\": {\"meaningPreserved\": true, \"factsPreserved\": true, \"noUnsupportedClaim\": true}}], \"audit\": {\"sameLanguage\": true, \"centralMessagePreserved\": true, \"coherentEssay\": true, \"notes\": \"\"}}",
+    "synthesis.json": "{\"centralMessage\": \"Sound judgment weighs evidence, uncertainty, and alternatives.\", \"clusters\": [{\"id\": \"cluster-001\", \"label\": \"Theme 1\", \"synthesis\": \"Evidence must be weighed against uncertainty and alternatives.\", \"centrality\": 0.8, \"recurrence\": 0.4, \"originality\": 0.6, \"score\": 0.65, \"selected\": true, \"chapterIds\": [\"chapter-0002\"], \"sourceUnitIds\": [\"u000004\"], \"ideaIds\": [\"batch-0001-idea-001\"]}, {\"id\": \"cluster-002\", \"label\": \"Theme 2\", \"synthesis\": \"Evidence must be weighed against uncertainty and alternatives.\", \"centrality\": 0.8, \"recurrence\": 0.4, \"originality\": 0.6, \"score\": 0.65, \"selected\": true, \"chapterIds\": [\"chapter-0003\"], \"sourceUnitIds\": [\"u000006\"], \"ideaIds\": [\"batch-0002-idea-001\"]}, {\"id\": \"cluster-003\", \"label\": \"Theme 3\", \"synthesis\": \"Evidence must be weighed against uncertainty and alternatives.\", \"centrality\": 0.8, \"recurrence\": 0.4, \"originality\": 0.6, \"score\": 0.65, \"selected\": true, \"chapterIds\": [\"chapter-0004\"], \"sourceUnitIds\": [\"u000008\"], \"ideaIds\": [\"batch-0003-idea-001\"]}], \"outline\": [{\"id\": \"section-01\", \"title\": \"Evidence and interpretation\", \"purpose\": \"Establish the central method.\", \"budgetWords\": 100, \"clusterIds\": [\"cluster-001\", \"cluster-002\"]}, {\"id\": \"section-02\", \"title\": \"Consequences\", \"purpose\": \"Integrate implications.\", \"budgetWords\": 80, \"clusterIds\": [\"cluster-003\"]}], \"chapterCoverage\": [{\"chapterId\": \"chapter-0002\", \"clusterIds\": [\"cluster-001\"]}, {\"chapterId\": \"chapter-0003\", \"clusterIds\": [\"cluster-002\"]}, {\"chapterId\": \"chapter-0004\", \"clusterIds\": [\"cluster-003\"]}], \"audit\": {\"allAnalysesUsed\": true, \"centralMessageCovered\": true, \"redundancyMerged\": true, \"notes\": \"\"}}",
+    "job.json": "{\n  \"source\": \"__ROOT__/book/index.html\",\n  \"sourceSha256\": \"a7516e289cf07944a76d3ab22f966e394f1511cfe0b7baa2110ac71d0e45b81d\",\n  \"output\": \"__ROOT__/book/index.summary-1min.html\",\n  \"language\": \"en\",\n  \"sourceTitle\": \"Measured Arguments\",\n  \"minutes\": 1.0,\n  \"wordsPerMinute\": 200,\n  \"targetWords\": 200,\n  \"minimumWords\": 180,\n  \"maximumWords\": 220,\n  \"sourceWords\": 303,\n  \"batches\": [\n    \"batch-0001.json\",\n    \"batch-0002.json\",\n    \"batch-0003.json\"\n  ],\n  \"contentChapterIds\": [\n    \"chapter-0002\",\n    \"chapter-0003\",\n    \"chapter-0004\"\n  ],\n  \"excludedChapters\": [\n    {\n      \"chapterId\": \"chapter-0001\",\n      \"reason\": \"contents\"\n    },\n    {\n      \"chapterId\": \"chapter-0005\",\n      \"reason\": \"bibliography\"\n    }\n  ],\n  \"unitCount\": 10,\n  \"batchMaximumChars\": 32000,\n  \"parallelAnalyses\": 4\n}\n",
+    "context.json": "{\n  \"language\": \"en\",\n  \"sourceTitle\": \"Measured Arguments\",\n  \"audience\": \"educated general reader\",\n  \"format\": \"unified thematic essay\",\n  \"traceability\": \"collapsible source map excluded from reading time\",\n  \"shortDurationPolicy\": \"prioritize the central message and highest-ranked ideas\",\n  \"selectionWeights\": {\n    \"centrality\": 0.5,\n    \"recurrence\": 0.25,\n    \"originality\": 0.25\n  },\n  \"instructions\": \"Stay in the source language. Preserve uncertainty and disagreement. Never invent facts, examples, quotations, citations, names, dates, or numbers.\"\n}\n",
+    "chapters.json": "{\n  \"chapters\": [\n    {\n      \"id\": \"chapter-0001\",\n      \"title\": \"Contents\",\n      \"anchor\": \"contents\",\n      \"included\": false,\n      \"exclusionReason\": \"contents\",\n      \"unitIds\": [\n        \"u000001\",\n        \"u000002\"\n      ],\n      \"wordCount\": 4,\n      \"batches\": []\n    },\n    {\n      \"id\": \"chapter-0002\",\n      \"title\": \"Origins\",\n      \"anchor\": \"origins\",\n      \"included\": true,\n      \"exclusionReason\": null,\n      \"unitIds\": [\n        \"u000003\",\n        \"u000004\"\n      ],\n      \"wordCount\": 101,\n      \"batches\": [\n        \"batch-0001.json\"\n      ]\n    },\n    {\n      \"id\": \"chapter-0003\",\n      \"title\": \"Methods\",\n      \"anchor\": \"methods\",\n      \"included\": true,\n      \"exclusionReason\": null,\n      \"unitIds\": [\n        \"u000005\",\n        \"u000006\"\n      ],\n      \"wordCount\": 101,\n      \"batches\": [\n        \"batch-0002.json\"\n      ]\n    },\n    {\n      \"id\": \"chapter-0004\",\n      \"title\": \"Consequences\",\n      \"anchor\": \"consequences\",\n      \"included\": true,\n      \"exclusionReason\": null,\n      \"unitIds\": [\n        \"u000007\",\n        \"u000008\"\n      ],\n      \"wordCount\": 101,\n      \"batches\": [\n        \"batch-0003.json\"\n      ]\n    },\n    {\n      \"id\": \"chapter-0005\",\n      \"title\": \"Selective Bibliography\",\n      \"anchor\": \"references\",\n      \"included\": false,\n      \"exclusionReason\": \"bibliography\",\n      \"unitIds\": [\n        \"u000009\",\n        \"u000010\"\n      ],\n      \"wordCount\": 6,\n      \"batches\": []\n    }\n  ]\n}\n",
+    "analyses/batch-0002.json": "{\"batch\": \"batch-0002.json\", \"chapterId\": \"chapter-0003\", \"segment\": 1, \"thesis\": \"The chapter develops the role of Methods.\", \"role\": \"It contributes one part of the book's measured argument.\", \"ideas\": [{\"id\": \"batch-0002-idea-001\", \"statement\": \"Evidence must be weighed against uncertainty and alternatives.\", \"centrality\": 0.8, \"originality\": 0.6, \"recurrenceCandidate\": \"evidence and uncertainty\", \"sourceUnitIds\": [\"u000006\"]}], \"evidenceAndExamples\": [], \"objectionsAndQualifications\": [{\"statement\": \"The record may remain incomplete.\", \"sourceUnitIds\": [\"u000006\"]}], \"audit\": {\"chapterCovered\": true, \"meaningPreserved\": true, \"factsPreserved\": true, \"notes\": \"\"}}",
+    "analyses/batch-0003.json": "{\"batch\": \"batch-0003.json\", \"chapterId\": \"chapter-0004\", \"segment\": 1, \"thesis\": \"The chapter develops the role of Consequences.\", \"role\": \"It contributes one part of the book's measured argument.\", \"ideas\": [{\"id\": \"batch-0003-idea-001\", \"statement\": \"Evidence must be weighed against uncertainty and alternatives.\", \"centrality\": 0.8, \"originality\": 0.6, \"recurrenceCandidate\": \"evidence and uncertainty\", \"sourceUnitIds\": [\"u000008\"]}], \"evidenceAndExamples\": [], \"objectionsAndQualifications\": [{\"statement\": \"The record may remain incomplete.\", \"sourceUnitIds\": [\"u000008\"]}], \"audit\": {\"chapterCovered\": true, \"meaningPreserved\": true, \"factsPreserved\": true, \"notes\": \"\"}}",
+    "analyses/batch-0001.json": "{\"batch\": \"batch-0001.json\", \"chapterId\": \"chapter-0002\", \"segment\": 1, \"thesis\": \"The chapter develops the role of Origins.\", \"role\": \"It contributes one part of the book's measured argument.\", \"ideas\": [{\"id\": \"batch-0001-idea-001\", \"statement\": \"Evidence must be weighed against uncertainty and alternatives.\", \"centrality\": 0.8, \"originality\": 0.6, \"recurrenceCandidate\": \"evidence and uncertainty\", \"sourceUnitIds\": [\"u000004\"]}], \"evidenceAndExamples\": [], \"objectionsAndQualifications\": [{\"statement\": \"The record may remain incomplete.\", \"sourceUnitIds\": [\"u000004\"]}], \"audit\": {\"chapterCovered\": true, \"meaningPreserved\": true, \"factsPreserved\": true, \"notes\": \"\"}}",
+    "batches/batch-0002.json": "{\n  \"batch\": \"batch-0002.json\",\n  \"language\": \"en\",\n  \"audience\": \"educated general reader\",\n  \"chapterId\": \"chapter-0003\",\n  \"chapterTitle\": \"Methods\",\n  \"segment\": 1,\n  \"selectionWeights\": {\n    \"centrality\": 0.5,\n    \"recurrence\": 0.25,\n    \"originality\": 0.25\n  },\n  \"instructions\": \"Analyze this chapter segment faithfully. Capture its thesis, role, ideas, representative evidence, objections, and qualifications. Cite source unit IDs.\",\n  \"units\": [\n    {\n      \"id\": \"u000005\",\n      \"chapterId\": \"chapter-0003\",\n      \"kind\": \"h1\",\n      \"text\": \"Methods\",\n      \"sourceAnchor\": \"methods\",\n      \"wordCount\": 1\n    },\n    {\n      \"id\": \"u000006\",\n      \"chapterId\": \"chapter-0003\",\n      \"kind\": \"p\",\n      \"text\": \"The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result. The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result.\",\n      \"sourceAnchor\": null,\n      \"wordCount\": 100\n    }\n  ]\n}\n",
+    "batches/batch-0003.json": "{\n  \"batch\": \"batch-0003.json\",\n  \"language\": \"en\",\n  \"audience\": \"educated general reader\",\n  \"chapterId\": \"chapter-0004\",\n  \"chapterTitle\": \"Consequences\",\n  \"segment\": 1,\n  \"selectionWeights\": {\n    \"centrality\": 0.5,\n    \"recurrence\": 0.25,\n    \"originality\": 0.25\n  },\n  \"instructions\": \"Analyze this chapter segment faithfully. Capture its thesis, role, ideas, representative evidence, objections, and qualifications. Cite source unit IDs.\",\n  \"units\": [\n    {\n      \"id\": \"u000007\",\n      \"chapterId\": \"chapter-0004\",\n      \"kind\": \"h1\",\n      \"text\": \"Consequences\",\n      \"sourceAnchor\": \"consequences\",\n      \"wordCount\": 1\n    },\n    {\n      \"id\": \"u000008\",\n      \"chapterId\": \"chapter-0004\",\n      \"kind\": \"p\",\n      \"text\": \"The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result. The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result.\",\n      \"sourceAnchor\": null,\n      \"wordCount\": 100\n    }\n  ]\n}\n",
+    "batches/batch-0001.json": "{\n  \"batch\": \"batch-0001.json\",\n  \"language\": \"en\",\n  \"audience\": \"educated general reader\",\n  \"chapterId\": \"chapter-0002\",\n  \"chapterTitle\": \"Origins\",\n  \"segment\": 1,\n  \"selectionWeights\": {\n    \"centrality\": 0.5,\n    \"recurrence\": 0.25,\n    \"originality\": 0.25\n  },\n  \"instructions\": \"Analyze this chapter segment faithfully. Capture its thesis, role, ideas, representative evidence, objections, and qualifications. Cite source unit IDs.\",\n  \"units\": [\n    {\n      \"id\": \"u000003\",\n      \"chapterId\": \"chapter-0002\",\n      \"kind\": \"h1\",\n      \"text\": \"Origins\",\n      \"sourceAnchor\": \"origins\",\n      \"wordCount\": 1\n    },\n    {\n      \"id\": \"u000004\",\n      \"chapterId\": \"chapter-0002\",\n      \"kind\": \"p\",\n      \"text\": \"The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result. The argument examines evidence, uncertainty, interpretation, method, context, history, consequences, objections, and practical judgment. It distinguishes a plausible observation from a stronger causal claim and asks what evidence would change the conclusion. The discussion preserves ambiguity where the record is incomplete and compares competing explanations before reaching a measured result.\",\n      \"sourceAnchor\": null,\n      \"wordCount\": 100\n    }\n  ]\n}\n"
+  },
+  "html": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<meta name=\"summary-generator\" content=\"comprehensivesummary-skill\">\n<meta name=\"summary-source-sha256\" content=\"a7516e289cf07944a76d3ab22f966e394f1511cfe0b7baa2110ac71d0e45b81d\">\n<meta name=\"summary-target-words\" content=\"200\">\n<meta name=\"summary-minimum-words\" content=\"180\">\n<meta name=\"summary-maximum-words\" content=\"220\">\n<meta name=\"summary-actual-words\" content=\"194\">\n<meta name=\"summary-words-per-minute\" content=\"200\">\n<title>A measured account of evidence</title>\n<style>:root{color-scheme:light dark;--bg:#f6f2e9;--paper:#fffdf8;--ink:#24211d;--muted:#6d655b;--accent:#73523a;--line:#d9cdbf}\n*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.68}\nmain{width:min(760px,calc(100% - 2rem));margin:3rem auto;background:var(--paper);padding:clamp(1.5rem,5vw,4.5rem);box-shadow:0 12px 40px #0001}\nh1{font-size:clamp(2rem,6vw,3.6rem);line-height:1.05;margin:.2em 0}.dek{font-size:1.18rem;color:var(--muted);margin:1rem 0 2rem}\nh2{font-size:1.55rem;line-height:1.2;margin:2.2em 0 .7em}p{margin:.8em 0}details{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem}\nsummary{cursor:pointer;font:600 1rem system-ui,sans-serif;color:var(--accent)}table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.88rem}\nth,td{text-align:left;vertical-align:top;padding:.65rem;border-bottom:1px solid var(--line)}a{color:var(--accent)}\n@media(max-width:620px){main{width:100%;margin:0;box-shadow:none}table,tbody,tr,th,td{display:block}th{border-bottom:0;padding-bottom:0}}\n@media(prefers-color-scheme:dark){:root{--bg:#171513;--paper:#211e1a;--ink:#eee7dd;--muted:#b9ada0;--accent:#d8ab83;--line:#4b433b}}</style>\n</head>\n<body><main>\n<article data-summary-body>\n<h1>A measured account of evidence</h1>\n<p class=\"dek\">A unified summary of the book&#x27;s argument, method, and implications.</p>\n<section id=\"section-01\"><h2>How the argument works</h2><p data-clusters=\"cluster-001 cluster-002\" data-source-units=\"u000004 u000006\">The book asks readers to weigh evidence without hiding uncertainty. Its argument separates plausible observations from stronger causal claims, then compares the available explanations before accepting a conclusion. This approach makes method part of the message rather than a technical detail added after interpretation.</p><p data-clusters=\"cluster-001 cluster-002\" data-source-units=\"u000004 u000006\">Across the discussion, historical context explains why an idea can appear reasonable without proving that the idea is correct. Evidence matters most when it could change the conclusion, survives comparison with alternatives, and remains useful beyond the examples from which the initial interpretation was formed.</p></section><section id=\"section-02\"><h2>What follows from it</h2><p data-clusters=\"cluster-003\" data-source-units=\"u000008\">The resulting judgment is measured. Incomplete records justify qualification rather than confidence, while practical consequences deserve attention even when causal claims remain unsettled. The strongest synthesis therefore preserves disagreement, identifies what is genuinely supported, and leaves open the questions that evidence cannot yet resolve.</p></section>\n<section id=\"conclusion\"><p data-clusters=\"cluster-001 cluster-002 cluster-003\" data-source-units=\"u000004 u000006 u000008\">The central lesson is a disciplined balance: understand why a claim attracts belief, test it against competing accounts, and state the conclusion no more strongly than the evidence permits. Context enriches judgment, but it does not replace proof.</p></section>\n</article>\n<details data-source-map><summary>Idea and chapter map</summary>\n<table><thead><tr><th>Idea</th><th>Summary</th><th>Source chapters</th></tr></thead><tbody><tr data-cluster=\"cluster-001\" data-source-units=\"u000004\"><th scope=\"row\">Theme 1</th><td>Evidence must be weighed against uncertainty and alternatives.</td><td><a href=\"index.html#origins\">Origins</a></td></tr><tr data-cluster=\"cluster-002\" data-source-units=\"u000006\"><th scope=\"row\">Theme 2</th><td>Evidence must be weighed against uncertainty and alternatives.</td><td><a href=\"index.html#methods\">Methods</a></td></tr><tr data-cluster=\"cluster-003\" data-source-units=\"u000008\"><th scope=\"row\">Theme 3</th><td>Evidence must be weighed against uncertainty and alternatives.</td><td><a href=\"index.html#consequences\">Consequences</a></td></tr></tbody></table>\n</details>\n</main></body></html>\n",
+  "validation": {
+    "status": "passed",
+    "findings": [],
+    "metrics": {
+      "actualWords": 194,
+      "minimumWords": 180,
+      "maximumWords": 220,
+      "wordsPerMinute": 200,
+      "estimatedMinutes": 0.97,
+      "sourceMapRows": 3,
+      "unsupportedFactualTokens": 0,
+      "duplicateParagraphs": 0
+    },
+    "limitations": "Source tracing and deterministic checks cannot guarantee perfect factual or interpretive accuracy; semantic fidelity still depends partly on LLM review."
+  }
+}

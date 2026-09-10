@@ -21,3 +21,18 @@ The default speed is 200 words per minute. The target is `minutes × wordsPerMin
 The source is immutable. All content chapters must be analyzed even when the final essay omits low-priority material. Sparse title-only sections without substantial prose are recorded as structural rather than treated as chapters. Any number, date, percentage, URL, email, or DOI used in the essay must exist in the source. Final claims retain source-unit references, but semantic faithfulness still relies partly on LLM review and is reported as such.
 
 The output contains no copied scripts or application behavior from the source. It is a new, self-contained semantic document with embedded CSS, stable hidden metadata, a unified thematic essay, and a separate source map. Internal budget metrics are never displayed to readers. Failed validation retains a candidate inside the job and never publishes it.
+
+## Coding style and runtime
+
+Write executable modules as .mjs ECMAScript modules with explicit relative imports,
+node: imports for built-ins and async/await. Keep functions focused and all skill
+resources inside this folder. Resolve resources with import.meta.url. Node.js 22
+or newer runs commands and the node:test suite. Bundled dependency exceptions,
+licenses and update procedures are recorded in dependencies.md.
+
+Preserve command arguments, JSON schemas and ownership checks. Doctor reports
+Node.js and htmlparser2 versions. Tests compare reference fixtures and exercise
+publication safeguards, language handling and portable startup.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

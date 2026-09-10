@@ -1,15 +1,7 @@
-# Runtime dependencies
+# Runtime setup
 
-## Required
+Use Node.js >=22, LibreOffice Writer, QPDF >=11.4 and Poppler utilities pdftotext, pdffonts and pdftoppm. Balanced and compact also require Ghostscript.
 
-- `uv` bootstraps managed Python 3.12 and locked Python packages.
-- LibreOffice Writer renders `.doc` and `.docx` files. Discovery checks `soffice`/`libreoffice`, macOS `/Applications`, and Windows Program Files locations.
+Run scripts/doc2pdf doctor before conversion. PATH and common platform directories are searched. SCRIPTA_SOFFICE, SCRIPTA_QPDF, SCRIPTA_PDFTOTEXT, SCRIPTA_PDFFONTS, SCRIPTA_PDFTOPPM and SCRIPTA_GS can select explicit executables.
 
-## Profile-specific
-
-- Ghostscript is required only by `balanced` and `compact`. Discovery checks `gs` and Windows `gswin64c.exe`/`gswin32c.exe` locations.
-- PyMuPDF performs PDF inspection and page rendering, so Poppler is not a runtime dependency.
-
-## Installation policy
-
-`convert` and `validate` never install system packages. `install-deps` is a separate, explicit command. It displays the selected native package-manager operations and requires interactive confirmation unless `--yes` was supplied after host/user approval.
+Run install-deps to review native package-manager commands. Run install-deps --yes only when installation is authorized. Automatic installation supports macOS Homebrew and Linux apt-get or dnf. See [the dependency record](../dependencies.md) for versions, licenses and update steps.

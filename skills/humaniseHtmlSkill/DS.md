@@ -27,3 +27,18 @@ Never translate, invent facts, add citations or anecdotes, introduce first-perso
 - Every model-required unit is accounted for exactly once.
 - Failed validation leaves `candidate.html` and does not publish it.
 - The report states that deterministic checks and LLM self-audit do not prove authorship or factual correctness.
+
+## Coding style and runtime
+
+Write executable modules as .mjs ECMAScript modules with explicit relative imports,
+node: imports for built-ins and async/await. Keep functions focused and all skill
+resources inside this folder. Resolve resources with import.meta.url. Node.js 22
+or newer runs commands and the node:test suite. Bundled dependency exceptions,
+licenses and update procedures are recorded in dependencies.md.
+
+Preserve command arguments, JSON schemas and ownership checks. Doctor reports
+Node.js and htmlparser2 versions. Tests compare reference fixtures and exercise
+publication safeguards, language handling and portable startup.
+
+Language is read from `<html lang>` unless `--language` is supplied. Tags use
+hyphenated BCP 47 syntax and are normalized by Node.js `Intl.Locale`.

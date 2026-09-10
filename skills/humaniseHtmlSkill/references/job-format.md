@@ -68,3 +68,12 @@ Write the result for `batches/batch-0001.json` to `rewrites/batch-0001.json`:
 Return every unit that does not declare `reuseOf`, exactly once. All four booleans are mandatory and true. `keep` requires text identical to the tokenized source. A `verify-only` unit only permits `keep`. Exact-memory units are expanded deterministically from their canonical result.
 
 Targeted retry is appropriate only for a rejected batch or unit: missing/duplicate IDs, malformed JSON, empty text, invalid action/audit, lost protections, changed placeholders, or broken structure. Do not request user confirmation between batches.
+
+## Runtime
+
+The Node.js implementation uses the command arguments and JSON shapes documented
+here. Reference fixtures in tests/fixtures verify preparation, state transitions
+and generated artifacts.
+
+Language is read from `<html lang>` unless `--language` is supplied. Tags use
+hyphenated BCP 47 syntax and are normalized by Node.js `Intl.Locale`.

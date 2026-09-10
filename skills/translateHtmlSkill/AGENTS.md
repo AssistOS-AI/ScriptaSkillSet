@@ -13,3 +13,9 @@ This repository subtree is the portable, LLM-driven `translateHtml` skill. `SKIL
 - Use the launcher as the only runtime entry point in normal operation.
 - Update documentation, descriptors, lockfile, and tests when behavior or interfaces change.
 - Run unit tests, compile checks, `doctor`, and an end-to-end prepare/build/validate fixture after substantive changes.
+
+## Implementation rules
+
+Follow the coding style and runtime section in [DS.md](DS.md). Use .mjs modules
+and Node.js built-ins; document bundled dependency exceptions in dependencies.md.
+Run `node --test tests/*.test.mjs`, syntax checks and `scripts/translatehtml doctor`.

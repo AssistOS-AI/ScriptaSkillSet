@@ -1,34 +1,14 @@
-# doc2PdfSkill
+# Scripta DOC/DOCX to PDF
 
-Converts local `.doc` and `.docx` documents to validated PDFs using LibreOffice. The default `fidelity` profile changes PDF container structure without recompressing images. `balanced` and `compact` use Ghostscript for smaller screen-oriented files and automatically fall back to `fidelity` if QA detects structural loss.
+Convert Word documents with LibreOffice, optimize with QPDF and verify every PDF page with Poppler. Ghostscript supplies the optional balanced and compact profiles.
 
-The public JPeetz/agent-skills `document-processing` workflow was consulted for its recommendation to use LibreOffice headless. No upstream source code or documentation is vendored: the specialized implementation and QA pipeline here are original. The upstream repository currently has no machine-detectable license file, despite its README describing repository standards as MIT.
-
-## Runtime
-
-The launcher needs `uv`; it provisions Python 3.12 and Python dependencies. System tools are discovered in `PATH` and standard application locations.
+Requires Node.js >=22. Copy the entire skill folder including external/runtime. Prepare native tools using [dependencies.md](dependencies.md), then run doctor.
 
 ```bash
 scripts/doc2pdf doctor
-scripts/doc2pdf install-deps
-```
-
-`install-deps` is explicit and interactive. Add `--yes` only after the system-level installation has been approved. Supported installers are Homebrew on macOS, apt/dnf/pacman on Linux, and winget on Windows.
-
-## Convert and validate
-
-```bash
-scripts/doc2pdf convert manuscript.docx
-scripts/doc2pdf convert legacy.doc --output legacy.pdf --profile balanced
+scripts/doc2pdf convert manuscript.docx --profile fidelity
 scripts/doc2pdf validate manuscript.docx --pdf manuscript.pdf
+node --test tests/*.test.mjs
 ```
 
-Existing output requires `--overwrite` and must carry the skill ownership marker. QA artifacts are temporary unless `--keep-qa-artifacts` is supplied.
-
-## Development
-
-```bash
-uv sync --extra dev
-uv run pytest
-uv run python -m compileall -q src tests
-```
+See [SKILL.md](SKILL.md) for options, output contracts and handling warnings. Sources remain immutable. Existing outputs require --overwrite and the skill ownership marker.

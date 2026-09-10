@@ -6,6 +6,8 @@ The source PDF is authoritative. The converter does not rewrite document text, i
 
 Images remain images even when their pixels contain text. OCR, vision-language models, LLM review, and remote document services are intentionally excluded.
 
+Heading rules follow aligned PDF drawing evidence. The stylesheet adds no decorative underline to chapter headings; source-derived inline borders remain intact.
+
 ## Host requirements
 
 - `uv`

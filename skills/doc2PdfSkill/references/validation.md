@@ -8,4 +8,4 @@ Normalized mean pixel-difference limits at 96 DPI are `0.002` for `fidelity`, `0
 
 Requested DOCX font names that cannot be matched to rendered PDF font names are warnings because theme fonts and renderer aliases can prevent exact name matching. QA reports both sets for review.
 
-For DOCX inputs, native Word hyperlink elements are counted. LibreOffice exporting fewer PDF links is reported as a warning, while any further loss introduced by optimization is an error. Legacy DOC does not expose a deterministic pre-render hyperlink inventory.
+For DOCX inputs, native Word hyperlink elements are counted. LibreOffice exporting fewer PDF links is reported as a warning, while any further loss introduced by optimization is an error. Binary DOC does not expose a deterministic pre-render hyperlink inventory.

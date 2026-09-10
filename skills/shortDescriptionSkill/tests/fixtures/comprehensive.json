@@ -1,0 +1,58 @@
+{
+  "source": "<!doctype html><html lang=\"en\"><head><title>Test Book</title><meta name=\"summary-generator\" content=\"comprehensivesummary-skill\"></head><body>\n        <article data-summary-body><h1>Questions of evidence</h1>\n        <p>The book examines how evidence shapes public judgment.</p>\n        <p>It asks why uncertainty creates tension between institutions and individuals.</p>\n        <p>The final answer recommends a confidential verification framework for institutions.</p>\n        </article></body></html>",
+  "prepared": {
+    "status": "analysis_required",
+    "job": "__FIXTURE_ROOT__/job",
+    "source": "__FIXTURE_ROOT__/book.html",
+    "output": "__FIXTURE_ROOT__/shortDescription.html",
+    "language": "en",
+    "sourceKind": "comprehensive-summary",
+    "contentChapters": 1,
+    "batches": 1,
+    "completedAnalyses": 0,
+    "remainingAnalyses": 1,
+    "readyAnalyses": [
+      {
+        "batch": "__FIXTURE_ROOT__/job/batches/batch-0001.json",
+        "analysis": "__FIXTURE_ROOT__/job/analyses/batch-0001.json",
+        "errors": []
+      }
+    ],
+    "recommendedParallelAnalyses": 1
+  },
+  "ready": {
+    "status": "ready_to_build",
+    "job": "__FIXTURE_ROOT__/job",
+    "source": "__FIXTURE_ROOT__/book.html",
+    "output": "__FIXTURE_ROOT__/shortDescription.html",
+    "language": "en",
+    "sourceKind": "comprehensive-summary",
+    "contentChapters": 1,
+    "batches": 1,
+    "completedAnalyses": 1,
+    "remainingAnalyses": 0,
+    "readyAnalyses": [],
+    "recommendedParallelAnalyses": 0,
+    "draftErrors": [],
+    "reviewErrors": []
+  },
+  "files": {
+    "draft.json": "{\"mode\": \"nonfiction\", \"sentences\": [{\"index\": 1, \"text\": \"The document explores the role of evidence in public judgment.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}, {\"index\": 2, \"text\": \"Its subject connects uncertainty with institutional and individual perspectives.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}, {\"index\": 3, \"text\": \"It focuses on questions that shape how claims are understood.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}, {\"index\": 4, \"text\": \"The central tension concerns how people interpret uncertain evidence.\", \"themeIds\": [\"batch-0001-theme-001\"], \"sourceUnitIds\": [\"u000001\"]}], \"protectedRevelationIds\": [\"batch-0001-revelation-001\"], \"chapterCoverage\": [{\"chapterId\": \"chapter-0001\", \"themeIds\": [\"batch-0001-theme-001\"]}], \"audit\": {\"sameLanguage\": true, \"themeOnly\": true, \"noSolutions\": true, \"noSpoilers\": true, \"neutralTone\": true, \"notes\": \"\"}}",
+    "job.json": "{\n  \"source\": \"__FIXTURE_ROOT__/book.html\",\n  \"output\": \"__FIXTURE_ROOT__/shortDescription.html\",\n  \"sourceSha256\": \"014280692854ce3968d81f7da7aa28a01f3dcd6617813b30999e25fe2bca04ef\",\n  \"sourceKind\": \"comprehensive-summary\",\n  \"sourceTitle\": \"Test Book\",\n  \"language\": \"en\",\n  \"contentChapterIds\": [\n    \"chapter-0001\"\n  ],\n  \"batchNames\": [\n    \"batch-0001.json\"\n  ]\n}\n",
+    "context.json": "{\n  \"sourceTitle\": \"Test Book\",\n  \"language\": \"en\",\n  \"sourceKind\": \"comprehensive-summary\",\n  \"audience\": \"general reader\",\n  \"tone\": \"neutral, informative, compact\",\n  \"sentenceRange\": [\n    4,\n    6\n  ],\n  \"allowed\": [\n    \"subject\",\n    \"scope\",\n    \"context\",\n    \"central questions\",\n    \"thematic tensions\",\n    \"premise\",\n    \"setting\",\n    \"starting conflict\"\n  ],\n  \"withhold\": [\n    \"answers\",\n    \"solutions\",\n    \"conclusions\",\n    \"recommendations\",\n    \"verdicts\",\n    \"twists\",\n    \"identities\",\n    \"resolutions\",\n    \"outcomes\",\n    \"fates\",\n    \"ending\"\n  ]\n}\n",
+    "chapters.json": "[\n  {\n    \"id\": \"chapter-0001\",\n    \"title\": \"Front matter\",\n    \"content\": true,\n    \"unitIds\": [\n      \"u000001\",\n      \"u000002\",\n      \"u000003\",\n      \"u000004\"\n    ]\n  }\n]\n",
+    "review.json": "{\"draftSha256\": \"38e5c2d0dabafaf3e4daf1569d35d6132797dd134939eba475bd7c1856a6b105\", \"sentences\": [{\"index\": 1, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}, {\"index\": 2, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}, {\"index\": 3, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}, {\"index\": 4, \"solutionRisk\": false, \"spoilerRisk\": false, \"matchedRevelationIds\": [], \"notes\": \"\"}], \"passed\": true, \"solutionsWithheld\": true, \"conclusionsWithheld\": true, \"spoilersWithheld\": true, \"notes\": \"\"}",
+    "analyses/batch-0001.json": "{\"batch\": \"batch-0001.json\", \"chapterId\": \"chapter-0001\", \"segment\": 1, \"modeSignals\": [\"nonfiction\"], \"themes\": [{\"id\": \"batch-0001-theme-001\", \"type\": \"subject\", \"statement\": \"Evidence and public judgment\", \"sourceUnitIds\": [\"u000001\"]}], \"protectedRevelations\": [{\"id\": \"batch-0001-revelation-001\", \"type\": \"solution\", \"statement\": \"The final answer recommends a confidential verification framework for institutions.\", \"guardTerms\": [\"confidential verification framework\"], \"sourceUnitIds\": [\"u000004\"]}], \"audit\": {\"chapterCovered\": true, \"themeIdentified\": true, \"revelationsSeparated\": true, \"factsPreserved\": true, \"notes\": \"\"}}",
+    "batches/batch-0001.json": "{\n  \"batch\": \"batch-0001.json\",\n  \"chapterId\": \"chapter-0001\",\n  \"chapterTitle\": \"Front matter\",\n  \"segment\": 1,\n  \"language\": \"en\",\n  \"characterCount\": 235,\n  \"units\": [\n    {\n      \"id\": \"u000001\",\n      \"tag\": \"h1\",\n      \"text\": \"Questions of evidence\"\n    },\n    {\n      \"id\": \"u000002\",\n      \"tag\": \"p\",\n      \"text\": \"The book examines how evidence shapes public judgment.\"\n    },\n    {\n      \"id\": \"u000003\",\n      \"tag\": \"p\",\n      \"text\": \"It asks why uncertainty creates tension between institutions and individuals.\"\n    },\n    {\n      \"id\": \"u000004\",\n      \"tag\": \"p\",\n      \"text\": \"The final answer recommends a confidential verification framework for institutions.\"\n    }\n  ]\n}\n"
+  },
+  "html": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<meta name=\"short-description-generator\" content=\"shortdescription-skill\">\n<meta name=\"short-description-source-sha256\" content=\"014280692854ce3968d81f7da7aa28a01f3dcd6617813b30999e25fe2bca04ef\">\n<title>Short description — Test Book</title>\n<style>html{color-scheme:light dark}body{margin:0;background:#f5f3ee;color:#24211d;font:1.08rem/1.7 Georgia,serif}main{width:min(760px,calc(100% - 2rem));margin:clamp(2rem,8vw,6rem) auto}article{background:#fffdf8;padding:clamp(1.5rem,6vw,4rem);box-shadow:0 12px 40px #33251b18}p{margin:0}@media(prefers-color-scheme:dark){body{background:#181614;color:#eee8df}article{background:#24211d}}@media(max-width:600px){main{width:100%;margin:0}article{box-shadow:none}}</style>\n</head>\n<body><main><article data-short-description><p>The document explores the role of evidence in public judgment. Its subject connects uncertainty with institutional and individual perspectives. It focuses on questions that shape how claims are understood. The central tension concerns how people interpret uncertain evidence.</p></article></main></body>\n</html>\n",
+  "validation": {
+    "status": "passed",
+    "findings": [],
+    "metrics": {
+      "sentences": 4,
+      "unsupportedFactualTokens": 0
+    },
+    "limitations": "Deterministic checks supplement but cannot replace the active LLM semantic revelation review."
+  }
+}

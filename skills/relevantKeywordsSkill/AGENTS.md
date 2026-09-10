@@ -1,9 +1,7 @@
 # Repository guidance
 
-Keep this skill provider-independent and deterministic for a fixed HTML document, configuration, dependency set, and embedding model. Do not call an LLM or a remote keyword service during analysis.
+Use Node.js >=22 ECMAScript modules, relative imports and Node's built-in test runner. Keep the HTML parser, notices and dependency records inside this skill.
 
-Use `scripts/relevantkeywords` as the normal entrypoint. The pinned INT8 ONNX model must be installed explicitly with `scripts/relevantkeywords install`; ordinary analysis must never trigger an implicit network download. Do not add PyTorch, Sentence Transformers, Transformers, tokenizers, Hugging Face Hub, SciPy, scikit-learn, or GPU runtime dependencies.
+The active LLM reads every source batch and consolidates the final keywords. Node validates source identity, JSON schemas, citations, counts and configured synonyms. Preserve source HTML byte-for-byte and replace relevantKeywords.txt atomically only after complete review.
 
-Preserve the source HTML byte-for-byte. Analysis writes only `relevantKeywords.txt` beside the source, using an atomic replacement. Do not create backups, JSON reports, Markdown reports, or HTML metadata.
-
-Keep documentation, schemas, code, tests, and comments in English. When behavior changes, update `SKILL.md`, `README.md`, `DS.md`, `skill.json`, tests, and the dependency lock as applicable. Run tests, compilation, `doctor`, and an end-to-end fixture before delivery.
+Keep documentation, schemas, code, tests and comments in English. Update SKILL.md, README.md, DS.md, skill.json and tests together when behavior changes. Run node --test tests/*.test.mjs and scripts/relevantkeywords doctor before delivery.

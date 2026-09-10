@@ -1,7 +1,7 @@
 {
   "title": "PDF to Semantic HTML",
   "family": "document-conversion",
-  "summary": "Converts born-digital PDFs to responsive, reader-resizable HTML through one approved launcher with a managed runtime and deterministic QA.",
+  "summary": "Converts born-digital PDFs to responsive, reader-resizable HTML with source-derived typography and heading rules, a managed runtime, and deterministic QA.",
   "aliases": [
     "pdf2html",
     "pdf-to-html"

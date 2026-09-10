@@ -43,3 +43,6 @@ Deliver only after all content batches are analyzed, every protected revelation 
 
 Use scripts/marketingsummary with Node.js 22 or newer. All runtime dependencies
 are local to this folder. Commands never install packages. See dependencies.md.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

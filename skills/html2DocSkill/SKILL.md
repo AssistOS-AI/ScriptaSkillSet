@@ -28,7 +28,7 @@ Resolve this skill directory from `SKILL.md` and invoke the launcher from the bo
 <skill-directory>/scripts/html2doc convert index.html
 ```
 
-The launcher requires `uv`, installs managed Python 3.12, synchronizes the locked skill-owned environment, and runs the command. It requires no native office suite, browser, or document renderer.
+The launcher requires Node.js >=22. Its document, HTML, CSS, XML, ZIP and image helpers are bundled inside external/runtime. Copy the complete skill directory.
 
 ## Workflow
 

@@ -37,3 +37,12 @@ Units marked `verify-only` must use `action: "keep"` with exact source text. Thi
 ## Completion standard
 
 Deliver only after structural, token, factual-protection, paragraph-coverage, asset, duplicate, and style-signal checks pass. Report warnings honestly. LLM self-audit and deterministic heuristics improve editorial consistency but do not prove human authorship or guarantee factual correctness, and this skill makes no detector-evasion claim.
+
+## Runtime
+
+Use scripts/humanisehtml with Node.js 22 or newer. The HTML parser is bundled inside this skill;
+language normalization uses Node.js Intl.Locale. See
+[dependencies.md](dependencies.md).
+
+Language is read from `<html lang>` unless `--language` is supplied. Tags use
+hyphenated BCP 47 syntax and are normalized by Node.js `Intl.Locale`.

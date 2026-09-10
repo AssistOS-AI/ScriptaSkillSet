@@ -1,0 +1,26 @@
+[
+  {
+    "name": "@xmldom/xmldom",
+    "version": "0.9.12",
+    "license": "MIT",
+    "location": "node_modules/@xmldom/xmldom",
+    "source": "git://github.com/xmldom/xmldom.git",
+    "integrity": "sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==",
+    "notices": [
+      "node_modules/@xmldom/xmldom/LICENSE"
+    ],
+    "dependencies": {}
+  },
+  {
+    "name": "fflate",
+    "version": "0.8.3",
+    "license": "MIT",
+    "location": "node_modules/fflate",
+    "source": "https://github.com/101arrowz/fflate",
+    "integrity": "sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==",
+    "notices": [
+      "node_modules/fflate/LICENSE"
+    ],
+    "dependencies": {}
+  }
+]

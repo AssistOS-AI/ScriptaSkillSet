@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from bs4 import BeautifulSoup
 
 from pdf2html_skill.models import (
@@ -1286,6 +1288,55 @@ def test_preserves_centered_title_page_vertical_rhythm_and_rule(tmp_path: Path) 
     assert "margin-bottom: 12.00pt" in soup.h1["style"]
     assert "margin-bottom: 108.00pt" in soup.find_all("p")[0]["style"]
 
+    # The same title page without a source stroke must not acquire a rule.
+    html_path.write_text(
+        "<html><body><h1>BOOK TITLE</h1><p>A subtitle</p><p>A distant note</p></body></html>",
+        encoding="utf-8",
+    )
+    enhance_html(
+        html_path,
+        stylesheet,
+        SourceEvidence(
+            typography=TypographyProfile(body_size_pt=10),
+            pages=(SourcePageEvidence(1, 522, 756, words, (), ()),),
+        ),
+        title="Book",
+        language="en",
+        source_page_count=1,
+        content_pages=[1],
+    )
+    soup = BeautifulSoup(html_path.read_text(encoding="utf-8"), "html.parser")
+    assert "border-bottom" not in soup.h1.get("style", "")
+    assert "padding-bottom" not in soup.h1.get("style", "")
+
+
+@pytest.mark.parametrize("rule_top", [None, 33, 88, 140])
+def test_left_heading_rule_requires_stroke_between_heading_and_prose(tmp_path: Path, rule_top: int | None) -> None:
+    html_path = tmp_path / "index.html"
+    stylesheet = tmp_path / "assets" / "styles.css"
+    html_path.write_text("<html><body><h1>Chapter title</h1><p>Opening prose.</p></body></html>", encoding="utf-8")
+    words = (
+        SourceWord("Chapter", "chapter", True, False, 20, 52, 120, 59, 79),
+        SourceWord("title", "title", True, False, 20, 125, 170, 59, 79),
+        SourceWord("Opening", "opening", False, False, 10, 52, 95, 103, 113),
+        SourceWord("prose.", "prose", False, False, 10, 100, 135, 103, 113),
+    )
+    strokes = () if rule_top is None else (SourceStroke(52, 380, rule_top, rule_top, "#b7a06a", 0.5),)
+    enhance_html(
+        html_path, stylesheet,
+        SourceEvidence(typography=TypographyProfile(body_size_pt=10), pages=(SourcePageEvidence(1, 432, 648, words, (), (), strokes=strokes),)),
+        title="Book", language="en", source_page_count=1, content_pages=[1],
+    )
+    soup = BeautifulSoup(html_path.read_text(encoding="utf-8"), "html.parser")
+    style = soup.h1.get("style", "")
+    if rule_top == 88:
+        assert "border-bottom: 0.50pt solid #b7a06a" in style
+        assert "padding-bottom: 9.00pt" in style
+        assert "margin-bottom: 15.00pt" in style
+    else:
+        assert "border-bottom" not in style
+        assert "padding-bottom" not in style
+
 
 def test_centered_rhythm_does_not_jump_over_body_paragraphs(tmp_path: Path) -> None:
     html_path = tmp_path / "index.html"
@@ -1341,6 +1392,8 @@ def test_centered_rhythm_does_not_jump_over_body_paragraphs(tmp_path: Path) -> N
 def test_screen_html_preserves_full_page_aspect_and_source_whitespace() -> None:
     styles = build_styles(_evidence([("text", False, False, 10)]))
     screen_styles = styles.split("@media print", maxsplit=1)[0]
+    assert "h1 { border-bottom: 0; }" in screen_styles
+    assert ".source-page > h1:first-child" not in screen_styles
     assert "min-height: var(--pdf-page-height)" not in screen_styles
     assert "break-before: page" not in screen_styles
     assert "max-width: min(800px, var(--pdf-page-width))" in screen_styles

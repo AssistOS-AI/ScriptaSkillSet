@@ -1,0 +1,155 @@
+{
+  "source": "<!doctype html><html lang=\"en\"><head><title>A Book of Questions</title></head><body><article><h1>A Book of Questions</h1><p>This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. The final answer is hidden by design and should never appear in promotional copy.</p></article></body></html>",
+  "prepared": {
+    "status": "analysis_required",
+    "job": "__FIXTURE_ROOT__/job",
+    "source": "__FIXTURE_ROOT__/book.html",
+    "output": "__FIXTURE_ROOT__/book.marketing.html",
+    "language": "en",
+    "sourceKind": "semantic-html",
+    "wordRange": [
+      250,
+      300
+    ],
+    "contentChapters": 1,
+    "batches": 1,
+    "completedAnalyses": 0,
+    "remainingAnalyses": 1,
+    "readyAnalyses": [
+      {
+        "batch": "__FIXTURE_ROOT__/job/batches/batch-0001.json",
+        "analysis": "__FIXTURE_ROOT__/job/analyses/batch-0001.json",
+        "errors": []
+      }
+    ],
+    "recommendedParallelAnalyses": 1
+  },
+  "states": [
+    {
+      "status": "analysis_required",
+      "job": "__FIXTURE_ROOT__/job",
+      "source": "__FIXTURE_ROOT__/book.html",
+      "output": "__FIXTURE_ROOT__/book.marketing.html",
+      "language": "en",
+      "sourceKind": "semantic-html",
+      "wordRange": [
+        250,
+        300
+      ],
+      "contentChapters": 1,
+      "batches": 1,
+      "completedAnalyses": 0,
+      "remainingAnalyses": 1,
+      "readyAnalyses": [
+        {
+          "batch": "__FIXTURE_ROOT__/job/batches/batch-0001.json",
+          "analysis": "__FIXTURE_ROOT__/job/analyses/batch-0001.json",
+          "errors": []
+        }
+      ],
+      "recommendedParallelAnalyses": 1
+    },
+    {
+      "status": "synthesis_required",
+      "job": "__FIXTURE_ROOT__/job",
+      "source": "__FIXTURE_ROOT__/book.html",
+      "output": "__FIXTURE_ROOT__/book.marketing.html",
+      "language": "en",
+      "sourceKind": "semantic-html",
+      "wordRange": [
+        250,
+        300
+      ],
+      "contentChapters": 1,
+      "batches": 1,
+      "completedAnalyses": 1,
+      "remainingAnalyses": 0,
+      "readyAnalyses": [],
+      "recommendedParallelAnalyses": 0,
+      "synthesisErrors": null
+    },
+    {
+      "status": "draft_required",
+      "job": "__FIXTURE_ROOT__/job",
+      "source": "__FIXTURE_ROOT__/book.html",
+      "output": "__FIXTURE_ROOT__/book.marketing.html",
+      "language": "en",
+      "sourceKind": "semantic-html",
+      "wordRange": [
+        250,
+        300
+      ],
+      "contentChapters": 1,
+      "batches": 1,
+      "completedAnalyses": 1,
+      "remainingAnalyses": 0,
+      "readyAnalyses": [],
+      "recommendedParallelAnalyses": 0,
+      "synthesisErrors": [],
+      "draftErrors": null
+    },
+    {
+      "status": "review_required",
+      "job": "__FIXTURE_ROOT__/job",
+      "source": "__FIXTURE_ROOT__/book.html",
+      "output": "__FIXTURE_ROOT__/book.marketing.html",
+      "language": "en",
+      "sourceKind": "semantic-html",
+      "wordRange": [
+        250,
+        300
+      ],
+      "contentChapters": 1,
+      "batches": 1,
+      "completedAnalyses": 1,
+      "remainingAnalyses": 0,
+      "readyAnalyses": [],
+      "recommendedParallelAnalyses": 0,
+      "draftErrors": [],
+      "reviewErrors": null
+    },
+    {
+      "status": "ready_to_build",
+      "job": "__FIXTURE_ROOT__/job",
+      "source": "__FIXTURE_ROOT__/book.html",
+      "output": "__FIXTURE_ROOT__/book.marketing.html",
+      "language": "en",
+      "sourceKind": "semantic-html",
+      "wordRange": [
+        250,
+        300
+      ],
+      "contentChapters": 1,
+      "batches": 1,
+      "completedAnalyses": 1,
+      "remainingAnalyses": 0,
+      "readyAnalyses": [],
+      "recommendedParallelAnalyses": 0,
+      "synthesisErrors": [],
+      "draftErrors": [],
+      "reviewErrors": []
+    }
+  ],
+  "files": {
+    "draft.json": "{\n  \"title\": \"Questions Worth Following\",\n  \"dek\": \"A thoughtful invitation into uncertainty identity evidence and choice.\",\n  \"sections\": [\n    {\n      \"id\": \"section-01\",\n      \"role\": \"questions\",\n      \"heading\": \"Where certainty begins to shift\",\n      \"paragraphs\": [\n        {\n          \"text\": \"Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading\",\n          \"selectedHookIds\": [\n            \"selected-hook-001\"\n          ],\n          \"sourceUnitIds\": [\n            \"u000002\"\n          ],\n          \"audit\": {\n            \"factsPreserved\": true,\n            \"noUnsupportedPromise\": true,\n            \"noSpoiler\": true\n          }\n        }\n      ]\n    }\n  ],\n  \"closing\": {\n    \"text\": \"The most revealing question may be the one still waiting beyond these pages.\",\n    \"selectedHookIds\": [\n      \"selected-hook-001\"\n    ],\n    \"sourceUnitIds\": [\n      \"u000002\"\n    ],\n    \"audit\": {\n      \"factsPreserved\": true,\n      \"noUnsupportedPromise\": true,\n      \"noSpoiler\": true\n    }\n  },\n  \"audit\": {\n    \"sameLanguage\": true,\n    \"salesPageShape\": true,\n    \"subtleClosing\": true,\n    \"notes\": \"\"\n  }\n}",
+    "synthesis.json": "{\n  \"mode\": \"fiction\",\n  \"positioning\": {\n    \"headlineAngle\": \"Questions that unsettle familiar assumptions\",\n    \"readerPromise\": \"An invitation to investigate\",\n    \"audience\": \"general educated reader\",\n    \"tone\": \"editorial, persuasive, restrained\"\n  },\n  \"selectedHooks\": [\n    {\n      \"id\": \"selected-hook-001\",\n      \"statement\": \"The book explores difficult questions about identity, evidence, uncertainty, and choice.\",\n      \"hookIds\": [\n        \"batch-0001-hook-001\"\n      ],\n      \"sourceUnitIds\": [\n        \"u000002\"\n      ]\n    }\n  ],\n  \"protectedRevelationIds\": [\n    \"batch-0001-revelation-001\"\n  ],\n  \"outline\": [\n    {\n      \"id\": \"section-01\",\n      \"role\": \"questions\",\n      \"title\": \"Questions worth following\",\n      \"budgetWords\": 230,\n      \"selectedHookIds\": [\n        \"selected-hook-001\"\n      ]\n    }\n  ],\n  \"chapterCoverage\": [\n    {\n      \"chapterId\": \"chapter-0001\",\n      \"hookIds\": [\n        \"batch-0001-hook-001\"\n      ]\n    }\n  ],\n  \"audit\": {\n    \"allAnalysesUsed\": true,\n    \"spoilerBoundaryDefined\": true,\n    \"noAnswersSelected\": true,\n    \"notes\": \"\"\n  }\n}",
+    "job.json": "{\n  \"source\": \"__FIXTURE_ROOT__/book.html\",\n  \"output\": \"__FIXTURE_ROOT__/book.marketing.html\",\n  \"sourceSha256\": \"603ededb9403f499842a147cfe085b680f69ad33e7d0aff7bc3a7d02cce4d4be\",\n  \"sourceKind\": \"semantic-html\",\n  \"sourceTitle\": \"A Book of Questions\",\n  \"language\": \"en\",\n  \"sourceWords\": 858,\n  \"targetWords\": 275,\n  \"minimumWords\": 250,\n  \"maximumWords\": 300,\n  \"contentChapterIds\": [\n    \"chapter-0001\"\n  ],\n  \"batchNames\": [\n    \"batch-0001.json\"\n  ]\n}\n",
+    "context.json": "{\n  \"sourceTitle\": \"A Book of Questions\",\n  \"language\": \"en\",\n  \"sourceKind\": \"semantic-html\",\n  \"audience\": \"general educated reader\",\n  \"tone\": \"editorial, persuasive, restrained\",\n  \"outputShape\": [\n    \"hero\",\n    \"stakes\",\n    \"questions\",\n    \"approach\",\n    \"reader-fit\",\n    \"open-loop\"\n  ],\n  \"spoilerPolicy\": {\n    \"nonfiction\": \"withhold answers, conclusions, solutions, prescriptions, and final recommendations\",\n    \"fiction\": \"withhold twists, revelations, relationship outcomes, character fates, and endings\",\n    \"hybrid\": \"apply the stricter local rule\"\n  },\n  \"wordRange\": [\n    250,\n    300\n  ],\n  \"excluded\": []\n}\n",
+    "chapters.json": "[\n  {\n    \"id\": \"chapter-0001\",\n    \"title\": \"A Book of Questions\",\n    \"content\": true,\n    \"unitIds\": [\n      \"u000001\",\n      \"u000002\"\n    ]\n  }\n]\n",
+    "review.json": "{\n  \"draftSha256\": \"b270bcdeaf8d798b2d0422bf59a3664c660a32a2c18531722c52b4ed48bb1d49\",\n  \"paragraphs\": [\n    {\n      \"location\": \"hero:title\",\n      \"spoilerRisk\": false,\n      \"matchedRevelationIds\": [],\n      \"notes\": \"\"\n    },\n    {\n      \"location\": \"hero:dek\",\n      \"spoilerRisk\": false,\n      \"matchedRevelationIds\": [],\n      \"notes\": \"\"\n    },\n    {\n      \"location\": \"section-01:p001\",\n      \"spoilerRisk\": false,\n      \"matchedRevelationIds\": [],\n      \"notes\": \"\"\n    },\n    {\n      \"location\": \"closing:p001\",\n      \"spoilerRisk\": false,\n      \"matchedRevelationIds\": [],\n      \"notes\": \"\"\n    }\n  ],\n  \"passed\": true,\n  \"answersWithheld\": true,\n  \"twistsWithheld\": true,\n  \"openLoopsPreserved\": true,\n  \"notes\": \"\"\n}",
+    "analyses/batch-0001.json": "{\n  \"batch\": \"batch-0001.json\",\n  \"chapterId\": \"chapter-0001\",\n  \"segment\": 1,\n  \"modeSignals\": [\n    \"fiction\"\n  ],\n  \"safeHooks\": [\n    {\n      \"id\": \"batch-0001-hook-001\",\n      \"type\": \"question\",\n      \"statement\": \"The book explores difficult questions about identity, evidence, uncertainty, and choice.\",\n      \"sourceUnitIds\": [\n        \"u000002\"\n      ]\n    }\n  ],\n  \"protectedRevelations\": [\n    {\n      \"id\": \"batch-0001-revelation-001\",\n      \"type\": \"twist\",\n      \"statement\": \"The final answer is hidden by design.\",\n      \"guardTerms\": [\n        \"final answer is hidden\"\n      ],\n      \"sourceUnitIds\": [\n        \"u000002\"\n      ]\n    }\n  ],\n  \"audit\": {\n    \"chapterCovered\": true,\n    \"questionsIdentified\": true,\n    \"revelationsSeparated\": true,\n    \"factsPreserved\": true,\n    \"notes\": \"\"\n  }\n}",
+    "batches/batch-0001.json": "{\n  \"batch\": \"batch-0001.json\",\n  \"chapterId\": \"chapter-0001\",\n  \"chapterTitle\": \"A Book of Questions\",\n  \"segment\": 1,\n  \"language\": \"en\",\n  \"characterCount\": 6400,\n  \"units\": [\n    {\n      \"id\": \"u000001\",\n      \"tag\": \"h1\",\n      \"text\": \"A Book of Questions\"\n    },\n    {\n      \"id\": \"u000002\",\n      \"tag\": \"p\",\n      \"text\": \"This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. This book begins with difficult questions about identity evidence uncertainty and choice. The final answer is hidden by design and should never appear in promotional copy.\"\n    }\n  ]\n}\n"
+  },
+  "html": "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<meta name=\"marketing-summary-generator\" content=\"marketingsummary-skill\">\n<meta name=\"marketing-summary-source-sha256\" content=\"603ededb9403f499842a147cfe085b680f69ad33e7d0aff7bc3a7d02cce4d4be\">\n<meta name=\"marketing-summary-mode\" content=\"fiction\">\n<meta name=\"marketing-summary-target-words\" content=\"275\">\n<meta name=\"marketing-summary-minimum-words\" content=\"250\">\n<meta name=\"marketing-summary-maximum-words\" content=\"300\">\n<meta name=\"marketing-summary-actual-words\" content=\"294\">\n<title>Questions Worth Following</title>\n<style>:root{color-scheme:light dark;--bg:#f1ece3;--paper:#fffdf8;--ink:#201d19;--muted:#6d6258;--accent:#8b4c32;--line:#d8c9ba}\n*{box-sizing:border-box}body{margin:0;background:linear-gradient(150deg,var(--bg),#e7ded2);color:var(--ink);font-family:Georgia,'Times New Roman',serif;line-height:1.7}\nmain{width:min(820px,calc(100% - 2rem));margin:3rem auto;background:var(--paper);padding:clamp(1.5rem,6vw,5rem);box-shadow:0 18px 55px #33251b1a;border-top:5px solid var(--accent)}\nh1{font-size:clamp(2.25rem,7vw,4.6rem);line-height:1.02;letter-spacing:-.025em;margin:0 0 .5em}.dek{font-size:clamp(1.1rem,2.5vw,1.35rem);color:var(--muted);margin:0 0 2.5rem}\nh2{font-size:1.45rem;line-height:1.25;margin:2.5rem 0 .75rem;color:var(--accent)}p{margin:.8rem 0}.sales-questions{border-block:1px solid var(--line);padding:1rem 0 1.5rem;margin-top:2rem}\n.closing{font-size:1.18rem;font-style:italic;margin-top:3rem;padding-top:1.4rem;border-top:1px solid var(--line)}\n@media(max-width:620px){main{width:100%;margin:0;padding:1.4rem;box-shadow:none}}\n@media(prefers-color-scheme:dark){:root{--bg:#171411;--paper:#211d19;--ink:#f1e9df;--muted:#c1b3a5;--accent:#e3a17f;--line:#50453c}body{background:var(--bg)}}</style>\n</head>\n<body><main><article data-marketing-summary>\n<header><h1>Questions Worth Following</h1><p class=\"dek\">A thoughtful invitation into uncertainty identity evidence and choice.</p></header>\n<section class=\"sales-section sales-questions\"><h2>Where certainty begins to shift</h2><p>Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading Questions about identity evidence uncertainty and choice invite curiosity and thoughtful reading</p></section>\n<p class=\"closing\">The most revealing question may be the one still waiting beyond these pages.</p>\n</article></main></body></html>\n",
+  "validation": {
+    "status": "passed",
+    "findings": [],
+    "metrics": {
+      "actualWords": 294,
+      "minimumWords": 250,
+      "maximumWords": 300,
+      "unsupportedFactualTokens": 0
+    },
+    "limitations": "Deterministic checks supplement but cannot replace the active LLM's semantic spoiler review."
+  }
+}

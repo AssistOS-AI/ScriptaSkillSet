@@ -2,13 +2,20 @@
   "title": "Relevant Keywords",
   "family": "document-analysis",
   "summary": "Extracts and semantically consolidates fundamental multilingual keywords from an HTML book into one simple text file.",
-  "aliases": ["relevantKeywords", "relevant-keywords", "html-keywords", "keyword-extraction"],
+  "aliases": [
+    "relevantKeywords",
+    "relevant-keywords",
+    "html-keywords",
+    "keyword-extraction"
+  ],
   "dependsOn": [],
-  "outputs": ["relevantKeywords.txt"],
+  "outputs": [
+    "relevantKeywords.txt"
+  ],
   "entrypoints": [
     "SKILL.md",
     "scripts/relevantkeywords",
-    "scripts/relevantkeywords.py",
+    "scripts/relevantkeywords.mjs",
     "references/synonyms-format.md"
   ],
   "selfContained": true

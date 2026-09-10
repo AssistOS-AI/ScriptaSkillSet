@@ -151,3 +151,12 @@ Write `draft.json` only after synthesis passes:
 Section IDs must match the synthesis outline. Every paragraph needs selected cluster IDs and valid source-unit IDs. All booleans are mandatory and true. Adjust the draft until its counted words fall within the range recorded in `job.json`.
 
 The built HTML keeps word-budget and estimated-duration values in the validation report and hidden metadata only. It must not render those internal metrics as reader-facing content.
+
+## Runtime
+
+The Node.js implementation uses the command arguments and JSON shapes documented
+here. Reference fixtures in tests/fixtures verify preparation, state transitions
+and generated artifacts.
+
+Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
+`Intl.Locale`. The source language comes from HTML unless explicitly overridden.

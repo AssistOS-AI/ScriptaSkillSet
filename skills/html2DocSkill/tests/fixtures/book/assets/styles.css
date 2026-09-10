@@ -1,0 +1,4 @@
+:root{--pdf-page-width:595.28pt;--pdf-page-height:841.89pt;--pdf-body-size:11pt}
+        body{font-family:Georgia,serif;font-size:var(--pdf-body-size);color:#222}
+        p{text-align:justify;margin-bottom:6pt} h1{font-size:2em}
+        th{background-color:#ddeeff} img{width:240pt}

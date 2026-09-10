@@ -15,7 +15,7 @@
   "entrypoints": [
     "SKILL.md",
     "scripts/comprehensivesummary",
-    "scripts/comprehensivesummary.py",
+    "scripts/comprehensivesummary.mjs",
     "references/job-format.md"
   ],
   "selfContained": true
