@@ -8,7 +8,9 @@ export function textReport(result) {
   for (const c of result.corrections) lines.push(`[${c.language}] ${c.kind} in ${c.file}\nBefore: ${typeof c.before === 'string' ? c.before : JSON.stringify(c.before)}\nAfter: ${typeof c.after === 'string' ? c.after : JSON.stringify(c.after)}`);
   lines.push('', 'Remaining findings');
   for (const f of result.findings) lines.push(`[${f.severity}] [${f.language}] ${f.category} at ${f.location}: ${f.detail}${f.excerpts ? '\n' + f.excerpts.join('\n') : ''}`);
-  lines.push('', 'Limitations', ...result.limitations, '', 'Recovery', ...result.backups.map(b => `${b.file} -> ${b.backup}`));
+  lines.push('', 'Limitations', ...result.limitations, '', 'Recovery');
+  if (result.backups?.length) lines.push(...result.backups.map(b => `${b.file} -> ${b.backup}`));
+  else lines.push('Temporary working files were discarded after report delivery.');
   return lines.join('\n') + '\n';
 }
 export async function writeLayoutReport(directory, result) {

@@ -1,9 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {checkDisplayPages} from '../src/display-pages.mjs';
+import {checkDisplayPages, displayPageProfiles, displayRowsCentered} from '../src/display-pages.mjs';
 
 const profile={page:2,groups:[{size:26,leading:40,gapBefore:0,bold:true,italic:false,lines:[{}, {}, {}]},{size:15,leading:23,gapBefore:10,bold:false,italic:false,lines:[{},{}]}]};
 const record=(g,i)=>({page:'2',displayGroup:String(i),displayLines:g.lines.length,font:{size:String(g.size*96/72),weight:g.bold?'700':'400',style:g.italic?'italic':'normal'},style:{lineHeight:String(g.leading*96/72),textAlign:'center',marginTop:g.gapBefore*96/72}});
+test('centered title pages survive one off-axis line',()=>{
+  const rows=[
+    {left:146,width:156},
+    {left:105,width:229},
+    {left:135,width:169},
+    {left:86,width:270},
+    {left:121,width:216},
+    {left:144,width:155}
+  ];
+  assert.equal(displayRowsCentered(rows,432),true);
+  assert.equal(displayRowsCentered([{left:52,width:336},{left:52,width:318}],432),false);
+});
+
 test('matching HTML delivery modes cannot hide merged source display groups',()=>{
   assert.equal(checkDisplayPages([profile],[{width:1440,records:[]}])[0].page,2);
 });
@@ -22,7 +35,7 @@ import {pathToFileURL} from 'node:url';
 import {openBrowser} from '../src/browser.mjs';
 import {navigate,applyDomRepairs,measure} from '../src/layout-browser.mjs';
 import {inspectLayout} from '../src/layout-checks.mjs';
-import {displayPageProfiles,repairDisplayPages} from '../src/display-pages.mjs';
+import {repairDisplayPages} from '../src/display-pages.mjs';
 
 const titleXml=`<pdf2xml><page number="2" width="432" height="648">
 <fontspec id="1" size="34" family="AAAAAA+Inter" color="#173346"/>
@@ -43,12 +56,12 @@ test('left display pages preserve mixed fonts, source rule and text through two 
  t.after(()=>fs.rm(directory,{recursive:true,force:true}));
  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
  const file=path.join(directory,'index.html');
- const html='<html lang="en"><head><style>html{--standalone-size:23.0144px}body{margin:0;width:min(100vw,576px)}section{box-sizing:border-box;padding:12%}p,h1{margin:0}</style></head><body data-validatebook-root><section class="pdf-source-page" data-reader-page="2" data-source-page="2"><h2 id="page_2">ARTIFICIAL IMPOSSIBILITY</h2><p><em>How Finance, Institutions, Biology, and Culture Make Feasible Futures Unbuildable</em></p><p>AN OUTFINITIST MAP FOR SCIENCE FICTION, PUBLIC DEBATE, AND THE AGE OF SCALABLE INTELLIGENCE</p><p>ENGLISH EDITION | AUGUST 2026</p></section></body></html>';
+  const html='<html lang="en"><head><style>html{--standalone-size:23.0144px}body{margin:0;width:min(100vw,576px)}section{box-sizing:border-box;padding:12%}p,h1{margin:0}#page_2{font-family:"ShouldNotWin",sans-serif}[data-reader-page="2"] > p:nth-of-type(1){line-height:1.5;text-indent:16.5pt}</style></head><body data-validatebook-root><section class="pdf-source-page" data-reader-page="2" data-source-page="2"><h2 id="page_2">ARTIFICIAL IMPOSSIBILITY</h2><p><em>How Finance, Institutions, Biology, and Culture Make Feasible Futures Unbuildable</em></p><p>AN OUTFINITIST MAP FOR SCIENCE FICTION, PUBLIC DEBATE, AND THE AGE OF SCALABLE INTELLIGENCE</p><p>ENGLISH EDITION | AUGUST 2026</p></section></body></html>';
  await fs.writeFile(file,html);await navigate(browser,file);
  const profiles=await browser.evaluate(`(${displayPageProfiles.toString()})(${JSON.stringify(titleXml)},${JSON.stringify({horizontalRules:[{page:2,x0:56,x1:384,top:192,bottom:192,width:1.5,color:'#007c82'}]})})`);
  assert.equal(profiles.length,1);assert.equal(profiles[0].groups.length,4);assert.equal(profiles[0].groups[0].align,'left');assert.equal(profiles[0].groups[0].rule.color,'#007c82');assert.equal(profiles[0].groups[1].italic,true);
- const fonts={inter:'Arial, sans-serif',ebgaramond:'Georgia, serif'};
- let css=null;
+  const fonts={inter:'Arial, sans-serif',ebgaramond:'Georgia, serif'};
+  let css=null;
  for(let pass=0;pass<2;pass++){
   await browser.send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
   const before=await browser.evaluate('document.body.textContent.replace(/\\s+/g, "")');

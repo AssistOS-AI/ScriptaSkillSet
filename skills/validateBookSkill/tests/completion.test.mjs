@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { sourceDecorations } from '../src/decorations.mjs';
-import { runCorrections } from '../src/complete.mjs';
+import { runCorrections, discardTemporaryWork, isDisposableJobDirectory } from '../src/complete.mjs';
 import { readingPages, compareEnglish } from '../src/layout-checks.mjs';
 import { retainReviewedDifferences } from '../src/reviewed-differences.mjs';
 import { hash } from '../src/storage.mjs';
@@ -46,4 +46,25 @@ test('unchanged installed bytes with unresolved errors are a failure, not passed
   assert.equal(result.passes.length,2);
   assert.equal(result.failure.code,'unchanged_installed_files');
   assert.equal(result.failure.findings[0].category,'missing_paragraph');
+});
+
+test('complete discards job directories and leftover atomic temps, never the book root',async t=>{
+  const book=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-book-'));
+  const job=path.join(book,'..',path.basename(book)+'-job');
+  t.after(()=>fs.rm(book,{recursive:true,force:true}));
+  t.after(()=>fs.rm(job,{recursive:true,force:true}));
+  await fs.mkdir(job,{recursive:true});
+  await fs.writeFile(path.join(job,'job.json'),'{}\n');
+  await fs.mkdir(path.join(book,'.validatebook-layout'));
+  await fs.writeFile(path.join(book,'en.full_content.html.validatebook-abc123def0.tmp'),'tmp');
+  await fs.writeFile(path.join(book,'RAPORT-CORECTII.txt'),'keep');
+  assert.equal(isDisposableJobDirectory(job,book),true);
+  assert.equal(isDisposableJobDirectory(book,book),false);
+  assert.equal(isDisposableJobDirectory(path.join(book,'.validatebook-layout'),book),false);
+  assert.equal(isDisposableJobDirectory(path.dirname(book),book),false);
+  await discardTemporaryWork(job,book);
+  assert.equal(await fs.access(job).then(()=>true,()=>false),false);
+  assert.equal(await fs.access(path.join(book,'.validatebook-layout')).then(()=>true,()=>false),false);
+  assert.equal(await fs.access(path.join(book,'en.full_content.html.validatebook-abc123def0.tmp')).then(()=>true,()=>false),false);
+  assert.equal(await fs.readFile(path.join(book,'RAPORT-CORECTII.txt'),'utf8'),'keep');
 });

@@ -126,7 +126,7 @@ export function paginationCss({width,height,margins,contents=[],contentsLineHeig
   if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw Error('Source PDF page dimensions required');
   const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
   const toc=contents.length?`
-[data-validatebook-root] .source-contents-heading{margin:0 0 .25em!important;text-align:left!important}
+[data-validatebook-root] .source-contents-heading{margin:0 0 .25em!important;text-align:left!important;font-family:inherit}
 [data-validatebook-root] .source-toc{list-style:none;margin:0;padding:0}
 [data-validatebook-root] .source-toc li{margin:0!important;line-height:${contentsLineHeight/contentsFontSize};text-indent:0}
 [data-validatebook-root] .source-toc a[data-page-label]{display:flex;align-items:baseline;gap:.12em;color:inherit;text-decoration:none}

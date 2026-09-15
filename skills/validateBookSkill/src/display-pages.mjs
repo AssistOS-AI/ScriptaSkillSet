@@ -1,5 +1,21 @@
-// Source display geometry is independent of book titles and HTML heading tags.
+export function displayRowsCentered(rows, width) {
+  const mid = width / 2;
+  const left = Math.min(...rows.map(r => r.left));
+  if (rows.every(r => r.left - left <= 18)) return false;
+  const tolerance = Math.max(18, width * 0.045);
+  const near = rows.filter(r => Math.abs(r.left + r.width / 2 - mid) <= tolerance).length;
+  return near >= Math.max(2, rows.length - 1);
+}
+
 export function displayPageProfiles(xml, decorations = {}) {
+  const centeredRows = (rows, width) => {
+    const mid = width / 2;
+    const left = Math.min(...rows.map(r => r.left));
+    if (rows.every(r => r.left - left <= 18)) return false;
+    const tolerance = Math.max(18, width * 0.045);
+    const near = rows.filter(r => Math.abs(r.left + r.width / 2 - mid) <= tolerance).length;
+    return near >= Math.max(2, rows.length - 1);
+  };
   const doc = new DOMParser().parseFromString(xml, 'text/xml');
   const fonts = new Map([...doc.querySelectorAll('fontspec')].map(n => [n.getAttribute('id'), {
     size: Number(n.getAttribute('size')), family: n.getAttribute('family'), color: n.getAttribute('color')
@@ -13,7 +29,7 @@ export function displayPageProfiles(xml, decorations = {}) {
       ...fonts.get(n.getAttribute('font')), bold: !!n.querySelector('b'), italic: !!n.querySelector('i')
     })).filter(r => r.text && r.top >= height * .06 && r.top < height * .9);
     if (rows.length < 3 || rows.length > 14 || Math.max(...rows.map(r => r.size)) < 20) continue;
-    const centered = rows.every(r => Math.abs(r.left + r.width / 2 - width / 2) <= 12);
+    const centered = centeredRows(rows, width);
     const left = Math.min(...rows.map(r => r.left)), right = Math.max(...rows.map(r => r.left + r.width));
     const leftAligned = rows.every(r => r.left - left <= 18);
     if (!centered && !leftAligned) continue;
@@ -45,16 +61,22 @@ export function displayPageProfiles(xml, decorations = {}) {
 
 export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
   const compact = s => s.normalize('NFKC').replace(/[\s\u200b\ufeff]/gu, '');
-  const key = s => s.replace(/^[A-Z]{6}\+/, '').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman)$/i, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const key = s => s.replace(/^[A-Z]{6}\+/, '').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman|mt)$/ig, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const resolveFamily = source => {
+    if (typeof fontMap === 'string') return fontMap;
+    const k = key(source);
+    if (fontMap?.[k]) return fontMap[k];
+    const hit = Object.entries(fontMap || {}).find(([name]) => name === k || name.startsWith(k) || k.startsWith(name));
+    return hit?.[1];
+  };
   const changes = [];
   if(typeof fontMap==='string'&&new Set(profiles.flatMap(p=>p.groups.map(g=>key(g.family)))).size>1)throw Error('Mixed display fonts require a family map');
-  // Validate every page and family before mutating any document nodes.
   const plans = profiles.map(profile => {
     const page = document.querySelector(`.pdf-source-page[data-reader-page="${profile.page}"]`);
     if (!page) throw Error(`Display page ${profile.page} requires a source page container`);
     if (compact(page.textContent) !== compact(profile.groups.map(g => g.text).join(' '))) throw Error(`Display page ${profile.page} text does not match source groups`);
     if (page.querySelector('a,img,table,svg') || [...page.querySelectorAll('[id]')].some(n => n.id !== `page_${profile.page}`)) throw Error('Display page has content requiring structural mapping');
-    const families = profile.groups.map(g => typeof fontMap === 'string' ? fontMap : fontMap?.[key(g.family)]);
+    const families = profile.groups.map(g => resolveFamily(g.family));
     if (families.some(f => !f)) throw Error('Display page requires a verified source family for every group');
     return {profile,page,families};
   });
@@ -89,7 +111,7 @@ export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
 }
 
 export function checkDisplayPages(profiles, layouts, fontMap = {}) {
-  const findings = [], key = s => s.replace(/^[A-Z]{6}\+/, '').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman)$/i, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const findings = [], key = s => s.replace(/^[A-Z]{6}\+/, '').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman|mt)$/ig, '').replace(/[^a-z0-9]/gi, '').toLowerCase();
   const family = s => s.split(',')[0].replace(/["']/g,'').trim().toLowerCase();
   const color = s => s?.startsWith('#') ? 'rgb('+s.slice(1).match(/../g).map(x=>parseInt(x,16)).join(', ')+')' : s;
   for (const layout of layouts) for (const profile of profiles) {

@@ -158,8 +158,12 @@ export async function prepare(root, options = {}) {
     const decorations = await sourceDecorations(selection.pdf, pdfSha256, graphicsProvider);
     const fontDirectory=path.join(path.dirname(selection.documents[0].file),path.basename(selection.documents[0].file,'.html')+'.assets','fonts');
     const sourceFontsList=options.autoCorrect?await sourceFonts(selection.pdf,pdfSha256,graphicsProvider,fontDirectory):[];
-    const fontKey=name=>name.replace(/^[A-Z]{6}\+/,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman)$/i,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
-    const sourceFontMap=Object.fromEntries(sourceFontsList.map(font=>[fontKey(font.source_name),`"${font.css_family}", Georgia, serif`]));
+    const fontKey=name=>name.replace(/^[A-Z]{6}\+/,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman|mt)$/ig,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+    const sourceFontMap=Object.fromEntries(sourceFontsList.map(font=>{
+      const name=`${font.source_name} ${font.css_family}`.toLowerCase();
+      const generic=/garamond|georgia|times|palatino|minion|caslon|baskerville/.test(name)?'Georgia, serif':/inter|arial|helvetica|segoe|roboto|noto sans|sans/.test(name)?'system-ui, sans-serif':'Georgia, serif';
+      return [fontKey(font.source_name),`"${font.css_family}", ${generic}`];
+    }));
     const sourceEvidence = { pages, decorations, fonts:sourceFontsList, fontInventory: fontInfo.stdout, imageInventory: imageInfo.stdout, wordAndLineBounds: boxes.stdout, typographyXml:typography.stdout };
     await writeJson(path.join(directory, 'source-evidence.json'), sourceEvidence);
     artifacts.push({ file: path.join(directory, 'source-evidence.json'), sha256: await fileHash(path.join(directory, 'source-evidence.json')) });
@@ -248,7 +252,7 @@ export async function prepare(root, options = {}) {
       resourceInputs.push(...presentation.inputs);
       const before=presentation.scale&&presentation.scale!==1?await measure(browser,item.file,presentation):standalone;
       before.delivery=presentation;
-      const typeComparison=compareTypography(sourceType,before,item.language);
+      const typeComparison=compareTypography(sourceType,before,item.language,{sourceFontMap});
       if(displayPages.length&&item.language==='en'){
         const familyKey=s=>s.replace(/^[A-Z]{6}\+/,'').replace(/[^a-z]/gi,'').toLowerCase();
         const sourceFamilies=new Set(displayPages.flatMap(p=>p.groups.map(g=>familyKey(g.family))));
@@ -297,7 +301,7 @@ export async function prepare(root, options = {}) {
       const final = options.autoCorrect && actions.length ? await measure(browser, item.file,presentation) : before;
       final.delivery=presentation;
       let listFindings=[];if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const checked=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);listFindings=checked.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure or typography differs from HTML.',f));}
-      final.typography=compareTypography(sourceType,final,item.language);
+      final.typography=compareTypography(sourceType,final,item.language,{sourceFontMap});
       const displayFindings=layouts=>item.language==='en'?checkDisplayPages(displayPages,layouts,sourceFontMap).map(f=>issue('en','source_display_page_difference','page '+f.page,f.detail,f)):[];
       const assets = await collectAssets(final); resourceInputs.push(...assets.inputs);
       let findings = [...listFindings,...final.typography.findings, ...final.layouts.flatMap(l => checkDisplay(l, item.language)), ...assets.findings];
@@ -308,7 +312,7 @@ export async function prepare(root, options = {}) {
       findings.push(...paddingFindings(final.layouts));
       if(presentation.articleContract){
         const article=await measure(browser,item.file,{importedArticle:presentation.articleContract});
-        article.typography=compareTypography(sourceType,article,item.language);
+        article.typography=compareTypography(sourceType,article,item.language,{sourceFontMap});
         findings.push(...displayFindings(article.layouts));
         if(item.language==='en'&&decorations?.lists){const checked=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);findings.push(...checked.findings.map(f=>issue('en',f.kind,'page '+f.page,'Imported reader list structure or typography differs from PDF.',f)));}
         findings.push(...article.typography.findings,...article.layouts.flatMap(l=>checkDisplay(l,item.language)));
@@ -320,7 +324,7 @@ export async function prepare(root, options = {}) {
           else for(let i=0;i<source.length;i++){
             const a=source[i],b=target[i];
             if(a.text!==b.text||a.tag!==b.tag)findings.push(issue(item.language,'reader_import_structure',b.selector,'Imported article changes text or block order.'));
-            else if(Math.abs(parseFloat(a.font.size)-parseFloat(b.font.size))>.1||a.font.family!==b.font.family||a.style.lineHeight!==b.style.lineHeight)findings.push(issue(item.language,'reader_typography_difference',b.selector,'Imported article differs from the verified standalone typography.',{standalone:a.font,imported:b.font,width:article.layouts[v].width}));
+            else if(a.displayGroup==null&&(Math.abs(parseFloat(a.font.size)-parseFloat(b.font.size))>.1||a.font.family!==b.font.family||a.style.lineHeight!==b.style.lineHeight))findings.push(issue(item.language,'reader_typography_difference',b.selector,'Imported article differs from the verified standalone typography.',{standalone:a.font,imported:b.font,width:article.layouts[v].width}));
           }
         }
         const articleFile=path.join(directory,item.language+'-article-layout.json');await writeJson(articleFile,article);artifacts.push({file:articleFile,sha256:await fileHash(articleFile)});

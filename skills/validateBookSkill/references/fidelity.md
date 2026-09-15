@@ -12,7 +12,7 @@ Before any canonical replacement, verify the original hash and write a recoverab
 
 ## Default typography and reader delivery
 
-An overflow-free page with loaded fonts is not sufficient acceptance. The executable audit extracts PDF font sizes using `pdftohtml -xml -zoom 1`, converts points to CSS pixels with 96/72, and measures baseline increments from precise word/line bounds independently of glyph-box height. Unique normalized source-page matches support paragraph font-size and paragraph-gap comparisons; fontspec rounding has an explicit tolerance. Rendered word ranges detect excessive justification gaps even when nothing overflows.
+An overflow-free page with loaded fonts is not sufficient acceptance. The executable audit extracts PDF font sizes using `pdftohtml -xml -zoom 1`, converts points to CSS pixels with 96/72, and measures baseline increments from precise word/line bounds independently of glyph-box height. Unique normalized HTML paragraph matches against the source text, including paragraphs that continue across PDF pages, support paragraph font-size, source-family and paragraph-gap comparisons; fontspec rounding has an explicit tolerance. An unmapped or ambiguous English paragraph is a finding, not an uncertified pass. Rendered word ranges detect excessive justification gaps even when nothing overflows.
 
 `prepare --auto-correct` calibrates the default type scale and source-supported paragraph leading/gaps without changing text. `--word-spacing natural` requests ordinary word spacing and left alignment consistently across existing languages; `source` is the default and only corrects measured excessive justification. It does not change or test font +/- controls. Do not create phrase-specific CSS or hand-code a rule for a quoted example.
 
@@ -20,7 +20,7 @@ For ScriptaHub standalone readers, the skill reads and hash-binds the shared rea
 
 ## Shared CSS and reader import
 
-Short dialogue receives the same source font-size checks as longer prose. Match unique source occurrences, including repeated text within one page; text length must not exempt a dialogue from validation.
+Short dialogue receives the same source font-size and family checks as longer prose. Match unique HTML paragraphs against the source text, including paragraphs that continue across PDF pages; text length must not exempt a dialogue from validation. An unmapped English paragraph fails verification.
 
 After presentation repairs, move inline declarations into a single local `validatebook-layout.css` per HTML directory. Deduplicate identical declaration groups, preserve emphasis and heading custom properties, remove inline style attributes, and compare computed property values before installing the CSS and HTML. Allow only sub-0.001px serialization rounding. Keep originals and hash-bound stylesheet evidence. Existing unrelated files must not be overwritten.
 

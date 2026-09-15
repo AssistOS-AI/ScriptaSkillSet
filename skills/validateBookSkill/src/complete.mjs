@@ -4,6 +4,36 @@ import { discover, prepare, report } from './audit.mjs';
 import { exists, hash, readJson, writeJson } from './storage.mjs';
 import { textReport } from './layout-report.mjs';
 
+export function isDisposableJobDirectory(directory, bookRoot) {
+  const job = path.resolve(directory);
+  const book = path.resolve(bookRoot);
+  if (!job || job === book || job === path.parse(job).root) return false;
+  const fromBook = path.relative(book, job);
+  const fromJob = path.relative(job, book);
+  if (fromBook && !fromBook.startsWith('..') && !path.isAbsolute(fromBook)) return false;
+  if (fromJob && !fromJob.startsWith('..') && !path.isAbsolute(fromJob)) return false;
+  return true;
+}
+
+export async function discardTemporaryWork(directory, bookRoot) {
+  const removed = [];
+  const drop = async file => { await fs.rm(file, { recursive: true, force: true }); removed.push(file); };
+  if (directory && isDisposableJobDirectory(directory, bookRoot)) await drop(path.resolve(directory));
+  if (!bookRoot) return removed;
+  const root = path.resolve(bookRoot);
+  for (const name of ['.validatebook-layout', '.validatebook-layout-jobs']) await drop(path.join(root, name));
+  const entries = await fs.readdir(root, { withFileTypes: true }).catch(() => []);
+  for (const entry of entries) {
+    const file = path.join(root, entry.name);
+    if (entry.isFile() && /\.validatebook-[0-9a-f]+\.tmp$/i.test(entry.name)) await drop(file);
+    if (!entry.isDirectory() || entry.name.startsWith('.')) continue;
+    for (const child of await fs.readdir(file).catch(() => [])) {
+      if (/\.validatebook-[0-9a-f]+\.tmp$/i.test(child)) await drop(path.join(file, child));
+    }
+  }
+  return removed;
+}
+
 // Progress is a change in installed bytes, not the number of findings or
 // presentation actions. Keep all immutable passes and their recovery files.
 export function installedState(inputs) {
@@ -54,7 +84,7 @@ export async function complete(root, options = {}) {
       corrections:execution.passes.flatMap(p=>p.result.corrections),
       backups:execution.passes.flatMap(p=>p.result.backups)};
     const reportFile=path.join(selection.root,'RAPORT-CORECTII.txt');
-    const content=textReport(aggregate)+(execution.failure?'\nExecution failure: '+execution.failure.detail+'\n':'');
+    const content=textReport({...aggregate,backups:[]})+(execution.failure?'\nExecution failure: '+execution.failure.detail+'\n':'');
     if(await exists(reportFile)) {
       const previous=await fs.readFile(reportFile,'utf8');
       if(previous!==content)await fs.writeFile(path.join(runDirectory,'previous-RAPORT-CORECTII.txt'),previous,{flag:'wx'});
@@ -64,8 +94,9 @@ export async function complete(root, options = {}) {
     await fs.copyFile(temporary,reportFile);
     Object.assign(state,{status:execution.failure?'failed':verified.status,failure:execution.failure,reportText:reportFile,reportSha256:hash(content)});
     await writeJson(stateFile,state);
-    return {...aggregate,status:state.status,failure:state.failure,reportText:reportFile,stateFile};
-  } finally {await lock.close();await fs.unlink(lockFile);}
+    await discardTemporaryWork(directory, selection.root);
+    return {...aggregate,status:state.status,failure:state.failure,reportText:reportFile,job:null,stateFile:null};
+  } finally {await lock.close().catch(()=>{});await fs.unlink(lockFile).catch(()=>{});}
 }
 
 export async function planComplete(root, options = {}) {

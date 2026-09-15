@@ -95,7 +95,7 @@ export function applyDomRepairs(actions) {
         for(const rule of parsed.cssRules){const id=rule.selectorText?.match(/data-vb-style="([^"]+)"/);if(id&&rule.style)previous.set(id[1],rule.style.cssText);}
       }
       const nodes=[...document.querySelectorAll('[style],[data-vb-style]')];
-      const signatures=new Map(),expected=[],assignments=[];
+      const signatures=new Map(),expected=[],assignments=[],inlineIds=new Map(),inlineTags=new Map();
       for(const n of nodes){
         const declaration=document.createElement('span').style;
         declaration.cssText=previous.get(n.getAttribute('data-vb-style'))||'';
@@ -106,14 +106,35 @@ export function applyDomRepairs(actions) {
         const computed=getComputedStyle(n);expected.push({node:n,values:Object.fromEntries([...declaration].map(key=>[key,computed.getPropertyValue(key)]))});
         let id=signatures.get(signature);if(!id){id='s'+(signatures.size+1);signatures.set(signature,id);}
         assignments.push([n,id]);
+        if(n.getAttribute('style')){
+          if(n.id&&CSS.escape(n.id)===n.id){
+            const ids=inlineIds.get(signature)||[];
+            if(!ids.includes(n.id))ids.push(n.id);
+            inlineIds.set(signature,ids);
+          }
+          const tags=inlineTags.get(signature)||[];
+          const tag=n.tagName.toLowerCase();
+          if(!tags.includes(tag))tags.push(tag);
+          inlineTags.set(signature,tags);
+        }
       }
       for(const [n,id] of assignments)n.setAttribute('data-vb-style',id);
       document.body.setAttribute('data-validatebook-root','');
       const scope='[data-validatebook-root]'.repeat(8);
+      const extra='[data-validatebook-root]'.repeat(12);
       if(a.importedFontRatio!==undefined&&(!Number.isFinite(a.importedFontRatio)||a.importedFontRatio<=0))throw Error('Invalid imported font unit ratio');
       const imported=a.importedFontRatio?scope+'.reader-html-content { --validatebook-font-size: calc(var(--reader-font-size) * '+a.importedFontRatio+'); }\n':'';
       const pageStyle=a.previousCss?.includes('/* validateBook source pagination */')?'/* validateBook source pagination */'+a.previousCss.split('/* validateBook source pagination */')[1]:'';
-      const css='/* validateBook managed presentation; generated from verified declarations */\n'+imported+[...signatures].map(([declaration,id])=>':is('+scope+'[data-vb-style="'+id+'"], '+scope+' [data-vb-style="'+id+'"]) { '+declaration+' }').join('\n')+'\n'+pageStyle;
+      const css='/* validateBook managed presentation; generated from verified declarations */\n'+imported+[...signatures].map(([declaration,id])=>{
+        const selectors=[scope+'[data-vb-style="'+id+'"]',scope+' [data-vb-style="'+id+'"]'];
+        for(const tag of inlineTags.get(declaration)||[]){
+          selectors.push(extra+' '+tag+'[data-vb-style="'+id+'"]',extra+' [data-reader-page] > '+tag+'[data-vb-style="'+id+'"]');
+        }
+        for(const elementId of inlineIds.get(declaration)||[]){
+          selectors.push(extra+'#'+elementId+'[data-vb-style="'+id+'"]',extra+' #'+elementId+'[data-vb-style="'+id+'"]');
+        }
+        return ':is('+selectors.join(', ')+') { '+declaration+' }';
+      }).join('\n')+'\n'+pageStyle;
       const temporary=document.createElement('style');temporary.textContent=css;document.head.append(temporary);
       nodes.forEach(n=>n.removeAttribute('style'));old?.remove();
       for(const check of expected)for(const [key,value] of Object.entries(check.values)){

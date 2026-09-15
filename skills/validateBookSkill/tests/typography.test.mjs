@@ -20,7 +20,7 @@ const doc=(size=23,leading=31)=>({presentation:{bodyFontSize:size,contentSelecto
 test('point conversion and baseline distance are independent from glyph height',()=>{assert.equal(pointsToCssPixels(12),16);assert.equal(profile.bodyPt,11);assert.equal(profile.leadingCssPx,15.5*4/3);assert.notEqual(profile.leadingCssPx,14.3*4/3);});
 test('absolute enlargement fails even with unchanged relative type hierarchy',()=>{const c=compareTypography(profile,doc());assert(c.findings.some(f=>f.category==='absolute_font_size_difference'));assert(c.findings.some(f=>f.category==='line_leading_difference'));assert(c.findings.some(f=>f.category==='paragraph_gap_difference'));});
 test('correct physical typography does not trigger false enlargement',()=>{const d=doc(11*4/3,15.5*4/3);d.records[0].style.marginBottom=0;assert.equal(compareTypography(profile,d).findings.length,0);});
-test('ambiguous repeated source passages cannot authorize font replacement',()=>{assert.equal(compareTypography({...profile,pages:[...pages,...pages]},doc()).mappings.length,0);});
+test('ambiguous repeated source passages cannot authorize font replacement',()=>{const c=compareTypography({...profile,pages:[...pages,...pages]},doc());assert.equal(c.mappings.length,0);assert(c.findings.some(f=>f.category==='source_typography_ambiguous'));});
 test('calibration is general, preserves control variables, and natural spacing never edits prose',()=>{const d=doc(),c=compareTypography(profile,d),a=typographyActions(profile,d,c,{defaultSizePx:18.56,justifyPolicy:'natural'});assert(a[0].properties['font-size'].includes('--reader-font-size'));assert(a.find(x=>x.selector==='#passage').properties['text-align']==='left');assert(a.every(x=>!('text' in x)&&x.kind==='presentation'));assert.throws(()=>typographyActions(profile,d,c),/default CSS/);});
 test('natural word spacing preserves centered and right-aligned display paragraphs',()=>{for(const textAlign of ['center','right','end']){const d=doc();d.records[0].style.textAlign=textAlign;const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'natural'});assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],undefined);}});
 test('route-based reader inflation and marker-based defaults are explicit, unsupported contracts fail',()=>{const routeScaling='const sourceScale = /\\/old\\/book/.test(new URL(state.htmlFrame.src).pathname) ? 1 : 1.24;';assert.equal(frameScale(routeScaling,'/new/book',true),1.24);assert.equal(frameScale(routeScaling,'/old/book',true),1);const current="const sourceScale = state.htmlFrame.contentDocument?.body?.hasAttribute('data-pdf-fidelity') ? 1 : 1.24;";assert.equal(frameScale(current,'/any/book',true),1);assert.equal(frameScale(current,'/any/book',false),1.24);assert.throws(()=>frameScale('unknown','/',true),/not recognized/);});
@@ -36,5 +36,45 @@ test('short dialogue uses the same PDF font-size checks as surrounding prose',()
   assert.equal(compared.findings.filter(f=>f.category==='absolute_font_size_difference').length,3);
   assert(compared.mappings.every(m=>m.expectedCssPx===44/3));
   const ambiguous={...source,pages:[{page:1,lines:[...source.pages[0].lines,source.pages[0].lines[0]]}]};
-  assert(!compareTypography(ambiguous,target).mappings.some(m=>m.selector==='#dialogue0'));
+  const repeated=compareTypography(ambiguous,target);
+  assert(!repeated.mappings.some(m=>m.selector==='#dialogue0'));
+  assert(repeated.findings.some(f=>f.category==='source_typography_ambiguous'&&f.location==='#dialogue0'));
+});
+
+test('a paragraph that continues across PDF pages still maps as one HTML paragraph',()=>{
+  const first='This makes the subject part of the Outfinitist philosophy adopted here. Outfinitism begins from finite but movable limits.';
+  const second='It is to distinguish physical impossibility from institutional refusal.';
+  const source={...profile,pages:[
+    {page:5,lines:[{text:first,top:693,font:{sizePt:11,family:'AAAAAA+EBGaramond'}}]},
+    {page:6,lines:[{text:second,top:76,font:{sizePt:11,family:'AAAAAA+EBGaramond'}},{text:lines[1].text,top:166,font:{sizePt:11,family:'AAAAAA+EBGaramond'}}]}
+  ]};
+  const fonts={ebgaramond:'"pdf-font-9e82528ffc0c", Georgia, serif'};
+  const target=doc(11*4/3,15.5*4/3);target.records[0].text=first+' '+second;target.records[0].style.marginBottom=0;
+  target.records[0].font.family='Georgia, "Iowan Old Style", "Palatino Linotype", serif';
+  const wrong=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert.equal(wrong.mappings.length,1);
+  assert.equal(wrong.mappings[0].fontSizePt,11);
+  assert.equal(wrong.mappings[0].page,5);
+  assert.deepEqual(wrong.mappings[0].sourceFamilies,['AAAAAA+EBGaramond']);
+  assert(wrong.findings.some(f=>f.category==='source_font_family_difference'));
+  assert.equal(wrong.findings.find(f=>f.category==='source_font_family_difference').repair.properties['font-family'],fonts.ebgaramond);
+  target.records[0].font.family=fonts.ebgaramond;
+  const compared=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert.equal(compared.findings.length,0);
+  const actions=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts});
+  assert.equal(actions.find(a=>a.selector==='#passage').properties['font-family'],fonts.ebgaramond);
+});
+
+test('an unmapped English paragraph is an error, not an uncertified pass',()=>{
+  const target=doc(11*4/3,15.5*4/3);target.records[0].text='This English paragraph never occurs in the PDF source.';target.records[0].style.marginBottom=0;
+  const compared=compareTypography(profile,target);
+  assert.equal(compared.mappings.length,0);
+  assert.equal(compared.findings[0].category,'source_typography_unmapped');
+});
+
+test('translated prose without a lexical PDF match is not an English unmapped error',()=>{
+  const target=doc();target.records[0].text='Un paragraf tradus care nu coincide lexical cu sursa engleză.';
+  const own=compareTypography(profile,target,'ro');
+  assert.equal(own.mappings.length,0);
+  assert(!own.findings.some(f=>f.category==='source_typography_unmapped'||f.category==='source_font_family_difference'));
 });

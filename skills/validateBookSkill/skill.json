@@ -1,7 +1,7 @@
 {
   "title": "Validate book",
   "family": "document-validation",
-  "summary": "Local PDF/HTML structure and typography checks, shared CSS without inline declarations, default iframe/article parity, English-first presentation and text-only book-root reports. Preserves source page boundaries with separate cover/title pages and text-preserving page containers. Measures source page padding and restores contents leaders, indentation and page labels. Preserves display alignment and excludes repeated running headers from body-margin estimates. Preserves source paragraph borders through shared PDF drawing evidence. Detects and recovers flattened source lists with page-continuing numbering and source list typography. Body leading excludes other font sizes; the reader adapter supports generic local-book stylesheet imports and frame/root scale parity. Generic mixed-font centered/left title pages and source horizontal rules are reconstructed and checked in both reader delivery modes.",
+  "summary": "Local PDF/HTML structure and typography checks, shared CSS without inline declarations, default iframe/article parity, English-first presentation and text-only book-root reports. Preserves source page boundaries with separate cover/title pages and text-preserving page containers. Measures source page padding and restores contents leaders, indentation and page labels. Preserves display alignment and excludes repeated running headers from body-margin estimates. Preserves source paragraph borders through shared PDF drawing evidence. Detects and recovers flattened source lists with page-continuing numbering and source list typography. Body leading excludes other font sizes; the reader adapter supports generic local-book stylesheet imports and frame/root scale parity. Generic mixed-font centered/left title pages and source horizontal rules are reconstructed and checked in both reader delivery modes. Managed CSS keeps element IDs so later source ID rules cannot override captured title typography.",
   "aliases": [
     "validateBook",
     "validate-book"
@@ -16,8 +16,6 @@
     "repair-tasks.json",
     "source-evidence.json",
     "*-layout.json",
-    "recovery.json",
-    "complete.json",
     "validatebook-layout.css",
     "*-article-layout.json",
     "RAPORT-CORECTII.txt"

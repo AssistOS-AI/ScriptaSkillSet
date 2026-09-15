@@ -8,6 +8,7 @@ export function readerTypographyRepairs(standalone, article, defaultSizePx) {
     for(let i=0;i<source.length;i++){
       const a=source[i],b=target[i];
       if(a.text!==b.text||a.tag!==b.tag)throw Error('Reader import changes block text or order');
+      if(a.displayGroup!=null)continue;
       const properties={};
       if(a.font.family!==b.font.family)properties['font-family']=a.font.family;
       if(Math.abs(parseFloat(a.font.size)-parseFloat(b.font.size))>.1)properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${parseFloat(a.font.size)/defaultSizePx})`;
