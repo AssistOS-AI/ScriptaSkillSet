@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {pointsToCssPixels,sourceTypographyProfile,compareTypography,typographyActions} from '../src/typography.mjs';
-import {frameScale} from '../src/reader-presentation.mjs';
+import {assertReaderStyleIsolation,frameScale} from '../src/reader-presentation.mjs';
 import {checkDisplay, compareStructure, compareEnglish} from '../src/layout-checks.mjs';
 const text='A final address appeared: EQUATORIAL CONTINUITY ARCHIVE, NAIROBI. ACCESS TRUSTEE: NURU OKAFOR.';
 const lines=[{text,top:100,font:{sizePt:11}},{text:'Another sufficiently long line after this paragraph.',top:115.5,font:{sizePt:11}}];
@@ -18,12 +18,53 @@ test('smaller table text cannot determine body prose leading',()=>{
 });
 const doc=(size=23,leading=31)=>({presentation:{bodyFontSize:size,contentSelector:'body'},records:[{tag:'p',selector:'#passage',text,font:{size:String(size)},style:{lineHeight:String(leading),marginBottom:4}}]});
 test('point conversion and baseline distance are independent from glyph height',()=>{assert.equal(pointsToCssPixels(12),16);assert.equal(profile.bodyPt,11);assert.equal(profile.leadingCssPx,15.5*4/3);assert.notEqual(profile.leadingCssPx,14.3*4/3);});
+test('chapter hierarchy restores PDF colors, multiline leading and adjacent heading gaps',()=>{
+  const source={...profile,bodyPt:10,bodyCssPx:40/3,leadingPt:14.7,leadingCssPx:19.6,pages:[{page:15,width:432,lines:[
+    {text:'CHAPTER 2',top:64,font:{sizePt:10,family:'Inter',color:'#8a593c'},bold:true},
+    {text:'Essential Patterns: Tools,',top:83,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'Planning, Memory,',top:113,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'Reflection, and Multi-Agent',top:143,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'Work',top:173,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'2.1 From augmented models to adaptive loops',top:268,font:{sizePt:12,family:'Inter',color:'#315e78'},bold:true}
+  ]}]};
+  const record=(selector,text,size,marginTop)=>({tag:'h2',selector,text,page:'15',font:{size:String(pointsToCssPixels(size)),family:'Inter',weight:'700'},style:{lineHeight:String(pointsToCssPixels(size)*1.22),marginTop,marginBottom:10,color:'rgb(0, 0, 0)'}});
+  const target={presentation:{bodyFontSize:40/3,contentSelector:'body'},records:[record('#chapter','CHAPTER 2',10,0),record('#title','Essential Patterns: Tools, Planning, Memory, Reflection, and Multi-Agent Work',23,62),record('#section','2.1 From augmented models to adaptive loops',12,32)]};
+  const compared=compareTypography(source,target);
+  assert(compared.findings.some(f=>f.category==='source_text_color_difference'&&f.location==='#chapter'));
+  assert(compared.findings.some(f=>f.category==='heading_line_leading_difference'&&f.location==='#title'));
+  assert(compared.findings.some(f=>f.category==='block_gap_difference'&&f.location==='#title'));
+  const actions=typographyActions(source,target,compared,{defaultSizePx:18.56});
+  assert.equal(actions.find(a=>a.selector==='#chapter').properties.color,'#8a593c');
+  assert.equal(actions.find(a=>a.selector==='#section').properties.color,'#315e78');
+  assert.equal(actions.find(a=>a.selector==='#title').properties['line-height'],String(30/23));
+  assert(parseFloat(actions.find(a=>a.selector==='#title').properties['margin-top'])<.4);
+});
+test('heading after a table measures its gap from the source table bottom',()=>{
+  const caption='Table 5.1. Example requirements.';
+  const heading='5.3 The next section';
+  const source={...profile,bodyPt:10,bodyCssPx:40/3,leadingPt:14.7,leadingCssPx:19.6,tableFragments:[{page:46,topPt:80,bottomPt:314,cells:[{text:'Example'}]}],pages:[{page:46,width:432,lines:[
+    {text:caption,top:64,font:{sizePt:8,family:'Inter',color:'#5d6a73'}},
+    {text:heading,top:338,font:{sizePt:12,family:'Inter',color:'#315e78'},bold:true}
+  ]}]};
+  const target={presentation:{bodyFontSize:40/3,contentSelector:'body'},records:[
+    {tag:'p',selector:'#caption',nodeIndex:1,text:caption,page:'46',font:{size:String(32/3),family:'Inter'},style:{lineHeight:'13',marginTop:0,marginBottom:0,color:'rgb(93, 106, 115)'}},
+    {tag:'table',selector:'#table',nodeIndex:2,text:'Example',page:'46'},
+    {tag:'h2',selector:'#heading',nodeIndex:3,text:heading,page:'46',font:{size:'16',family:'Inter'},style:{lineHeight:'19.5',marginTop:350,marginBottom:0,color:'rgb(49, 94, 120)'}}
+  ]};
+  const compared=compareTypography(source,target);
+  const mapping=compared.mappings.find(m=>m.selector==='#heading');
+  assert.equal(mapping.gapSource,'source_table_bottom');assert.equal(mapping.gapBeforeEm,2);
+  const actions=typographyActions(source,target,compared,{defaultSizePx:18.56});
+  assert.equal(actions.find(a=>a.selector==='#heading').properties['margin-top'],'2em');
+  assert(!actions.some(a=>a.selector===undefined));
+});
 test('absolute enlargement fails even with unchanged relative type hierarchy',()=>{const c=compareTypography(profile,doc());assert(c.findings.some(f=>f.category==='absolute_font_size_difference'));assert(c.findings.some(f=>f.category==='line_leading_difference'));assert(c.findings.some(f=>f.category==='paragraph_gap_difference'));});
 test('correct physical typography does not trigger false enlargement',()=>{const d=doc(11*4/3,15.5*4/3);d.records[0].style.marginBottom=0;assert.equal(compareTypography(profile,d).findings.length,0);});
 test('ambiguous repeated source passages cannot authorize font replacement',()=>{const c=compareTypography({...profile,pages:[...pages,...pages]},doc());assert.equal(c.mappings.length,0);assert(c.findings.some(f=>f.category==='source_typography_ambiguous'));});
 test('calibration is general, preserves control variables, and natural spacing never edits prose',()=>{const d=doc(),c=compareTypography(profile,d),a=typographyActions(profile,d,c,{defaultSizePx:18.56,justifyPolicy:'natural'});assert(a[0].properties['font-size'].includes('--reader-font-size'));assert(a.find(x=>x.selector==='#passage').properties['text-align']==='left');assert(a.every(x=>!('text' in x)&&x.kind==='presentation'));assert.throws(()=>typographyActions(profile,d,c),/default CSS/);});
 test('natural word spacing preserves centered and right-aligned display paragraphs',()=>{for(const textAlign of ['center','right','end']){const d=doc();d.records[0].style.textAlign=textAlign;const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'natural'});assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],undefined);}});
-test('route-based reader inflation and marker-based defaults are explicit, unsupported contracts fail',()=>{const routeScaling='const sourceScale = /\\/old\\/book/.test(new URL(state.htmlFrame.src).pathname) ? 1 : 1.24;';assert.equal(frameScale(routeScaling,'/new/book',true),1.24);assert.equal(frameScale(routeScaling,'/old/book',true),1);const current="const sourceScale = state.htmlFrame.contentDocument?.body?.hasAttribute('data-pdf-fidelity') ? 1 : 1.24;";assert.equal(frameScale(current,'/any/book',true),1);assert.equal(frameScale(current,'/any/book',false),1.24);assert.throws(()=>frameScale('unknown','/',true),/not recognized/);});
+test('route-based reader inflation and marker-based defaults are explicit, unsupported contracts fail',()=>{const routeScaling='const sourceScale = /\\/old\\/book/.test(new URL(state.htmlFrame.src).pathname) ? 1 : 1.24;';assert.equal(frameScale(routeScaling,'/new/book',true),1.24);assert.equal(frameScale(routeScaling,'/old/book',true),1);const current="const sourceScale = state.htmlFrame.contentDocument?.body?.matches('[data-pdf-fidelity], [data-validatebook-root]') ? 1 : 1.24;";assert.equal(frameScale(current,'/any/book',true),1);assert.equal(frameScale(current,'/any/book',false),1.24);assert.throws(()=>frameScale('unknown','/',true),/not recognized/);});
+test('reader CSS cannot style the inside of managed books',()=>{const gate=':not([data-pdf-fidelity]):not([data-validatebook-root])';assert.doesNotThrow(()=>assertReaderStyleIsolation(`.reader-html-content{--standalone-size:var(--reader-font-size);width:1240px;margin:auto}.reader-html-content${gate}{padding:2rem}.reader-html-content${gate} p{margin:0;color:black}.reader-html-content :is(script, style, noscript, [hidden]){display:none!important}`,`body{width:1240px;margin:auto}body${gate}{padding:2rem}body${gate} p{margin:0}`));assert.throws(()=>assertReaderStyleIsolation('.reader-html-content p{margin:1em}','body{}'),/does not exclude managed books/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{font-family:serif}','body{}'),/cannot set book typography/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{padding:2rem}','body{}'),/page padding/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content[data-pdf-fidelity="book"] p{color:red}','body{}'),/Book-specific presentation/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{}','p{margin:1em}'),/Standalone content selector/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{}','body{padding:2rem}'),/managed root cannot add page padding/);});
 test('rendered excessive word spacing is actionable even without overflow',()=>{const d={language:'en',duplicates:[],brokenLinks:[],scrollWidth:390,width:390,fontFaces:[],records:[{selector:'#p',tag:'p',text,spacing:{excessive:true,gapP90Em:1.2}}]};const f=checkDisplay(d,'en').find(f=>f.category==='excessive_word_spacing');assert.equal(f.repair.properties['text-align'],'left');});
 test('translated prose inherits the English baseline rhythm without text matching or rewriting',()=>{const master=compareTypography(profile,doc());const target=doc();target.records[0].text='Un paragraf tradus care nu coincide lexical cu sursa engleză.';const own=compareTypography(profile,target,'ro');assert.equal(own.mappings.length,0);const actions=typographyActions(profile,target,own,{defaultSizePx:18.56,masterTypography:master});const p=actions.find(a=>a.selector==='#passage');assert.equal(p.properties['margin-bottom'],'0');assert.equal(Number(p.properties['line-height']),profile.leadingCssPx/profile.bodyCssPx);});
 

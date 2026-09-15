@@ -23,7 +23,7 @@ import {readingPages} from './layout-checks.mjs';
 import {restoreReferenceBoundaries,restoreSplitSourcePhrases} from './source-boundaries.mjs';
 import {displayPageProfiles,repairDisplayPages,checkDisplayPages} from './display-pages.mjs';
 import {repairFalseHeadings} from './false-headings.mjs';
-import {paginateDocument,repairPageShells,paginationCss,translatedPaginationCss,sourcePagePresentation,applyContentsPresentation,pagePaddingDifferences,pageHeightDifferences} from './pagination.mjs';
+import {paginateDocument,repairPageShells,paginationCss,translatedPaginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,pageHeightDifferences,sourceBlankPages} from './pagination.mjs';
 const execute = promisify(execFile);
 export const report = layoutReport;
 export async function doctor(options = {}) {
@@ -167,10 +167,12 @@ export async function prepare(root, options = {}) {
     const pdfGeometry=await browser.evaluate(`(${parsePdfGeometry.toString()})(${JSON.stringify(boxes.stdout)})`);
     const hasPageContainers=(await fs.readFile(selection.documents[0].file,'utf8')).includes('class="pdf-source-page"');
     const pagePresentation=options.paginate||hasPageContainers?await browser.evaluate(`(${sourcePagePresentation.toString()})(${JSON.stringify(typography.stdout)})`):null;
+    if(pagePresentation)pagePresentation.images=sourceImagePresentation(imageInfo.stdout);
     let contentsMapping=[];
     const sourceType=sourceTypographyProfile(await browser.evaluate(`(${parsePdfTypography.toString()})(${JSON.stringify(typography.stdout)})`),pdfGeometry);
     const displayPages=await browser.evaluate(`(${displayPageProfiles.toString()})(${JSON.stringify(typography.stdout)},${JSON.stringify(decorations)})`);
     sourceType.displayPages=displayPages.map(p=>p.page);
+    sourceType.tableFragments=decorations.tables;
     let english;
     const unresolved = [];
     const expectedCurrent = new Map(initialInputs.map(i => [i.file, i.sha256]));
@@ -193,11 +195,15 @@ export async function prepare(root, options = {}) {
       if(listRepair)result.changes.push(...listRepair.changes);
       if(options.paginate&&item.language==='en'){
         const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
-        const blankPages=item.language==='en'?pages.filter(p=>!anchors.includes(p.page)&&/^\s*\d*\s*$/.test(p.text)).map(p=>p.page):[];
+        const blankPages=item.language==='en'?sourceBlankPages(pages,anchors):[];
         const paginated=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:item.language==='en'?'source':'translation',expectedPages:item.language==='en'?pages.length:null})})`);
         const contents=await browser.evaluate(`(${applyContentsPresentation.toString()})(${JSON.stringify({profile:pagePresentation,language:item.language,mapping:contentsMapping})})`);
         if(item.language==='en')contentsMapping=contents.mapping;
         result.changes.push(...contents.changes);
+        if(item.language==='en'){
+          const images=await browser.evaluate(`(${applySourceImagePresentation.toString()})(${JSON.stringify(pagePresentation)})`);
+          result.changes.push(...images.changes);
+        }
         result.changes.push({kind:'pagination',before:'page anchors in continuous text',after:paginated});
         delete result.changes.at(-1).after.html;
         result.changes.push({kind:'source_page_presentation',margins:pagePresentation.margins,contents:contents.mapping,unmatched:contents.unmatched});
@@ -219,7 +225,12 @@ export async function prepare(root, options = {}) {
       }
       if (!result.changes.length) return;
       try { await guardInstallation(browser,item,result,presentation,pagePresentation); }
-      catch(error){await writeJson(path.join(directory,'rejected-candidate.json'),{file:item.file,error:error.message,findings:error.findings||[]});throw error;}
+      catch(error){
+        if(!error.findings)throw error;
+        await writeJson(path.join(directory,'rejected-candidate-'+item.language+'.json'),{file:item.file,error:error.message,findings:error.findings});
+        unresolved.push(...error.findings.map(f=>({...f,severity:'error',file:item.file,language:item.language,detail:'Correction batch rejected; current document preserved. '+(f.detail||f.category)})));
+        return;
+      }
       const expected = initialInputs.find(i => i.file === item.file).sha256;
       if (await fileHash(item.file) !== expected) throw Error('Concurrent source change before repair: ' + item.file);
       const backup = path.join(directory, 'recovery', item.language, path.basename(item.file)); await fs.mkdir(path.dirname(backup), { recursive: true });
@@ -288,12 +299,15 @@ export async function prepare(root, options = {}) {
       const targetDecorations=english?translatedDecorations(decorations,english,before,structure,item.language):decorations;
       const actions = [];
       if (options.autoCorrect) {
+        const displayRepairs=[];const displayRepairKeys=new Set();
+        for(const finding of beforeDisplay)if(finding.repair){const key=finding.repair.kind+'|'+finding.repair.selector;if(!displayRepairKeys.has(key)){displayRepairKeys.add(key);displayRepairs.push(finding.repair);}}
+        actions.push(...displayRepairs);
         if(fidelityMarker)actions.push({kind:'source_fidelity'});
         if(!english||!unresolved.some(f=>f.language==='en'&&f.severity==='error'))actions.push(...tableComparison.actions);
         if(borderComparison)actions.push(...decorationActions(borderComparison));
         actions.unshift(...typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',masterTypography:english?.typography||typeComparison,sourceFontMap,sourceFontWeights}));
         if(translatedStyles)actions.push(...translatedStyleCheck(before,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).actions);
-        if(presentation.articleContract&&!pagePresentation){
+        if(presentation.articleContract){
           const imported=await measure(browser,item.file,{importedArticle:presentation.articleContract});
           actions.unshift(...readerTypographyRepairs(before,imported,presentation.defaultSizePx*(presentation.scale||1)));
         }
@@ -314,7 +328,8 @@ export async function prepare(root, options = {}) {
         }
         await apply(item, actions, presentation, repairShells);
       }
-      if(options.autoCorrect && item.language==='en' && decorations?.lists?.length && !actions.length)throw Error('List correction requires presentation consolidation');
+      if(options.autoCorrect && item.language==='en' && decorations?.lists?.length && !actions.length)
+        unresolved.push(issue(item.language,'list_correction_unavailable','document','List correction could not be consolidated safely; the document remains available and the error is retained in the final report.'));
       const final = options.autoCorrect && (actions.length || repairShells) ? await measure(browser, item.file,presentation) : before;
       final.delivery=presentation;
       if(item.language==='en')final.displayProfiles=displayPages;

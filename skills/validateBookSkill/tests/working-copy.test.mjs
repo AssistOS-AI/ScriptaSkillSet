@@ -36,3 +36,13 @@ test('a concurrent edit blocks installation before any original replacement',asy
  assert.equal(await fs.readFile(path.join(root,'a.html'),'utf8'),'first');
  assert.equal(await fs.readFile(path.join(root,'b.html'),'utf8'),'user edit');
 });
+
+test('verified corrections can install while unresolved validation errors remain reported',async t=>{
+ const temp=await fs.mkdtemp(path.join(os.tmpdir(),'book-partial-'));t.after(()=>fs.rm(temp,{recursive:true,force:true}));
+ const root=path.join(temp,'book'),dir=path.join(temp,'job');await fs.mkdir(root);await fs.mkdir(dir);
+ await fs.writeFile(path.join(root,'book.html'),'before');
+ const copy=await workingCopy(root,dir);await fs.writeFile(path.join(copy.stagedRoot,'book.html'),'after');
+ const installed=await installWorkingCopy(copy,dir,{status:'completed_with_errors',findings:[{severity:'error',category:'unresolved_source_mapping'}]});
+ assert.equal(installed.length,1);
+ assert.equal(await fs.readFile(path.join(root,'book.html'),'utf8'),'after');
+});

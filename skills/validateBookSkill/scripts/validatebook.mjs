@@ -22,8 +22,8 @@ try {
   else {
     if (extra.length || !['doctor', 'complete', 'prepare', 'status', 'report', 'complete-plan', 'complete-status'].includes(command) || (command === 'doctor' ? !!input : !input)) throw Error(help);
     const result = command === 'complete' ? await complete(input, { ...values, restoreSourcePublisher:values['restore-source-publisher'], jobDir:values['job-dir'], wordSpacing:values['word-spacing'] }) : command === 'complete-plan' ? await planComplete(input, { jobDir: values['job-dir'] }) : command === 'complete-status' ? await completeStatus(input) : command === 'doctor' ? await doctor(values) : command === 'prepare' ? await (values['auto-correct'] ? complete : prepare)(input, { ...values, restoreSourcePublisher:values['restore-source-publisher'], jobDir: values['job-dir'], autoCorrect: values['auto-correct'], wordSpacing:values['word-spacing'] }) : await report(input);
-    const output=['prepare','complete'].includes(command)?{status:result.status,installed:result.installed??false,scope:result.scope,job:result.job,documents:result.documents.map(d=>({language:d.language,blocks:d.blocks,viewports:d.viewports})),coverage:result.coverage,corrections:result.corrections.length,findings:result.findings.length,reportText:result.reportText}:result;
+    const output=['prepare','complete'].includes(command)?{status:result.status,installed:result.installed??false,cleanup:result.cleanup,scope:result.scope,job:result.job,documents:result.documents.map(d=>({language:d.language,blocks:d.blocks,viewports:d.viewports})),coverage:result.coverage,corrections:result.corrections.length,findings:result.findings.length,reportText:result.reportText}:result;
     console.log(JSON.stringify(output, null, 2));
-    process.exitCode = ['needs_attention', 'failed', 'incomplete'].includes(result.status) ? 3 : 0;
+    process.exitCode = ['needs_attention', 'completed_with_errors', 'failed', 'incomplete'].includes(result.status) ? 3 : 0;
   }
 } catch (error) { console.error('validatebook: ' + error.message); process.exitCode = 2; }

@@ -40,7 +40,7 @@ export async function workingCopy(root,directory) {
 // Validate all original hashes before the first replacement. Keep recovery
 // copies and roll back earlier replacements if any later write fails.
 export async function installWorkingCopy(copy,directory,validation) {
-  if(!validation||!['passed','passed_with_warnings'].includes(validation.status)||validation.failure||validation.findings.some(f=>f.severity==='error'))throw Error('Unverified candidate cannot be installed');
+  if(!validation||!['passed','passed_with_warnings','completed_with_errors'].includes(validation.status)||validation.failure)throw Error('Unverified candidate cannot be installed');
   await verifyInputs(copy.hostInputs||[]);
   for(const input of copy.hostInputs||[]){
     const staged=path.join(copy.tree,path.relative(copy.host,input.file));

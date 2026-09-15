@@ -94,8 +94,9 @@ export function importReaderArticle(settings) {
 // Never accept arbitrary JavaScript or prose replacement actions.
 export function applyDomRepairs(actions) {
   const text = () => { const c = document.body.cloneNode(true); c.querySelectorAll('script,style,template,noscript').forEach(n => n.remove()); return c.textContent; };
+  const characterInventory=value=>[...value].filter(c=>!/\s/u.test(c)).sort().join('');
   const before = text(), changes = [];
-  let stylesheet;
+  let stylesheet,tableReflow=false;const removedGenerated=[];
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
@@ -138,7 +139,9 @@ export function applyDomRepairs(actions) {
       const extra='[data-validatebook-root]'.repeat(12);
       if(a.importedFontRatio!==undefined&&(!Number.isFinite(a.importedFontRatio)||a.importedFontRatio<=0))throw Error('Invalid imported font unit ratio');
       if(a.standaloneSizeRem!==undefined&&(!Number.isFinite(a.standaloneSizeRem)||a.standaloneSizeRem<=0))throw Error('Invalid standalone size');
-      const imported=a.importedFontRatio?scope+'.reader-html-content { --validatebook-font-size: calc(var(--reader-font-size) * '+a.importedFontRatio+'); }\n':'';
+      const rootFont=getComputedStyle(document.body).fontFamily;
+      if(/[{};]/.test(rootFont))throw Error('Invalid root font family');
+      const imported=a.importedFontRatio?scope+'.reader-html-content, .reader-html-content[data-validatebook-root] { --validatebook-font-size: calc(var(--reader-font-size) * '+a.importedFontRatio+'); font-family: '+rootFont+'; }\n':'';
       const standalone=a.standaloneSizeRem?scope+', html:has(>'+scope+'){--standalone-size:'+a.standaloneSizeRem+'rem}\n':'';
       const pageStyle=a.previousCss?.includes('/* validateBook source pagination */')?'/* validateBook source pagination */'+a.previousCss.split('/* validateBook source pagination */')[1]:'';
       const css='/* validateBook managed presentation; generated from verified declarations */\n'+standalone+imported+[...signatures].map(([declaration,id])=>{
@@ -187,6 +190,11 @@ export function applyDomRepairs(actions) {
       if (!/^(p|h[1-6]|th|td|figcaption)$/.test(a.tag) || n.tagName.toLowerCase() !== a.expectedTag) throw Error('Unsafe or stale tag repair');
       const replacement = document.createElement(a.tag); for (const attr of n.attributes) replacement.setAttribute(attr.name, attr.value); while (n.firstChild) replacement.append(n.firstChild); n.replaceWith(replacement);
       changes.push({ kind: a.kind, selector: a.selector, before: old, after: replacement.outerHTML });
+    } else if(a.kind==='remove_generated_caption'){
+      if(n.tagName!=='FIGCAPTION'||n.textContent!==a.text||!/^figure from pdf page \d+$/i.test(n.textContent.trim()))throw Error('Unsafe generated caption removal');
+      const image=n.closest('figure')?.querySelector('img');
+      if(image&&/^figure from pdf page \d+$/i.test(image.getAttribute('alt')||''))image.setAttribute('alt','');
+      removedGenerated.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});
     } else if (a.kind === 'classes') {
       n.setAttribute('class', a.classes);
       changes.push({ kind:a.kind, selector:a.selector, before:old, after:n.outerHTML });
@@ -206,6 +214,40 @@ export function applyDomRepairs(actions) {
         }
       }
       changes.push({kind:a.kind, selector:a.selector, before:old, after:n.outerHTML});
+    } else if (a.kind === 'table_grid') {
+      if(n.tagName!=='TABLE'||n.rows.length!==a.rows.length)throw Error('Stale table grid repair');
+      for(let row=0;row<n.rows.length;row++){
+        const cells=[...n.rows[row].cells],expected=a.rows[row];
+        if(cells.length!==expected.texts.length||cells.some((c,i)=>c.textContent!==expected.texts[i]))throw Error('Table grid content changed');
+        if(expected.keep.length!==expected.tags.length||expected.keep.some(i=>i<0||i>=cells.length)||cells.some((c,i)=>!expected.keep.includes(i)&&c.textContent.trim()))throw Error('Unsafe nonempty table cell removal');
+        for(let i=cells.length-1;i>=0;i--)if(!expected.keep.includes(i))cells[i].remove();
+        const kept=[...n.rows[row].cells];
+        for(let i=0;i<kept.length;i++)if(kept[i].tagName.toLowerCase()!==expected.tags[i]){
+          const replacement=document.createElement(expected.tags[i]);for(const attr of kept[i].attributes)replacement.setAttribute(attr.name,attr.value);while(kept[i].firstChild)replacement.append(kept[i].firstChild);kept[i].replaceWith(replacement);
+        }
+      }
+      changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
+    } else if(a.kind==='table_fragments'){
+      if(n.tagName!=='TABLE'||!Array.isArray(a.rows)||!a.rows.length||!Array.isArray(a.tables)||a.tables[0]!==a.selector)throw Error('Invalid fragmented table repair');
+      const fragments=a.remove.map(fragment=>{const matches=document.querySelectorAll(fragment.selector);if(matches.length!==1||matches[0].textContent!==fragment.text)throw Error('Fragmented table content changed');return matches[0];});
+      const consumedTables=a.tables.map(selector=>{const matches=document.querySelectorAll(selector);if(matches.length!==1||matches[0].tagName!=='TABLE')throw Error('Fragmented table selector changed');return matches[0];});
+      const loose=fragments.filter(node=>!node.closest('table'));
+      const thead=document.createElement('thead'),tbody=document.createElement('tbody');
+      for(let row=0;row<a.rows.length;row++){
+        const tr=document.createElement('tr');
+        for(const expected of a.rows[row]){if(!['th','td'].includes(expected.tag)||typeof expected.text!=='string')throw Error('Invalid reconstructed table cell');const cell=document.createElement(expected.tag);if(expected.tag==='th')cell.scope='col';cell.textContent=expected.text;tr.append(cell);}
+        (row===0?thead:tbody).append(tr);
+      }
+      n.replaceChildren(thead,tbody);
+      for(const node of loose){
+        if(node.id){
+          if(n.id&&n.id!==node.id)throw Error('Fragmented table repair cannot preserve multiple element IDs');
+          n.id=node.id;
+        }
+        node.remove();
+      }
+      for(const table of consumedTables.slice(1)){const wrap=table.closest('.pdf-table-wrap');(wrap||table).remove();}
+      tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
     } else if (a.kind === 'presentation') {
       const allowed = new Set(['font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'text-align', 'text-indent', 'margin-top', 'margin-bottom', 'margin-left', 'padding-left', 'border-left', 'padding', 'max-width', 'width', 'height', 'overflow-wrap', 'white-space', 'border-collapse', 'table-layout', 'word-spacing', 'letter-spacing', 'color', 'background-color', 'border-top', 'border-right', 'border-bottom', 'vertical-align', 'box-sizing', 'aspect-ratio', 'max-height', 'object-fit', 'object-position', 'display', 'border-radius', 'border', 'margin']);
       const beforeProperties=Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)]));
@@ -213,7 +255,7 @@ export function applyDomRepairs(actions) {
       changes.push({ kind: a.kind, selector: a.selector, before: beforeProperties, after: Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)])) });
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
-  if (text() !== before) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
+  if (text() !== before && (!(tableReflow||removedGenerated.length)||characterInventory(text()+removedGenerated.join(''))!==characterInventory(before))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
   const dt = document.doctype;
   const doctype = dt ? '<!DOCTYPE ' + dt.name + (dt.publicId ? ' PUBLIC "' + dt.publicId + '"' : '') + (dt.systemId ? (dt.publicId ? '' : ' SYSTEM') + ' "' + dt.systemId + '"' : '') + '>\n' : '';
   return { html: doctype + document.documentElement.outerHTML, changes, stylesheet };

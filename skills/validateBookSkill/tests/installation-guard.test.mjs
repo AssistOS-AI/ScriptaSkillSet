@@ -23,6 +23,9 @@ test('nested covers, cumulative spacing and rejected installation preserve origi
   assert.deepEqual(layout.pagination.pages[0].padding,[0,0,0,0]);
   assert(checkDisplay(layout,'en').some(f=>f.category==='page_spacing_ownership_conflict'));
   const html=await browser.evaluate('document.documentElement.outerHTML');
+  await browser.evaluate('document.documentElement.innerHTML='+JSON.stringify('<head><style>.pdf-source-page{padding:40px}.pdf-table-wrap{margin:20px 0}</style></head><body data-validatebook-root><section class="pdf-source-page" data-reader-page="3"><div class="pdf-table-wrap"><table><tr><td>Cell</td></tr></table></div></section></body>'));
+  const tableLayout=await browser.evaluate(`(${inspectLayout.toString()})()`);
+  assert(!checkDisplay(tableLayout,'en').some(f=>f.category==='page_spacing_ownership_conflict'));
   const file=path.join(root,'full_content.html');await fs.writeFile(file,'original bytes');
   const result={html:html.replace('</head>','<link rel="stylesheet" data-validatebook-presentation href="validatebook-layout.css"></head>'),stylesheet:{css:paginationCss(profile)}};
   await assert.rejects(guardInstallation(browser,{file,language:'en'},result,null,profile),/page_spacing_ownership_conflict/);

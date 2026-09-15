@@ -5,6 +5,26 @@ import { exists, hash, readJson, writeJson } from './storage.mjs';
 import { textReport } from './layout-report.mjs';
 import {workingCopy,installWorkingCopy} from './working-copy.mjs';
 
+export async function resetPreviousResults(root, ownLock) {
+  const directories=['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'].map(n=>path.join(root,n));
+  const ownDirectory=ownLock&&path.dirname(ownLock);
+  if(ownDirectory&&!directories.includes(ownDirectory))directories.push(ownDirectory);
+  async function inspect(directory) {
+    for(const entry of await fs.readdir(directory,{withFileTypes:true}).catch(e=>{if(e.code==='ENOENT')return [];throw e;})) {
+      const file=path.join(directory,entry.name);
+      if(entry.isDirectory())await inspect(file);
+      else if(entry.name.endsWith('.lock')&&file!==ownLock)throw Error('Previous results are locked: '+file);
+    }
+  }
+  for(const directory of directories)await inspect(directory);
+  for(const directory of directories) {
+    if(ownLock&&ownDirectory===directory) {
+      for(const name of await fs.readdir(directory))if(path.join(directory,name)!==ownLock)await fs.rm(path.join(directory,name),{recursive:true,force:true});
+    } else await fs.rm(directory,{recursive:true,force:true});
+  }
+  for(const name of ['RAPORT-CORECTII.txt','RAPORT-VERIFICARE.txt'])await fs.rm(path.join(root,name),{force:true});
+}
+
 export function isDisposableJobDirectory(directory, bookRoot) {
   const job = path.resolve(directory);
   const book = path.resolve(bookRoot);
@@ -35,6 +55,29 @@ export async function discardTemporaryWork(directory, bookRoot) {
   return removed;
 }
 
+export async function cleanupCompletedWork(root,transaction,result) {
+  if(!result.installed||result.failure)return [];
+  if(!['passed','passed_with_warnings','completed_with_errors'].includes(result.status))return [];
+  const relative=path.relative(transaction,root);
+  if(!relative||(!relative.startsWith('..')&&!path.isAbsolute(relative)))throw Error('Refusing to clean the book or its ancestor');
+  // A durable report and verified installation must precede cleanup.
+  await fs.access(path.join(root,'RAPORT-CORECTII.txt'));
+  const directories=['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'].map(n=>path.join(root,n));
+  if(!directories.some(d=>transaction===d||transaction.startsWith(d+path.sep)))directories.push(transaction);
+  const locks=[];
+  async function inspect(directory){
+    for(const entry of await fs.readdir(directory,{withFileTypes:true}).catch(error=>{if(error.code==='ENOENT')return [];throw error;})){
+      const file=path.join(directory,entry.name);
+      if(entry.isDirectory())await inspect(file);
+      else if(entry.name.endsWith('.lock')&&file!==path.join(path.dirname(transaction),'transaction.lock'))locks.push(file);
+    }
+  }
+  for(const directory of directories)await inspect(directory);
+  if(locks.length)throw Error('Cleanup deferred: another or interrupted job has lock files: '+locks.join(', '));
+  for(const directory of directories)await fs.rm(directory,{recursive:true,force:true});
+  return directories;
+}
+
 // Progress is a change in installed bytes, not the number of findings or
 // presentation actions. Keep all immutable passes and their recovery files.
 export function installedState(inputs) {
@@ -49,11 +92,7 @@ export async function runCorrections(runPass, onPass = async () => {}) {
     await onPass(pass, passes);
     if (!pass.result.findings.some(f=>f.severity==='error')) return { passes, result:pass.result };
     const state = installedState(pass.inputs);
-    if (seen.has(state)) return { passes, result:pass.result, failure: {
-      code:'unchanged_installed_files',
-      detail:'Correction handlers left unresolved findings with an already verified installed file state.',
-      findings:pass.result.findings.filter(f=>f.severity==='error')
-    } };
+    if (seen.has(state)) return { passes, result:pass.result, exhausted:true };
     seen.add(state);
   }
 }
@@ -82,7 +121,7 @@ async function completeCandidate(root, options = {}) {
       await writeJson(stateFile,state);
     });
     const verified=await report(execution.result.job);
-    const aggregate={...verified,
+    const aggregate={...verified,status:execution.exhausted?'completed_with_errors':verified.status,
       initialFindings:[...new Map(execution.passes.flatMap(p=>p.result.initialFindings).map(f=>[f.id,f])).values()],
       corrections:execution.passes.flatMap(p=>p.result.corrections),
       backups:execution.passes.flatMap(p=>p.result.backups)};
@@ -95,7 +134,7 @@ async function completeCandidate(root, options = {}) {
     const temporary=path.join(runDirectory,'RAPORT-CORECTII.txt');
     await fs.writeFile(temporary,content);
     await fs.copyFile(temporary,reportFile);
-    Object.assign(state,{status:execution.failure?'failed':verified.status,failure:execution.failure,reportText:reportFile,reportSha256:hash(content)});
+    Object.assign(state,{status:aggregate.status,failure:execution.failure,reportText:reportFile,reportSha256:hash(content)});
     await writeJson(stateFile,state);
     // Recovery and rejection evidence are part of the result, including failures.
     // Never delete the only originals after changing a book.
@@ -110,8 +149,9 @@ export async function complete(root,options={}) {
   await fs.mkdir(directory,{recursive:true});
   const lockFile=path.join(directory,'transaction.lock');
   const lock=await fs.open(lockFile,'wx');
-  const transaction=await fs.mkdtemp(path.join(directory,'transaction-'));
   try{
+    await resetPreviousResults(selection.root,lockFile);
+    const transaction=await fs.mkdtemp(path.join(directory,'transaction-'));
     const copy=await workingCopy(selection.root,transaction);
     await writeJson(path.join(transaction,'input-snapshot.json'),{root:selection.root,inputs:copy.original,hostInputs:copy.hostInputs||[]});
     let result;
@@ -121,13 +161,25 @@ export async function complete(root,options={}) {
       await fs.writeFile(reportText,'Status: failed\nInstalled: false\nOriginal files preserved.\n'+error.message+'\nEvidence: '+transaction+'\n');
       throw error;
     }
-    const accepted=!result.findings.some(f=>f.severity==='error')&&!result.failure;
+    const accepted=!result.failure&&['passed','passed_with_warnings','completed_with_errors'].includes(result.status);
     const installation=accepted?await installWorkingCopy(copy,transaction,result):[];
     const reportText=path.join(selection.root,'RAPORT-CORECTII.txt');
     const reportBody=(await fs.readFile(result.reportText,'utf8')).replaceAll(copy.stagedRoot,selection.root);
     await fs.writeFile(reportText,`Installed: ${accepted}\n${accepted?'Verified candidate installed.':'Candidate rejected; original files preserved.'}\nEvidence: ${transaction}\n\n`+reportBody);
     await writeJson(path.join(transaction,'transaction.json'),{accepted,installation,root:selection.root,stagedRoot:copy.stagedRoot,reportText});
-    return {...result,installed:accepted,installation,reportText};
+    if(accepted){
+      const retainedReport=(await fs.readFile(reportText,'utf8'))+'\nTemporary job paths above are historical after successful cleanup; see cleanup status below.\n';
+      await fs.writeFile(reportText,retainedReport);
+      try{
+        const removed=await cleanupCompletedWork(selection.root,transaction,{...result,installed:true});
+        await fs.appendFile(reportText,'Cleanup completed: '+removed.join(', ')+'\n');
+        return {...result,installed:true,installation,reportText,job:null,stateFile:null,cleanup:{status:'completed',removed}};
+      }catch(error){
+        await fs.appendFile(reportText,'Cleanup incomplete: '+error.message+'\n');
+        return {...result,installed:true,installation,reportText,cleanup:{status:'incomplete',error:error.message}};
+      }
+    }
+    return {...result,installed:false,installation,reportText};
   }finally{await lock.close();await fs.unlink(lockFile).catch(()=>{});}
 }
 
@@ -148,9 +200,9 @@ export async function completeStatus(file) {
   if (state.scope !== 'layout_and_structure' || typeof state.root !== 'string' || typeof state.auditDirectory !== 'string' || !Array.isArray(state.documents) || state.identity !== hash(state.root)) throw Error('Invalid layout coordinator contract; prepare a fresh coordinator in a separate directory.');
   const available = await exists(path.join(state.auditDirectory, 'job.json'));
   const audit = available ? await report(state.auditDirectory) : null;
-  return { scope: 'layout_and_structure', status: state.status==='failed'?'failed':audit?.status || 'incomplete', failure:state.failure, root: state.root, auditDirectory: state.auditDirectory,
+  return { scope: 'layout_and_structure', status:['failed','completed_with_errors'].includes(state.status)?state.status:audit?.status || 'incomplete', failure:state.failure, root: state.root, auditDirectory: state.auditDirectory,
     stages: ['local English PDF/HTML checks', 'English layout repairs', 'inherit English presentation in existing languages', 'local translated structure/display checks', 'text correction report'],
     reportText: audit?.reportText, findings: audit?.findings || [], corrections: audit?.corrections || [],
-    instruction: available ? 'Reuse current local evidence by rerunning the native complete command after correcting an implementation defect.' : `Run complete on the book root with --job-dir ${path.dirname(state.auditDirectory)}.`,
+    instruction: available ? 'The final report retains unresolved findings; a new complete invocation starts with fresh evidence and retries all supported corrections.' : `Run complete on the book root with --job-dir ${path.dirname(state.auditDirectory)}.`,
     executionPolicy: { reuseExistingTaskAuthorization: true, intermediateConfirmations: false, platformPermissionsRequired: true } };
 }

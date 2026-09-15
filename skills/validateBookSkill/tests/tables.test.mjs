@@ -35,6 +35,67 @@ test('partial text, wrong spans, duplicate tables and unsupported source grids n
   }
   assert.equal(compareTables([],documentFixture(),options).findings[0].category,'html_table_unmapped');
 });
+
+test('empty converter spacer cells are removed when every source row maps exactly',()=>{
+  const doc=documentFixture();
+  doc.records[0].cells=doc.records[0].cells.flatMap(c=>[
+    {...c,selector:c.selector+'a',col:c.col*2},
+    {...c,selector:c.selector+'b',text:'',col:c.col*2+1,width:1}
+  ]);
+  const result=compareTables([source],doc,options);
+  assert(result.findings.some(f=>f.category==='source_table_grid_difference'));
+  assert(result.actions.some(a=>a.kind==='table_grid'));
+  assert(!result.findings.some(f=>f.category==='source_table_unmapped'||f.category==='html_table_unmapped'));
+});
+
+test('empty spacer repair accepts alternating header and body offsets',()=>{
+  const doc=documentFixture(),cells=doc.records[0].cells;
+  doc.records[0].cells=[
+    {...cells[0],text:'',col:0,selector:'#empty-h0'},{...cells[0],col:1,selector:'#h0'},{...cells[1],text:'',col:2,selector:'#empty-h1'},{...cells[1],col:3,selector:'#h1'},
+    {...cells[2],col:0,selector:'#b0'},{...cells[2],text:'',col:1,selector:'#empty-b0'},{...cells[3],col:2,selector:'#b1'},{...cells[3],text:'',col:3,selector:'#empty-b1'}
+  ];
+  const repair=compareTables([source],doc,options).actions.find(a=>a.kind==='table_grid');
+  assert.deepEqual(repair.rows.map(r=>r.keep),[[1,3],[0,2]]);
+});
+
+test('one PDF table split across tables and an intervening paragraph is reconstructed uniquely',()=>{
+  const doc=documentFixture(),base=doc.records[0],cells=base.cells;
+  const first={...base,nodeIndex:10,cells:[
+    {...cells[0],selector:'#h0',nodeIndex:11},{...cells[1],selector:'#h1',nodeIndex:12},
+    {...cells[2],selector:'#b0',nodeIndex:13},{...cells[3],selector:'#b1',nodeIndex:14,text:'Public'}
+  ]};
+  const second={...base,selector:'#tail',nodeIndex:16,cells:[{...cells[3],selector:'#empty',nodeIndex:17,text:'',row:0,col:1}]};
+  doc.records=[first,...first.cells.map(c=>({tag:'td',selector:c.selector,nodeIndex:c.nodeIndex,page:14,text:c.text})),{tag:'p',selector:'#middle',nodeIndex:15,page:14,text:'benefit'},second,{tag:'td',selector:'#empty',nodeIndex:17,page:14,text:''}];
+  const result=compareTables([source],doc,options),repair=result.actions.find(a=>a.kind==='table_fragments');
+  assert(repair);assert.equal(repair.rows[1][1].text,'Public benefit');assert.equal(repair.tables.length,2);
+  assert(result.findings.some(f=>f.category==='source_table_fragmentation'));
+});
+
+test('one malformed table absorbs an adjacent repeated header and split physical rows',()=>{
+  const doc=documentFixture(),base=doc.records[0],cells=base.cells;
+  const table={...base,nodeIndex:20,cells:[
+    {...cells[2],selector:'#b0',nodeIndex:21,row:0,col:0},
+    {...cells[3],selector:'#b1a',nodeIndex:22,text:'Public',row:0,col:1},
+    {...cells[3],selector:'#b1b',nodeIndex:23,text:'benefit',row:1,col:1}
+  ]};
+  doc.records=[
+    {tag:'p',selector:'#page-header',nodeIndex:19,page:14,text:'Meaning Pattern',id:'page_14'},
+    table,
+    ...table.cells.map(cell=>({tag:'td',selector:cell.selector,nodeIndex:cell.nodeIndex,page:14,text:cell.text}))
+  ];
+  const result=compareTables([source],doc,options),repair=result.actions.find(action=>action.kind==='table_fragments');
+  assert(repair);assert.equal(repair.tables.length,1);
+  assert.deepEqual(repair.rows.map(row=>row.map(cell=>cell.text)),[['Pattern','Meaning'],['Sponsor','Public benefit']]);
+  assert(repair.remove.some(fragment=>fragment.selector==='#page-header'));
+});
+
+test('source table fragments emitted as adjacent paragraphs are nonblocking when text is present',()=>{
+  const doc=documentFixture();
+  doc.records[0].cells=source.cells.filter(c=>c.row===0).map(c=>({...c,selector:c.selector+'h'}));
+  doc.records.push({tag:'p',selector:'#adjacent',page:14,text:'Sponsor Public benefit'});
+  const result=compareTables([source],doc,options);
+  assert(result.findings.some(f=>f.category==='source_table_unmapped'&&f.severity==='warning'));
+});
 test('translated cell presentation requires the existing structural table correspondence',()=>{
   const en=documentFixture(),ro=documentFixture();ro.records[0].selector='#ro';ro.records[0].page=18;ro.records[0].cells.forEach(c=>c.text='Tradus '+c.text);
   const unmapped=translatedTables([source],en,ro,{matches:[]});

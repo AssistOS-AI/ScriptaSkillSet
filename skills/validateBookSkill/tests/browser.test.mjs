@@ -45,6 +45,12 @@ test('authorized publisher restoration uses PDF evidence and preserves other pro
   assert.equal(await browser.evaluate('document.querySelector("#narrative").textContent'),'LocalBrand outside copyright stays unchanged.');
   assert.deepEqual(await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(source)})`),[]);
  }
+ await browser.evaluate('document.body.innerHTML='+JSON.stringify('<p><strong>Copyright © [2026] LocalBrand All rights reserved.</strong></p><p>Available for free on LocalBrand website (<a href="https://localbrand.example">LocalBrand.example</a>).</p><h2 id="page_4">Next page</h2><p id="narrative">LocalBrand narrative stays unchanged.</p>'));
+ const changes=await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(source)})`);
+ assert.equal(changes.length,2);
+ assert.equal(await browser.evaluate('document.querySelector("strong").textContent'),'Copyright © [2026] Source Publisher All rights reserved.');
+ assert.equal(await browser.evaluate('document.querySelector("a").href'),'https://www.source.example/');
+ assert.equal(await browser.evaluate('document.querySelector("#narrative").textContent'),'LocalBrand narrative stays unchanged.');
 });
 
 test('measurement visits all viewports, inspects fonts and never captures a screenshot',async()=>{

@@ -14,6 +14,7 @@ const evidence=JSON.parse(await readFile(new URL('fixtures/semantic-evidence.jso
 test('source provider exports merged grid spans, text, fills and individual borders',()=>{
   const tables=sourceTables(evidence);assert.equal(tables.length,1);
   assert.equal(tables[0].columns,2);assert.equal(tables[0].cells[0].colspan,2);
+  assert(Number.isFinite(tables[0].topPt)&&tables[0].bottomPt>tables[0].topPt);
   assert.deepEqual(tables[0].cells.map(c=>c.text),['Merged heading','Alpha','Beta']);
   assert(tables[0].cells.every(c=>Object.keys(c.borders).length===4));
   assert(tables[0].cells.every(c=>/^#[\da-f]{6}$/i.test(c.background)));
@@ -32,6 +33,7 @@ function filledPage(){
 test('horizontal rules and alternating cell fills recover unstroked columns',()=>{
   const tables=sourceTables({pages:[filledPage()]});
   assert.equal(tables.length,1);assert.equal(tables[0].rows,3);assert.equal(tables[0].columns,2);
+  assert.equal(tables[0].topPt,20);assert.equal(tables[0].bottomPt,110);
   assert.deepEqual(tables[0].cells.map(c=>c.widthPt),[100,200,100,200,100,200]);
   assert.equal(tables[0].cells[2].background,'#ffffff');
   assert(tables[0].cells.every(c=>c.borders.left==='0'&&c.borders.right==='0'));

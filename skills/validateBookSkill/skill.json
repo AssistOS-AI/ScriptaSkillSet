@@ -37,9 +37,10 @@
     "Poppler pdfimages",
     "Poppler pdftohtml"
   ],
-  "installationSafety": "Pre-install standalone/imported delivery checks; one reader root; exclusive page inset ownership; nested covers; retain recovery on success and failure.",
+  "installationSafety": "Pre-install standalone/imported delivery checks; one reader root; exclusive page inset ownership; nested covers; retain recovery until verified success and final-report delivery; preserve recovery on failure.",
   "translationPagination": "All languages retain source-proportioned minimum page height, including cover, title, copyright and final pages. Preserve translation page count and breaks; longer content may expand pages. Check minimum page dimensions in standalone and imported readers.",
-  "completionContract": "Isolated complete correction cycle; no canonical installation with blocking findings; source typography at every viewport; translations checked by source presentation role; automatic source-anchor pagination.",
+  "completionContract": "Fresh isolated correction passes; install verified batches; retain unresolved errors as completed_with_errors without blocking the book; reject unsafe rendering batches and continue other documents.",
   "sourcePublisherRestoration": "Explicit opt-in only; source-derived identity and website restoration inside copyright sections; never ordinary narrative rewriting.",
-  "translatedMedia": "Preserve localized image assets; inherit English rendered image geometry and styling in both reader paths. Source table cell styling preserves translated text and flexible row height; missing or ambiguous media correspondences block installation."
+  "translatedMedia": "Preserve localized image assets; inherit English rendered image geometry and styling in both reader paths. Source table cell styling preserves translated text and flexible row height; missing or ambiguous media correspondences block installation.",
+  "cleanup": "Before complete, clear previous book-owned jobs and reports, preserving canonical assets and unresolved locks. After verified installation and reporting, clean temporary work even with unresolved validation errors. Runtime failures retain diagnostics until the next fresh run."
 }

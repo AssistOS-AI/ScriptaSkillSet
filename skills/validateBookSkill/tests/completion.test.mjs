@@ -4,8 +4,30 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { sourceDecorations } from '../src/decorations.mjs';
-import { runCorrections, discardTemporaryWork, isDisposableJobDirectory } from '../src/complete.mjs';
+import { runCorrections, discardTemporaryWork, isDisposableJobDirectory, cleanupCompletedWork, resetPreviousResults } from '../src/complete.mjs';
 import { readingPages, compareEnglish } from '../src/layout-checks.mjs';
+
+test('success cleanup requires a delivered report, preserves failures and locks, and retains canonical files',async t=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-cleanup-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
+ const transaction=path.join(root,'.validatebook-layout','transaction-test');
+ for(const name of ['.validatebook-jobs','.validatebook-layout-jobs'])await fs.mkdir(path.join(root,name));
+ await fs.mkdir(transaction,{recursive:true});await fs.writeFile(path.join(transaction,'evidence.json'),'evidence');
+ await fs.writeFile(path.join(root,'book.html'),'canonical');
+ const accepted={installed:true,status:'passed_with_warnings',findings:[]};
+ assert.deepEqual(await cleanupCompletedWork(root,transaction,{...accepted,installed:false}),[]);
+ assert.deepEqual(await cleanupCompletedWork(root,transaction,{...accepted,status:'failed',failure:{}}),[]);
+ await assert.rejects(cleanupCompletedWork(root,transaction,accepted),/ENOENT/);
+ await fs.writeFile(path.join(root,'RAPORT-CORECTII.txt'),'durable final report');
+ const lock=path.join(root,'.validatebook-jobs','prepare.lock');await fs.writeFile(lock,'');
+ await assert.rejects(cleanupCompletedWork(root,transaction,accepted),/lock files/);
+ assert.equal(await fs.readFile(path.join(transaction,'evidence.json'),'utf8'),'evidence');
+ await fs.unlink(lock);
+ await assert.rejects(cleanupCompletedWork(root,root,accepted),/book or its ancestor/);
+ await cleanupCompletedWork(root,transaction,accepted);
+ for(const name of ['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'])await assert.rejects(fs.access(path.join(root,name)),/ENOENT/);
+ assert.equal(await fs.readFile(path.join(root,'book.html'),'utf8'),'canonical');
+ assert.equal(await fs.readFile(path.join(root,'RAPORT-CORECTII.txt'),'utf8'),'durable final report');
+});
 
 test('page furniture does not interrupt paragraphs and reference numbers remain content',()=>{
   const pages=[{page:1,text:'BOOK TITLE\nA paragraph continues\n1'},{page:2,text:'BOOK TITLE\nacross two source pages.\n1649.\n2'},{page:3,text:'BOOK TITLE\nOther content.\n3'}];
@@ -34,11 +56,45 @@ test('completion executes beyond three passes even when error counts stay equal'
   assert.equal(result.failure,undefined);
 });
 
-test('unchanged installed bytes with unresolved errors are a failure, not passed',async()=>{
+test('unchanged bytes finish with unresolved errors preserved',async()=>{
   const result=await runCorrections(async()=>({inputs:[{file:'book',sha256:'same'}],result:{findings:[{severity:'error',category:'missing_paragraph'}]}}));
   assert.equal(result.passes.length,2);
-  assert.equal(result.failure.code,'unchanged_installed_files');
-  assert.equal(result.failure.findings[0].category,'missing_paragraph');
+  assert.equal(result.exhausted,true);
+  assert.equal(result.failure,undefined);
+  assert.equal(result.result.findings[0].category,'missing_paragraph');
+});
+
+test('fresh completion clears prior evidence and reports but keeps canonical files',async t=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-reset-'));
+  t.after(()=>fs.rm(root,{recursive:true,force:true}));
+  const directory=path.join(root,'.custom-validation');
+  await fs.mkdir(directory);
+  const ownLock=path.join(directory,'transaction.lock');
+  await fs.writeFile(ownLock,'');
+  for(const name of ['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs']){
+    await fs.mkdir(path.join(root,name));
+    await fs.writeFile(path.join(root,name,'stale.json'),'stale');
+  }
+  await fs.writeFile(path.join(directory,'old-transaction.json'),'stale');
+  await fs.writeFile(path.join(root,'RAPORT-CORECTII.txt'),'old report');
+  await fs.writeFile(path.join(root,'book.html'),'canonical');
+  await resetPreviousResults(root,ownLock);
+  for(const name of ['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'])
+    await assert.rejects(fs.access(path.join(root,name)),/ENOENT/);
+  assert.deepEqual(await fs.readdir(directory),['transaction.lock']);
+  await assert.rejects(fs.access(path.join(root,'RAPORT-CORECTII.txt')),/ENOENT/);
+  assert.equal(await fs.readFile(path.join(root,'book.html'),'utf8'),'canonical');
+});
+
+test('fresh completion refuses to erase evidence owned by another active job',async t=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-active-'));
+  t.after(()=>fs.rm(root,{recursive:true,force:true}));
+  const directory=path.join(root,'.validatebook-layout');
+  await fs.mkdir(directory);
+  const ownLock=path.join(directory,'transaction.lock');
+  await fs.writeFile(ownLock,'');
+  await fs.writeFile(path.join(directory,'prepare.lock'),'');
+  await assert.rejects(resetPreviousResults(root,ownLock),/Previous results are locked/);
 });
 
 test('complete discards job directories and leftover atomic temps, never the book root',async t=>{

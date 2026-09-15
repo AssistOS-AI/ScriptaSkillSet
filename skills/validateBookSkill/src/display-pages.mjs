@@ -74,13 +74,14 @@ export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
   const plans = profiles.map(profile => {
     const page = document.querySelector(`.pdf-source-page[data-reader-page="${profile.page}"]`);
     if (!page) throw Error(`Display page ${profile.page} requires a source page container`);
-    if (compact(page.textContent) !== compact(profile.groups.map(g => g.text).join(' '))) throw Error(`Display page ${profile.page} text does not match source groups`);
     if (page.querySelector('a,img,table,svg') || [...page.querySelectorAll('[id]')].some(n => n.id !== `page_${profile.page}`)) throw Error('Display page has content requiring structural mapping');
+    const sourceText=profile.groups.map(g => g.text).join(' ');
+    const restoreText=compact(page.textContent) !== compact(sourceText);
     const families = profile.groups.map(g => resolveFamily(g.family));
     if (families.some(f => !f)) throw Error('Display page requires a verified source family for every group');
-    return {profile,page,families};
+    return {profile,page,families,restoreText};
   });
-  for (const {profile,page,families} of plans) {
+  for (const {profile,page,families,restoreText} of plans) {
     const before = page.innerHTML, original = page.textContent, fragment = document.createDocumentFragment();
     page.style.setProperty('container-type','inline-size');
     const maximum = Math.max(...profile.groups.map(g => g.size));
@@ -104,8 +105,9 @@ export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
       fragment.append(block,document.createTextNode('\n'));
     }
     page.replaceChildren(fragment); page.setAttribute('data-source-display-page','');
-    if (compact(original) !== compact(page.textContent)) throw Error('Display reconstruction changed source text');
+    if (!restoreText && compact(original) !== compact(page.textContent)) throw Error('Display reconstruction changed source text');
     changes.push({kind:'source_display_page',page:profile.page,before,after:page.innerHTML,groups:profile.groups});
+    if(restoreText)changes.push({kind:'source_display_text_restoration',page:profile.page,before:original,after:page.textContent,source:'pdf_display_groups'});
   }
   return changes;
 }

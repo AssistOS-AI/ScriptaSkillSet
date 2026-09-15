@@ -78,7 +78,7 @@ export function sourceTables(evidence) {
           indentPt:lines.length>1?Math.max(0,lines[0].left-left):0,
           paddingPt:[Math.max(0,Math.min(...words.map(w=>w.top))-b.t),Math.max(0,left-b.l),Math.max(0,b.b-Math.max(...words.map(w=>w.bottom))),Math.max(0,left-b.l)]}:null };
     });
-    tables.push({page:page.page_number,pageWidthPt:page.width_pt,rows:grid.num_rows,columns:grid.num_cols,widthPt:grid.bbox.r-grid.bbox.l,cells});
+    tables.push({page:page.page_number,pageWidthPt:page.width_pt,topPt:grid.bbox.t,bottomPt:grid.bbox.b,rows:grid.num_rows,columns:grid.num_cols,widthPt:grid.bbox.r-grid.bbox.l,cells});
   }
   return tables;
 }

@@ -81,7 +81,7 @@ export function inspectLayout() {
   for(const page of pagination.pages){
     const node=document.querySelector('section.pdf-source-page[data-reader-page="'+page.number+'"]');
     page.cover=!!node.querySelector('figure#page_1');
-    page.nestedSpacing=[...node.querySelectorAll('main,article,section,div')].filter(n=>n.querySelector('p,h1,h2,h3,h4,h5,h6,figure,img,table')).flatMap(n=>{
+    page.nestedSpacing=[...node.querySelectorAll('main,article,section,div')].filter(n=>!n.matches('.pdf-table-wrap')&&n.querySelector('p,h1,h2,h3,h4,h5,h6,figure,img,table')).flatMap(n=>{
       const s=getComputedStyle(n);
       const values=['paddingTop','paddingRight','paddingBottom','paddingLeft','marginTop','marginRight','marginBottom','marginLeft'].map(k=>parseFloat(s[k])||0);
       return values.some(v=>Math.abs(v)>.5)?[{selector:selector(n),values}]:[];
@@ -94,6 +94,7 @@ export function inspectLayout() {
   if(article){
     const style=getComputedStyle(article),probe=document.createElement('div');
     probe.className='reader-html-content';
+    probe.setAttribute('data-reader-host-probe','');
     for(const key of ['font-size','font-family','font-weight','font-style'])probe.style.setProperty(key,style.getPropertyValue(key));
     article.parentElement.append(probe);
     const expected=getComputedStyle(probe),actualBox=article.getBoundingClientRect(),expectedBox=probe.getBoundingClientRect();
@@ -109,7 +110,7 @@ export function inspectLayout() {
       for(const n of c.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li,blockquote,figcaption,td,th,div,section,br')) n.after(document.createTextNode('\n'));
       return c.textContent;
     })() : bodyText,
-    presentation:{contentSelector:'body',bodyFontSize:parseFloat(getComputedStyle(document.body).fontSize),rootFontSize:parseFloat(getComputedStyle(document.documentElement).fontSize),fidelity:document.body.hasAttribute('data-pdf-fidelity'),fidelityMarker:document.body.getAttribute('data-pdf-fidelity')},
+    presentation:{contentSelector:'body',bodyFontSize:parseFloat(getComputedStyle(document.body).fontSize),rootFontSize:parseFloat(getComputedStyle(document.documentElement).fontSize),fidelity:document.body.matches('[data-pdf-fidelity], [data-validatebook-root]'),fidelityMarker:document.body.getAttribute('data-pdf-fidelity')},
     width: innerWidth, scrollWidth: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight };
 }
 
@@ -135,6 +136,7 @@ export function checkDisplay(document, language) {
   if (document.scrollWidth > document.width + 2) findings.push(issue(language, 'horizontal_overflow', 'document', `Content width ${document.scrollWidth}, viewport ${document.width}.`));
   for (const r of document.records) {
     for (const type of ['hidden', 'clipped', 'outside', 'broken']) if (r[type]) findings.push(issue(language, type === 'broken' ? 'broken_image' : type + '_content', r.selector, r.text.slice(0, 160) || r.src || r.tag, { width: document.width }));
+    if(r.tag==='figcaption'&&/^figure from pdf page \d+$/i.test(normalizeText(r.text)))findings.push(issue(language,'generated_figure_caption',r.selector,'A converter placeholder is visible as book content although it does not occur in the PDF.',{repair:{kind:'remove_generated_caption',selector:r.selector,text:r.text}}));
     if(r.spacing?.excessive)findings.push(issue(language,'excessive_word_spacing',r.selector,'Justified word gaps exceed 0.65 em in sampled rendered lines.',{width:document.width,spacing:r.spacing,repair:{kind:'presentation',selector:r.selector,properties:{'text-align':'left','word-spacing':'normal','letter-spacing':'normal'}}}));
     if (/[\uFFFD\uE000-\uF8FF]/u.test(r.text)) findings.push(issue(language, 'suspect_character', r.selector, 'Replacement/private-use character. Preserve until its source mapping is established.', { excerpt: r.text.slice(0, 200) }));
   }

@@ -52,6 +52,12 @@ test('local display detects hidden/clipped text, corruption, failed fonts, broke
   const d=document([record('bad','Broken \uFFFD',{hidden:true,clipped:true}),record('image','',{tag:'img',broken:true,src:'missing.png'})]);d.fontFaces=[{family:'BookFont',status:'error'}];d.brokenLinks=['#absent'];d.scrollWidth=900;
   const kinds=checkDisplay(d,'en').map(f=>f.category);for(const name of ['hidden_content','clipped_content','suspect_character','font_load_failed','broken_anchor','broken_image','horizontal_overflow'])assert(kinds.includes(name));
 });
+test('converter figure placeholders are visible-content errors with a native removal',()=>{
+  const d=document([record('caption','Figure from PDF page 1',{tag:'figcaption'})]);
+  const finding=checkDisplay(d,'en').find(f=>f.category==='generated_figure_caption');
+  assert.equal(finding.repair.kind,'remove_generated_caption');
+  assert.equal(finding.repair.selector,'#caption');
+});
 test('actual rendered fonts compared with PDF subset names',()=>{
   const source='ABCDEF+EBGaramond-Regular TrueType yes yes yes 1 0';
   assert.equal(comparePdfFonts(source,[{fonts:[{familyName:'EB Garamond',glyphCount:40}]}]).length,0);

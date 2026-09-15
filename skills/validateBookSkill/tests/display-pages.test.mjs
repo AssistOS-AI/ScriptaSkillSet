@@ -87,3 +87,17 @@ test('left display pages preserve mixed fonts, source rule and text through two 
  const renamed=titleXml.replaceAll('ARTIFICIAL','DIFFERENT').replaceAll('IMPOSSIBILITY','TITLE');
  assert.equal((await browser.evaluate(`(${displayPageProfiles.toString()})(${JSON.stringify(renamed)})`)).length,1);
 });
+
+test('display page repair restores mismatched source text from PDF groups', {skip:!process.env.VALIDATEBOOK_INTEGRATION}, async t=>{
+ const directory=await fs.mkdtemp(path.join(os.tmpdir(),'display-text-'));
+ t.after(()=>fs.rm(directory,{recursive:true,force:true}));
+ const file=path.join(directory,'index.html');
+ await fs.writeFile(file,'<html><body data-validatebook-root><section class="pdf-source-page" data-reader-page="2" data-source-page="2"><h2 id="page_2">WRONG BRAND</h2><p>Wrong subtitle</p><p>Wrong edition</p></section></body></html>');
+ const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+ await navigate(browser,file);
+ const profiles=await browser.evaluate(`(${displayPageProfiles.toString()})(${JSON.stringify(titleXml)},${JSON.stringify({horizontalRules:[{page:2,x0:56,x1:384,top:192,bottom:192,width:1.5,color:'#007c82'}]})})`);
+ const changes=await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(profiles)},${JSON.stringify({inter:'Arial, sans-serif',ebgaramond:'Georgia, serif'})},23.0144)`);
+ assert(changes.some(change=>change.kind==='source_display_text_restoration'));
+ assert.equal(await browser.evaluate('document.body.textContent.includes("ARTIFICIAL")'),true);
+ assert.equal(await browser.evaluate('document.body.textContent.includes("WRONG BRAND")'),false);
+});
