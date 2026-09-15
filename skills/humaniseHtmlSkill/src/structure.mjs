@@ -27,6 +27,17 @@ export function structureFindings(source, target, sourcePath, targetPath) {
   const findings = [],
     left = relevantElements(source),
     right = relevantElements(target);
+  const directives = root => {
+    const found = [];
+    const visit = node => {
+      if (node.type === 'directive') found.push(node.data.replace(/^!doctype\s+/i, '!doctype '));
+      for (const child of node.children ?? []) visit(child);
+    };
+    visit(root);
+    return found;
+  };
+  if (JSON.stringify(directives(source)) !== JSON.stringify(directives(target)))
+    findings.push({ severity: 'error', code: 'document-directives', message: 'A document declaration or processing instruction changed or became visible text.' });
   if (left.length !== right.length)
     return [
       {

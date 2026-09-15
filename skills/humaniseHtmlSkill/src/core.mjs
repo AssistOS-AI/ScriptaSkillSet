@@ -420,7 +420,7 @@ export async function buildJob(input, { overwrite = false } = {}) {
     'humanisation-language': job.language
   });
   const candidate = path.join(dir, 'candidate.html');
-  await fs.writeFile(candidate, '<!doctype html>\n' + D.serialize(doc));
+  await fs.writeFile(candidate, D.serialize(doc));
   const { validateHumanisation } = await import('./validation.mjs'),
     report = await validateHumanisation(
       path.join(dir, 'source-original.html'),

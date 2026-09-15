@@ -14,6 +14,10 @@ The default reading rate is 200 words per minute and the accepted final range is
 
 ## Node.js runtime
 
+Explicit `doc-copyright` roles and `source-copyright` section classes are recorded
+as non-content, including long author/production notes within those boundaries.
+Ordinary narrative copyright mentions remain content.
+
 Requires Node.js 22 or newer. The POSIX launcher runs on macOS and Linux:
 
 ```sh

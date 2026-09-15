@@ -20,6 +20,11 @@ The schema is exact and deliberately unversioned. No legacy shapes are accepted.
 
 ## Chapter analysis
 
+`chapters.json` retains excluded copyright sections and their unit IDs with
+`included: false` and `exclusionReason: "legal-or-metadata"`. Explicit
+`doc-copyright` roles or exact `source-copyright` section classes classify long
+production notes as non-content too. Excluded sections receive no analysis batch.
+
 For each `batches/<name>.json`, write `analyses/<name>.json`:
 
 ```json

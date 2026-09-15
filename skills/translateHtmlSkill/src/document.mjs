@@ -198,16 +198,14 @@ function encodeChildren(tag) {
   const placeholders = {},
     protections = {};
   function encode(n) {
-    if (n.type === 'comment') {
+    if (n.type === 'comment' || n.type === 'directive') {
       const t = `⟦PROTECT:P${String(
         Object.keys(protections).length + 1
       ).padStart(6, '0')}⟧`;
-      protections[t] = `<!--${n.data}-->`;
+      protections[t] = serialize(n);
       return t;
     }
     if (n.type === 'text') return protect(n.data, protections);
-    if (n.type === 'directive')
-      return protect(n.data.replace(/^!doctype\s+/i, ''), protections);
     if (!n.name) return serialize(n);
     const id = `T${String(Object.keys(placeholders).length + 1).padStart(
       6,
@@ -353,7 +351,7 @@ export function extractUnits(doc) {
   const textNodes = [];
   function visit(n) {
     if (
-      ['text', 'directive'].includes(n.type) &&
+      n.type === 'text' &&
       n.data.trim() &&
       !excluded(n) &&
       !ancestors(n).some(p => has(p, C.MARKER_UNIT))
@@ -482,15 +480,32 @@ export function decodeFragment(value, unit) {
   const matches = s => [...s.matchAll(tokenRE)].map(m => m[0]).sort();
   if (JSON.stringify(matches(value)) !== JSON.stringify(matches(unit.source)))
     throw Error(`Unit ${unit.id} changed its HTML placeholder set.`);
-  value = restoreProtections(value, unit);
+  restoreProtections(value, unit);
   const root = new Element('div', {}),
     stack = [['ROOT', root]];
   let position = 0;
-  for (const m of value.matchAll(tokenRE)) {
+  for (const m of value.matchAll(/⟦(OPEN|CLOSE|VOID|PROTECT):([TP]\d{6})⟧/gu)) {
     if (m.index > position)
       append(stack.at(-1)[1], new Text(value.slice(position, m.index)));
-    const [kind, id] = [m[1], m[2]],
-      def = unit.placeholders?.[id];
+    const [kind, id] = [m[1], m[2]];
+    if (kind === 'PROTECT') {
+      const original = unit.protections?.[m[0]];
+      if (original === undefined)
+        throw Error(`Unit ${unit.id} contains unknown protected token ${m[0]}.`);
+      // Parse only source-owned markup, never translated prose.
+      const nodes = /^(?:<!--|<\?|<!doctype\b)/i.test(original)
+        ? parse(original).children
+        : [];
+      if (nodes.length === 1 && ['comment', 'directive'].includes(nodes[0].type))
+        append(stack.at(-1)[1], nodes[0]);
+      else if (nodes.length === 2 && nodes[0].type === 'directive' &&
+        nodes[1].type === 'text' && !nodes[1].data.trim())
+        append(stack.at(-1)[1], nodes[0]);
+      else append(stack.at(-1)[1], new Text(original));
+      position = m.index + m[0].length;
+      continue;
+    }
+    const def = unit.placeholders?.[id];
     if (!def)
       throw Error(`Unit ${unit.id} contains unknown placeholder ${id}.`);
     if (kind === 'OPEN' || kind === 'VOID') {

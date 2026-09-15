@@ -21,6 +21,12 @@ Every model-translated unit has this form:
 
 The translation must contain the exact placeholder multiset from `source`. `build` rejects missing, duplicated, unknown, or improperly nested placeholders.
 
+Doctype and XML declarations outside prose remain in `template.html` without unit
+IDs. Processing instructions and comments inside prose are protected values, restored
+as markup rather than escaped visible text. Older jobs that extracted declarations as
+text require fresh preparation. Do not reuse their shifted IDs without checking the
+complete source and protection data.
+
 Units carrying `reuseOf` or `reuseTemplateOf` are omitted from translation output. The
 former reuses an exact, markup-aware canonical translation. The latter reuses a canonical
 human-facing numeric label and replaces its preserved number deterministically. `build`

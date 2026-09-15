@@ -96,6 +96,7 @@ export function extractDocument(doc) {
   );
   let chapters = [],
     mapping = new Map();
+  const explicitNonContent = new Map();
   const h1s = elements(
     scope,
     n => n.name === 'h1' && !excluded(n) && wordCount(textOf(n))
@@ -129,6 +130,10 @@ export function extractDocument(doc) {
           title: h ? compact(textOf(h)) : `Section ${i + 1}`,
           anchor: h?.attribs.id || null
         });
+        const roles = (b.attribs.role || '').split(/\s+/);
+        const classes = (b.attribs.class || '').split(/\s+/);
+        if (roles.includes('doc-copyright') || classes.includes('source-copyright'))
+          explicitNonContent.set(id, 'legal-or-metadata');
         const descendants = elements(b);
         for (const r of roots)
           if (r === b || descendants.includes(r)) mapping.set(r, id);
@@ -171,7 +176,8 @@ export function extractDocument(doc) {
         .join(' '),
       total = cu.reduce((n, u) => n + u.wordCount, 0);
     let reason = null;
-    if (C.CONTENTS_HEADINGS.includes(h)) reason = 'contents';
+    if (explicitNonContent.has(c.id)) reason = explicitNonContent.get(c.id);
+    else if (C.CONTENTS_HEADINGS.includes(h)) reason = 'contents';
     else if (
       C.BIBLIOGRAPHY_PREFIXES.some(
         p => h === p || h.startsWith(p + ' ') || h.endsWith(' ' + p)

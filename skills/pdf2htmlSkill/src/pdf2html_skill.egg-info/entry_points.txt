@@ -1,2 +1,0 @@
-[console_scripts]
-pdf2html = pdf2html_skill.cli:main

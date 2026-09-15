@@ -17,6 +17,7 @@ The active host-provided LLM performs the translation. Never select, name, confi
 - Translate visible prose plus `<title>`, meta description, `alt`, `title`, and `aria-label`.
 - Never translate `script`, `style`, `code`, `pre`, `kbd`, `samp`, `math`, `svg`, or content under `translate="no"`.
 - Never OCR or translate text inside images.
+- Preserve document declarations and processing instructions as markup. Do not translate a doctype or XML declaration as visible text. If an older job extracted one as a unit, retain that job as evidence and prepare a fresh job; transfer reviewed translations only where source text, placeholders and protections still match.
 - Preserve each unit ID and its placeholder multiset exactly. Inline placeholders may move only as required by target-language word order, while remaining correctly nested.
 - Preserve names and bibliography metadata unless ordinary descriptive wording requires translation. Never modify citations, URLs, journal coordinates, or identifiers.
 - Do not claim that structural heuristics prove semantic correctness. They detect incomplete translation and structural damage; the bootstrap review supplies the limited semantic check.
@@ -43,11 +44,12 @@ Treat the user's request to translate the document as authorization for the comp
 
 Before `prepare`, preflight the permissions needed to read the source, create the local
 job, write the target directory, run the launcher, and install a missing managed runtime.
-If the execution environment requires elevated permission for any of them, request one
-combined approval at that point, scoped to the whole translation run. After work starts,
-never request a second approval. If an unforeseeable new privileged capability later
-becomes indispensable, exhaust safe alternatives and report it as a blocker rather than
-asking the user to approve another batch or continuation.
+If elevation is required, inventory predictable operations together and request reusable
+approvals at that point, scoped to the actual launchers and operations. Reuse granted
+rules rather than requesting per-batch approval. The platform may require separate
+dialogs or a new approval for an unforeseen capability; comply with that policy, never
+bypass it or promise the skill can suppress it. Exhaust safe alternatives before
+reporting an unexpected privileged capability as a blocker.
 
 Progress updates must be declarative status messages, never questions or calls to action.
 Do not use wording such as “continue?”, “approve”, “confirm”, or “shall I process the next
@@ -173,3 +175,19 @@ Send a final response only after `remainingBatches` is zero and `build` has publ
 
 Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
 `Intl.Locale`. The source language comes from HTML unless explicitly overridden.
+
+## Existing-book correction
+
+For complete book maintenance, an English change triggers review of the whole
+corresponding chapter in every existing translation, not just the changed sentence.
+Read the complete accepted English chapter and existing target chapter with adjacent
+boundary context. Correct all errors found throughout that chapter; keep faithful
+passages unchanged. Revalidate complete unit coverage, meaning, typography and reader
+layout. Global source styling changes affect all chapters. Include accepted English
+humanisation in the impact comparison without blindly copying its wording into the
+target language. Never invoke full-book translation to repair existing chapters.
+The host maintains a reviewed chapter map, before/after hashes and evidence; ambiguous
+alignment or missing chapters block repair. Structural repairs use a separate reviewed
+candidate patch, not relaxed translation-build safeguards. Read references/repair.md.
+
+Use `scripts/translatehtml repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. No missing translations or whole chapters are generated. See [repair contract](references/repair.md).

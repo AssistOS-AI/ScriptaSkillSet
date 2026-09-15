@@ -1,0 +1,33 @@
+//! Core data model for docling.rs.
+//!
+//! This crate is the Rust counterpart of the `docling-core` Python package: it
+//! owns the unified [`DoclingDocument`] representation that every backend
+//! produces and every serializer consumes. Keeping it dependency-light and
+//! separate from the conversion logic mirrors the Python split between
+//! `docling-core` (the schema) and `docling` (the converters).
+//!
+//! Phase 0 models a simplified, linear node tree that is enough to round-trip
+//! through Markdown. The faithful, `$ref`-based schema that matches
+//! docling-core's JSON wire format lands in Phase 1 (see `docs/MIGRATION.md`).
+
+pub mod assets;
+pub mod base64;
+pub mod chunker;
+pub mod confidence;
+mod doclang;
+pub mod doctags;
+mod document;
+pub mod env;
+mod json;
+mod labels;
+mod latex;
+mod markdown;
+
+pub use confidence::{ConfidenceReport, PageConfidence, QualityGrade};
+pub use doclang::inline_runs_from_markdown;
+pub use document::{
+    inline_paragraph_node, ContentLayer, DoclingDocument, FieldItem, InlineRun, ListItemDclx, Node,
+    PictureClass, PictureImage, Script, Table, TableCell, TableStructure,
+};
+pub use labels::DocItemLabel;
+pub use markdown::{ImageMode, MarkdownStreamer};

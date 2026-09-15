@@ -24,6 +24,12 @@ The output contains no copied scripts or application behavior from the source. I
 
 ## Coding style and runtime
 
+For direct section/article boundaries, an explicit `doc-copyright` role or exact
+`source-copyright` class classifies the whole region as legal/metadata. Keep its
+units and exclusion reason in chapter evidence but do not create an analysis
+batch. Do not infer this exclusion from prose mentioning copyright or partial
+class names. Existing prepared evidence is not rewritten after this correction.
+
 Write executable modules as .mjs ECMAScript modules with explicit relative imports,
 node: imports for built-ins and async/await. Keep functions focused and all skill
 resources inside this folder. Resolve resources with import.meta.url. Node.js 22

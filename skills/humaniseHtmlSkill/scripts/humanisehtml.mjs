@@ -16,6 +16,11 @@ try {
     );
   }
   const command = process.argv[2];
+  if (command === 'repair') {
+    const { repairCommand } = await import('../src/repair.mjs');
+    console.log(JSON.stringify(await repairCommand('humaniseHtml', process.argv.slice(3)), null, 2));
+    process.exit(0);
+  }
   if (['--help', '-h'].includes(command)) {
     console.log(help);
     process.exit(0);

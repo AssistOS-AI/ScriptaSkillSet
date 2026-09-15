@@ -1,0 +1,34 @@
+[package]
+name = "docling-core"
+description = "Core DoclingDocument data model and serializers for docling.rs (a Rust port of docling)."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+# Lower floor than the workspace (no ort/pdfium here): bounded by the
+# edition-2024 deps in the lock (indexmap via serde_json/preserve_order).
+rust-version = "1.85"
+
+[dependencies]
+# serde_json builds the docling-core-compatible DoclingDocument JSON wire format
+# (export_to_json); the model itself stays plain (walked into `Value` by json.rs).
+# `preserve_order` keeps docling's field order (schema_name, version, …).
+serde_json = { version = "1", features = ["preserve_order"] }
+# Content hash for exported image asset names (assets/image_NNNNNN_<sha256>.png),
+# matching docling's referenced-image naming scheme.
+sha2 = "0.10"
+# HuggingFace tokenizer for the HybridChunker (behind the `chunking` feature);
+# same flags as docling-rag's optional embedder to keep one build of the crate.
+tokenizers = { version = "0.20", default-features = false, features = ["onig"], optional = true }
+# Markdown parsing for the WindowChunker's heading-bounded sections (behind the
+# `chunking` feature); same flags as the docling crate's Markdown backend.
+pulldown-cmark = { version = "0.13", default-features = false, optional = true }
+
+[features]
+# Tokenization-aware chunking (HybridChunker's HuggingFaceTokenizer) and the
+# Markdown window chunker (WindowChunker).
+chunking = ["dep:tokenizers", "dep:pulldown-cmark"]

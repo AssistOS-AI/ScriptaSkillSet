@@ -5,6 +5,16 @@ Document fixtures record source HTML, prepared job files, workflow states,
 rendered HTML bytes and validation reports. Temporary absolute paths are replaced
 with a fixture-root token. Recorded source bytes remain unchanged.
 
+On 2026-09-13 declaration expectations were corrected from markup semantics without
+recapturing outputs from the implementation. The spurious `u000005` doctype unit and
+its translation were removed; subsequent attribute IDs, memory references and unit
+counts shifted by one. Templates now retain the original doctype without a wrapper.
+Expected output replaces the fabricated declaration translation with the retained
+doctype and serializer newlines. Length ratios subtract only that translation's
+letters from the existing target count. All actual prose, source bytes and unrelated
+expectations remain unchanged. `directives.test.mjs` independently checks preparation,
+translated visible text, declaration preservation and validator rejection of damage.
+
 Original source SHA256 values:
 
 - src/translatehtml_skill/core.py: d5174125d731e4adbf3d4f18fb26ed2a095b6999aa853662a29cd82f670771e9

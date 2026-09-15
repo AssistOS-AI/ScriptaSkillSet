@@ -1,0 +1,99 @@
+{
+  "name": "test_does_not_center_body_indented_line_that_happens_to_be_symmetric",
+  "input": "<p>Alpha</p><p>Give me</p><p>Omega</p>",
+  "evidence": {
+    "typography": {
+      "body_size_pt": 10,
+      "body_family": "sans-serif",
+      "text_color": "#111827",
+      "heading_scale": [
+        2.0,
+        1.55,
+        1.25
+      ],
+      "body_font_name": ""
+    },
+    "pages": [
+      {
+        "page_number": 1,
+        "width_pt": 522,
+        "height_pt": 756,
+        "words": [
+          {
+            "text": "Alpha",
+            "token": "alpha",
+            "bold": false,
+            "italic": false,
+            "size_pt": 10,
+            "x0": 73.4,
+            "x1": 130,
+            "top": 0,
+            "bottom": 10,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Give",
+            "token": "give",
+            "bold": false,
+            "italic": false,
+            "size_pt": 10,
+            "x0": 73.4,
+            "x1": 130,
+            "top": 20,
+            "bottom": 30,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "me",
+            "token": "me",
+            "bold": false,
+            "italic": false,
+            "size_pt": 10,
+            "x0": 390,
+            "x1": 417.2,
+            "top": 20,
+            "bottom": 30,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Omega",
+            "token": "omega",
+            "bold": false,
+            "italic": false,
+            "size_pt": 10,
+            "x0": 73.4,
+            "x1": 140,
+            "top": 40,
+            "bottom": 50,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          }
+        ],
+        "lines": [],
+        "links": [],
+        "rectangles": [],
+        "strokes": [],
+        "images": []
+      }
+    ],
+    "fonts": []
+  },
+  "options": {
+    "title": "X",
+    "language": "und",
+    "source_page_count": 1,
+    "content_pages": [
+      1
+    ]
+  },
+  "originalRoot": "/private/var/folders/qb/skl4bjmn1m9dp9xynd7l68c80000gn/T/pytest-of-adrianganga/pytest-200/test_does_not_center_body_inde0",
+  "html": "<!doctype html>\n<html lang=\"und\"><head><title>X</title><meta content=\"width=device-width, initial-scale=1\" name=\"viewport\"/><meta content=\"pdf2html-skill\" name=\"generator\"/><link href=\"assets/styles.css\" rel=\"stylesheet\"/></head><body><main class=\"pdf-document\" data-reader-content=\"\"><section aria-label=\"PDF page 1\" class=\"source-page\" data-page-label=\"\" data-source-page=\"1\" id=\"page_1\" style=\"--pdf-page-top: 0.00%; --pdf-page-left: 14.06%; --pdf-page-right: 20.08%; --pdf-page-bottom: 135.25%; --pdf-reader-size: var(--reader-font-size, var(--standalone-size, 10.00pt)); font-size: var(--pdf-reader-size)\"><p>Alpha</p><p>Give me</p><p>Omega</p></section></main><script id=\"pdf2html-reader-bridge\">(() => {\n  window.addEventListener(\"message\", (event) => {\n    if (event.data?.type !== \"axiologic-reader-settings\") return;\n    const size = Number(event.data.fontSize);\n    if (Number.isFinite(size) && size > 0) {\n      document.documentElement.style.setProperty(\"--standalone-size\", `${size}rem`);\n    }\n    if (event.data.theme) document.documentElement.dataset.theme = event.data.theme;\n  });\n})();</script></body></html>",
+  "css": "\n:root {\n  --pdf-body-size: 10.00pt;\n  --pdf-text: #111827;\n  --pdf-page-width: 522.00pt;\n  --pdf-page-height: 756.00pt;\n  --pdf-page-aspect: 522.00 / 756.00;\n}\n* { box-sizing: border-box; }\nhtml { background-color: #f5f5f5; color: var(--pdf-text); }\nbody {\n  max-width: min(800px, var(--pdf-page-width));\n  margin: 0 auto;\n  padding: 2rem 0;\n  font-family: Inter, \"Segoe UI\", Arial, sans-serif;\n  font-size: var(--standalone-size, var(--pdf-body-size));\n  line-height: 1.45;\n}\nmain.pdf-document { width: 100%; margin: 0; }\n.source-page {\n  position: relative;\n  aspect-ratio: var(--pdf-page-aspect);\n  margin-bottom: 1.5rem;\n  padding: var(--pdf-page-top, 2rem) var(--pdf-page-right, 2rem) var(--pdf-page-bottom, 2rem) var(--pdf-page-left, 2rem);\n  background-color: #fff;\n  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);\n}\n.source-page:last-child { margin-bottom: 0; }\n.source-page > :first-child { margin-top: 0; }\n.source-page-full-image { overflow: hidden; padding: 0; }\n.source-page-full-image > figure { position: absolute; inset: 0; margin: 0; }\n.source-page-full-image > figure > img { width: 100%; height: 100%; object-fit: cover; }\n.source-page::after {\n  content: attr(data-page-label);\n  position: absolute;\n  right: 1rem;\n  bottom: 0.75rem;\n  left: 1rem;\n  color: #777;\n  font-size: 0.75rem;\n  line-height: 1;\n  text-align: center;\n}\nh1 { font-size: 2.00em; }\nh2 { font-size: 1.55em; }\nh3 { font-size: 1.25em; }\nh1, h2, h3, h4, h5, h6 {\n  margin-top: 1.5em;\n  margin-bottom: 0.5em;\n  color: #333;\n  line-height: 1.25;\n  break-after: avoid;\n}\nh1 { border-bottom: 0; }\np { margin: 0 0 0.55em; text-align: justify; }\nh1, h2, h3, h4, h5, h6, p, li, td, th, caption, figcaption { overflow-wrap: anywhere; }\nfigure { max-width: 100%; margin: 1.5em 0; text-align: center; }\nimg { display: block; max-width: 100%; height: auto; margin-inline: auto; }\nfigcaption { margin-top: 0.5em; color: #666; text-align: center; }\n.table-scroll { width: 100%; max-width: 100%; overflow-x: auto; }\ntable { width: 100%; max-width: 100%; margin: 1em 0; border-collapse: collapse; }\nth, td { padding: 8px; border: 1px solid #ddd; text-align: start; vertical-align: top; }\nth { background-color: #f2f2f2; font-weight: bold; }\n.toc-table { margin: 0; border: 0; table-layout: auto; }\n.toc-table td { padding: 0; border: 0; }\n.toc-part-row td { font-weight: 700; }\n.toc-entry { display: flex; align-items: baseline; gap: 0.3em; width: 100%; box-sizing: border-box; padding-left: var(--toc-indent, 0pt); color: inherit; text-decoration: none; }\n.toc-title { flex: 0 1 auto; }\n.toc-part-title { flex: 0 1 auto; }\n.toc-leader { flex: 1 1 auto; min-width: 1rem; border-bottom: 1px dotted currentColor; }\n.toc-page { flex: 0 0 auto; min-width: 2ch; text-align: right; }\n.contents-list { margin: 0; }\n.contents-list-entry { margin: 0 0 0.45em; line-height: 1.25; text-align: left; }\n.contents-list-entry:last-child { margin-bottom: 0; }\npre { padding: 1em; overflow: auto; background-color: #f6f8fa; border-radius: 3px; }\ncode { padding: 0.2em 0.4em; background-color: #f6f8fa; border-radius: 3px; font-family: \"SFMono-Regular\", Consolas, \"Liberation Mono\", monospace; }\npre code { padding: 0; background-color: transparent; }\n.formula { margin: 1em 0; padding: 0.5em; background-color: #f9f9f9; text-align: center; }\n.formula-not-decoded {\n  margin: 1em 0;\n  padding: 0.5em;\n  background: repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #f9f9f9 10px, #f9f9f9 20px);\n  text-align: center;\n}\n.key-value-region { margin: 1em 0; padding: 1em; background-color: #f9f9f9; border-radius: 4px; }\n.key-value-region dt { font-weight: bold; }\n.key-value-region dd { margin: 0 0 0.5em 1em; }\n.form-container { margin: 1em 0; padding: 1em; border: 1px solid #ddd; border-radius: 4px; }\n.form-item { margin-bottom: 0.5em; }\n.image-classification { margin-top: 0.5em; color: #666; font-size: 0.9em; }\ndetails.docling-meta { margin: 0.5em 0; font-size: 0.9em; text-align: left; }\ndetails.docling-meta > summary { padding: 2px 6px; color: #555; cursor: pointer; font-style: italic; }\n.docling-meta-field { margin: 4px 0 4px 1em; padding: 6px 10px; background-color: #f0f0f0; border-left: 3px solid #ccc; border-radius: 3px; text-align: left; }\n.docling-meta-field-label { color: #444; font-weight: bold; }\na { color: inherit; text-decoration: inherit; }\n@media (max-width: 640px) {\n  body { padding: 0.75rem; }\n  .source-page { margin-bottom: 1rem; }\n  .source-page::after { bottom: 0.5rem; }\n}\n@media print {\n  html { background: #fff; }\n  body { max-width: none; padding: 0; }\n  main.pdf-document { width: auto; margin: 0; }\n  .source-page { min-height: var(--pdf-page-height); margin: 0; padding: 0; aspect-ratio: auto; box-shadow: none; }\n  .source-page:not(:empty) { padding-top: var(--pdf-page-top, 0%); }\n  .source-page + .source-page:not(:empty) { break-before: page; }\n  a { color: inherit; }\n}\n"
+}

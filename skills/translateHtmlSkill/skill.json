@@ -1,7 +1,7 @@
 {
   "title": "Translate HTML",
   "family": "document-translation",
-  "summary": "Translates semantic HTML in parallel 32k-character batches with translation memory while preserving markup, behavior, links, and shared assets.",
+  "summary": "Translates semantic HTML in parallel 32k-character batches with translation memory while preserving declarations, markup, behavior, links, and shared assets.",
   "aliases": [
     "translateHtml",
     "translate-html",
@@ -15,7 +15,8 @@
     "SKILL.md",
     "scripts/translatehtml",
     "scripts/translatehtml.mjs",
-    "references/job-format.md"
+    "references/job-format.md",
+    "references/repair.md"
   ],
   "selfContained": true
 }

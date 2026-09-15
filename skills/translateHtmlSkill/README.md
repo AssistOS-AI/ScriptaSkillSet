@@ -5,6 +5,7 @@
 ## What it preserves
 
 - element order and semantic block counts;
+- document declarations and processing instructions, without adding a doctype to sources that lack one;
 - headings, paragraphs, lists, tables, captions, and inline emphasis;
 - scripts, CSS, reader integration, IDs, classes, styles, and data attributes;
 - external links and internal anchors;
@@ -34,9 +35,9 @@ scripts/translatehtml build /tmp/translatehtml-job-...
 
 The translation request authorizes this complete workflow. The skill preflights required
 permissions and, only when the host requires elevated access, requests one combined
-approval before starting. It never requests another approval or pauses between batches,
-before build, or before validation. Progress messages are declarative and never ask the
-user to continue.
+approval inventory before starting, with reusable launcher/operation scopes. It does
+not ask for per-batch consent. Platform-required approvals remain mandatory and cannot
+be suppressed by a skill. Progress messages never ask the user to continue.
 
 Jobs use deterministic resumable paths under the document's local
 `.translatehtml-jobs/` directory by default, avoiding per-batch external-path permission
@@ -73,3 +74,13 @@ licenses and update steps.
 
 Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
 `Intl.Locale`. The source language comes from HTML unless explicitly overridden.
+
+## Existing-book correction
+
+Complete maintenance reviews and corrects the whole affected translated chapter for
+each English change, in every existing language. The same rule covers English
+humanisation and global typography changes. Preserve faithful passages and canonical
+paths; do not rerun full-book translation. See references/repair.md for chapter evidence,
+localized patching and host-managed promotion.
+
+Use `scripts/translatehtml repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. No missing translations or whole chapters are generated. See [repair contract](references/repair.md).

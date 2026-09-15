@@ -5,7 +5,7 @@ description: Conservatively edit large same-language semantic HTML documents and
 
 # Humanise HTML
 
-Use this skill when the user wants existing HTML prose made more natural, less formulaic, or less recognizably machine-styled without changing its language or structure. The workflow must run end to end without intermediate questions. If the environment requires permission for any operation, request one combined approval at the start and keep all job artifacts in the workspace.
+Use this skill when the user wants existing HTML prose made more natural, less formulaic, or less recognizably machine-styled without changing its language or structure. Reuse authorization from the parent correction workflow, including on resume. Do not restart its permission preflight or ask for stage, batch, retry or local-installation confirmation. Run allowed workspace operations in the default sandbox. Use actual approved launcher rules, not merely proposed prefixes, and do not immediately repeat an interrupted approval request. Request only genuinely missing platform permissions required for the work; never bypass them or promise the skill can suppress them. Keep job artifacts in the approved workspace.
 
 ## Required workflow
 
@@ -25,6 +25,8 @@ Use a conservative editorial pass. Remove generic introductions and summaries, r
 Preserve meaning, factual claims, uncertainty, terminology, tone, chronology, examples, quotations, and citations. Never translate. Never invent facts, sources, opinions, personal experiences, examples, or anecdotes. Do not make the text artificially colloquial or quirky. A good paragraph may be returned unchanged.
 
 Units marked `verify-only` must use `action: "keep"` with exact source text. This includes bibliographies and reference lists, copyright/legal text, citation-only blocks, identifier-heavy metadata, and page accessibility labels.
+
+Document declarations and processing instructions are protected markup, never editorial units. Preserve their presence without converting an XML declaration or doctype into visible prose. If an older prepared job exposed a declaration as a text unit, retain its evidence and prepare a fresh job; transfer only reviewed units whose complete source and protection data still match.
 
 ## Large-document rules
 
@@ -46,3 +48,19 @@ language normalization uses Node.js Intl.Locale. See
 
 Language is read from `<html lang>` unless `--language` is supplied. Tags use
 hyphenated BCP 47 syntax and are normalized by Node.js `Intl.Locale`.
+
+## Existing-book correction
+
+In complete book maintenance, humanise the accepted PDF-faithful English baseline
+once. Existing translations receive translation correction against final accepted
+English and inherit its presentation; do not run separate target humanisation.
+An explicitly requested independent same-language editorial pass remains supported.
+Preserve baselines privately. Return chapter-level before/after evidence so the host can review every
+affected chapter in all existing translations, including changes caused by English
+humanisation. Recheck full chapter meaning and terminology, not only edited sentences.
+Do not generate translations from English humanised prose or modify fonts/layout as
+an editorial rewrite. Short readers and metadata are reviewed after final full editions.
+Temporary humanised outputs are promoted by the authorized host to existing canonical
+paths only after all complete-workflow gates pass; they are not new published editions.
+
+Use `scripts/humanisehtml repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. No missing translations or whole chapters are generated. See [repair contract](references/repair.md).

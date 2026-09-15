@@ -21,9 +21,10 @@ Never translate, invent facts, add citations or anecdotes, introduce first-perso
 ## Safety properties
 
 - No source mutation without explicit `--in-place`.
-- No intermediate approval prompts.
+- No per-batch consent prompts; platform-required permissions remain mandatory.
 - No paragraph or inline element may disappear.
 - Scripts, styles, code, links, resource paths, structural attributes, and protected factual tokens remain stable.
+- Doctypes and processing instructions remain non-editorial markup. Build preserves their presence, without inserting a doctype into a document that had none; validation compares declarations and rejects conversion into visible text.
 - Every model-required unit is accounted for exactly once.
 - Failed validation leaves `candidate.html` and does not publish it.
 - The report states that deterministic checks and LLM self-audit do not prove authorship or factual correctness.
@@ -42,3 +43,16 @@ publication safeguards, language handling and portable startup.
 
 Language is read from `<html lang>` unless `--language` is supplied. Tags use
 hyphenated BCP 47 syntax and are normalized by Node.js `Intl.Locale`.
+
+## Existing-book correction
+
+Complete maintenance records chapter-level before/after evidence against accepted
+same-language baselines. The host propagates English changes through whole affected
+chapters in existing translations, revalidates and installs canonical files with
+recovery backups. This is a host orchestration contract; humaniseHtml neither
+translates nor implements publication of the complete ScriptaHub bundle.
+
+Use `scripts/humanisehtml repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. No missing translations or whole chapters are generated. See [repair contract](references/repair.md).
+# Parent-workflow execution
+
+An authorized complete correction carries through this skill and resumed batches without a fresh consent step. The host distinguishes actual platform grants from proposed prefixes and retains incomplete work after interrupted tools. Complete-book maintenance humanises accepted English once; target translations are corrected against that accepted English without another humanisation stage. Independent explicitly requested same-language editing remains supported.

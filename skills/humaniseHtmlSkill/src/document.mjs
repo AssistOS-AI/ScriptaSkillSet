@@ -198,16 +198,14 @@ function encodeChildren(tag) {
   const placeholders = {},
     protections = {};
   function encode(n) {
-    if (n.type === 'comment') {
+    if (n.type === 'comment' || n.type === 'directive') {
       const t = `⟦PROTECT:P${String(
         Object.keys(protections).length + 1
       ).padStart(6, '0')}⟧`;
-      protections[t] = `<!--${n.data}-->`;
+      protections[t] = serialize(n);
       return t;
     }
     if (n.type === 'text') return protect(n.data, protections);
-    if (n.type === 'directive')
-      return protect(n.data.replace(/^!doctype\s+/i, ''), protections);
     if (!n.name) return serialize(n);
     const id = `T${String(Object.keys(placeholders).length + 1).padStart(
       6,
@@ -353,7 +351,7 @@ export function extractUnits(doc) {
   const textNodes = [];
   function visit(n) {
     if (
-      ['text', 'directive'].includes(n.type) &&
+      n.type === 'text' &&
       n.data.trim() &&
       !excluded(n) &&
       !ancestors(n).some(p => has(p, C.MARKER_UNIT))

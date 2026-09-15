@@ -1,7 +1,7 @@
 {
   "title": "Humanise HTML",
   "family": "document-editing",
-  "summary": "Makes book-length HTML prose read naturally in chapter-aligned 32k-character batches while preserving markup, facts, behavior, links, and assets.",
+  "summary": "Makes book-length HTML prose read naturally in chapter-aligned 32k-character batches while preserving markup, document declarations, facts, behavior, links, and assets.",
   "aliases": [
     "humaniseHtml",
     "humanizeHtml",
@@ -16,7 +16,8 @@
     "SKILL.md",
     "scripts/humanisehtml",
     "scripts/humanisehtml.mjs",
-    "references/job-format.md"
+    "references/job-format.md",
+    "references/repair.md"
   ],
   "selfContained": true
 }

@@ -33,6 +33,7 @@ Use this skill when the user wants a book summarized to a requested reading time
 - Never invent claims, facts, quotations, examples, citations, names, dates, numbers, URLs, or DOI values.
 - Every analysis idea and every final paragraph must cite valid source-unit IDs.
 - Exclude copyright/legal boilerplate, duplicate contents pages, navigation, page labels, and unannotated bibliography entries from idea ranking, while recording their exclusion.
+- Explicit `section`/`article` copyright boundaries (`role="doc-copyright"` or the exact `source-copyright` class) remain recorded non-content even when they contain a long production note. A narrative mention of copyright is not an exclusion signal.
 - Do not reproduce source scripts, styles, navigation, or reader integrations. The summary is a new self-contained HTML document.
 
 ## Completion standard

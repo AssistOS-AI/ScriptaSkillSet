@@ -5,6 +5,15 @@ Document fixtures record source HTML, prepared job files, workflow states,
 rendered HTML bytes and validation reports. Temporary absolute paths are replaced
 with a fixture-root token. Recorded source bytes remain unchanged.
 
+On 2026-09-11 declaration expectations were corrected from markup semantics,
+not regenerated from runtime output. The spurious `html` editorial unit was
+removed, subsequent attribute IDs and counts shifted, and the original doctype
+replaced the visible `html` prefix. Serialization retains the declaration newline
+and surrounding whitespace. Prose rewrites, protection data, source bytes and
+unrelated expectations remain unchanged. `directives.test.mjs` independently
+checks declaration preservation, visible text, unit exclusion and rejection of
+corrupted output.
+
 Original source SHA256 values:
 
 - src/humanisehtml_skill/core.py: 3cd1cbd96ef0a2ea13ef93fc961f9a67ed99c4d473dc71baec364925d9c4aa80

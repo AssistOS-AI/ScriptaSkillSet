@@ -1,0 +1,40 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {pointsToCssPixels,sourceTypographyProfile,compareTypography,typographyActions} from '../src/typography.mjs';
+import {frameScale} from '../src/reader-presentation.mjs';
+import {checkDisplay} from '../src/layout-checks.mjs';
+const text='A final address appeared: EQUATORIAL CONTINUITY ARCHIVE, NAIROBI. ACCESS TRUSTEE: NURU OKAFOR.';
+const lines=[{text,top:100,font:{sizePt:11}},{text:'Another sufficiently long line after this paragraph.',top:115.5,font:{sizePt:11}}];
+const pages=[{page:1,lines}];
+const geometry=[{blocks:[{lines:[{text,top:100,bottom:114.3},{text:lines[1].text,top:115.5,bottom:129.8}]}]}];
+const profile=sourceTypographyProfile(pages,geometry);
+test('smaller table text cannot determine body prose leading',()=>{
+  const table=Array.from({length:20},(_,i)=>({text:'Small table text with enough characters for the old length heuristic '+i,top:200+i*11.6,font:{sizePt:8}}));
+  const body=Array.from({length:30},(_,i)=>({...lines[i%2],top:100+i*19.5,text:('Ordinary body prose repeated sufficiently to establish the body size '+i).repeat(2)}));
+  const measured=[{blocks:[{lines:body},{lines:table}]}];
+  const mixed=sourceTypographyProfile([{page:1,lines:[...body,...table]}],measured);
+  assert.equal(mixed.bodyPt,11);
+  assert.equal(mixed.leadingPt,19.5);
+});
+const doc=(size=23,leading=31)=>({presentation:{bodyFontSize:size,contentSelector:'body'},records:[{tag:'p',selector:'#passage',text,font:{size:String(size)},style:{lineHeight:String(leading),marginBottom:4}}]});
+test('point conversion and baseline distance are independent from glyph height',()=>{assert.equal(pointsToCssPixels(12),16);assert.equal(profile.bodyPt,11);assert.equal(profile.leadingCssPx,15.5*4/3);assert.notEqual(profile.leadingCssPx,14.3*4/3);});
+test('absolute enlargement fails even with unchanged relative type hierarchy',()=>{const c=compareTypography(profile,doc());assert(c.findings.some(f=>f.category==='absolute_font_size_difference'));assert(c.findings.some(f=>f.category==='line_leading_difference'));assert(c.findings.some(f=>f.category==='paragraph_gap_difference'));});
+test('correct physical typography does not trigger false enlargement',()=>{const d=doc(11*4/3,15.5*4/3);d.records[0].style.marginBottom=0;assert.equal(compareTypography(profile,d).findings.length,0);});
+test('ambiguous repeated source passages cannot authorize font replacement',()=>{assert.equal(compareTypography({...profile,pages:[...pages,...pages]},doc()).mappings.length,0);});
+test('calibration is general, preserves control variables, and natural spacing never edits prose',()=>{const d=doc(),c=compareTypography(profile,d),a=typographyActions(profile,d,c,{defaultSizePx:18.56,justifyPolicy:'natural'});assert(a[0].properties['font-size'].includes('--reader-font-size'));assert(a.find(x=>x.selector==='#passage').properties['text-align']==='left');assert(a.every(x=>!('text' in x)&&x.kind==='presentation'));assert.throws(()=>typographyActions(profile,d,c),/default CSS/);});
+test('natural word spacing preserves centered and right-aligned display paragraphs',()=>{for(const textAlign of ['center','right','end']){const d=doc();d.records[0].style.textAlign=textAlign;const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'natural'});assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],undefined);}});
+test('route-based reader inflation and marker-based defaults are explicit, unsupported contracts fail',()=>{const routeScaling='const sourceScale = /\\/old\\/book/.test(new URL(state.htmlFrame.src).pathname) ? 1 : 1.24;';assert.equal(frameScale(routeScaling,'/new/book',true),1.24);assert.equal(frameScale(routeScaling,'/old/book',true),1);const current="const sourceScale = state.htmlFrame.contentDocument?.body?.hasAttribute('data-pdf-fidelity') ? 1 : 1.24;";assert.equal(frameScale(current,'/any/book',true),1);assert.equal(frameScale(current,'/any/book',false),1.24);assert.throws(()=>frameScale('unknown','/',true),/not recognized/);});
+test('rendered excessive word spacing is actionable even without overflow',()=>{const d={language:'en',duplicates:[],brokenLinks:[],scrollWidth:390,width:390,fontFaces:[],records:[{selector:'#p',tag:'p',text,spacing:{excessive:true,gapP90Em:1.2}}]};const f=checkDisplay(d,'en').find(f=>f.category==='excessive_word_spacing');assert.equal(f.repair.properties['text-align'],'left');});
+test('translated prose inherits the English baseline rhythm without text matching or rewriting',()=>{const master=compareTypography(profile,doc());const target=doc();target.records[0].text='Un paragraf tradus care nu coincide lexical cu sursa engleză.';const own=compareTypography(profile,target,'ro');assert.equal(own.mappings.length,0);const actions=typographyActions(profile,target,own,{defaultSizePx:18.56,masterTypography:master});const p=actions.find(a=>a.selector==='#passage');assert.equal(p.properties['margin-bottom'],'0');assert.equal(Number(p.properties['line-height']),profile.leadingCssPx/profile.bodyCssPx);});
+
+test('short dialogue uses the same PDF font-size checks as surrounding prose',()=>{
+  const dialogue=['"Recommendation recorded."','"Do you confirm recycling?"','"I confirm that you made a recommendation."'];
+  const source={...profile,pages:[{page:1,lines:dialogue.map((text,i)=>({text,top:100+i*15.5,font:{sizePt:11}}))}]};
+  const target=doc(18.56);target.records=dialogue.map((text,i)=>({...target.records[0],selector:'#dialogue'+i,text}));
+  const compared=compareTypography(source,target);
+  assert.equal(compared.mappings.length,3);
+  assert.equal(compared.findings.filter(f=>f.category==='absolute_font_size_difference').length,3);
+  assert(compared.mappings.every(m=>m.expectedCssPx===44/3));
+  const ambiguous={...source,pages:[{page:1,lines:[...source.pages[0].lines,source.pages[0].lines[0]]}]};
+  assert(!compareTypography(ambiguous,target).mappings.some(m=>m.selector==='#dialogue0'));
+});

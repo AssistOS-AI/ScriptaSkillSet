@@ -1,0 +1,20 @@
+[package]
+name = "docling-node"
+description = "Private PDF-to-JSON binding for pdf2htmlSkill."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+docling-pdf = { path = "../docling-pdf", version = "1.32.0" }
+napi = { version = "2", default-features = false, features = ["napi4"] }
+napi-derive = "2"
+
+[build-dependencies]
+napi-build = "2"

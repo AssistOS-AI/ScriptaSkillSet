@@ -25,6 +25,12 @@ Semantic leaf blocks are extracted as mixed-content units. Nested inline tags be
 
 Scripts, styles, code regions, identifiers, classes, data attributes, and behavioral markup remain unchanged. Human-facing metadata and accessibility attributes are translated as separate units. Local references are recalculated from the target HTML back to the source directory, so assets remain single-copy.
 
+Document declarations and processing instructions are never standalone translation
+units. Inside mixed content they use immutable protection tokens and reconstruct as
+source-owned markup, as do comments. Model-authored prose remains text. Build preserves
+the source declaration set, including absence of a doctype, and validation rejects
+declarations that are removed, changed, added or converted to visible text.
+
 ## Validation and publication
 
 Build requires every model-owned unit exactly once, resolves every memory-backed unit, and requires a reviewed bootstrap plus a nonempty document profile. It checks placeholder identity and nesting before creating a candidate. Validation compares element topology, protected attributes and program regions, semantic block counts, resource existence, unchanged substantial units, retained source five-word sequences, unexpected duplicate model translations, broad length ratios, and—only where useful—the target's Unicode script. Intentional copies expanded from translation memory are excluded from the duplicate metric. It uses no statistical language detector. Only a passing candidate is installed, and existing files require both explicit overwrite and an ownership marker.
@@ -45,3 +51,16 @@ publication safeguards, language handling and portable startup.
 
 Language tags use hyphenated BCP 47 syntax and are normalized by Node.js
 `Intl.Locale`. The source language comes from HTML unless explicitly overridden.
+
+## Existing-book correction
+
+Complete-maintenance review scope is the entire affected chapter in each existing
+translation. This includes changes introduced by English humanisation and global
+styling. The host records chapter alignment, full unit coverage and source/evidence
+hashes, applies localized fixes and revalidates semantics and actual reader layout.
+Whole-chapter review does not authorize indiscriminate whole-book retranslation.
+The generic bootstrap-only translation review is insufficient for this maintenance
+mode. Low-level repair/build safeguards remain unchanged. Up-front reusable approval
+scopes reduce repeated prompts but do not override host permission policy.
+
+Use `scripts/translatehtml repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. No missing translations or whole chapters are generated. See [repair contract](references/repair.md).

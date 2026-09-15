@@ -1,0 +1,347 @@
+[
+  {
+    "name": "@napi-rs/canvas",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas/-/canvas-0.1.100.tgz",
+    "integrity": "sha512-xglYA6q3XO5P3BNJYxVZ1IV7DLVjp1Py6nwag88YntrS+3vKHyYcMqXVS4ZztJmwz2uGvz1FWhI/4LgbR5uQDA==",
+    "optional": false,
+    "location": "node_modules/@napi-rs/canvas"
+  },
+  {
+    "name": "@napi-rs/canvas-android-arm64",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-android-arm64/-/canvas-android-arm64-0.1.100.tgz",
+    "integrity": "sha512-hjhCKhntPv9+t4ckHymdx0phYNcVW+GKQR6Lzw2zE+pOVjOplSmtx9nNNknTjbEDLcuLZqA1y8ufKg1XfgftzQ==",
+    "optional": true,
+    "os": [
+      "android"
+    ],
+    "cpu": [
+      "arm64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-android-arm64"
+  },
+  {
+    "name": "@napi-rs/canvas-darwin-arm64",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-darwin-arm64/-/canvas-darwin-arm64-0.1.100.tgz",
+    "integrity": "sha512-2PcswRaC7Ly645DGt88///zuFDhJxJYdKAs1uU3mfk1atYkXufgcgLfBpk6Tm12nCQBaNt1wpybuPZ4qOhTo8A==",
+    "optional": true,
+    "os": [
+      "darwin"
+    ],
+    "cpu": [
+      "arm64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-darwin-arm64"
+  },
+  {
+    "name": "@napi-rs/canvas-darwin-x64",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-darwin-x64/-/canvas-darwin-x64-0.1.100.tgz",
+    "integrity": "sha512-ePNZtj7pNIva/siZMg+HmbeozkIjqUIYdoymH8HaA3qK7LfzFN4WMBM8G6HQ9ZC+H3+Dnn5pqtiXpgLykaPOhw==",
+    "optional": true,
+    "os": [
+      "darwin"
+    ],
+    "cpu": [
+      "x64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-darwin-x64"
+  },
+  {
+    "name": "@napi-rs/canvas-linux-arm-gnueabihf",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-linux-arm-gnueabihf/-/canvas-linux-arm-gnueabihf-0.1.100.tgz",
+    "integrity": "sha512-d5cDB48oWFGU8/XPhUOFAlySgb/VAu7D+s8fi55K1Pcfg8aPplHWqMgibhVLU8ky7Pyg/fuiVLz4Nf3JrSTuUA==",
+    "optional": true,
+    "os": [
+      "linux"
+    ],
+    "cpu": [
+      "arm"
+    ],
+    "location": "node_modules/@napi-rs/canvas-linux-arm-gnueabihf"
+  },
+  {
+    "name": "@napi-rs/canvas-linux-arm64-gnu",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-linux-arm64-gnu/-/canvas-linux-arm64-gnu-0.1.100.tgz",
+    "integrity": "sha512-rDxgxRu69RvDlX/bh9o22DxLsGr8EqsNgotL9+RwQE1S0b0cqeatqsw6aW45mukm0B42DIAaAacKaYQ8cqS1nw==",
+    "optional": true,
+    "os": [
+      "linux"
+    ],
+    "cpu": [
+      "arm64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-linux-arm64-gnu"
+  },
+  {
+    "name": "@napi-rs/canvas-linux-arm64-musl",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-linux-arm64-musl/-/canvas-linux-arm64-musl-0.1.100.tgz",
+    "integrity": "sha512-K3mDW66N+xT2/V439u1alFANiBUjdEx2gLiNYnCmUsva5jZMxWTjafBYwTzYK+EMFMHrUoabuU+T1BIP5CgbYQ==",
+    "optional": true,
+    "os": [
+      "linux"
+    ],
+    "cpu": [
+      "arm64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-linux-arm64-musl"
+  },
+  {
+    "name": "@napi-rs/canvas-linux-riscv64-gnu",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-linux-riscv64-gnu/-/canvas-linux-riscv64-gnu-0.1.100.tgz",
+    "integrity": "sha512-mooqUBTIsccZpnoQC4NgrC1v6C1vof39etLNMnBwCY+p0gajWJvAHLGQ6g/gGyS5YrpDW+GefSN4+Cvcr08UWw==",
+    "optional": true,
+    "os": [
+      "linux"
+    ],
+    "cpu": [
+      "riscv64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-linux-riscv64-gnu"
+  },
+  {
+    "name": "@napi-rs/canvas-linux-x64-gnu",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-linux-x64-gnu/-/canvas-linux-x64-gnu-0.1.100.tgz",
+    "integrity": "sha512-1eCvkDCazm7FFhsT7DfGOdSaHgZVK3bt/dSBl5EWHOWmnz+I7j8tPseJqqD81NF+MH21jKUK4wQSDjN0mdhnTg==",
+    "optional": true,
+    "os": [
+      "linux"
+    ],
+    "cpu": [
+      "x64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-linux-x64-gnu"
+  },
+  {
+    "name": "@napi-rs/canvas-linux-x64-musl",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-linux-x64-musl/-/canvas-linux-x64-musl-0.1.100.tgz",
+    "integrity": "sha512-20arT6lnI19S68qNlii73TSEDbECNgzMz2EpldC1V3mZFuRkeujXkcebRk0LRJe9SEUAooYiLokfMViY8IX7yA==",
+    "optional": true,
+    "os": [
+      "linux"
+    ],
+    "cpu": [
+      "x64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-linux-x64-musl"
+  },
+  {
+    "name": "@napi-rs/canvas-win32-arm64-msvc",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-win32-arm64-msvc/-/canvas-win32-arm64-msvc-0.1.100.tgz",
+    "integrity": "sha512-DZFFT1wIAg37LJw37yhMRFfjATd3vTQzjZ1Yki8u2vhO6Hi5VE6BVaGQ1aaDu7xb4iMErz+9EOwjpS7xcxFeBw==",
+    "optional": true,
+    "os": [
+      "win32"
+    ],
+    "cpu": [
+      "arm64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-win32-arm64-msvc"
+  },
+  {
+    "name": "@napi-rs/canvas-win32-x64-msvc",
+    "version": "0.1.100",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/@napi-rs/canvas-win32-x64-msvc/-/canvas-win32-x64-msvc-0.1.100.tgz",
+    "integrity": "sha512-MyT1j3mHC2+Lu4pBi9mKyMJhtP6U7k7EldY7sj/uS5gJA65gTXt8MefJQXLJo5d/vZbuWmfxzkEUNc/urV3pHA==",
+    "optional": true,
+    "os": [
+      "win32"
+    ],
+    "cpu": [
+      "x64"
+    ],
+    "location": "node_modules/@napi-rs/canvas-win32-x64-msvc"
+  },
+  {
+    "name": "boolbase",
+    "version": "1.0.0",
+    "license": "ISC",
+    "resolved": "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz",
+    "integrity": "sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==",
+    "optional": false,
+    "location": "node_modules/boolbase"
+  },
+  {
+    "name": "cheerio",
+    "version": "1.0.0-rc.12",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/cheerio/-/cheerio-1.0.0-rc.12.tgz",
+    "integrity": "sha512-VqR8m68vM46BNnuZ5NtnGBKIE/DfN0cRIzg9n40EIq9NOv90ayxLBXA8fXC5gquFRGJSTRqBq25Jt2ECLR431Q==",
+    "optional": false,
+    "location": "node_modules/cheerio"
+  },
+  {
+    "name": "cheerio-select",
+    "version": "2.1.0",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/cheerio-select/-/cheerio-select-2.1.0.tgz",
+    "integrity": "sha512-9v9kG0LvzrlcungtnJtpGNxY+fzECQKhK4EGJX2vByejiMX84MFNQw4UxPJl3bFbTMw+Dfs37XaIkCwTZfLh4g==",
+    "optional": false,
+    "location": "node_modules/cheerio-select"
+  },
+  {
+    "name": "css-select",
+    "version": "5.2.2",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/css-select/-/css-select-5.2.2.tgz",
+    "integrity": "sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==",
+    "optional": false,
+    "location": "node_modules/css-select"
+  },
+  {
+    "name": "css-what",
+    "version": "6.2.2",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/css-what/-/css-what-6.2.2.tgz",
+    "integrity": "sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==",
+    "optional": false,
+    "location": "node_modules/css-what"
+  },
+  {
+    "name": "dom-serializer",
+    "version": "2.0.0",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/dom-serializer/-/dom-serializer-2.0.0.tgz",
+    "integrity": "sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==",
+    "optional": false,
+    "location": "node_modules/dom-serializer"
+  },
+  {
+    "name": "domelementtype",
+    "version": "2.3.0",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/domelementtype/-/domelementtype-2.3.0.tgz",
+    "integrity": "sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==",
+    "optional": false,
+    "location": "node_modules/domelementtype"
+  },
+  {
+    "name": "domhandler",
+    "version": "5.0.3",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/domhandler/-/domhandler-5.0.3.tgz",
+    "integrity": "sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==",
+    "optional": false,
+    "location": "node_modules/domhandler"
+  },
+  {
+    "name": "domutils",
+    "version": "3.2.2",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/domutils/-/domutils-3.2.2.tgz",
+    "integrity": "sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==",
+    "optional": false,
+    "location": "node_modules/domutils"
+  },
+  {
+    "name": "entities",
+    "version": "4.5.0",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/entities/-/entities-4.5.0.tgz",
+    "integrity": "sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==",
+    "optional": false,
+    "location": "node_modules/entities"
+  },
+  {
+    "name": "htmlparser2",
+    "version": "8.0.2",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/htmlparser2/-/htmlparser2-8.0.2.tgz",
+    "integrity": "sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==",
+    "optional": false,
+    "location": "node_modules/htmlparser2"
+  },
+  {
+    "name": "node-readable-to-web-readable-stream",
+    "version": "0.4.2",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/node-readable-to-web-readable-stream/-/node-readable-to-web-readable-stream-0.4.2.tgz",
+    "integrity": "sha512-/cMZNI34v//jUTrI+UIo4ieHAB5EZRY/+7OmXZgBxaWBMcW2tGdceIw06RFxWxrKZ5Jp3sI2i5TsRo+CBhtVLQ==",
+    "optional": true,
+    "location": "node_modules/node-readable-to-web-readable-stream"
+  },
+  {
+    "name": "nth-check",
+    "version": "2.1.1",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/nth-check/-/nth-check-2.1.1.tgz",
+    "integrity": "sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==",
+    "optional": false,
+    "location": "node_modules/nth-check"
+  },
+  {
+    "name": "parse5",
+    "version": "7.3.0",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/parse5/-/parse5-7.3.0.tgz",
+    "integrity": "sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==",
+    "optional": false,
+    "location": "node_modules/parse5"
+  },
+  {
+    "name": "parse5-htmlparser2-tree-adapter",
+    "version": "7.1.0",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/parse5-htmlparser2-tree-adapter/-/parse5-htmlparser2-tree-adapter-7.1.0.tgz",
+    "integrity": "sha512-ruw5xyKs6lrpo9x9rCZqZZnIUntICjQAd0Wsmp396Ul9lN/h+ifgVV1x1gZHi8euej6wTfpqX8j+BFQxF0NS/g==",
+    "optional": false,
+    "location": "node_modules/parse5-htmlparser2-tree-adapter"
+  },
+  {
+    "name": "entities",
+    "version": "6.0.1",
+    "license": "BSD-2-Clause",
+    "resolved": "https://registry.npmjs.org/entities/-/entities-6.0.1.tgz",
+    "integrity": "sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==",
+    "optional": false,
+    "location": "node_modules/parse5/node_modules/entities"
+  },
+  {
+    "name": "pdfjs-dist",
+    "version": "5.4.624",
+    "license": "Apache-2.0",
+    "resolved": "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-5.4.624.tgz",
+    "integrity": "sha512-sm6TxKTtWv1Oh6n3C6J6a8odejb5uO4A4zo/2dgkHuC0iu8ZMAXOezEODkVaoVp8nX1Xzr+0WxFJJmUr45hQzg==",
+    "optional": false,
+    "location": "node_modules/pdfjs-dist"
+  },
+  {
+    "name": "playwright-core",
+    "version": "1.62.0",
+    "license": "Apache-2.0",
+    "resolved": "https://registry.npmjs.org/playwright-core/-/playwright-core-1.62.0.tgz",
+    "integrity": "sha512-nsNRyq0r2zsG8AcRHWknc9QRA5XCueC7gWMrs+Gx2tlZn9hcl8zudfh00lhJPY1DE7NmZ6bDsT9g2yey8mXljA==",
+    "optional": false,
+    "location": "node_modules/playwright-core"
+  },
+  {
+    "name": "pngjs",
+    "version": "7.0.0",
+    "license": "MIT",
+    "resolved": "https://registry.npmjs.org/pngjs/-/pngjs-7.0.0.tgz",
+    "integrity": "sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==",
+    "optional": false,
+    "location": "node_modules/pngjs"
+  }
+]

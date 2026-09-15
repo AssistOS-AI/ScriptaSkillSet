@@ -1,0 +1,51 @@
+{
+  "version": "docling.rs 1.32.0, FP32 models-v1",
+  "files": {
+    "models/layout_heron.onnx": {
+      "bytes": 172208540,
+      "sha256": "97129cc5982735ec024802911b55a913b5fedd75214304e4c5039bc15f5f32f3",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/layout_heron.onnx"
+    },
+    "models/tableformer/bbox.onnx": {
+      "bytes": 52110,
+      "sha256": "b4a95578d62c7af6391744cddea6d830750bae4b5e16f1e31a3f8e5539848cdf",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/bbox.onnx"
+    },
+    "models/tableformer/bbox.onnx.data": {
+      "bytes": 39649280,
+      "sha256": "7610e2593bfaecd72a535370f06e8c2468f9bf208bd2abe46cc727dda0a11392",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/bbox.onnx.data"
+    },
+    "models/tableformer/decoder.onnx": {
+      "bytes": 432913,
+      "sha256": "bde95d8ec69cac03b30c5314734e0321306a8d35ab6e9a8006c5bfce1136ef47",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/decoder.onnx"
+    },
+    "models/tableformer/decoder.onnx.data": {
+      "bytes": 77856768,
+      "sha256": "f497d191f3907a2dd0ac9b4a2562e8f52c60f7657a1a714f5a8c4e855f3e39ef",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/decoder.onnx.data"
+    },
+    "models/tableformer/encoder.onnx": {
+      "bytes": 225842279,
+      "sha256": "83c9e77c56904d39f994b7a4d09460ea2bf2fbb5a998ce5da12cbe69bad081e0",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/encoder.onnx"
+    },
+    "darwin-arm64/docling.node": {
+      "bytes": 37133728,
+      "sha256": "ee27e24bd9edd09b74e0b7152f47edca2351761410f1e2abab65cadd7039891f"
+    },
+    "darwin-arm64/lib/libpdfium.dylib": {
+      "bytes": 7260512,
+      "sha256": "f151baf68cf7c4ebee7e7b9263bdce065436b8df7008fb174d89dd2a97fac124"
+    },
+    "linux-arm64/docling.node": {
+      "bytes": 32792720,
+      "sha256": "26c881b73697708bba5fd4c0285b128a8e9bf1a6b18924c066deb8b4f51df87a"
+    },
+    "linux-arm64/lib/libpdfium.so": {
+      "bytes": 7963264,
+      "sha256": "794a43ec86642d48ed69becb6923022cd0b34d23c81c524452d6f0549398d710"
+    }
+  }
+}

@@ -8,6 +8,7 @@ Portable document skills for an active LLM environment:
 local dependencies.
 
 - `pdf2htmlSkill` converts born-digital PDFs to semantic responsive HTML.
+- `validateBookSkill` uses local code to check and correct PDF/HTML layout, fonts and structure, propagate English presentation to existing languages, and produce text-only correction reports. See [workflow](skills/validateBookSkill/SKILL.md).
 - `translateHtmlSkill` translates semantic HTML with the active LLM while preserving structure and shared assets.
 - `humaniseHtmlSkill` conservatively improves same-language book prose chapter by chapter while preserving HTML, facts, links, and shared assets.
 - `comprehensiveSummarySkill` analyzes every content chapter and produces a source-traceable HTML summary for a requested reading time.

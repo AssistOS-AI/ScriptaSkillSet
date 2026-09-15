@@ -1,7 +1,7 @@
 {
   "title": "PDF to Semantic HTML",
   "family": "document-conversion",
-  "summary": "Converts born-digital PDFs to responsive, reader-resizable HTML with source-derived typography and heading rules, a managed runtime, and deterministic QA.",
+  "summary": "Converts born-digital PDFs to semantic responsive HTML with source-derived typography, local assets, proportional reader controls and deterministic QA. Automatically prepares missing local runtime components before conversion. Preserves source paragraph borders through shared PDF drawing evidence. Detects and recovers flattened source lists with page-continuing numbering and source list typography. The decorations command exports isolated horizontal source rules for display-page consumers.",
   "aliases": [
     "pdf2html",
     "pdf-to-html"
@@ -14,9 +14,11 @@
   "entrypoints": [
     "SKILL.md",
     "scripts/pdf2html",
-    "scripts/pdf2html.py",
     "references/dependencies.md",
-    "references/validation.md"
+    "references/validation.md",
+    "references/repair.md",
+    "scripts/setup.mjs",
+    "dependencies.md"
   ],
   "selfContained": true
 }

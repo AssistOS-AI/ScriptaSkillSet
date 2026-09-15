@@ -394,7 +394,7 @@ export async function buildJob(input, { overwrite = false } = {}) {
     'translation-source-sha256': job.sourceSha256
   });
   const candidate = path.join(dir, 'candidate.html');
-  await fs.writeFile(candidate, '<!doctype html>\n' + D.serialize(doc));
+  await fs.writeFile(candidate, D.serialize(doc));
   const { validateTranslation } = await import('./validation.mjs');
   const report = await validateTranslation(job.source, candidate, {
     targetLanguage: job.targetLanguage,

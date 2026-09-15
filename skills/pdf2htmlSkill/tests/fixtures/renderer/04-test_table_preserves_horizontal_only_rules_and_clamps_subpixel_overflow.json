@@ -1,0 +1,351 @@
+{
+  "name": "test_table_preserves_horizontal_only_rules_and_clamps_subpixel_overflow",
+  "input": "<html><body><table><caption>Table signals</caption><tr><th>Signal</th><th>Implication</th></tr><tr><td>Aspirin</td><td>Rapid feedback</td></tr><tr><td>Viagra</td><td>Immediate benefit</td></tr><tr><td>Coffin</td><td>Inevitable demand</td></tr></table><p>Page bounds</p></body></html>",
+  "evidence": {
+    "typography": {
+      "body_size_pt": 10,
+      "body_family": "sans-serif",
+      "text_color": "#111827",
+      "heading_scale": [
+        2.0,
+        1.55,
+        1.25
+      ],
+      "body_font_name": ""
+    },
+    "pages": [
+      {
+        "page_number": 1,
+        "width_pt": 432,
+        "height_pt": 648,
+        "words": [
+          {
+            "text": "Table",
+            "token": "table",
+            "bold": true,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 51.85,
+            "x1": 75,
+            "top": 5,
+            "bottom": 14,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "signals",
+            "token": "signals",
+            "bold": true,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 80,
+            "x1": 112,
+            "top": 5,
+            "bottom": 14,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Signal",
+            "token": "signal",
+            "bold": true,
+            "italic": false,
+            "size_pt": 8,
+            "x0": 57,
+            "x1": 85,
+            "top": 25,
+            "bottom": 33,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Implication",
+            "token": "implication",
+            "bold": true,
+            "italic": false,
+            "size_pt": 8,
+            "x0": 160,
+            "x1": 210,
+            "top": 25,
+            "bottom": 33,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Aspirin",
+            "token": "aspirin",
+            "bold": true,
+            "italic": false,
+            "size_pt": 8,
+            "x0": 57,
+            "x1": 88,
+            "top": 45,
+            "bottom": 53,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Rapid",
+            "token": "rapid",
+            "bold": false,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 160,
+            "x1": 185,
+            "top": 45,
+            "bottom": 54,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "feedback",
+            "token": "feedback",
+            "bold": false,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 190,
+            "x1": 230,
+            "top": 45,
+            "bottom": 54,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Viagra",
+            "token": "viagra",
+            "bold": true,
+            "italic": false,
+            "size_pt": 8,
+            "x0": 57,
+            "x1": 85,
+            "top": 65,
+            "bottom": 73,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Immediate",
+            "token": "immediate",
+            "bold": false,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 160,
+            "x1": 205,
+            "top": 65,
+            "bottom": 74,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "benefit",
+            "token": "benefit",
+            "bold": false,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 210,
+            "x1": 242,
+            "top": 65,
+            "bottom": 74,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Coffin",
+            "token": "coffin",
+            "bold": true,
+            "italic": false,
+            "size_pt": 8,
+            "x0": 57,
+            "x1": 82,
+            "top": 85,
+            "bottom": 93,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Inevitable",
+            "token": "inevitable",
+            "bold": false,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 160,
+            "x1": 205,
+            "top": 85,
+            "bottom": 94,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "demand",
+            "token": "demand",
+            "bold": false,
+            "italic": false,
+            "size_pt": 9,
+            "x0": 210,
+            "x1": 245,
+            "top": 85,
+            "bottom": 94,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "Page",
+            "token": "page",
+            "bold": false,
+            "italic": false,
+            "size_pt": 10,
+            "x0": 51.85,
+            "x1": 75,
+            "top": 120,
+            "bottom": 130,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          },
+          {
+            "text": "bounds",
+            "token": "bounds",
+            "bold": false,
+            "italic": false,
+            "size_pt": 10,
+            "x0": 350,
+            "x1": 387.3,
+            "top": 120,
+            "bottom": 130,
+            "font_family": "sans-serif",
+            "color": "#111827",
+            "font_name": ""
+          }
+        ],
+        "lines": [],
+        "links": [],
+        "rectangles": [
+          {
+            "x0": 51.1,
+            "x1": 153.1,
+            "top": 20,
+            "bottom": 40,
+            "fill_color": "#1c1b1a"
+          },
+          {
+            "x0": 153.1,
+            "x1": 387.1,
+            "top": 20,
+            "bottom": 40,
+            "fill_color": "#1c1b1a"
+          },
+          {
+            "x0": 51.1,
+            "x1": 153.1,
+            "top": 40,
+            "bottom": 60,
+            "fill_color": "#f5f0e7"
+          },
+          {
+            "x0": 153.1,
+            "x1": 387.1,
+            "top": 40,
+            "bottom": 60,
+            "fill_color": "#f5f0e7"
+          },
+          {
+            "x0": 51.1,
+            "x1": 153.1,
+            "top": 60,
+            "bottom": 80,
+            "fill_color": "#ffffff"
+          },
+          {
+            "x0": 153.1,
+            "x1": 387.1,
+            "top": 60,
+            "bottom": 80,
+            "fill_color": "#ffffff"
+          },
+          {
+            "x0": 51.1,
+            "x1": 153.1,
+            "top": 80,
+            "bottom": 100,
+            "fill_color": "#f5f0e7"
+          },
+          {
+            "x0": 153.1,
+            "x1": 387.1,
+            "top": 80,
+            "bottom": 100,
+            "fill_color": "#f5f0e7"
+          }
+        ],
+        "strokes": [
+          {
+            "x0": 51,
+            "x1": 387,
+            "top": 20,
+            "bottom": 20,
+            "color": "#c9c2b8",
+            "width": 0.5
+          },
+          {
+            "x0": 51,
+            "x1": 387,
+            "top": 40,
+            "bottom": 40,
+            "color": "#c9c2b8",
+            "width": 0.5
+          },
+          {
+            "x0": 51,
+            "x1": 387,
+            "top": 60,
+            "bottom": 60,
+            "color": "#c9c2b8",
+            "width": 0.5
+          },
+          {
+            "x0": 51,
+            "x1": 387,
+            "top": 80,
+            "bottom": 80,
+            "color": "#c9c2b8",
+            "width": 0.5
+          },
+          {
+            "x0": 51,
+            "x1": 387,
+            "top": 100,
+            "bottom": 100,
+            "color": "#c9c2b8",
+            "width": 0.5
+          }
+        ],
+        "images": []
+      }
+    ],
+    "fonts": []
+  },
+  "options": {
+    "title": "Horizontal rules",
+    "language": "en",
+    "source_page_count": 1,
+    "content_pages": [
+      1
+    ]
+  },
+  "originalRoot": "/private/var/folders/qb/skl4bjmn1m9dp9xynd7l68c80000gn/T/pytest-of-adrianganga/pytest-200/test_table_preserves_horizonta0",
+  "html": "<!doctype html>\n<html lang=\"en\"><head><title>Horizontal rules</title><meta content=\"width=device-width, initial-scale=1\" name=\"viewport\"/><meta content=\"pdf2html-skill\" name=\"generator\"/><link href=\"assets/styles.css\" rel=\"stylesheet\"/></head><body><main class=\"pdf-document\" data-reader-content=\"\"><section aria-label=\"PDF page 1\" class=\"source-page\" data-page-label=\"\" data-source-page=\"1\" id=\"page_1\" style=\"--pdf-page-top: 1.16%; --pdf-page-left: 12.00%; --pdf-page-right: 10.35%; --pdf-page-bottom: 119.91%; --pdf-reader-size: var(--reader-font-size, var(--standalone-size, 10.00pt)); font-size: var(--pdf-reader-size)\"><div class=\"table-scroll\"><table style=\"table-layout: fixed; border-collapse: collapse; width: 99.94%; margin-left: 0.00%; margin-right: 0.06%\"><colgroup><col style=\"width: 30.36%\"/><col style=\"width: 69.64%\"/></colgroup><caption style=\"font-size: calc(var(--pdf-reader-size) * 0.9000); padding-left: 0.75pt; text-align: left\"><strong>Table</strong> <strong>signals</strong></caption><tr style=\"height: 20.00pt\"><th style=\"font-size: calc(var(--pdf-reader-size) * 0.8000); background-color: #1c1b1a; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 5.90pt 7.00pt 5.90pt\"><strong>Signal</strong></th><th style=\"font-size: calc(var(--pdf-reader-size) * 0.8000); background-color: #1c1b1a; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 6.90pt 7.00pt 6.90pt\"><strong>Implication</strong></th></tr><tr style=\"height: 20.00pt\"><td style=\"font-size: calc(var(--pdf-reader-size) * 0.8000); background-color: #f5f0e7; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 5.90pt 7.00pt 5.90pt\"><strong>Aspirin</strong></td><td style=\"font-size: calc(var(--pdf-reader-size) * 0.9000); background-color: #f5f0e7; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 6.90pt 6.00pt 6.90pt\">Rapid feedback</td></tr><tr style=\"height: 20.00pt\"><td style=\"font-size: calc(var(--pdf-reader-size) * 0.8000); background-color: #ffffff; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 5.90pt 7.00pt 5.90pt\"><strong>Viagra</strong></td><td style=\"font-size: calc(var(--pdf-reader-size) * 0.9000); background-color: #ffffff; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 6.90pt 6.00pt 6.90pt\">Immediate benefit</td></tr><tr style=\"height: 20.00pt\"><td style=\"font-size: calc(var(--pdf-reader-size) * 0.8000); background-color: #f5f0e7; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 5.90pt 7.00pt 5.90pt\"><strong>Coffin</strong></td><td style=\"font-size: calc(var(--pdf-reader-size) * 0.9000); background-color: #f5f0e7; border: 0; border-top: 0.50pt solid #c9c2b8; border-right: 0; border-bottom: 0.50pt solid #c9c2b8; border-left: 0; color: #111827; padding: 5.00pt 6.90pt 6.00pt 6.90pt\">Inevitable demand</td></tr></table></div><p>Page bounds</p></section></main><script id=\"pdf2html-reader-bridge\">(() => {\n  window.addEventListener(\"message\", (event) => {\n    if (event.data?.type !== \"axiologic-reader-settings\") return;\n    const size = Number(event.data.fontSize);\n    if (Number.isFinite(size) && size > 0) {\n      document.documentElement.style.setProperty(\"--standalone-size\", `${size}rem`);\n    }\n    if (event.data.theme) document.documentElement.dataset.theme = event.data.theme;\n  });\n})();</script></body></html>",
+  "css": "\n:root {\n  --pdf-body-size: 10.00pt;\n  --pdf-text: #111827;\n  --pdf-page-width: 432.00pt;\n  --pdf-page-height: 648.00pt;\n  --pdf-page-aspect: 432.00 / 648.00;\n}\n* { box-sizing: border-box; }\nhtml { background-color: #f5f5f5; color: var(--pdf-text); }\nbody {\n  max-width: min(800px, var(--pdf-page-width));\n  margin: 0 auto;\n  padding: 2rem 0;\n  font-family: Inter, \"Segoe UI\", Arial, sans-serif;\n  font-size: var(--standalone-size, var(--pdf-body-size));\n  line-height: 1.45;\n}\nmain.pdf-document { width: 100%; margin: 0; }\n.source-page {\n  position: relative;\n  aspect-ratio: var(--pdf-page-aspect);\n  margin-bottom: 1.5rem;\n  padding: var(--pdf-page-top, 2rem) var(--pdf-page-right, 2rem) var(--pdf-page-bottom, 2rem) var(--pdf-page-left, 2rem);\n  background-color: #fff;\n  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);\n}\n.source-page:last-child { margin-bottom: 0; }\n.source-page > :first-child { margin-top: 0; }\n.source-page-full-image { overflow: hidden; padding: 0; }\n.source-page-full-image > figure { position: absolute; inset: 0; margin: 0; }\n.source-page-full-image > figure > img { width: 100%; height: 100%; object-fit: cover; }\n.source-page::after {\n  content: attr(data-page-label);\n  position: absolute;\n  right: 1rem;\n  bottom: 0.75rem;\n  left: 1rem;\n  color: #777;\n  font-size: 0.75rem;\n  line-height: 1;\n  text-align: center;\n}\nh1 { font-size: 2.00em; }\nh2 { font-size: 1.55em; }\nh3 { font-size: 1.25em; }\nh1, h2, h3, h4, h5, h6 {\n  margin-top: 1.5em;\n  margin-bottom: 0.5em;\n  color: #333;\n  line-height: 1.25;\n  break-after: avoid;\n}\nh1 { border-bottom: 0; }\np { margin: 0 0 0.55em; text-align: justify; }\nh1, h2, h3, h4, h5, h6, p, li, td, th, caption, figcaption { overflow-wrap: anywhere; }\nfigure { max-width: 100%; margin: 1.5em 0; text-align: center; }\nimg { display: block; max-width: 100%; height: auto; margin-inline: auto; }\nfigcaption { margin-top: 0.5em; color: #666; text-align: center; }\n.table-scroll { width: 100%; max-width: 100%; overflow-x: auto; }\ntable { width: 100%; max-width: 100%; margin: 1em 0; border-collapse: collapse; }\nth, td { padding: 8px; border: 1px solid #ddd; text-align: start; vertical-align: top; }\nth { background-color: #f2f2f2; font-weight: bold; }\n.toc-table { margin: 0; border: 0; table-layout: auto; }\n.toc-table td { padding: 0; border: 0; }\n.toc-part-row td { font-weight: 700; }\n.toc-entry { display: flex; align-items: baseline; gap: 0.3em; width: 100%; box-sizing: border-box; padding-left: var(--toc-indent, 0pt); color: inherit; text-decoration: none; }\n.toc-title { flex: 0 1 auto; }\n.toc-part-title { flex: 0 1 auto; }\n.toc-leader { flex: 1 1 auto; min-width: 1rem; border-bottom: 1px dotted currentColor; }\n.toc-page { flex: 0 0 auto; min-width: 2ch; text-align: right; }\n.contents-list { margin: 0; }\n.contents-list-entry { margin: 0 0 0.45em; line-height: 1.25; text-align: left; }\n.contents-list-entry:last-child { margin-bottom: 0; }\npre { padding: 1em; overflow: auto; background-color: #f6f8fa; border-radius: 3px; }\ncode { padding: 0.2em 0.4em; background-color: #f6f8fa; border-radius: 3px; font-family: \"SFMono-Regular\", Consolas, \"Liberation Mono\", monospace; }\npre code { padding: 0; background-color: transparent; }\n.formula { margin: 1em 0; padding: 0.5em; background-color: #f9f9f9; text-align: center; }\n.formula-not-decoded {\n  margin: 1em 0;\n  padding: 0.5em;\n  background: repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #f9f9f9 10px, #f9f9f9 20px);\n  text-align: center;\n}\n.key-value-region { margin: 1em 0; padding: 1em; background-color: #f9f9f9; border-radius: 4px; }\n.key-value-region dt { font-weight: bold; }\n.key-value-region dd { margin: 0 0 0.5em 1em; }\n.form-container { margin: 1em 0; padding: 1em; border: 1px solid #ddd; border-radius: 4px; }\n.form-item { margin-bottom: 0.5em; }\n.image-classification { margin-top: 0.5em; color: #666; font-size: 0.9em; }\ndetails.docling-meta { margin: 0.5em 0; font-size: 0.9em; text-align: left; }\ndetails.docling-meta > summary { padding: 2px 6px; color: #555; cursor: pointer; font-style: italic; }\n.docling-meta-field { margin: 4px 0 4px 1em; padding: 6px 10px; background-color: #f0f0f0; border-left: 3px solid #ccc; border-radius: 3px; text-align: left; }\n.docling-meta-field-label { color: #444; font-weight: bold; }\na { color: inherit; text-decoration: inherit; }\n@media (max-width: 640px) {\n  body { padding: 0.75rem; }\n  .source-page { margin-bottom: 1rem; }\n  .source-page::after { bottom: 0.5rem; }\n}\n@media print {\n  html { background: #fff; }\n  body { max-width: none; padding: 0; }\n  main.pdf-document { width: auto; margin: 0; }\n  .source-page { min-height: var(--pdf-page-height); margin: 0; padding: 0; aspect-ratio: auto; box-shadow: none; }\n  .source-page:not(:empty) { padding-top: var(--pdf-page-top, 0%); }\n  .source-page + .source-page:not(:empty) { break-before: page; }\n  a { color: inherit; }\n}\n"
+}

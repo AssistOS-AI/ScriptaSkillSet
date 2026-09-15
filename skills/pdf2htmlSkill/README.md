@@ -1,79 +1,89 @@
 # pdf2htmlSkill
 
-`pdf2htmlSkill` is a local-first Codex skill for converting born-digital PDFs into semantic, responsive HTML. It preserves headings, paragraphs, lists, native tables, figures, captions, local images, links, source-page boundaries, reading order, and available typography evidence as faithfully as practical without turning every page into an absolutely positioned replica.
+Convert born-digital PDFs into semantic, responsive HTML books. The source PDF controls text, headings, emphasis, tables, images, links and typography. Each source page has a stable anchor and a responsive sheet with source-derived margins.
 
-The source PDF is authoritative. The converter does not rewrite document text, invent headings, apply emphasis by vocabulary, or synthesize missing content. Bold, italic, and materially different block font sizes are aligned to the exact source occurrence and page, including blocks that Docling classified inconsistently. Heading levels are retained only when the source font size supports them. Centering requires centered source-line geometry and rejects ordinary paragraphs that begin on the page's repeated body indent; uppercase display blocks may span wider than ordinary centered captions. Source-derived vertical gaps are transferred only between adjacent centered flow blocks, so later notices cannot create false whitespace after a heading across intervening prose. A repeated first-line paragraph indent is transferred from source geometry only to paragraphs whose first line exhibits that offset, including short one-line paragraphs. Table fills and each horizontal or vertical border edge are derived independently from source geometry, while sub-pixel table bounds are clamped to the responsive content width. One-column table rows may be split only when consecutive PDF text lines reconstruct the serialized table text exactly. Linked contents tables are rendered as borderless typographic entries with flexible dotted leaders, matching their source-page function rather than showing spreadsheet-style cells.
+Distribute the skill checkout. Runtime packages, tools, models, browsers and caches are installed locally and excluded by `.gitignore`. Retain notices and required source for the native binaries bundled with the skill.
 
-Images remain images even when their pixels contain text. OCR, vision-language models, LLM review, and remote document services are intentionally excluded.
+## Installation
 
-Heading rules follow aligned PDF drawing evidence. The stylesheet adds no decorative underline to chapter headings; source-derived inline borders remain intact.
+Use Node.js 22+ with npm. The first `convert` or `validate` command automatically installs missing runtime components inside the skill and then continues. Internet and write access to the skill directory are required during installation. To prepare it in advance:
 
-## Host requirements
+```sh
+node /path/to/pdf2htmlSkill/scripts/setup.mjs
+/path/to/pdf2htmlSkill/scripts/pdf2html doctor
+```
 
-- `uv`
-- Poppler commands `pdfinfo` and `pdftoppm`
-- Network access during the first launcher run and initial Docling model download
+The skill owns its Node.js packages, Docling.rs native engine, layout/table models and managed Chromium. The supplied binaries cover macOS arm64 and Linux arm64 with glibc. See [runtime installation](references/dependencies.md) for local tool packages, container prerequisites, other architecture builds and offline copying. See [dependencies](dependencies.md) for versions and licenses.
 
-Python 3.12, the project environment, Python packages, and Chromium are managed automatically inside the skill folder by the portable launcher. Poppler remains a host package because it is supplied by the operating system.
+## Conversion
 
-## First run
+From the book folder:
 
-```bash
-cd /path/to/book/en
+```sh
 /path/to/pdf2htmlSkill/scripts/pdf2html convert
 ```
 
-No separate setup or `doctor` command is required for normal use. The POSIX launcher works on macOS and Linux and performs the complete first-run sequence inside this one command: it checks `uv` and Poppler, installs a native managed Python 3.12 through `uv`, synchronizes the locked runtime dependencies into the skill-owned `.venv`, installs Playwright Chromium, runs `doctor`, and then performs the requested conversion. Subsequent calls resynchronize cheaply when the lock changes and reuse the ready environment. No virtual environment or machine-specific absolute path is committed to the repository.
+The command selects `book.pdf`, or the PDF present in the invocation folder, and publishes `index.html` plus `assets/` beside the source. Multiple PDFs in the same directory are rejected because they would target the same HTML file.
 
-When Codex must elevate execution for Chromium or network access, approve the launcher command with a reusable prefix. The setup, browser installation, runtime check, conversion, and validation then inherit the same execution boundary; Codex must not request separate approvals for their individual subprocesses. `scripts/pdf2html doctor` remains available only for explicit troubleshooting.
+Pass files or directories to convert multiple editions. Directory inputs are searched recursively:
 
-## Convert in the current PDF folder
-
-```bash
-cd /path/to/book/en
-/path/to/pdf2htmlSkill/scripts/pdf2html convert
+```sh
+/path/to/pdf2htmlSkill/scripts/pdf2html convert ../en/book.pdf ../ro/book.pdf
 ```
 
-With no input argument, the command selects `book.pdf` from the invocation folder. If `book.pdf` is absent and exactly one differently named PDF is present, that PDF is accepted automatically. The command writes `index.html` plus `assets/` beside it. The source PDF and any unrelated files remain untouched. The generated `index.html` path is returned as the primary artifact.
+Language comes from a terminal filename marker such as `_RO`, then a supported parent folder (`en`, `ro`, `fr`, `de`, `es`, `pt`, `it`, `pl`), with `--lang` as fallback. `--title` sets the title for one PDF. `--image-scale` controls image raster scale, default 2.
 
-You may name the PDF explicitly with `/path/to/pdf2htmlSkill/scripts/pdf2html convert book.pdf`. Add `--overwrite` when the folder already contains an `index.html` generated by this tool. Add `--keep-qa-artifacts` only when persistent diagnostics are required; it creates a hidden `.pdf2html-qa/` folder beside the book.
+For a separate output directory:
 
-The explicit isolated-output form remains available:
-
-```bash
+```sh
 /path/to/pdf2htmlSkill/scripts/pdf2html convert input.pdf --output output/document --lang en
 ```
 
-## Convert multiple PDFs
+Use `--overwrite` to replace converter-owned output. In-place publication preserves the source and unrelated files. A failed validation retains diagnostics and stops publication. JSON on stdout returns the artifact path, options, source hash, document counts, runtime and validation result.
 
-Pass files, directories, or a mixture. Directories are searched recursively. Every PDF is converted beside its source, so each edition must have its own folder:
+## Fidelity and reader controls
 
-```bash
-/path/to/pdf2htmlSkill/scripts/pdf2html convert ../en/book.pdf ../ro/book.pdf ../fr/book.pdf
-```
+The converter aligns typography to each source occurrence, preserves available embedded fonts, repairs paragraph boundaries and indentation from source geometry, and derives table fills and individual borders from PDF drawings. Heading rules appear only when supported by an aligned source stroke. Fully ruled tables missed by region classification are recovered only when their existing text fits the closed source grid exactly, including merged cells.
 
-The language is inferred from a supported parent folder (`en`, `ro`, `fr`, `de`, `es`, `pt`, `it`, or `pl`) or from a filename suffix such as `_RO`. `--lang` supplies a fallback. Two PDFs in the same folder are rejected because both would target the same `index.html`.
+Numbered lists retain their starting numbers and any explicit numbering gaps. Images remain local images, including text inside image pixels. Headings, paragraphs, lists, tables, captions and figures remain semantic HTML. Rendering is responsive, so line wrapping can differ from fixed PDF pages.
 
-## Validate an existing result
+Ruled chapter labels omitted by layout recognition are recovered from exact source text when their typography and position support the match. Heading weight follows the source so a medium font does not acquire browser-generated bold.
 
-```bash
+Source font sizes use ratios of `--pdf-reader-size`. Host readers can set `--reader-font-size`; local iframe readers can send `axiologic-reader-settings`. A−/A+ scales prose, headings, captions and tables together. The generated HTML contains its own iframe bridge and local assets.
+
+## Validation
+
+```sh
 /path/to/pdf2htmlSkill/scripts/pdf2html validate input.pdf --html output/document/index.html
 ```
 
-Validation results are returned to the caller without adding technical files to the book. Add `--keep-qa-artifacts` only when persistent diagnostic reports are needed.
+Checks cover text recall and order, source-page anchors, structural counts, local assets, image decoding and browser overflow at 1440, 1024 and 390 pixels. Source-page renders and browser screenshots provide an informational visual score. `--keep-qa-artifacts` retains reports and previews in `.pdf2html-qa/`; conversion metadata otherwise remains in the command result.
 
-Every source page has a stable `page_N` anchor. In normal browser view each source page appears as an individual white sheet on a neutral background, with the PDF's physical aspect ratio, source-derived margins, a compact visible gap, subtle shadow, and numbered footer. Short pages retain their original blank area instead of collapsing around their text. The sheets scale responsively with the viewport; explicit print page height and page breaks remain confined to print CSS. URI annotations become local HTML links, and PDF internal destinations point to the page anchors. Validation fails if the anchor set differs from the source PDF page set.
-
-Generated editions also support adaptable-reader text controls. Source font sizes are stored as ratios of a shared base, so a host `--reader-font-size` setting resizes prose, headings, captions, and table cells consistently. When an edition is loaded through a local `file:` iframe, the inline bridge accepts the reader's `axiologic-reader-settings` message and applies its `fontSize` without depending on files from the host website.
+Text recall below 98% warns and below 95% fails. Text-order recall below 95% warns and below 90% fails. Multi-column documents can fail the order gate when row-wise source extraction and semantic column order differ; inspect retained diagnostics. See [validation](references/validation.md).
 
 ## Development
 
-```bash
-uv python install 3.12
-uv sync --managed-python --python 3.12 --extra dev
-uv run pytest
-uv run python -m compileall -q src tests
-RUN_PDF2HTML_INTEGRATION=1 uv run pytest -m integration
+```sh
+node --test tests/*.test.mjs
+RUN_PDF2HTML_INTEGRATION=1 node --test tests/*.test.mjs
 ```
 
-The integration test downloads or reuses Docling models and therefore remains opt-in.
+Renderer fixtures check CSS and semantic DOM equivalence. Source, table-recovery and publication tests verify geometry, spans, image handling, ownership and rollback. The integration test converts a PDF and exercises proportional reader resizing. `tests/reader-contract.mjs` can test the actual host reader in both HTTP and local iframe modes.
+
+## Existing-book correction
+
+PDF content and visual fidelity are mandatory repair defaults, including fonts, paragraph geometry and borderless contents. The final result returns to the existing canonical HTML after host-managed backup, hash checks and revalidation in the actual reader. Separate repair outputs are temporary safety candidates, not duplicate editions. See references/repair.md for the required procedure.
+
+Use `scripts/pdf2html repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. No missing translations or whole chapters are generated. See [repair contract](references/repair.md).
+
+## Source paragraph borders
+
+The renderer merges collinear vertical PDF strokes and restores a left paragraph border only when source geometry and aligned text identify the complete paragraph. Width, color and horizontal insets come from the source; no quote wording is hard-coded. Table intersections and marginal rules are excluded. Ambiguous or split-paragraph matches remain unresolved.
+
+Use `scripts/pdf2html decorations INPUT.pdf` to export source-hash-bound JSON with `borders` and `unresolved`. This read-only command reuses the existing PDF.js/QPDF extractor, performs no installation, conversion, rasterization or browser capture, and requires the already installed runtime. Consumers can validate and repair existing HTML without importing this skill's modules.
+
+## Flattened source lists
+
+The source presentation provider also returns numbered and bulleted list groups from PDF line geometry. Recognize consecutive markers and hanging continuation lines; exclude numbered contents rows. Recover a uniquely matched complete group from a flattened paragraph, preserving exact text, inline emphasis, page IDs and prose before/after it. Keep the original literal markers in semantic ol/ul/li elements, hide generated markers and measure their hanging inset. Ordered groups retain their starting number across source pages. Font size and leading follow list-specific source measurements, not the prose default. Missing or ambiguous matches are findings, never permission to rewrite text. The decorations JSON command now includes lists alongside paragraph borders, using the same extraction pass.
+
+The read-only decorations JSON also includes `horizontalRules`: isolated interior horizontal strokes with page number, x0/x1, top/bottom, width and color from the PDF. Strokes intersecting vertical table edges are excluded. This evidence supports source-grounded display-page repair in consumers; no title wording or decorative style is inferred.

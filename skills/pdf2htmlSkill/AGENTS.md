@@ -19,6 +19,6 @@ This repository is one portable `pdf2html` skill. The root `SKILL.md` is the ope
 - Do not add OCR, remote document upload, or LLM validation without an explicit contract change.
 - Preserve input PDFs and unknown files in output directories.
 - Update `README.md`, `SKILL.md`, `DS.md`, `skill.json`, references, and tests when interfaces or behavior change.
-- Use Python 3.10 through 3.13, type hints, focused modules, pathlib, and explicit subprocess argument arrays.
+- Use Node.js 22+, ECMAScript modules in `.mjs` files, focused modules, `node:` built-ins, and explicit subprocess argument arrays. Record specialized dependencies and their licenses in `dependencies.md`.
 - Run unit tests, syntax checks, `doctor`, and at least one opted-in integration conversion after substantive implementation changes.
 
