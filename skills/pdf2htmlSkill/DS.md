@@ -1,5 +1,11 @@
 # PDF to semantic HTML design
 
+
+## Source table evidence
+
+The read-only `decorations INPUT.pdf` JSON includes `tables` alongside borders, lists and horizontal rules. It recognizes closed ruled grids and tables whose horizontal row rules and adjacent cell fills establish complete column partitions, including unfilled alternating rows. Recognition requires text confined to every inferred column; decorative rectangles, crossing text and missing boundaries are rejected. Evidence includes source page width, cell text and spans, column widths, fills, individual border edges, vertical alignment and uniform typography. Mixed typography remains null and unsupported tables remain uncertified. The command flushes stdout before exit and performs no conversion, installation or rasterization.
+
+
 ## Runtime and commands
 
 Node.js ECMAScript modules implement the skill. The public launcher is `scripts/pdf2html`, with `doctor`, `convert` and `validate` commands. `convert` and `validate` run `scripts/setup.mjs --ensure` before importing conversion modules. Setup provisions missing pinned models, JavaScript packages, Chromium and local Poppler/QPDF packages under an installation lock, then checks the runtime in a fresh process. `doctor` remains read-only. Runtime paths resolve inside the skill directory; local command binaries take precedence over PATH. See `dependencies.md` for the complete inventory and licenses.

@@ -3,6 +3,10 @@ export function paginateDocument({blankPages=[],origin='source',expectedPages=nu
   const root=document.querySelector('[data-validatebook-root]')||document.body;
   const narrative=()=>{const copy=root.cloneNode(true);copy.querySelectorAll('script,style,template,noscript').forEach(n=>n.remove());return copy.textContent;};
   const before=narrative();
+  // A reader imports the first matching root. Pagination must never clone that
+  // entry point into page-local fragments.
+  root.setAttribute('data-reader-content','true');
+  root.querySelectorAll('[data-reader-content]').forEach(n=>n.removeAttribute('data-reader-content'));
   const existing=[...root.querySelectorAll(':scope > .pdf-source-page')];
   if(existing.length){
     const pages=existing.map(n=>Number(n.getAttribute('data-reader-page')));
@@ -47,6 +51,36 @@ export function paginateDocument({blankPages=[],origin='source',expectedPages=nu
 }
 
 // Executed in Chromium against Poppler XML, never against document scripts.
+export function repairPageShells() {
+  const root=document.querySelector('[data-validatebook-root]');
+  if(!root)return [];
+  const pages=[...root.querySelectorAll(':scope > .pdf-source-page[data-reader-page]')];
+  if(!pages.length)return [];
+  const originalText=root.textContent;
+  const changes=[];
+  root.setAttribute('data-reader-content','true');
+  root.querySelectorAll('[data-reader-content]').forEach(n=>n.removeAttribute('data-reader-content'));
+  // Consecutive normal-flow sections may share a page, especially in translations.
+  // Only structural shells are eligible; prose and decorated layouts retain
+  // their spacing. The page box owns the outer inset exactly once.
+  for(const page of pages){
+    const pending=[...page.children];
+    while(pending.length){
+      const shell=pending.shift();
+      if(!shell.matches('main,article,section,div')||[...shell.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()))continue;
+      const style=getComputedStyle(shell);
+      if(!['block','flow-root'].includes(style.display)||!['static','relative'].includes(style.position)||!['transparent','rgba(0, 0, 0, 0)'].includes(style.backgroundColor)||style.backgroundImage!=='none'||['Top','Right','Bottom','Left'].some(side=>parseFloat(style['border'+side+'Width'])>0))continue;
+      const properties={'padding':'0px','margin':'0px','min-height':'0px','font-size':'inherit','break-before':'auto','break-after':'auto'};
+      const before=shell.getAttribute('style');
+      for(const [key,value] of Object.entries(properties))shell.style.setProperty(key,value,'important');
+      changes.push({kind:'page_shell_spacing',page:page.getAttribute('data-reader-page'),before,after:shell.getAttribute('style')});
+      pending.push(...shell.children);
+    }
+  }
+  if(root.textContent!==originalText)throw Error('Page shell repair changed narrative text');
+  return changes;
+}
+
 export function sourcePagePresentation(xml) {
   const doc=new DOMParser().parseFromString(xml,'text/xml');
   if(doc.querySelector('parsererror'))throw Error('Invalid source typography XML');
@@ -117,16 +151,27 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
   return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,mapping:result,unmatched,changes};
 }
 
-export function pagePaddingDifferences(layout,profile) {
-  if(!profile)return [];
+export function pagePaddingDifferences(layout,profile,language='en') {
+  if(!profile||language!=='en')return [];
   return (layout.pagination?.pages||[]).filter(page=>!page.padding||page.padding.some((value,i)=>Math.abs(value/page.width-(page.cover?0:profile.margins[['top','right','bottom','left'][i]]/profile.width))>.002)).map(page=>({page:page.number,width:layout.width,padding:page.padding,expected:profile.margins}));
+}
+
+export function pageHeightDifferences(layout,profile) {
+  if(!profile)return [];
+  return (layout.pagination?.pages||[]).filter(p=>p.height+2<p.width*profile.height/profile.width)
+    .map(p=>({page:p.number,width:layout.width,height:p.height,minimumHeight:p.width*profile.height/profile.width}));
+}
+
+export function translatedPaginationCss({width,height}) {
+  if(!(width>0&&height>0))throw Error('Source PDF page dimensions required');
+  return '/* validateBook translated flow */\n[data-validatebook-root] > .pdf-source-page{min-height:'+height/width*100+'cqw;--validatebook-page-scale:max(1,calc(100cqw / '+width*4/3+'px));font-size:calc(1em * var(--validatebook-page-scale))}\n';
 }
 
 export function paginationCss({width,height,margins,contents=[],contentsLineHeight,contentsFontSize}) {
   if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw Error('Source PDF page dimensions required');
   const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
   const toc=contents.length?`
-[data-validatebook-root] .source-contents-heading{margin:0 0 .25em!important;text-align:left!important;font-family:inherit}
+[data-validatebook-root] .source-contents-heading{margin:0 0 .25em!important;text-align:left!important}
 [data-validatebook-root] .source-toc{list-style:none;margin:0;padding:0}
 [data-validatebook-root] .source-toc li{margin:0!important;line-height:${contentsLineHeight/contentsFontSize};text-indent:0}
 [data-validatebook-root] .source-toc a[data-page-label]{display:flex;align-items:baseline;gap:.12em;color:inherit;text-decoration:none}
@@ -138,13 +183,18 @@ export function paginationCss({width,height,margins,contents=[],contentsLineHeig
 ${[...new Set(contents.map(r=>r.indent))].sort((a,b)=>a-b).map((indent,i)=>`[data-validatebook-root] .source-toc li[data-toc-level="${i}"]{padding-left:${indent/contentsFontSize}em}`).join('\n')}
 `.replaceAll('[data-validatebook-root]','[data-validatebook-root][data-validatebook-root]'):'';
   return `/* validateBook source pagination */
+@property --validatebook-page-scale{syntax:"<number>";inherits:true;initial-value:1}
 [data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size;background:var(--reader-surround,var(--standalone-surround,#e3e6e4));box-shadow:none;border-color:transparent}
-[data-validatebook-root] > .pdf-source-page{display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
+[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:max(1,calc(100cqw / ${width*4/3}px));font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
 [data-validatebook-root] > .pdf-source-page:last-of-type{margin-bottom:0;break-after:auto}
-[data-validatebook-root] > .pdf-source-page:has(> figure#page_1){padding:0}
-.pdf-source-page > figure#page_1{margin:0}
-.pdf-source-page > figure#page_1 img{display:block;width:100%;height:auto;margin:0}
+[data-validatebook-root] > .pdf-source-page:has(figure#page_1){padding:0}
+.pdf-source-page figure#page_1{margin:0}
+.pdf-source-page figure#page_1 img{display:block;width:100%;height:auto;margin:0}
 .pdf-source-page p[data-page-continuation]{text-indent:0!important}
+[data-validatebook-root] img, [data-validatebook-root] svg, [data-validatebook-root] video{max-width:100%;height:auto}
+[data-validatebook-root] .pdf-table-wrap{max-width:100%;overflow-x:auto}
+[data-validatebook-root] table{max-width:100%;border-collapse:collapse}
+[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:anywhere}
 ${toc}
 @media print{[data-validatebook-root]:has(> .pdf-source-page){width:100%;max-width:none;padding:0;border:0;background:transparent}[data-validatebook-root] > .pdf-source-page{min-height:0;margin:0;border:0;box-shadow:none;break-after:page}.pdf-source-page[data-blank-page]{min-height:90vh}}
 `;

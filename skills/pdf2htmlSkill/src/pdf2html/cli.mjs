@@ -13,8 +13,9 @@ try {
     const { inspectSource } = await import('./source.mjs');
     const { paragraphBorders } = await import('./decorations.mjs');
     const { sourceLists } = await import('./lists.mjs');
+    const { sourceTables } = await import('./source-tables.mjs');
     const source = await inspectSource(process.argv[3]);
-    process.stdout.write(JSON.stringify({ sourceSha256: source.profile.sha256, ...paragraphBorders(source.evidence), lists: sourceLists(source.evidence) }) + '\n');
+    await new Promise((resolve,reject)=>process.stdout.write(JSON.stringify({ sourceSha256: source.profile.sha256, ...paragraphBorders(source.evidence), lists: sourceLists(source.evidence), tables: sourceTables(source.evidence) }) + '\n',error=>error?reject(error):resolve()));
     process.exit(0);
   }
   if (process.argv[2] === 'fonts') {

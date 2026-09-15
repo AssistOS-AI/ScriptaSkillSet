@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import { discover, prepare, report } from './audit.mjs';
 import { exists, hash, readJson, writeJson } from './storage.mjs';
 import { textReport } from './layout-report.mjs';
+import {workingCopy,installWorkingCopy} from './working-copy.mjs';
 
 export function isDisposableJobDirectory(directory, bookRoot) {
   const job = path.resolve(directory);
@@ -57,8 +58,10 @@ export async function runCorrections(runPass, onPass = async () => {}) {
   }
 }
 
-export async function complete(root, options = {}) {
+async function completeCandidate(root, options = {}) {
   const selection = await discover(root,options);
+  const sourceHtml=await fs.readFile(selection.documents[0].file,'utf8');
+  const paginate=options.paginate??/\bid=["']page_\d+["']/.test(sourceHtml);
   const directory = path.resolve(options.jobDir || path.join(selection.root,'.validatebook-layout'));
   await fs.mkdir(directory,{recursive:true});
   const lockFile=path.join(directory,'complete.lock');
@@ -70,7 +73,7 @@ export async function complete(root, options = {}) {
     await writeJson(stateFile,state);
     const execution=await runCorrections(async index=>{
       const jobDir=path.join(runDirectory,'pass-'+(index+1));
-      const result=await prepare(selection.root,{...options,autoCorrect:true,jobDir,patches:index===0?options.patches:undefined});
+      const result=await prepare(selection.root,{...options,paginate,autoCorrect:true,jobDir});
       const job=await readJson(path.join(jobDir,'job.json'));
       return {result,inputs:job.inputs};
     },async pass=>{
@@ -94,9 +97,38 @@ export async function complete(root, options = {}) {
     await fs.copyFile(temporary,reportFile);
     Object.assign(state,{status:execution.failure?'failed':verified.status,failure:execution.failure,reportText:reportFile,reportSha256:hash(content)});
     await writeJson(stateFile,state);
-    await discardTemporaryWork(directory, selection.root);
-    return {...aggregate,status:state.status,failure:state.failure,reportText:reportFile,job:null,stateFile:null};
+    // Recovery and rejection evidence are part of the result, including failures.
+    // Never delete the only originals after changing a book.
+    return {...aggregate,status:state.status,failure:state.failure,reportText:reportFile,job:execution.result.job,stateFile};
   } finally {await lock.close().catch(()=>{});await fs.unlink(lockFile).catch(()=>{});}
+}
+
+export async function complete(root,options={}) {
+  const selection=await discover(root,options);
+  if(options.pdf||options.english)throw Error('Transactional completion requires source files declared inside the book; external overrides are audit-only.');
+  const directory=path.resolve(options.jobDir||path.join(selection.root,'.validatebook-layout'));
+  await fs.mkdir(directory,{recursive:true});
+  const lockFile=path.join(directory,'transaction.lock');
+  const lock=await fs.open(lockFile,'wx');
+  const transaction=await fs.mkdtemp(path.join(directory,'transaction-'));
+  try{
+    const copy=await workingCopy(selection.root,transaction);
+    await writeJson(path.join(transaction,'input-snapshot.json'),{root:selection.root,inputs:copy.original,hostInputs:copy.hostInputs||[]});
+    let result;
+    try{result=await completeCandidate(copy.stagedRoot,{...options,jobDir:path.join(transaction,'audit')});}
+    catch(error){
+      const reportText=path.join(selection.root,'RAPORT-CORECTII.txt');
+      await fs.writeFile(reportText,'Status: failed\nInstalled: false\nOriginal files preserved.\n'+error.message+'\nEvidence: '+transaction+'\n');
+      throw error;
+    }
+    const accepted=!result.findings.some(f=>f.severity==='error')&&!result.failure;
+    const installation=accepted?await installWorkingCopy(copy,transaction,result):[];
+    const reportText=path.join(selection.root,'RAPORT-CORECTII.txt');
+    const reportBody=(await fs.readFile(result.reportText,'utf8')).replaceAll(copy.stagedRoot,selection.root);
+    await fs.writeFile(reportText,`Installed: ${accepted}\n${accepted?'Verified candidate installed.':'Candidate rejected; original files preserved.'}\nEvidence: ${transaction}\n\n`+reportBody);
+    await writeJson(path.join(transaction,'transaction.json'),{accepted,installation,root:selection.root,stagedRoot:copy.stagedRoot,reportText});
+    return {...result,installed:accepted,installation,reportText};
+  }finally{await lock.close();await fs.unlink(lockFile).catch(()=>{});}
 }
 
 export async function planComplete(root, options = {}) {
@@ -119,6 +151,6 @@ export async function completeStatus(file) {
   return { scope: 'layout_and_structure', status: state.status==='failed'?'failed':audit?.status || 'incomplete', failure:state.failure, root: state.root, auditDirectory: state.auditDirectory,
     stages: ['local English PDF/HTML checks', 'English layout repairs', 'inherit English presentation in existing languages', 'local translated structure/display checks', 'text correction report'],
     reportText: audit?.reportText, findings: audit?.findings || [], corrections: audit?.corrections || [],
-    instruction: available ? 'Reuse current local evidence. Resolve only remaining layout/structure findings.' : `Run prepare on the book root with --job-dir ${state.auditDirectory}; add --auto-correct when correction is authorized.`,
+    instruction: available ? 'Reuse current local evidence by rerunning the native complete command after correcting an implementation defect.' : `Run complete on the book root with --job-dir ${path.dirname(state.auditDirectory)}.`,
     executionPolicy: { reuseExistingTaskAuthorization: true, intermediateConfirmations: false, platformPermissionsRequired: true } };
 }

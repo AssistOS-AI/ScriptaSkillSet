@@ -10,9 +10,11 @@ export function readerTypographyRepairs(standalone, article, defaultSizePx) {
       if(a.text!==b.text||a.tag!==b.tag)throw Error('Reader import changes block text or order');
       if(a.displayGroup!=null)continue;
       const properties={};
+      const aScale=a.pageScale||1,bScale=b.pageScale||1;
+      const aSize=parseFloat(a.font.size)/aScale,bSize=parseFloat(b.font.size)/bScale;
       if(a.font.family!==b.font.family)properties['font-family']=a.font.family;
-      if(Math.abs(parseFloat(a.font.size)-parseFloat(b.font.size))>.1)properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${parseFloat(a.font.size)/defaultSizePx})`;
-      if(a.style.lineHeight!==b.style.lineHeight){
+      if(Math.abs(aSize-bSize)>.1)properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${aSize/defaultSizePx})`;
+      if(Math.abs(parseFloat(a.style.lineHeight)/aScale-parseFloat(b.style.lineHeight)/bScale)>.1){
         const leading=parseFloat(a.style.lineHeight);
         properties['line-height']=Number.isFinite(leading)?String(leading/parseFloat(a.font.size)):'normal';
       }

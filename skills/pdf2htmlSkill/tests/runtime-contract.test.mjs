@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tokens } from '../src/pdf2html/common.mjs';
 import { coverage, orderScore, segmentRanges, validateAssets } from '../src/pdf2html/validation.mjs';
-import { inspectSource, emphasis } from '../src/pdf2html/source.mjs';
+import { inspectSource, emphasis, browserLoadableTrueType } from '../src/pdf2html/source.mjs';
 import { captionIsBelow } from '../src/pdf2html/images.mjs';
 import { parseHtml } from '../src/pdf2html/dom.mjs';
 import { inferLanguage, expandInputs, convertMany } from '../src/pdf2html/batch.mjs';
@@ -34,6 +34,18 @@ test('source extraction preserves words, emphasis, strokes, fills and image regi
   }
   assert.equal(page.images.length,1);assert.equal(page.rectangles[0].fill_color,'#d3d3d3');assert.equal(page.strokes.length,6);
   assert.deepEqual(emphasis('Subset+ArialMT',[.75,0,.1875,.75,10,20]),{bold:false,italic:true});
+});
+test('TrueType streams missing OS/2 receive a Chromium-loadable table',()=>{
+  const tables=[{tag:'cmap',data:Buffer.alloc(8)},{tag:'head',data:Buffer.alloc(54)},{tag:'hhea',data:Buffer.alloc(36)},{tag:'hmtx',data:Buffer.alloc(8)},{tag:'maxp',data:Buffer.from([0,1,0,0,0,1])},{tag:'name',data:Buffer.alloc(12)},{tag:'post',data:Buffer.alloc(32)}];
+  let cursor=12+tables.length*16;
+  const input=Buffer.alloc(cursor+tables.reduce((sum,t)=>sum+t.data.length,0));
+  input.writeUInt32BE(0x00010000,0);input.writeUInt16BE(tables.length,4);
+  tables.forEach((table,i)=>{const offset=12+i*16;input.write(table.tag,offset,4,'ascii');input.writeUInt32BE(cursor,offset+8);input.writeUInt32BE(table.data.length,offset+12);table.data.copy(input,cursor);cursor+=table.data.length;});
+  const out=browserLoadableTrueType(input,{bold:true});
+  const count=out.readUInt16BE(4);const tags=[];
+  for(let i=0;i<count;i++)tags.push(out.subarray(12+i*16,16+i*16).toString('ascii'));
+  assert(tags.includes('OS/2'));
+  assert.equal(browserLoadableTrueType(out,{bold:true}).length,out.length);
 });
 test('caption position uses source lines',()=>{
   assert.equal(captionIsBelow([{text:'Figure 1. A diagram',top:80}],'Figure 1. A diagram',100,300),false);

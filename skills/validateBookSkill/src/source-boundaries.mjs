@@ -27,3 +27,32 @@ export function restoreReferenceBoundaries(pages) {
   }
   return changes;
 }
+
+export function restoreSplitSourcePhrases(xml) {
+  const doc=new DOMParser().parseFromString(xml,'text/xml');
+  const compact=s=>s.normalize('NFKC').replace(/[^\p{L}\p{N}]/gu,'').toLowerCase();
+  const pages=new Map([...doc.querySelectorAll('page')].map(p=>[p.getAttribute('number'),compact([...p.querySelectorAll('text')].map(n=>n.textContent).join(' '))]));
+  const changes=[];
+  for(const page of document.querySelectorAll('.pdf-source-page[data-source-page]')){
+    const source=pages.get(page.getAttribute('data-source-page'));
+    if(!source)continue;
+    const blocks=[...page.querySelectorAll(':scope > p')];
+    for(let i=0;i<blocks.length-1;i++){
+      const current=blocks[i],next=blocks[i+1];
+      if(current.querySelector('a,img,table')||next.querySelector('a,img,table')||next.id)continue;
+      const a=current.textContent.trim(),b=next.textContent.trim();
+      if(a.split(/\s+/).length>12||!a||!b)continue;
+      const joined=compact(a+' '+b);
+      if(!joined||!source.includes(joined))continue;
+      if(a.split(/\s+/).length>4&&source.includes(compact(a))&&source.includes(compact(b)))continue;
+      const before=current.outerHTML+'\n'+next.outerHTML;
+      current.append(document.createTextNode(' '));
+      current.append(...next.childNodes);
+      next.remove();
+      if(compact(current.textContent)!==joined)throw Error('Split-phrase repair changed paragraph text');
+      changes.push({kind:'split_source_phrase',before,after:current.outerHTML,page:page.getAttribute('data-source-page')});
+      blocks.splice(i+1,1);i--;
+    }
+  }
+  return changes;
+}

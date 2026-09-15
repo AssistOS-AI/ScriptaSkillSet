@@ -16,7 +16,6 @@ export function textReport(result) {
 export async function writeLayoutReport(directory, result) {
   await writeJson(path.join(directory, 'report.json'), result);
   await fs.writeFile(path.join(directory, 'report.txt'), textReport(result));
-  await writeJson(path.join(directory, 'repair-tasks.json'), { scope: result.scope, tasks: result.findings, instruction: 'Layout/structure only. No humanisation, translation rewriting, summaries, metadata, font-size-control tests, screenshots or automatic missing-language creation.' });
   return { ...result, reportText: path.join(directory, 'report.txt') };
 }
 export async function layoutReport(directory) {

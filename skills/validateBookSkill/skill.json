@@ -1,7 +1,8 @@
 {
   "title": "Validate book",
   "family": "document-validation",
-  "summary": "Local PDF/HTML structure and typography checks, shared CSS without inline declarations, default iframe/article parity, English-first presentation and text-only book-root reports. Preserves source page boundaries with separate cover/title pages and text-preserving page containers. Measures source page padding and restores contents leaders, indentation and page labels. Preserves display alignment and excludes repeated running headers from body-margin estimates. Preserves source paragraph borders through shared PDF drawing evidence. Detects and recovers flattened source lists with page-continuing numbering and source list typography. Body leading excludes other font sizes; the reader adapter supports generic local-book stylesheet imports and frame/root scale parity. Generic mixed-font centered/left title pages and source horizontal rules are reconstructed and checked in both reader delivery modes. Managed CSS keeps element IDs so later source ID rules cannot override captured title typography.",
+  "sourceTableContract": "Required hash-bound ruled or fill-partitioned table evidence, exact cell mapping, rendered fonts and styling in both reader paths. Text scales with the page box above the physical-size floor; a wider host cannot inflate type. Unsupported tables and unmapped typography block completion.",
+  "summary": "Local PDF/HTML structure and typography checks, shared CSS without inline declarations, default iframe/article parity, English-first presentation and text-only book-root reports. Preserves source page boundaries with separate cover/title pages and text-preserving page containers. Measures source page padding and restores contents leaders, indentation and page labels. Preserves display alignment and excludes repeated running headers from body-margin estimates and from cross-page paragraph matching. English page folios are not translation counterparts. Preserves source paragraph borders through shared PDF drawing evidence. Detects and recovers flattened source lists with page-continuing numbering and source list typography. Body leading excludes other font sizes; the reader adapter supports generic local-book stylesheet imports and frame/root scale parity. Generic mixed-font centered/left title pages and source horizontal rules are reconstructed and checked in both reader delivery modes. Managed CSS keeps element IDs so later source ID rules cannot override captured title typography.",
   "aliases": [
     "validateBook",
     "validate-book"
@@ -13,7 +14,6 @@
   "outputs": [
     "report.txt",
     "report.json",
-    "repair-tasks.json",
     "source-evidence.json",
     "*-layout.json",
     "validatebook-layout.css",
@@ -29,12 +29,17 @@
     "references/complete-scriptahub.md",
     "references/execution.md"
   ],
-  "selfContained": false,
+  "selfContained": true,
   "environmentTools": [
     "Chromium",
     "Poppler pdftotext",
     "Poppler pdffonts",
     "Poppler pdfimages",
     "Poppler pdftohtml"
-  ]
+  ],
+  "installationSafety": "Pre-install standalone/imported delivery checks; one reader root; exclusive page inset ownership; nested covers; retain recovery on success and failure.",
+  "translationPagination": "All languages retain source-proportioned minimum page height, including cover, title, copyright and final pages. Preserve translation page count and breaks; longer content may expand pages. Check minimum page dimensions in standalone and imported readers.",
+  "completionContract": "Isolated complete correction cycle; no canonical installation with blocking findings; source typography at every viewport; translations checked by source presentation role; automatic source-anchor pagination.",
+  "sourcePublisherRestoration": "Explicit opt-in only; source-derived identity and website restoration inside copyright sections; never ordinary narrative rewriting.",
+  "translatedMedia": "Preserve localized image assets; inherit English rendered image geometry and styling in both reader paths. Source table cell styling preserves translated text and flexible row height; missing or ambiguous media correspondences block installation."
 }

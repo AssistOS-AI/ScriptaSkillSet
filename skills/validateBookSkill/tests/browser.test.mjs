@@ -5,11 +5,68 @@ import os from 'node:os';
 import path from 'node:path';
 import { openBrowser } from '../src/browser.mjs';
 import { measure, applyDomRepairs } from '../src/layout-browser.mjs';
+import {restorePublisherIdentity} from '../src/source-identity.mjs';
+import {compareImageStyles} from '../src/images.mjs';
+import {pathToFileURL} from 'node:url';
+
+test('localized cover dimensions match English through consolidation and both reader paths',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-images-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+ const en=path.join(dir,'en.html'),ro=path.join(dir,'ro.html'),style=path.join(dir,'reader.css');
+ await fs.writeFile(style,'body{margin:0}figure{margin:0}img{display:block;width:100%;height:auto}.reader-html-content{width:100%;margin:0}');
+ const markup=(height,label)=>'<!doctype html><html><head><link rel="stylesheet" href="reader.css"></head><body data-reader-content data-validatebook-root><figure id="page_1"><img src="data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="698" height="'+height+'"><text x="20" y="40">'+label+'</text></svg>')+'"></figure></body></html>';
+ await fs.writeFile(en,markup(973,'English'));await fs.writeFile(ro,markup(793,'Română'));
+ const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+ const master=await measure(browser,en),before=await measure(browser,ro),src=before.records[0].src;
+ assert(compareImageStyles(master,before,'ro').findings.some(f=>f.category==='image_style_difference'));
+ let previousCss;
+ for(let pass=0;pass<2;pass++){
+  const target=await measure(browser,ro);
+  await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify(compareImageStyles(master,target,'ro').actions)})`);
+  const saved=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',previousCss}])})`);
+  previousCss=saved.stylesheet.css;await fs.writeFile(ro,saved.html);await fs.writeFile(path.join(dir,'validatebook-layout.css'),previousCss);
+  const contract={generic:true,managed:true,readerCss:pathToFileURL(style).href,booksRoot:pathToFileURL(dir).href,defaultRem:1};
+  for(const settings of [null,{importedArticle:contract}]){
+   const source=await measure(browser,en,settings),result=await measure(browser,ro,settings);
+   for(let i=0;i<3;i++)assert.deepEqual(compareImageStyles(source.layouts[i],result.layouts[i],'ro').findings,[]);
+   assert.equal(result.records[0].src,src);
+  }
+ }
+});
+
+test('authorized publisher restoration uses PDF evidence and preserves other prose',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+ const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+ const source=[{page:3,text:'Copyright © [2026] Source Publisher\nAvailable for free on Source website (www.source.example).'}];
+ for(const lang of ['en','ro']){
+  await browser.evaluate('document.body.innerHTML='+JSON.stringify('<section><p><strong>Copyright © [2026] LocalBrand</strong></p><p>LocalBrand website (<a href="https://localbrand.example">LocalBrand.example</a>).</p><p>Research by LocalBrand.</p></section><p id="narrative">LocalBrand outside copyright stays unchanged.</p>'));
+  const changes=await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(source)})`);
+  assert.equal(changes.length,3);
+  assert.equal(await browser.evaluate('document.querySelector("strong").textContent'),'Copyright © [2026] Source Publisher');
+  assert.equal(await browser.evaluate('document.querySelector("a").href'),'https://www.source.example/');
+  assert.equal(await browser.evaluate('document.querySelector("#narrative").textContent'),'LocalBrand outside copyright stays unchanged.');
+  assert.deepEqual(await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(source)})`),[]);
+ }
+});
 
 test('measurement visits all viewports, inspects fonts and never captures a screenshot',async()=>{
   const calls=[];
   const browser={async send(method){calls.push(method);if(method==='DOM.getDocument')return {root:{nodeId:1}};if(method==='DOM.querySelector')return {nodeId:2};if(method==='CSS.getPlatformFontsForNode')return {fonts:[{familyName:'Test font',glyphCount:10}]};return {};},async evaluate(expression){if(expression.startsWith('(function inspectLayout'))return {records:[{selector:'#p',text:'Visible text',tag:'p'}],height:2000};return true;}};
   const result=await measure(browser,'/tmp/fixture.html');assert.equal(result.layouts.length,3);assert.equal(result.platformFonts.length,3);assert(!calls.some(c=>/Screenshot|printToPDF/.test(c)));
+});
+
+test('font collection retries one transient timeout and fails if evidence remains unavailable',async()=>{
+ let calls=0,persistent=false;
+ const browser={async send(method){
+   if(method==='DOM.getDocument')return {root:{nodeId:1}};
+   if(method==='DOM.querySelector')return {nodeId:2};
+   if(method==='CSS.getPlatformFontsForNode'){
+     if(++calls===1||persistent)throw Error('CDP timeout: CSS.getPlatformFontsForNode');
+     return {fonts:[{familyName:'Verified face',glyphCount:10}]};
+   }return {};
+ },async evaluate(expression){return expression.startsWith('(function inspectLayout')?{records:[{selector:'#p',text:'Text',tag:'p'}]}:true;}};
+ const result=await measure(browser,'/tmp/fixture.html');
+ assert.equal(result.platformFonts.length,3);assert.equal(calls,4);
+ persistent=true;calls=0;
+ await assert.rejects(measure(browser,'/tmp/fixture.html'),/CDP timeout/);assert.equal(calls,2);
 });
 
 test('native layout, repair text preservation, table headers and blocked scripts', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
@@ -33,6 +90,7 @@ test('managed CSS replaces inline declarations without altering computed typogra
   let previousCss;
   for(let i=0;i<2;i++){
     const result=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',previousCss}])})`);
+    if(previousCss)assert.equal(result.stylesheet.css,previousCss,'Managed selector priority must be stable across reruns');
     previousCss=result.stylesheet.css;
     assert(!/\sstyle=/.test(result.html));assert(result.stylesheet.css.includes('font-style: italic'));
     await fs.writeFile(path.join(root,result.stylesheet.href),result.stylesheet.css);await fs.writeFile(file,result.html);
@@ -48,7 +106,8 @@ test('managed source units stay equal when an article host changes the root rem 
   const file=path.join(root,'book.html');
   await fs.writeFile(file,'<!doctype html><html><head><style>:root{font-size:16px;--standalone-size:1.16rem}</style></head><body style="font-size:calc(var(--reader-font-size, var(--standalone-size,18.56px))*0.7902298850574713)"><p>Short dialogue.</p><p style="font-size:calc(var(--reader-font-size, var(--standalone-size,18.56px))*0.7902298850574713)">Longer prose.</p></body></html>');
   const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());await measure(browser,file);
-  const result=await browser.evaluate('('+applyDomRepairs.toString()+')('+JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',importedFontRatio:16/19.84}])+')');
+  const result=await browser.evaluate('('+applyDomRepairs.toString()+')('+JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',importedFontRatio:16/19.84,standaloneSizeRem:1.16}])+')');
+  assert(result.stylesheet.css.includes('--standalone-size:1.16rem'));
   await fs.writeFile(path.join(root,'validatebook-layout.css'),result.stylesheet.css);await fs.writeFile(file,result.html);await measure(browser,file);
   await browser.evaluate('document.documentElement.style.fontSize="19.84px";document.documentElement.style.setProperty("--reader-font-size","1.16rem");document.body.classList.add("reader-html-content")');
   const sizes=await browser.evaluate('Array.from(document.querySelectorAll("p"),n=>parseFloat(getComputedStyle(n).fontSize))');assert(sizes.every(size=>Math.abs(size-44/3)<.001));

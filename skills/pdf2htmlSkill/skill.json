@@ -1,6 +1,7 @@
 {
   "title": "PDF to Semantic HTML",
   "family": "document-conversion",
+  "sourceTableContract": "The decorations command exports ruled and fill-partitioned tables with source page widths, cell spans, fills, individual borders, vertical alignment and uniform typography. JSON is flushed before exit.",
   "summary": "Converts born-digital PDFs to semantic responsive HTML with source-derived typography, local assets, proportional reader controls and deterministic QA. Automatically prepares missing local runtime components before conversion. Preserves source paragraph borders through shared PDF drawing evidence. Detects and recovers flattened source lists with page-continuing numbering and source list typography. The decorations command exports isolated horizontal source rules for display-page consumers.",
   "aliases": [
     "pdf2html",

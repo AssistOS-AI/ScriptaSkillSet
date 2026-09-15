@@ -1,5 +1,11 @@
 # pdf2htmlSkill
 
+
+## Source table evidence
+
+The read-only `decorations INPUT.pdf` JSON includes `tables` alongside borders, lists and horizontal rules. It recognizes closed ruled grids and tables whose horizontal row rules and adjacent cell fills establish complete column partitions, including unfilled alternating rows. Recognition requires text confined to every inferred column; decorative rectangles, crossing text and missing boundaries are rejected. Evidence includes source page width, cell text and spans, column widths, fills, individual border edges, vertical alignment and uniform typography. Mixed typography remains null and unsupported tables remain uncertified. The command flushes stdout before exit and performs no conversion, installation or rasterization.
+
+
 Convert born-digital PDFs into semantic, responsive HTML books. The source PDF controls text, headings, emphasis, tables, images, links and typography. Each source page has a stable anchor and a responsive sheet with source-derived margins.
 
 Distribute the skill checkout. Runtime packages, tools, models, browsers and caches are installed locally and excluded by `.gitignore`. Retain notices and required source for the native binaries bundled with the skill.

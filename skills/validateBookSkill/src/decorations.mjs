@@ -1,4 +1,5 @@
 import { issue } from './layout-checks.mjs';
+import { validateTableEvidence } from './tables.mjs';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -17,6 +18,7 @@ export async function sourceDecorations(pdf, sha256, executable) {
     if (!/^\d+(?:\.\d+)?em solid #[\da-f]{6}$/i.test(b.properties?.['border-left']) || !['padding-left','margin-left'].every(k => /^\d+(?:\.\d+)?em$/.test(b.properties[k])) || b.properties['text-indent'] !== '0px' || Object.keys(b.properties).length !== 4) throw Error('Invalid border presentation');
   }
   if(!Array.isArray(profile.lists))throw Error('Source presentation provider must include list evidence');
+  validateTableEvidence(profile.tables);
   for(const rule of profile.horizontalRules||[])if(!Number.isInteger(rule.page)||rule.page<1||![rule.x0,rule.x1,rule.top,rule.bottom,rule.width].every(Number.isFinite)||rule.x1<=rule.x0||rule.width<=0||!/^#[\da-f]{6}$/i.test(rule.color))throw Error('Invalid source horizontal rule');
   for(const list of profile.lists)if(!['ol','ul'].includes(list.kind)||!Number.isInteger(list.page)||!Array.isArray(list.items)||list.items.length<2||list.items.some(i=>typeof i.text!=='string'||![i.size,i.leading,i.left,i.textLeft,i.gap,list.bodyLeft].every(Number.isFinite)||i.size<=0||i.leading<=0))throw Error('Invalid source list evidence');
   return profile;
@@ -33,10 +35,10 @@ export async function sourceFonts(pdf, sha256, executable, destination) {
 export function compareDecorations(profile, document, language = 'en') {
   const findings = [], matches = [];
   if (!profile) return { matches, findings: [issue(language, 'source_decorations_unchecked', 'document', 'Configure --pdf2html to check source paragraph borders and lists; source presentation is not certified.', { severity: 'warning' })] };
-  for (const unresolved of profile.unresolved) findings.push(issue(language, 'source_border_unresolved', 'page ' + unresolved.page, unresolved.reason, { needsJudgment: true }));
+  for (const unresolved of profile.unresolved) findings.push(issue(language, 'source_border_unresolved', 'page ' + unresolved.page, unresolved.reason));
   for (const border of profile.borders) {
     const candidates = document.records.filter(r => r.tag === 'p' && (!r.page || Number(r.page) === border.page) && compact(r.text) === compact(border.text));
-    if (candidates.length !== 1) { findings.push(issue(language, 'source_border_unmapped', 'page ' + border.page, 'A source paragraph border has no unique whole-paragraph HTML match.', { text: border.text, needsJudgment: true })); continue; }
+    if (candidates.length !== 1) { findings.push(issue(language, 'source_border_unmapped', 'page ' + border.page, 'A source paragraph border has no unique whole-paragraph HTML match.', { text: border.text })); continue; }
     const record = candidates[0]; matches.push({ selector: record.selector, border });
     const actual = record.decoration, size = parseFloat(record.font.size);
     const rgb = 'rgb(' + border.stroke.color.slice(1).match(/../g).map(x => parseInt(x, 16)).join(', ') + ')';

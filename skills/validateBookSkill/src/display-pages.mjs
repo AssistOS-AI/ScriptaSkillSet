@@ -90,7 +90,7 @@ export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
       block.setAttribute('data-source-display-group', String(i));
       block.setAttribute('data-source-display-width', String(profile.contentWidth || 0));
       g.lines.forEach((line,j) => { if(j) block.append(document.createTextNode(' '),document.createElement('br')); block.append(document.createTextNode(line.text)); });
-      const calibrated = `calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${g.size*96/72/defaultSizePx})`;
+      const calibrated = `calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${g.size*96/72/defaultSizePx} * var(--validatebook-page-scale, 1))`;
       const properties = {
         'font-family':families[i], 'font-size':profile.contentWidth ? `min(${calibrated}, ${g.size/profile.contentWidth*100}cqw)` : calibrated,
         'font-weight':g.bold?'700':'400', 'font-style':g.italic?'italic':'normal', 'line-height':String(g.leading/g.size),
@@ -119,7 +119,8 @@ export function checkDisplayPages(profiles, layouts, fontMap = {}) {
     if (blocks.length !== profile.groups.length) { findings.push({page:profile.page,width:layout.width,detail:'Source display groups are merged, missing or unverified.'}); continue; }
     for (let i = 0; i < blocks.length; i++) {
       const block = blocks[i], source = profile.groups[i];
-      const scale = profile.contentWidth && block.displayAvailableWidth ? Math.min(96/72,block.displayAvailableWidth/profile.contentWidth) : 96/72;
+      const pageScale=block.pageWidth&&profile.width?Math.max(1,block.pageWidth/(profile.width*96/72)):1;
+      const scale = profile.contentWidth && block.displayAvailableWidth ? Math.min(96/72*pageScale,block.displayAvailableWidth/profile.contentWidth) : 96/72*pageScale;
       const size = source.size * scale;
       const actual = {size:parseFloat(block.font.size),leading:parseFloat(block.style.lineHeight),align:block.style.textAlign,weight:block.font.weight,italic:block.font.style,gap:block.style.marginTop,lines:block.displayLines};
       const expectedFamily = source.family && fontMap[key(source.family)];

@@ -2,9 +2,9 @@
 
 validateBook is a layout, typography, display and structural-integrity skill. The user's September 2026 scope replaces the former editorial workflow. Read SKILL.md and references/contracts.md. Correct English presentation first, propagate to existing languages, then locally verify their structure and text/font rendering. Preserve translated prose.
 
-Use local Node.js code and native PDF/browser measurements for all decidable checks. LLM review is limited to localized ambiguous source/structure findings. No whole-book LLM review, humanisation, translation correction, summaries, metadata tasks, font +/− tests, screenshots or image reports. Do not introduce those through other repository guidance when executing this skill's explicitly limited scope.
+Use only the bundled Node.js code and native PDF/browser measurements for book verification and correction. Do not use an LLM, model API, Python command, shell-heredoc analysis, agent-authored helper script, external repair plan or reviewed-difference file for any book check or correction. Ambiguous evidence remains an explicit native finding. No humanisation, translation correction, summaries, metadata tasks, font +/− tests, screenshots or image reports. Do not introduce those through other repository guidance when executing this skill's explicitly limited scope.
 
-Use Node.js 22+ .mjs, built-ins, explicit exports and node:test. No sibling imports, API calls, automatic tool installation or model services. Native Chromium and configured Poppler tools are the documented environment exceptions.
+Use Node.js 22+ .mjs, built-ins, explicit exports and node:test. The skill has no Python code or Python runtime dependency. No sibling imports, API calls, automatic tool installation or model services. Native Chromium and configured Poppler tools are the documented environment exceptions.
 
 Use the pdf2html skill as an explicit executable dependency for PDF graphics evidence. Resolve its launcher from the selected skill and pass --pdf2html or VALIDATEBOOK_PDF2HTML. Do not copy its extractor or PDF runtime into validateBook. Run complete for authorized corrections; prepare is the single-pass primitive. Keep dependency declarations and completion tests synchronized.
 

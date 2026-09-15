@@ -4,22 +4,26 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { openBrowser } from './browser.mjs';
+import { guardInstallation } from './installation-guard.mjs';
+import {translationStyles,translatedStyleCheck} from './translation-style.mjs';
+import {compareImageStyles} from './images.mjs';
+import {restorePublisherIdentity} from './source-identity.mjs';
 import { hash, fileHash, readJson, writeJson, exists, verifyInputs, inside } from './storage.mjs';
 import { checkDisplay, compareEnglish, compareStructure, comparePdfFonts, parsePdfGeometry, comparePdfGeometry, issue } from './layout-checks.mjs';
 import { navigate, measure, applyDomRepairs } from './layout-browser.mjs';
 import { layoutReport, writeLayoutReport } from './layout-report.mjs';
 import { recoverLists } from './lists.mjs';
+import { compareTables, translatedTables } from './tables.mjs';
 import { sourceDecorations, sourceFonts, compareDecorations, decorationActions, translatedDecorations } from './decorations.mjs';
 
 import {parsePdfTypography,sourceTypographyProfile,compareTypography,typographyActions} from './typography.mjs';
 import {readerPresentation} from './reader-presentation.mjs';
 import {readerTypographyRepairs} from './reader-repairs.mjs';
 import {readingPages} from './layout-checks.mjs';
-import {restoreReferenceBoundaries} from './source-boundaries.mjs';
-import {retainReviewedDifferences} from './reviewed-differences.mjs';
+import {restoreReferenceBoundaries,restoreSplitSourcePhrases} from './source-boundaries.mjs';
 import {displayPageProfiles,repairDisplayPages,checkDisplayPages} from './display-pages.mjs';
 import {repairFalseHeadings} from './false-headings.mjs';
-import {paginateDocument,paginationCss,sourcePagePresentation,applyContentsPresentation,pagePaddingDifferences} from './pagination.mjs';
+import {paginateDocument,repairPageShells,paginationCss,translatedPaginationCss,sourcePagePresentation,applyContentsPresentation,pagePaddingDifferences,pageHeightDifferences} from './pagination.mjs';
 const execute = promisify(execFile);
 export const report = layoutReport;
 export async function doctor(options = {}) {
@@ -46,7 +50,7 @@ export async function discover(root, options = {}) {
   if (path.basename(root) === 'en' && await exists(path.join(root, '..', 'manifest.json'))) root = path.dirname(root);
   const filename = options.filename || 'full_content.html';
   if (path.basename(filename) !== filename || !filename.endsWith('.html')) throw Error('filename must be a plain HTML filename');
-  if (options.documents || options.acceptedEnglishReport) throw Error('Editorial baseline/translation-correction overrides were removed. Use a layout repair plan.');
+  if (options.documents || options.acceptedEnglishReport) throw Error('Editorial baseline and translation-correction overrides are unsupported; use the native layout pipeline.');
   const manifest = await exists(path.join(root, 'manifest.json')) ? await readJson(path.join(root, 'manifest.json')) : null;
   const editions = manifest?.editions || {};
   const pdf = path.resolve(options.pdf || path.join(root, editions.en?.pdf || 'en/book.pdf'));
@@ -112,33 +116,18 @@ async function sheets(browser, source, target) {
   });
 }
 
-export function validatePlan(plan, selection, inputHashes) {
-  if (!plan) return [];
-  if (!Array.isArray(plan.repairs)) throw Error('Plan requires repairs array');
-  for (const item of plan.repairs) {
-    const doc = selection.documents.find(d => d.language === item.language);
-    if (!doc || item.sha256 !== inputHashes.find(i => i.file === doc.file)?.sha256 || !item.reason?.trim()) throw Error('Stale/unbound repair plan');
-    if (!Array.isArray(item.actions) || item.actions.some(a => !['tag', 'presentation', 'table_headers'].includes(a.kind))) throw Error('Only text-preserving tag/presentation plans are supported');
-  }
-  return plan.repairs;
-}
-
 export async function prepare(root, options = {}) {
   if(options.paginate&&!options.autoCorrect)throw Error('--paginate requires --auto-correct');
   if(options.wordSpacing&&!['source','natural'].includes(options.wordSpacing))throw Error('--word-spacing must be source or natural');
   const selection = await discover(root, options);
   const initialInputs = await Promise.all([selection.pdf, ...selection.documents.map(d => d.file)].map(async file => ({ file, sha256: await fileHash(file) })));
-  const plan = options.patches ? await readJson(path.resolve(options.patches)) : null;
-  const review=options['reviewed-differences']?await readJson(path.resolve(options['reviewed-differences'])):null;
-  if(review)initialInputs.push({file:path.resolve(options['reviewed-differences']),sha256:await fileHash(path.resolve(options['reviewed-differences']))});
+  if(options.patches || options['reviewed-differences']) throw Error('External repair and review plans are unsupported; validateBook verifies and corrects from local source evidence only.');
   const graphicsProvider=options.pdf2html || process.env.VALIDATEBOOK_PDF2HTML;
   if(!graphicsProvider || !path.isAbsolute(graphicsProvider))throw Error('Configure --pdf2html or VALIDATEBOOK_PDF2HTML with the absolute pdf2html skill launcher path');
   await fs.access(graphicsProvider);
-  const requestHash=hash(JSON.stringify({scope:'layout_and_structure',graphicsProvider,paginate:!!options.paginate,wordSpacing:options.wordSpacing||'source',root:selection.root,pdf:selection.pdf,documents:selection.documents,autoCorrect:!!options.autoCorrect,plan}));
+  const requestHash=hash(JSON.stringify({scope:'layout_and_structure',graphicsProvider,paginate:!!options.paginate,restoreSourcePublisher:!!options.restoreSourcePublisher,wordSpacing:options.wordSpacing||'source',root:selection.root,pdf:selection.pdf,documents:selection.documents,autoCorrect:!!options.autoCorrect}));
   const directory = path.resolve(options.jobDir || path.join(selection.root, '.validatebook-layout-jobs', requestHash.slice(0,20)));
   if (await exists(path.join(directory, 'job.json'))) { const job=await readJson(path.join(directory,'job.json')); if(job.requestHash!==requestHash)throw Error('Job belongs to another book or request; use a separate directory'); return layoutReport(directory); }
-  const repairs = validatePlan(plan, selection, initialInputs);
-  if (repairs.length && !options.autoCorrect) throw Error('--patches requires --auto-correct');
   const runtime = await doctor(options);
   await fs.mkdir(directory, { recursive: true });
   const lock = await fs.open(path.join(directory, 'prepare.lock'), 'wx');
@@ -159,11 +148,18 @@ export async function prepare(root, options = {}) {
     const fontDirectory=path.join(path.dirname(selection.documents[0].file),path.basename(selection.documents[0].file,'.html')+'.assets','fonts');
     const sourceFontsList=options.autoCorrect?await sourceFonts(selection.pdf,pdfSha256,graphicsProvider,fontDirectory):[];
     const fontKey=name=>name.replace(/^[A-Z]{6}\+/,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman|mt)$/ig,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
-    const sourceFontMap=Object.fromEntries(sourceFontsList.map(font=>{
+    const sourceFontMap=Object.fromEntries(sourceFontsList.flatMap(font=>{
       const name=`${font.source_name} ${font.css_family}`.toLowerCase();
       const generic=/garamond|georgia|times|palatino|minion|caslon|baskerville/.test(name)?'Georgia, serif':/inter|arial|helvetica|segoe|roboto|noto sans|sans/.test(name)?'system-ui, sans-serif':'Georgia, serif';
-      return [fontKey(font.source_name),`"${font.css_family}", ${generic}`];
+      const stack=`"${font.css_family}", ${generic}`;
+      return [[fontKey(font.source_name),stack],[font.source_name,stack]];
     }));
+    const sourceFontWeights={};
+    for(const font of sourceFontsList){
+      const key=fontKey(font.source_name);
+      if(!sourceFontWeights[key])sourceFontWeights[key]=[];
+      if(!sourceFontWeights[key].includes(font.weight))sourceFontWeights[key].push(font.weight);
+    }
     const sourceEvidence = { pages, decorations, fonts:sourceFontsList, fontInventory: fontInfo.stdout, imageInventory: imageInfo.stdout, wordAndLineBounds: boxes.stdout, typographyXml:typography.stdout };
     await writeJson(path.join(directory, 'source-evidence.json'), sourceEvidence);
     artifacts.push({ file: path.join(directory, 'source-evidence.json'), sha256: await fileHash(path.join(directory, 'source-evidence.json')) });
@@ -178,21 +174,24 @@ export async function prepare(root, options = {}) {
     let english;
     const unresolved = [];
     const expectedCurrent = new Map(initialInputs.map(i => [i.file, i.sha256]));
-    async function apply(item, actions, presentation) {
-      if (!actions.length) return;
+    async function apply(item, actions, presentation, repairShells = false) {
+      if (!actions.length && !repairShells) return;
       const fontRules=sourceFontsList.map(font=>`@font-face { font-family: "${font.css_family}"; src: url("${path.relative(path.dirname(item.file),path.join(fontDirectory,path.basename(font.href))).split(path.sep).join('/')}") format("${font.href.endsWith('.otf')?'opentype':'truetype'}"); font-style: ${font.style}; font-weight: ${font.weight}; font-display: block; }`).join('\n');
       await navigate(browser, item.file);
       const cssFile = path.join(path.dirname(item.file), 'validatebook-layout.css');
       const cssBefore = await exists(cssFile) ? {file:cssFile,sha256:await fileHash(cssFile)} : null;
       if(cssBefore && !(await fs.readFile(cssFile,'utf8')).startsWith('/* validateBook managed presentation;'))throw Error('Managed stylesheet destination is occupied by unrelated content');
+      const identityChanges=options.restoreSourcePublisher?await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(pages)})`):[];
       const applied=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify(actions)})`);
+      applied.changes.push(...identityChanges);
       if(item.language==='en')applied.changes.push(...await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)})`));
       if(item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreReferenceBoundaries.toString()})(${JSON.stringify(readingPages(pages))})`));
+      if(item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreSplitSourcePhrases.toString()})(${JSON.stringify(typography.stdout)})`));
       let listRepair=null;
       if(item.language==='en'&&decorations?.lists)listRepair=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)},true)`);
       const result = {changes:[...applied.changes]};
       if(listRepair)result.changes.push(...listRepair.changes);
-      if(options.paginate){
+      if(options.paginate&&item.language==='en'){
         const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
         const blankPages=item.language==='en'?pages.filter(p=>!anchors.includes(p.page)&&/^\s*\d*\s*$/.test(p.text)).map(p=>p.page):[];
         const paginated=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:item.language==='en'?'source':'translation',expectedPages:item.language==='en'?pages.length:null})})`);
@@ -204,13 +203,23 @@ export async function prepare(root, options = {}) {
         result.changes.push({kind:'source_page_presentation',margins:pagePresentation.margins,contents:contents.mapping,unmatched:contents.unmatched});
       }
       if(item.language==='en')result.changes.push(...await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(displayPages)},${JSON.stringify(Object.keys(sourceFontMap).length?sourceFontMap:presentation.sourceDisplayFamily)},${presentation.defaultSizePx*(presentation.scale||1)})`));
-      const consolidated=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',previousCss:cssBefore?await fs.readFile(cssFile,'utf8'):null,importedFontRatio:presentation?.articleContract?.fontRatio}])})`);
+      result.changes.push(...await browser.evaluate(`(${repairPageShells.toString()})()`));
+      const consolidated=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',previousCss:cssBefore?await fs.readFile(cssFile,'utf8'):null,importedFontRatio:presentation?.articleContract?.fontRatio,standaloneSizeRem:presentation?.standaloneSizeRem}])})`);
       result.html=consolidated.html;
       result.stylesheet=consolidated.stylesheet;
       if(fontRules)result.stylesheet.css=result.stylesheet.css.replace('/* validateBook managed presentation; generated from verified declarations */','/* validateBook managed presentation; generated from verified declarations */\n'+fontRules);
       result.changes.push(...consolidated.changes);
-      if(options.paginate)result.stylesheet.css=result.stylesheet.css.split('/* validateBook source pagination */')[0]+paginationCss(pagePresentation);
+      if(pagePresentation&&item.language==='en')result.stylesheet.css=result.stylesheet.css.split('/* validateBook source pagination */')[0]+paginationCss(pagePresentation);
+      // Recognize nested covers. Translations keep their own breaks and gaps,
+      // with the same full-page minimum proportions as the source edition.
+      result.stylesheet.css=result.stylesheet.css.replaceAll(':has(> figure#page_1)',':has(figure#page_1)').replaceAll('.pdf-source-page > figure#page_1','.pdf-source-page figure#page_1');
+      if(item.language!=='en'&&pagePresentation){
+        const marker='/* validateBook translated flow */';
+        result.stylesheet.css=result.stylesheet.css.split(marker)[0]+translatedPaginationCss(pagePresentation);
+      }
       if (!result.changes.length) return;
+      try { await guardInstallation(browser,item,result,presentation,pagePresentation); }
+      catch(error){await writeJson(path.join(directory,'rejected-candidate.json'),{file:item.file,error:error.message,findings:error.findings||[]});throw error;}
       const expected = initialInputs.find(i => i.file === item.file).sha256;
       if (await fileHash(item.file) !== expected) throw Error('Concurrent source change before repair: ' + item.file);
       const backup = path.join(directory, 'recovery', item.language, path.basename(item.file)); await fs.mkdir(path.dirname(backup), { recursive: true });
@@ -241,6 +250,8 @@ export async function prepare(root, options = {}) {
     for (const item of selection.documents) {
       const standalone = await measure(browser, item.file);
       let presentation=await readerPresentation(standalone,item.file);
+      const fidelityMarker=options.autoCorrect&&presentation.kind==='reader-default'&&!standalone.presentation.fidelity;
+      if(fidelityMarker)presentation=await readerPresentation({...standalone,presentation:{...standalone.presentation,fidelity:true}},item.file);
       if(options.autoCorrect&&presentation.repair){
         const patch=presentation.repair;if(await fileHash(patch.file)!==patch.sha256)throw Error('Reader contract changed during preparation');
         const backup=path.join(directory,'recovery','reader',path.basename(patch.file));await fs.mkdir(path.dirname(backup),{recursive:true});await fs.copyFile(patch.file,backup,fs.constants.COPYFILE_EXCL);
@@ -265,14 +276,24 @@ export async function prepare(root, options = {}) {
       initialFindings.push(...typeComparison.findings);
       if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const listCheck=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);initialFindings.push(...listCheck.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure differs from HTML.',f)));}
       const beforeDisplay = before.layouts.flatMap(l => checkDisplay(l, item.language));
+      const translatedStyles=english?translationStyles(english,sourceType,sourceFontMap):null;
+      const repairShells=beforeDisplay.some(f=>['page_spacing_ownership_conflict','reader_root_incomplete'].includes(f.category));
       const structure = english ? compareStructure(english, before, item.language) : null;
+      if(english)initialFindings.push(...compareImageStyles(english,before,item.language).findings);
+      const tableProfile=english?translatedTables(decorations.tables,english,before,structure):decorations.tables;
+      const tableOptions={sourceFontMap,defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),language:item.language};
+      const tableComparison=compareTables(tableProfile,before,tableOptions);
+      initialFindings.push(...tableComparison.findings);
       initialFindings.push(...beforeDisplay, ...(structure?.findings || []));
       const targetDecorations=english?translatedDecorations(decorations,english,before,structure,item.language):decorations;
-      const actions = repairs.filter(r => r.language === item.language).flatMap(r => r.actions);
+      const actions = [];
       if (options.autoCorrect) {
+        if(fidelityMarker)actions.push({kind:'source_fidelity'});
+        if(!english||!unresolved.some(f=>f.language==='en'&&f.severity==='error'))actions.push(...tableComparison.actions);
         if(borderComparison)actions.push(...decorationActions(borderComparison));
-        actions.unshift(...typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',masterTypography:english?.typography||typeComparison,sourceFontMap}));
-        if(presentation.articleContract){
+        actions.unshift(...typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',masterTypography:english?.typography||typeComparison,sourceFontMap,sourceFontWeights}));
+        if(translatedStyles)actions.push(...translatedStyleCheck(before,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).actions);
+        if(presentation.articleContract&&!pagePresentation){
           const imported=await measure(browser,item.file,{importedArticle:presentation.articleContract});
           actions.unshift(...readerTypographyRepairs(before,imported,presentation.defaultSizePx*(presentation.scale||1)));
         }
@@ -280,6 +301,7 @@ export async function prepare(root, options = {}) {
         if (beforeDisplay.some(f => ['horizontal_overflow', 'outside_content'].includes(f.category))) actions.push({ kind: 'stylesheet', css: responsiveCss });
         // English presentation is the master. Propagate only when its local layout has no unresolved errors.
         if (english && !unresolved.some(f => f.language === 'en' && f.severity === 'error')) {
+          actions.push(...compareImageStyles(english,before,item.language).actions);
           actions.push(...structure.findings.filter(f => f.repair).map(f => f.repair));
           actions.push(...decorationActions(compareDecorations(targetDecorations,before,item.language)));
           const inherited = await sheets(browser, selection.documents[0].file, item.file);
@@ -288,46 +310,54 @@ export async function prepare(root, options = {}) {
           for (const match of structure.matches) {
             const sourceBlock=english.records.find(r=>r.selector===match.source);
             if(sourceBlock?.tag==='p')actions.push({kind:'presentation',selector:match.target,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${parseFloat(sourceBlock.font.size)/presentation.defaultSizePx})`,'line-height':String(parseFloat(sourceBlock.style.lineHeight)/parseFloat(sourceBlock.font.size))}});
-            const sourceImage=english.records.find(r=>r.selector===match.source && r.tag==='img');
-            if(!sourceImage?.src)continue;
-            const url=new URL(sourceImage.src,pathToFileURL(selection.documents[0].file));
-            if(url.protocol !== 'file:' || !await exists(fileURLToPath(url)))continue;
-            actions.push({kind:'image_source',selector:match.target,src:path.relative(path.dirname(item.file),fileURLToPath(url)).split(path.sep).join('/'),width:sourceImage.naturalWidth,height:sourceImage.naturalHeight});
           }
         }
-        await apply(item, actions, presentation);
+        await apply(item, actions, presentation, repairShells);
       }
       if(options.autoCorrect && item.language==='en' && decorations?.lists?.length && !actions.length)throw Error('List correction requires presentation consolidation');
-      const final = options.autoCorrect && actions.length ? await measure(browser, item.file,presentation) : before;
+      const final = options.autoCorrect && (actions.length || repairShells) ? await measure(browser, item.file,presentation) : before;
       final.delivery=presentation;
+      if(item.language==='en')final.displayProfiles=displayPages;
       let listFindings=[];if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const checked=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);listFindings=checked.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure or typography differs from HTML.',f));}
       final.typography=compareTypography(sourceType,final,item.language,{sourceFontMap});
       const displayFindings=layouts=>item.language==='en'?checkDisplayPages(displayPages,layouts,sourceFontMap).map(f=>issue('en','source_display_page_difference','page '+f.page,f.detail,f)):[];
       const assets = await collectAssets(final); resourceInputs.push(...assets.inputs);
       let findings = [...listFindings,...final.typography.findings, ...final.layouts.flatMap(l => checkDisplay(l, item.language)), ...assets.findings];
+      for(const layout of final.layouts.slice(1))findings.push(...compareTypography(sourceType,{...layout,platformFonts:final.platformFonts},item.language,{sourceFontMap}).findings);
+      if(translatedStyles)findings.push(...final.layouts.flatMap(layout=>translatedStyleCheck(layout,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).findings));
+      findings.push(...final.layouts.flatMap(l=>compareTables(tableProfile,{...l,platformFonts:final.platformFonts},tableOptions).findings));
       findings.push(...displayFindings(final.layouts));
       if(item.language==='en')findings.push(...(await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)},false)`)).map(f=>issue('en','false_heading_in_paragraph','page '+f.page,f.detail,f)));
       findings.push(...final.layouts.flatMap(l=>compareDecorations(targetDecorations,l,item.language).findings));
-      const paddingFindings=layouts=>layouts.flatMap(l=>pagePaddingDifferences(l,pagePresentation)).map(detail=>issue(item.language,'source_page_padding_difference','page '+detail.page,'Rendered page padding differs from measured PDF text bounds.',detail));
+      const paddingFindings=layouts=>layouts.flatMap(l=>pagePaddingDifferences(l,pagePresentation,item.language)).map(detail=>issue(item.language,'source_page_padding_difference','page '+detail.page,'Rendered page padding differs from measured PDF text bounds.',detail));
       findings.push(...paddingFindings(final.layouts));
+      const heightFindings=layouts=>layouts.flatMap(l=>pageHeightDifferences(l,pagePresentation)).map(detail=>issue(item.language,'page_height_below_minimum','page '+detail.page,'Rendered page is shorter than the source page proportions; translations retain full pages while allowing content growth.',detail));
+      findings.push(...heightFindings(final.layouts));
+      if(english)findings.push(...final.layouts.flatMap((l,i)=>compareImageStyles(english.layouts[i],l,item.language).findings));
       if(presentation.articleContract){
         const article=await measure(browser,item.file,{importedArticle:presentation.articleContract});
         article.typography=compareTypography(sourceType,article,item.language,{sourceFontMap});
+        for(const layout of article.layouts.slice(1))findings.push(...compareTypography(sourceType,{...layout,platformFonts:article.platformFonts},item.language,{sourceFontMap}).findings);
+        if(translatedStyles)findings.push(...article.layouts.flatMap(layout=>translatedStyleCheck(layout,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).findings));
+        findings.push(...article.layouts.flatMap(l=>compareTables(tableProfile,{...l,platformFonts:article.platformFonts},tableOptions).findings));
         findings.push(...displayFindings(article.layouts));
         if(item.language==='en'&&decorations?.lists){const checked=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);findings.push(...checked.findings.map(f=>issue('en',f.kind,'page '+f.page,'Imported reader list structure or typography differs from PDF.',f)));}
         findings.push(...article.typography.findings,...article.layouts.flatMap(l=>checkDisplay(l,item.language)));
         findings.push(...article.layouts.flatMap(l=>compareDecorations(targetDecorations,l,item.language).findings));
         findings.push(...paddingFindings(article.layouts));
+        findings.push(...heightFindings(article.layouts));
+        if(english)findings.push(...article.layouts.flatMap((l,i)=>compareImageStyles(english.articleLayouts[i],l,item.language).findings));
         for(let v=0;v<final.layouts.length;v++){
           const source=final.layouts[v].records,target=article.layouts[v].records;
           if(source.length!==target.length)findings.push(issue(item.language,'reader_import_structure','article','Imported article changes the measured block count.'));
           else for(let i=0;i<source.length;i++){
             const a=source[i],b=target[i];
             if(a.text!==b.text||a.tag!==b.tag)findings.push(issue(item.language,'reader_import_structure',b.selector,'Imported article changes text or block order.'));
-            else if(a.displayGroup==null&&(Math.abs(parseFloat(a.font.size)-parseFloat(b.font.size))>.1||a.font.family!==b.font.family||a.style.lineHeight!==b.style.lineHeight))findings.push(issue(item.language,'reader_typography_difference',b.selector,'Imported article differs from the verified standalone typography.',{standalone:a.font,imported:b.font,width:article.layouts[v].width}));
+            else if(a.text&&a.tag!=='img'&&a.tag!=='table'&&a.displayGroup==null&&(Math.abs(parseFloat(a.font.size)/(a.pageScale||1)-parseFloat(b.font.size)/(b.pageScale||1))>.1||a.font.family!==b.font.family||Math.abs(parseFloat(a.style.lineHeight)/(a.pageScale||1)-parseFloat(b.style.lineHeight)/(b.pageScale||1))>.1))findings.push(issue(item.language,'reader_typography_difference',b.selector,'Imported article differs from standalone typography after normalizing their page widths.',{standalone:a.font,imported:b.font,width:article.layouts[v].width}));
           }
         }
         const articleFile=path.join(directory,item.language+'-article-layout.json');await writeJson(articleFile,article);artifacts.push({file:articleFile,sha256:await fileHash(articleFile)});
+        if(item.language==='en')final.articleLayouts=article.layouts;
       }
       for (const f of final.platformFonts) if (!f.fonts.some(font => font.glyphCount > 0)) findings.push(issue(item.language, 'unrendered_text', f.selector, 'No platform font reports rendered glyphs for this nonempty text block.'));
       if (!english) {
@@ -335,14 +365,14 @@ export async function prepare(root, options = {}) {
         // require an invisible source face to render invented HTML characters.
         const visibleFamilies=new Set(sourceType.pages.flatMap(p=>p.lines.filter(l=>l.text.trim()).map(l=>l.font.family.replace(/^[A-Z]{6}\+/,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman)$/i,'').toLowerCase())));
         const visibleInventory=fontInfo.stdout.split('\n').filter(line=>! /\s(?:yes|no)\s/.test(line)||visibleFamilies.has(line.trim().split(/\s+/)[0].replace(/^[A-Z]{6}\+/,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman)$/i,'').toLowerCase())).join('\n');
-        findings.push(...comparePdfFonts(visibleInventory, final.platformFonts));
+        findings.push(...comparePdfFonts(visibleInventory, final.platformFonts, sourceFontsList));
         final.sourceGeometry=comparePdfGeometry(pdfGeometry,final);findings.push(...final.sourceGeometry.findings);
-        const compared = compareEnglish(pages, final); pageCoverage.push(...compared.coverage); findings.push(...retainReviewedDifferences(compared.findings,review,initialInputs.find(i=>i.file===selection.pdf).sha256));
+        const compared = compareEnglish(pages, final); pageCoverage.push(...compared.coverage); findings.push(...compared.findings);
         initialFindings.push(...compareEnglish(pages, before).findings);
         const sourceImages=imageInfo.stdout.split('\n').filter(line=>/^\s*\d+\s+\d+\s+image\s/.test(line));
         const htmlImages=final.records.filter(r=>r.tag==='img');
-        if(sourceImages.length && !htmlImages.length) findings.push(issue('en','missing_source_images','document',`PDF lists ${sourceImages.length} images but HTML contains none.`,{needsJudgment:true}));
-        else if(sourceImages.length !== htmlImages.length) findings.push(issue('en','image_inventory_difference','document',`PDF image inventory ${sourceImages.length}; HTML images ${htmlImages.length}. PDF masks/tiling and HTML reuse need source-specific alignment.`,{severity:'warning',needsJudgment:true}));
+        if(sourceImages.length && !htmlImages.length) findings.push(issue('en','missing_source_images','document',`PDF lists ${sourceImages.length} images but HTML contains none.`));
+        else if(sourceImages.length !== htmlImages.length) findings.push(issue('en','image_inventory_difference','document',`PDF image inventory ${sourceImages.length}; HTML images ${htmlImages.length}. PDF masks/tiling and HTML reuse could not be aligned deterministically.`,{severity:'warning'}));
         english = final;
       } else findings.push(...compareStructure(english, final, item.language).findings);
       const unique = new Map(findings.map(f => [f.id, f])); findings = [...unique.values()];
@@ -357,8 +387,8 @@ export async function prepare(root, options = {}) {
     const findings = [...new Map(unresolved.map(f => [f.id, f])).values()];
     const result = { scope: 'layout_and_structure', status: findings.some(f => f.severity === 'error') ? 'needs_attention' : findings.length ? 'passed_with_warnings' : 'passed', job: directory,
       documents: measurements, absent: selection.absent, pageCoverage, initialFindings: [...new Map(initialFindings.map(f => [f.id, f])).values()], findings, corrections, backups,
-      coverage: { pdfPages: pages.length, htmlDocuments: measurements.length, viewportsPerDocument: 3, llmReviewsRequired: findings.filter(f => f.needsJudgment).length, screenshots: 0 },
-      limitations: ['Layout/structural checks only; translation meaning, humanisation, summaries and metadata are not reviewed.', 'No font +/− tests, enlarged-text tests, screenshots, PDF rasterization or image reports.', 'Source PDF text, fonts, image inventory and bounding boxes are retained as text. Complex table/figure identity and exact PDF typography require a targeted source-grounded plan when local measurements are insufficient.', 'Equal block counts or matching font names do not prove semantic completeness or every glyph. Unmatched source lines and ambiguous structural mappings remain findings.', 'Book scripts and remote traffic are disabled. Interactive host application behavior is outside this standalone layout audit.'] };
+      coverage: { pdfPages: pages.length, htmlDocuments: measurements.length, viewportsPerDocument: 3, localAutomationOnly: true, externalReviewsRequired: 0, screenshots: 0 },
+      limitations: ['Layout/structural checks only; translation meaning, humanisation, summaries and metadata are not reviewed.', 'No font +/− tests, enlarged-text tests, screenshots, PDF rasterization or image reports.', 'Source PDF text, fonts, image inventory and bounding boxes are retained as text. Cases that local evidence cannot resolve deterministically remain explicit failed or warning findings.', 'Equal block counts or matching font names do not prove semantic completeness or every glyph. Unmatched source lines and ambiguous structural mappings remain findings.', 'Book scripts and remote traffic are disabled. Interactive host application behavior is outside this standalone layout audit.'] };
     await writeJson(path.join(directory, 'job.json'), { scope: 'layout_and_structure', requestHash, inputs, artifacts, result, runtime: runtime.runtime });
     await verifyInputs(inputs);
     return await writeLayoutReport(directory, result);

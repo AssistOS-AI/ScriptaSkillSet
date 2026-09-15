@@ -1,6 +1,16 @@
 import { pathToFileURL } from 'node:url';
 import { inspectLayout } from './layout-checks.mjs';
 
+async function platformFonts(browser,nodeId) {
+  try{return await browser.send('CSS.getPlatformFontsForNode',{nodeId});}
+  catch(error){
+    // This query is read-only and the document stays fixed. Retry a transient
+    // renderer stall once; never replace missing evidence with an empty result.
+    if(error.message!=='CDP timeout: CSS.getPlatformFontsForNode')throw error;
+    return browser.send('CSS.getPlatformFontsForNode',{nodeId});
+  }
+}
+
 export async function navigate(browser, file) {
   const url = pathToFileURL(file).href;
   await browser.send('Page.navigate', { url });
@@ -39,12 +49,12 @@ export async function measure(browser, file, presentation = null) {
     for (const record of d.records.filter(r => r.text && r.tag !== 'table' && r.tag !== 'img')) {
       const { nodeId } = await browser.send('DOM.querySelector', { nodeId: root.root.nodeId, selector: record.selector });
       if (!nodeId) continue;
-      const result = await browser.send('CSS.getPlatformFontsForNode', { nodeId });
+      const result = await platformFonts(browser,nodeId);
       // CDP does not traverse descendant flex formatting contexts. Inspect the
       // actual descendants before declaring a visible contents entry unrendered.
       if(!result.fonts.some(font=>font.glyphCount>0)){
         const descendants=await browser.send('DOM.querySelectorAll',{nodeId,selector:'*'});
-        for(const child of descendants.nodeIds){const measured=await browser.send('CSS.getPlatformFontsForNode',{nodeId:child});result.fonts.push(...measured.fonts);}
+        for(const child of descendants.nodeIds){const measured=await platformFonts(browser,child);result.fonts.push(...measured.fonts);}
       }
       fonts.push({ selector: record.selector, width, fonts: result.fonts });
     }
@@ -67,9 +77,11 @@ export function importReaderArticle(settings) {
   document.querySelectorAll('style,link[rel=stylesheet]').forEach(n=>n.remove());
   const add=href=>{const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.append(link);};
   add(settings.readerCss);
-  if(settings.managed && managedHref && original.hasAttribute('data-validatebook-root')){
+  const managedRoot=original.hasAttribute('data-validatebook-root')?original:null;
+  if(settings.managed && managedHref && managedRoot){
     article.setAttribute('data-validatebook-root','');
-    if(original.hasAttribute('data-vb-style'))article.setAttribute('data-vb-style',original.getAttribute('data-vb-style'));
+    const styleSource=original.hasAttribute('data-vb-style')?original:managedRoot;
+    if(styleSource.hasAttribute('data-vb-style'))article.setAttribute('data-vb-style',styleSource.getAttribute('data-vb-style'));
     if(!settings.generic)add(managedHref);
   }
   if(settings.generic)bookStyles.forEach(add);
@@ -79,7 +91,7 @@ export function importReaderArticle(settings) {
   document.documentElement.style.setProperty('--reader-font-size',settings.defaultRem+'rem');
 }
 
-// Never accept arbitrary JavaScript or prose replacements in a repair plan.
+// Never accept arbitrary JavaScript or prose replacement actions.
 export function applyDomRepairs(actions) {
   const text = () => { const c = document.body.cloneNode(true); c.querySelectorAll('script,style,template,noscript').forEach(n => n.remove()); return c.textContent; };
   const before = text(), changes = [];
@@ -106,7 +118,9 @@ export function applyDomRepairs(actions) {
         const computed=getComputedStyle(n);expected.push({node:n,values:Object.fromEntries([...declaration].map(key=>[key,computed.getPropertyValue(key)]))});
         let id=signatures.get(signature);if(!id){id='s'+(signatures.size+1);signatures.set(signature,id);}
         assignments.push([n,id]);
-        if(n.getAttribute('style')){
+        // Persist selector strength after inline declarations become managed
+        // CSS. Otherwise reruns alternately lose and restore source overrides.
+        if(n.getAttribute('style') || n.hasAttribute('data-vb-style')){
           if(n.id&&CSS.escape(n.id)===n.id){
             const ids=inlineIds.get(signature)||[];
             if(!ids.includes(n.id))ids.push(n.id);
@@ -123,9 +137,11 @@ export function applyDomRepairs(actions) {
       const scope='[data-validatebook-root]'.repeat(8);
       const extra='[data-validatebook-root]'.repeat(12);
       if(a.importedFontRatio!==undefined&&(!Number.isFinite(a.importedFontRatio)||a.importedFontRatio<=0))throw Error('Invalid imported font unit ratio');
+      if(a.standaloneSizeRem!==undefined&&(!Number.isFinite(a.standaloneSizeRem)||a.standaloneSizeRem<=0))throw Error('Invalid standalone size');
       const imported=a.importedFontRatio?scope+'.reader-html-content { --validatebook-font-size: calc(var(--reader-font-size) * '+a.importedFontRatio+'); }\n':'';
+      const standalone=a.standaloneSizeRem?scope+', html:has(>'+scope+'){--standalone-size:'+a.standaloneSizeRem+'rem}\n':'';
       const pageStyle=a.previousCss?.includes('/* validateBook source pagination */')?'/* validateBook source pagination */'+a.previousCss.split('/* validateBook source pagination */')[1]:'';
-      const css='/* validateBook managed presentation; generated from verified declarations */\n'+imported+[...signatures].map(([declaration,id])=>{
+      const css='/* validateBook managed presentation; generated from verified declarations */\n'+standalone+imported+[...signatures].map(([declaration,id])=>{
         const selectors=[scope+'[data-vb-style="'+id+'"]',scope+' [data-vb-style="'+id+'"]'];
         for(const tag of inlineTags.get(declaration)||[]){
           selectors.push(extra+' '+tag+'[data-vb-style="'+id+'"]',extra+' [data-reader-page] > '+tag+'[data-vb-style="'+id+'"]');
@@ -146,6 +162,7 @@ export function applyDomRepairs(actions) {
       const link=document.createElement('link');link.rel='stylesheet';link.setAttribute('data-validatebook-presentation','');link.setAttribute('href',a.href);document.head.append(link);
       stylesheet={href:a.href,css};changes.push({kind:a.kind,before:nodes.length+' inline/managed elements',after:signatures.size+' shared CSS declaration groups; no inline style attributes'});continue;
     }
+    if (a.kind === 'source_fidelity') { if(!document.body.hasAttribute('data-pdf-fidelity')){document.body.setAttribute('data-pdf-fidelity','validatebook');changes.push({kind:a.kind,before:null,after:'validatebook'});}continue; }
     if (a.kind === 'language_tag') { const old = document.documentElement.lang; document.documentElement.lang = a.language; changes.push({ kind: a.kind, before: old, after: a.language }); continue; }
     if (a.kind === 'stylesheet') {
       const old = document.querySelector('style[data-validatebook-layout]');
@@ -190,9 +207,9 @@ export function applyDomRepairs(actions) {
       }
       changes.push({kind:a.kind, selector:a.selector, before:old, after:n.outerHTML});
     } else if (a.kind === 'presentation') {
-      const allowed = new Set(['font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'text-align', 'text-indent', 'margin-top', 'margin-bottom', 'margin-left', 'padding-left', 'border-left', 'padding', 'max-width', 'width', 'height', 'overflow-wrap', 'white-space', 'border-collapse', 'table-layout', 'word-spacing', 'letter-spacing']);
+      const allowed = new Set(['font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'text-align', 'text-indent', 'margin-top', 'margin-bottom', 'margin-left', 'padding-left', 'border-left', 'padding', 'max-width', 'width', 'height', 'overflow-wrap', 'white-space', 'border-collapse', 'table-layout', 'word-spacing', 'letter-spacing', 'color', 'background-color', 'border-top', 'border-right', 'border-bottom', 'vertical-align', 'box-sizing', 'aspect-ratio', 'max-height', 'object-fit', 'object-position', 'display', 'border-radius', 'border', 'margin']);
       const beforeProperties=Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)]));
-      for (const [key, value] of Object.entries(a.properties)) { if (!allowed.has(key) || /url\(|expression\(|[{};]/i.test(value)) throw Error('Unsupported presentation property'); n.style.setProperty(key, value); }
+      for (const [key, value] of Object.entries(a.properties)) { if (!allowed.has(key) || /url\(|expression\(|[{};]/i.test(value)) throw Error('Unsupported presentation property'); const scaled=key==='font-size'&&value.includes('--reader-font-size')&&!value.includes('--validatebook-page-scale')?`calc((${value}) * var(--validatebook-page-scale, 1))`:value; n.style.setProperty(key, scaled); }
       changes.push({ kind: a.kind, selector: a.selector, before: beforeProperties, after: Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)])) });
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
