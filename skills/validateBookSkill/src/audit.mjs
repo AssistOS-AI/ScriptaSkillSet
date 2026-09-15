@@ -18,7 +18,8 @@ import { sourceDecorations, sourceFonts, compareDecorations, decorationActions, 
 
 import {parsePdfTypography,sourceTypographyProfile,compareTypography,typographyActions} from './typography.mjs';
 import {readerPresentation} from './reader-presentation.mjs';
-import {readerTypographyRepairs} from './reader-repairs.mjs';
+import {readerTypographyRepairs,readerGeometryCss} from './reader-repairs.mjs';
+import {tryCorrectionBatches} from './correction-batches.mjs';
 import {readingPages} from './layout-checks.mjs';
 import {restoreReferenceBoundaries,restoreSplitSourcePhrases} from './source-boundaries.mjs';
 import {displayPageProfiles,repairDisplayPages,checkDisplayPages} from './display-pages.mjs';
@@ -176,27 +177,32 @@ export async function prepare(root, options = {}) {
     let english;
     const unresolved = [];
     const expectedCurrent = new Map(initialInputs.map(i => [i.file, i.sha256]));
-    async function apply(item, actions, presentation, repairShells = false) {
-      if (!actions.length && !repairShells) return;
+    async function apply(item, actions, presentation, repairShells = false, mode='all') {
+      if (!actions.length && !repairShells && mode==='all' && !options.paginate) return;
+      const structure=mode==='all'||mode==='structure';
       const fontRules=sourceFontsList.map(font=>`@font-face { font-family: "${font.css_family}"; src: url("${path.relative(path.dirname(item.file),path.join(fontDirectory,path.basename(font.href))).split(path.sep).join('/')}") format("${font.href.endsWith('.otf')?'opentype':'truetype'}"); font-style: ${font.style}; font-weight: ${font.weight}; font-display: block; }`).join('\n');
       await navigate(browser, item.file);
+      await browser.evaluate('document.body.setAttribute("data-validatebook-root", "")');
       const cssFile = path.join(path.dirname(item.file), 'validatebook-layout.css');
       const cssBefore = await exists(cssFile) ? {file:cssFile,sha256:await fileHash(cssFile)} : null;
       if(cssBefore && !(await fs.readFile(cssFile,'utf8')).startsWith('/* validateBook managed presentation;'))throw Error('Managed stylesheet destination is occupied by unrelated content');
-      const identityChanges=options.restoreSourcePublisher?await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(pages)})`):[];
+      const identityChanges=structure&&options.restoreSourcePublisher?await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(pages)})`):[];
       const applied=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify(actions)})`);
       applied.changes.push(...identityChanges);
-      if(item.language==='en')applied.changes.push(...await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)})`));
-      if(item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreReferenceBoundaries.toString()})(${JSON.stringify(readingPages(pages))})`));
-      if(item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreSplitSourcePhrases.toString()})(${JSON.stringify(typography.stdout)})`));
+      if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)})`));
+      if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreReferenceBoundaries.toString()})(${JSON.stringify(readingPages(pages))})`));
+      if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreSplitSourcePhrases.toString()})(${JSON.stringify(typography.stdout)})`));
       let listRepair=null;
-      if(item.language==='en'&&decorations?.lists)listRepair=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)},true)`);
+      if(structure&&item.language==='en'&&decorations?.lists)listRepair=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)},true)`);
       const result = {changes:[...applied.changes]};
       if(listRepair)result.changes.push(...listRepair.changes);
-      if(options.paginate&&item.language==='en'){
+      if(options.paginate&&item.language==='en'&&(mode==='all'||mode==='pagination')){
         const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
         const blankPages=item.language==='en'?sourceBlankPages(pages,anchors):[];
         const paginated=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:item.language==='en'?'source':'translation',expectedPages:item.language==='en'?pages.length:null})})`);
+        // Measure and consolidate against the same page geometry that will be
+        // installed. Otherwise cover auto margins are captured before reflow.
+        await browser.evaluate(`{const style=document.createElement('style');style.dataset.validatebookCandidatePages='';style.textContent=${JSON.stringify(paginationCss(pagePresentation))};document.head.append(style);}`);
         const contents=await browser.evaluate(`(${applyContentsPresentation.toString()})(${JSON.stringify({profile:pagePresentation,language:item.language,mapping:contentsMapping})})`);
         if(item.language==='en')contentsMapping=contents.mapping;
         result.changes.push(...contents.changes);
@@ -208,10 +214,11 @@ export async function prepare(root, options = {}) {
         delete result.changes.at(-1).after.html;
         result.changes.push({kind:'source_page_presentation',margins:pagePresentation.margins,contents:contents.mapping,unmatched:contents.unmatched});
       }
-      if(item.language==='en')result.changes.push(...await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(displayPages)},${JSON.stringify(Object.keys(sourceFontMap).length?sourceFontMap:presentation.sourceDisplayFamily)},${presentation.defaultSizePx*(presentation.scale||1)})`));
+      if(item.language==='en'&&(mode==='all'||mode==='display'))result.changes.push(...await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(displayPages)},${JSON.stringify(Object.keys(sourceFontMap).length?sourceFontMap:presentation.sourceDisplayFamily)},${presentation.defaultSizePx*(presentation.scale||1)})`));
       result.changes.push(...await browser.evaluate(`(${repairPageShells.toString()})()`));
       const consolidated=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',previousCss:cssBefore?await fs.readFile(cssFile,'utf8'):null,importedFontRatio:presentation?.articleContract?.fontRatio,standaloneSizeRem:presentation?.standaloneSizeRem}])})`);
       result.html=consolidated.html;
+      result.html=result.html.replace(/<style data-validatebook-candidate-pages="">[\s\S]*?<\/style>/g,'');
       result.stylesheet=consolidated.stylesheet;
       if(fontRules)result.stylesheet.css=result.stylesheet.css.replace('/* validateBook managed presentation; generated from verified declarations */','/* validateBook managed presentation; generated from verified declarations */\n'+fontRules);
       result.changes.push(...consolidated.changes);
@@ -223,14 +230,10 @@ export async function prepare(root, options = {}) {
         const marker='/* validateBook translated flow */';
         result.stylesheet.css=result.stylesheet.css.split(marker)[0]+translatedPaginationCss(pagePresentation);
       }
+      if(presentation.geometryCss)result.stylesheet.css+='\n'+presentation.geometryCss;
       if (!result.changes.length) return;
-      try { await guardInstallation(browser,item,result,presentation,pagePresentation); }
-      catch(error){
-        if(!error.findings)throw error;
-        await writeJson(path.join(directory,'rejected-candidate-'+item.language+'.json'),{file:item.file,error:error.message,findings:error.findings});
-        unresolved.push(...error.findings.map(f=>({...f,severity:'error',file:item.file,language:item.language,detail:'Correction batch rejected; current document preserved. '+(f.detail||f.category)})));
-        return;
-      }
+      if(result.html===await fs.readFile(item.file,'utf8')&&cssBefore&&result.stylesheet.css===await fs.readFile(cssFile,'utf8'))return false;
+      await guardInstallation(browser,item,result,presentation,pagePresentation);
       const expected = initialInputs.find(i => i.file === item.file).sha256;
       if (await fileHash(item.file) !== expected) throw Error('Concurrent source change before repair: ' + item.file);
       const backup = path.join(directory, 'recovery', item.language, path.basename(item.file)); await fs.mkdir(path.dirname(backup), { recursive: true });
@@ -257,6 +260,7 @@ export async function prepare(root, options = {}) {
       corrections.push(...result.changes.map(c => ({ ...c, file: item.file, language: item.language })));
       // Persist recovery immediately, including if subsequent measurement fails.
       await writeJson(path.join(directory, 'recovery.json'), { backups, corrections });
+      return true;
     }
     for (const item of selection.documents) {
       const standalone = await measure(browser, item.file);
@@ -309,6 +313,7 @@ export async function prepare(root, options = {}) {
         if(translatedStyles)actions.push(...translatedStyleCheck(before,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).actions);
         if(presentation.articleContract){
           const imported=await measure(browser,item.file,{importedArticle:presentation.articleContract});
+          presentation.geometryCss=await browser.evaluate(`(${readerGeometryCss.toString()})(${JSON.stringify(await fs.readFile(fileURLToPath(presentation.articleContract.readerCss),'utf8'))})`);
           actions.unshift(...readerTypographyRepairs(before,imported,presentation.defaultSizePx*(presentation.scale||1)));
         }
         if (before.language.toLowerCase() !== item.language.toLowerCase()) actions.unshift({ kind: 'language_tag', language: item.language });
@@ -326,11 +331,20 @@ export async function prepare(root, options = {}) {
             if(sourceBlock?.tag==='p')actions.push({kind:'presentation',selector:match.target,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${parseFloat(sourceBlock.font.size)/presentation.defaultSizePx})`,'line-height':String(parseFloat(sourceBlock.style.lineHeight)/parseFloat(sourceBlock.font.size))}});
           }
         }
-        await apply(item, actions, presentation, repairShells);
+        const batches=[{name:'all',actions}];
+        if(item.language==='en')batches.push({name:'pagination',actions:[]},{name:'tables',actions:tableComparison.actions},{name:'typography',actions:typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',sourceFontMap,sourceFontWeights})},{name:'display',actions:[]},{name:'structure',actions:[]});
+        const rejected=[];
+        const accepted=await tryCorrectionBatches(batches,batch=>apply(item,batch.actions,presentation,repairShells,batch.name),async(batch,error)=>{
+          await writeJson(path.join(directory,'rejected-candidate-'+item.language+'-'+batch.name+'.json'),{file:item.file,batch:batch.name,error:error.message,findings:error.findings||[]});
+          rejected.push(issue(item.language,'correction_batch_rejected',batch.name,error.message));
+        });
+        // Failed attempts stay in the report even when another batch succeeds.
+        initialFindings.push(...rejected);
+        if(!accepted)unresolved.push(...rejected);
       }
       if(options.autoCorrect && item.language==='en' && decorations?.lists?.length && !actions.length)
         unresolved.push(issue(item.language,'list_correction_unavailable','document','List correction could not be consolidated safely; the document remains available and the error is retained in the final report.'));
-      const final = options.autoCorrect && (actions.length || repairShells) ? await measure(browser, item.file,presentation) : before;
+      const final = options.autoCorrect ? await measure(browser, item.file,presentation) : before;
       final.delivery=presentation;
       if(item.language==='en')final.displayProfiles=displayPages;
       let listFindings=[];if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const checked=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);listFindings=checked.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure or typography differs from HTML.',f));}

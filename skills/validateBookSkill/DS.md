@@ -1,5 +1,9 @@
 # Design: local layout and structural correction
 
+## Independent candidate acceptance
+
+`tryCorrectionBatches` retries a rejected combined candidate from canonical bytes with independent repair groups. Only rendering/consolidation rejection is recoverable; tool and concurrent-edit errors propagate. One accepted batch ends a pass so later selectors derive from fresh measurements. Unchanged candidates permit the next group. The existing installation guard remains authoritative. Root/page CSS is active before consolidation. Imported geometry copies authored host box declarations and conditional rules into root-only managed selectors; no sampled widths or descendant typography are copied. Tests cover responsive images/text, host mobile padding, page scaling, candidate rejection and runtime failure propagation.
+
 
 ## Table fidelity and blocking findings
 

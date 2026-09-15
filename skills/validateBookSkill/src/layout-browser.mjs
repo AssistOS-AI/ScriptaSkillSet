@@ -100,6 +100,7 @@ export function applyDomRepairs(actions) {
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
+      document.body.setAttribute('data-validatebook-root','');
       const old=document.querySelector('link[data-validatebook-presentation]');
       const previous=new Map();
       if(old){

@@ -21,7 +21,11 @@ test('native full audit/repair has zero screenshots, preserves translation and v
   await fs.writeFile(path.join(root,'en/full_content.html'),en);await fs.writeFile(path.join(root,'ro/full_content.html'),ro);
   const result=await prepare(root,{autoCorrect:true,languages:'ro',jobDir:path.join(root,'job')});
   assert.equal(result.coverage.screenshots,0);assert.equal(result.coverage.pdfPages,1);assert.equal(result.documents.length,2);
-  const fixed=await fs.readFile(path.join(root,'ro/full_content.html'),'utf8');assert(fixed.includes('lang="ro"'));assert(fixed.includes('Un paragraf sintetic complet pentru verificarea afișării.'));assert(result.corrections.some(c=>c.kind==='language_tag'));assert(result.corrections.some(c=>c.kind==='inherit_styles' && c.language==='ro'));assert(fixed.includes('font-family:Arial'));assert.equal(result.status,'passed');
+  const fixed=await fs.readFile(path.join(root,'ro/full_content.html'),'utf8');assert(fixed.includes('lang="ro"'));assert(fixed.includes('Un paragraf sintetic complet pentru verificarea afișării.'));assert(result.corrections.some(c=>c.kind==='language_tag'));assert(result.corrections.some(c=>c.kind==='inherit_styles' && c.language==='ro'));assert(fixed.includes('font-family:Arial'));
+  // The synthetic PDF has no embedded font. Safe presentation repairs install,
+  // but a translated source-font role cannot be certified from this fixture.
+  assert.equal(result.status,'needs_attention');
+  assert.deepEqual(result.findings.map(f=>[f.language,f.category]),[['ro','translation_style_unmapped']]);
   assert.equal(await fs.readFile(path.join(root,'job/recovery/ro/full_content.html'),'utf8'),ro);
   assert.equal((await report(path.join(root,'job'))).status,result.status);
   const files=await fs.readdir(path.join(root,'job'),{recursive:true});assert(!files.some(f=>/\.(png|jpg|jpeg)$|report\.html$/.test(f)));

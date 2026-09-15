@@ -1,5 +1,7 @@
 # Continue an authorized layout correction
 
+The native correction loop retries rejected combined candidates as independent source-supported repair batches, remeasuring after each accepted installation. Rejection does not authorize weaker checks. Runtime failures and concurrent edits abort; rejected layout attempts and unresolved findings remain in the final report. Activate final page geometry before CSS consolidation and preserve host responsive root geometry from the hash-bound reader stylesheet.
+
 The user's verify-and-correct request authorizes this skill's complete local structure/display workflow. Reuse that authorization across stages, retries and interruptions. Do not ask whether to continue, apply a deterministic local fix, process another language or finish installation. Scope excludes editorial work, summaries, metadata and font-size-control tests.
 
 Inventory required permissions once. Use allowed workspace reads/writes and already approved native launchers. Task authorization and platform permission remain different: a proposed or interrupted approval is not a granted rule. Never bypass sandbox boundaries or broaden a launcher to run unrelated code. Request a platform grant only when a required operation cannot run with existing permissions and no permitted equivalent exists.

@@ -5,6 +5,12 @@ description: Verify and correct existing book HTML structure, layout, typography
 
 # Validate book layout and structure
 
+## Independent repair batches
+
+Attempt the combined source-supported corrections first. If delivery validation or computed-style consolidation rejects that candidate, retry pagination, tables, typography, display pages and structural repairs independently from unchanged canonical files. Install at most one verified batch per pass, then collect fresh measurements and selectors. Retain rejected attempts in the report; never weaken delivery checks or suppress unresolved findings. Runtime failures and concurrent edits still abort the transaction. No external helper script or agent intervention is required.
+
+Activate the managed root and source page CSS before consolidating declarations, so cover margins are measured in their final page geometry. Reader typography repairs ignore images and leave viewport-dependent text rules to source-aware correction and final parity checks. Generate imported root geometry from the hash-bound host CSS, retaining its media queries rather than sampled pixel dimensions. Apply these rules only to the outer article; book paragraphs, tables and internal page spacing retain edition presentation.
+
 
 ## Table fidelity and blocking findings
 

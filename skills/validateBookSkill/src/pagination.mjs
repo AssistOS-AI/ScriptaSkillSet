@@ -222,13 +222,13 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
     }
     changes.push({kind:'source_contents_recovery',before,after:list.outerHTML,sourceEntries:entries});
   }
-  const lineHeight=(profile.contentsLineHeight>0&&profile.contentsFontSize>0)?profile.contentsLineHeight/profile.contentsFontSize:1.45;
+  const lineHeight=(profile.contentsLineHeight>0&&profile.contentsFontSize>0)?profile.contentsLineHeight/profile.contentsFontSize:null;
   if(language==='en')for(const li of document.querySelectorAll('.source-toc-part')){
     const matches=profile.contents.filter(row=>row.kind==='part'&&normalize(row.label)===normalize(li.textContent));
     if(matches.length!==1){unmatched.push(li.textContent.trim());continue;}
     const source=matches[0],size=source.size||profile.contentsFontSize;
     if(size>0)li.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
-    li.style.lineHeight=String(lineHeight);
+    if(lineHeight)li.style.lineHeight=String(lineHeight);
   }
   for(const a of document.querySelectorAll('.source-toc a[href^="#"]')){
     const label=a.querySelector('.validatebook-toc-label')?.textContent||a.textContent;
@@ -237,7 +237,7 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
     const source=matches[0],target=document.getElementById(a.getAttribute('href').slice(1));
     const size=source.size||profile.contentsFontSize;
     if(size>0)a.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
-    a.parentElement.style.lineHeight=String(lineHeight);
+    if(lineHeight)a.parentElement.style.lineHeight=String(lineHeight);
     const destination=target?.closest('.pdf-source-page');
     const page=language==='en'?source.number:destination?String([...destination.parentElement.querySelectorAll(':scope > .pdf-source-page')].indexOf(destination)+1):null;
     if(!page){unmatched.push(label);continue;}

@@ -1,5 +1,7 @@
 # ValidateBook
 
+Rejected combined corrections are retried as independent pagination, table, typography, display and structural batches. Each batch must pass standalone/imported delivery checks before installation; the next pass remeasures installed content. Rejected attempts remain reported. Responsive host container geometry is preserved from the actual host stylesheet, and media font inheritance cannot abort text repairs.
+
 
 ## Table fidelity and blocking findings
 
