@@ -153,13 +153,13 @@ export function applyDomRepairs(actions) {
         for(const elementId of inlineIds.get(declaration)||[]){
           selectors.push(extra+'#'+elementId+'[data-vb-style="'+id+'"]',extra+' #'+elementId+'[data-vb-style="'+id+'"]');
         }
-        return ':is('+selectors.join(', ')+') { '+declaration+' }';
+        return ':is(#validatebook-managed-priority#validatebook-managed-priority#validatebook-managed-priority, '+selectors.join(', ')+') { '+declaration+' }';
       }).join('\n')+'\n'+pageStyle;
       const temporary=document.createElement('style');temporary.textContent=css;document.head.append(temporary);
       nodes.forEach(n=>n.removeAttribute('style'));old?.remove();
       for(const check of expected)for(const [key,value] of Object.entries(check.values)){
         const actual=getComputedStyle(check.node).getPropertyValue(key);
-        const rounding=/^-?[\d.]+px$/.test(actual)&&/^-?[\d.]+px$/.test(value)&&Math.abs(parseFloat(actual)-parseFloat(value))<.001;
+        const rounding=/^-?[\d.]+px$/.test(actual)&&/^-?[\d.]+px$/.test(value)&&Math.abs(parseFloat(actual)-parseFloat(value))<=.01;
         if(actual!==value&&!rounding)throw Error('CSS consolidation changed computed '+key+' from '+value+' to '+actual+' on '+check.node.tagName+' '+check.node.textContent.slice(0,80));
       }
       temporary.remove();

@@ -107,6 +107,28 @@ test('managed CSS replaces inline declarations without altering computed typogra
   }
 });
 
+test('managed CSS accepts browser subpixel rounding during consolidation',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'presentation-rounding-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
+  const file=path.join(root,'book.html');
+  await fs.writeFile(file,'<!doctype html><html><body><h2 style="margin-top:375.635px">How the Story Is Organized</h2></body></html>');
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+  await measure(browser,file);
+  const result=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css'}])})`);
+  assert(result.stylesheet.css.includes('margin-top: 375.635px'));
+});
+
+test('managed CSS keeps inline repairs above source :is id specificity',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'presentation-specificity-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
+  const file=path.join(root,'book.html');
+  await fs.writeFile(file,'<!doctype html><html><head><style>[data-pdf-fidelity="ai-agents"]{font-size:14.6667px}[data-pdf-fidelity="ai-agents"] :is(#page_3,#page_4,.source-front-title){font-size:1.882353em}</style></head><body data-pdf-fidelity="ai-agents"><h2 class="source-front-title" style="font-size:29.3333px">How the Story Is Organized</h2></body></html>');
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+  await measure(browser,file);
+  const result=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css'}])})`);
+  await fs.writeFile(path.join(root,'validatebook-layout.css'),result.stylesheet.css);await fs.writeFile(file,result.html);await measure(browser,file);
+  const size=await browser.evaluate('getComputedStyle(document.querySelector(".source-front-title")).fontSize');
+  assert.equal(size,'29.3333px');
+});
+
 test('managed source units stay equal when an article host changes the root rem size',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'reader-units-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
   const file=path.join(root,'book.html');

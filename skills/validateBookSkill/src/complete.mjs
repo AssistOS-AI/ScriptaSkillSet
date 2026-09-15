@@ -165,11 +165,10 @@ export async function complete(root,options={}) {
     const installation=accepted?await installWorkingCopy(copy,transaction,result):[];
     const reportText=path.join(selection.root,'RAPORT-CORECTII.txt');
     const reportBody=(await fs.readFile(result.reportText,'utf8')).replaceAll(copy.stagedRoot,selection.root);
-    await fs.writeFile(reportText,`Installed: ${accepted}\n${accepted?'Verified candidate installed.':'Candidate rejected; original files preserved.'}\nEvidence: ${transaction}\n\n`+reportBody);
+    const evidenceLine=accepted?`Temporary evidence: ${transaction} (removed after successful cleanup)`: `Evidence: ${transaction}`;
+    await fs.writeFile(reportText,`Installed: ${accepted}\n${accepted?'Verified candidate installed.':'Candidate rejected; original files preserved.'}\n${evidenceLine}\n\n`+reportBody);
     await writeJson(path.join(transaction,'transaction.json'),{accepted,installation,root:selection.root,stagedRoot:copy.stagedRoot,reportText});
     if(accepted){
-      const retainedReport=(await fs.readFile(reportText,'utf8'))+'\nTemporary job paths above are historical after successful cleanup; see cleanup status below.\n';
-      await fs.writeFile(reportText,retainedReport);
       try{
         const removed=await cleanupCompletedWork(selection.root,transaction,{...result,installed:true});
         await fs.appendFile(reportText,'Cleanup completed: '+removed.join(', ')+'\n');
