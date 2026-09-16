@@ -6,7 +6,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { compareEnglish, compareStructure, checkDisplay, comparePdfFonts, comparePdfGeometry } from '../src/layout-checks.mjs';
-import { discover, collectAssets, doctor } from '../src/audit.mjs';
+import { discover, collectAssets, doctor, splitSafeVisibleContentRepairs } from '../src/audit.mjs';
 import { textReport, layoutReport } from '../src/layout-report.mjs';
 import { planComplete, completeStatus } from '../src/complete.mjs';
 import { fileHash, writeJson } from '../src/storage.mjs';
@@ -57,6 +57,27 @@ test('converter figure placeholders are visible-content errors with a native rem
   const finding=checkDisplay(d,'en').find(f=>f.category==='generated_figure_caption');
   assert.equal(finding.repair.kind,'remove_generated_caption');
   assert.equal(finding.repair.selector,'#caption');
+});
+test('generated figure captions are split from layout batches as safe visible-content repairs',()=>{
+  const actions=[
+    {kind:'presentation',selector:'#p',properties:{'font-size':'1em'}},
+    {kind:'remove_generated_caption',selector:'#cap',text:'Figure from PDF page 1'},
+    {kind:'stylesheet',css:'p{overflow-wrap:anywhere}'}
+  ];
+  const split=splitSafeVisibleContentRepairs(actions);
+  assert.deepEqual(split.safe,[actions[1]]);
+  assert.deepEqual(split.batch,[actions[0],actions[2]]);
+});
+test('translation presentation layer is split from risky layout batches',()=>{
+  const actions=[
+    {kind:'inherit_styles',sheets:[{href:'../en/validatebook-layout.css'}],bodyAttributes:{'data-pdf-fidelity':'validatebook'},safeTranslationStyle:true},
+    {kind:'language_tag',language:'it',safeTranslationStyle:true},
+    {kind:'presentation',selector:'#translated',properties:{'font-family':'"Source", serif'},safeTranslationStyle:true},
+    {kind:'table_grid',selector:'#table',rows:[]}
+  ];
+  const split=splitSafeVisibleContentRepairs(actions);
+  assert.deepEqual(split.safe,actions.slice(0,3));
+  assert.deepEqual(split.batch,[actions[3]]);
 });
 test('actual rendered fonts compared with PDF subset names',()=>{
   const source='ABCDEF+EBGaramond-Regular TrueType yes yes yes 1 0';

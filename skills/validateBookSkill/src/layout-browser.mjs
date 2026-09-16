@@ -144,7 +144,7 @@ export function applyDomRepairs(actions) {
       if(/[{};]/.test(rootFont))throw Error('Invalid root font family');
       const imported=a.importedFontRatio?scope+'.reader-html-content, .reader-html-content[data-validatebook-root] { --validatebook-font-size: calc(var(--reader-font-size) * '+a.importedFontRatio+'); font-family: '+rootFont+'; }\n':'';
       const standalone=a.standaloneSizeRem?scope+', html:has(>'+scope+'){--standalone-size:'+a.standaloneSizeRem+'rem}\n':'';
-      const pageStyle=a.previousCss?.includes('/* validateBook source pagination */')?'/* validateBook source pagination */'+a.previousCss.split('/* validateBook source pagination */')[1]:'';
+      const pageStyle=a.previousCss?.includes('/* validateBook source pagination */')?'/* validateBook source pagination */'+a.previousCss.split('/* validateBook source pagination */')[1]:a.previousCss?.includes('/* validateBook translated flow */')?'/* validateBook translated flow */'+a.previousCss.split('/* validateBook translated flow */')[1]:'';
       const css='/* validateBook managed presentation; generated from verified declarations */\n'+standalone+imported+[...signatures].map(([declaration,id])=>{
         const selectors=[scope+'[data-vb-style="'+id+'"]',scope+' [data-vb-style="'+id+'"]'];
         for(const tag of inlineTags.get(declaration)||[]){

@@ -219,6 +219,7 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
   const root=document.presentation?.contentSelector||'body';
   actions.push({kind:'presentation',selector:root,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${profile.bodyCssPx/defaultSizePx})`}});
   const mapped=new Map(sourceComparison.mappings.map(m=>[m.selector,m]));
+  const unmappedEnglish=new Set(sourceComparison.findings.filter(f=>f.category==='source_typography_unmapped').map(f=>f.location));
   const installedFamilies=new Map();
   for(const sample of document.platformFonts||[]){
     const record=document.records.find(r=>r.selector===sample.selector);
@@ -229,9 +230,50 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
       installedFamilies.get(key).add(record.font.family);
     }
   }
-  for(const r of document.records.filter(r=>/^(p|h[1-6]|figcaption)$/.test(r.tag))){
+  const records=document.records.filter(r=>/^(p|h[1-6]|figcaption)$/.test(r.tag));
+  const bodyMappings=sourceComparison.mappings.filter(m=>m.tag==='p'&&m.fontSizePt===profile.bodyPt);
+  const dominantBodyFamily=(()=>{
+    const counts=new Map();
+    for(const mapping of bodyMappings)for(const family of mapping.sourceFamilies||[]){
+      const key=familyKey(family);if(key)counts.set(key,(counts.get(key)||0)+1);
+    }
+    return [...counts].sort((a,b)=>b[1]-a[1])[0]?.[0]||null;
+  })();
+  const dominantBodyColor=(()=>{
+    const counts=new Map();
+    for(const mapping of bodyMappings)for(const color of mapping.sourceColors||[])counts.set(color,(counts.get(color)||0)+1);
+    return [...counts].sort((a,b)=>b[1]-a[1])[0]?.[0]||null;
+  })();
+  const contextualBodySelectors=new Set();
+  for(const r of records){
+    if(!unmappedEnglish.has(r.selector)||r.tag!=='p'||normalizeText(r.text).length<80)continue;
+    const index=records.indexOf(r);
+    const page=String(r.page||'');
+    const localMapped=records.filter(candidate=>candidate.tag==='p'&&String(candidate.page||'')===page&&mapped.get(candidate.selector)?.fontSizePt===profile.bodyPt);
+    const before=records.slice(Math.max(0,index-5),index).reverse().find(candidate=>candidate.tag==='p'&&mapped.get(candidate.selector)?.fontSizePt===profile.bodyPt);
+    const after=records.slice(index+1,index+6).find(candidate=>candidate.tag==='p'&&mapped.get(candidate.selector)?.fontSizePt===profile.bodyPt);
+    const supportedSamePage=localMapped.length>=3;
+    const supportedByNeighbors=before&&after&&String(before.page||'')===page&&String(after.page||'')===page;
+    if(supportedSamePage||supportedByNeighbors)contextualBodySelectors.add(r.selector);
+  }
+  for(const r of records){
     const m=mapped.get(r.selector);const properties={};
     if(!m&&profile.leadingCssPx&&Math.abs(parseFloat(r.font.size)-(document.presentation?.bodyFontSize||0))<.5){properties['line-height']=String(profile.leadingCssPx/profile.bodyCssPx);if(masterTypography.mappings.filter(x=>x.paragraphGapCssPx===0).length>masterTypography.mappings.length*.7)properties['margin-bottom']='0';}
+    if(!m&&contextualBodySelectors.has(r.selector)){
+      properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${profile.bodyCssPx/defaultSizePx} * var(--validatebook-page-scale, 1))`;
+      if(profile.leadingCssPx)properties['line-height']=String(profile.leadingCssPx/profile.bodyCssPx);
+      const bodyGap=median(bodyMappings.map(mapping=>mapping.paragraphGapCssPx).filter(value=>value!==undefined));
+      if(bodyGap!==null)properties['margin-bottom']=`${bodyGap/profile.bodyCssPx}em`;
+      if(dominantBodyColor)properties.color=dominantBodyColor;
+      if(dominantBodyFamily){
+        const mappedFamily=sourceFontMap[dominantBodyFamily];
+        const candidates=installedFamilies.get(dominantBodyFamily);
+        if(mappedFamily)properties['font-family']=mappedFamily;
+        else if(candidates?.size===1)properties['font-family']=[...candidates][0];
+        const weights=sourceFontWeights[dominantBodyFamily]||[];
+        if(weights.includes(400))properties['font-weight']='400';
+      }
+    }
     if(m){properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${pointsToCssPixels(m.fontSizePt)/defaultSizePx} * var(--validatebook-page-scale, 1))`;if(m.paragraphGapCssPx!==undefined)properties['margin-bottom']=`${m.paragraphGapCssPx/pointsToCssPixels(m.fontSizePt)}em`;if(m.fontSizePt===profile.bodyPt&&profile.leadingCssPx)properties['line-height']=String(profile.leadingCssPx/profile.bodyCssPx);if(m.sourceLeadingPt)properties['line-height']=String(m.sourceLeadingPt/m.fontSizePt);if(m.gapBeforeEm!==undefined){properties['margin-top']=m.gapBeforeEm+'em';if(m.previousSelector)actions.push({kind:'presentation',selector:m.previousSelector,properties:{'margin-bottom':'0'}});}if(m.sourceColors?.length===1)properties.color=m.sourceColors[0];}
     if(m?.sourceFamilies?.length){
       const keys=[...new Set(m.sourceFamilies.filter(Boolean).map(familyKey))];

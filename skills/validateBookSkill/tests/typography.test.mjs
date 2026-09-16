@@ -202,6 +202,30 @@ test('high token overlap cannot certify unmapped copyright typography',()=>{
   assert.equal(finding.severity,'error');
 });
 
+test('unmapped English body prose inherits nearby certified body typography',()=>{
+  const source={...profile,pages:[{page:4,height:648,lines:[
+    {text:'This book is not the transcript of a consciousness.',top:80,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}},
+    {text:'The first experiment concerned forgiveness and its history matters because the final text was produced through failure and correction.',top:126,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}},
+    {text:'The second experiment asked what an AI might say about human beings more generally and why witnesses matter.',top:158,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}},
+    {text:'The collection is strangely insightful even where its scientific status remains uncertain.',top:202,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}}
+  ]}]};
+  const target={presentation:{bodyFontSize:18.56,contentSelector:'body'},platformFonts:[{selector:'#before',fonts:[{familyName:'pdf-font-9e82528ffc0c',glyphCount:20,isCustomFont:true}]}],records:[
+    {tag:'p',selector:'#before',text:'This book is not the transcript of a consciousness.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'h2',selector:'#heading',text:'What Was Asked',page:'4',font:{size:'16',family:'Inter'},style:{lineHeight:'20',marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#unmapped',text:'The four large chapters began as four separate book experiments in a 2026 dialogue conducted within the ScriptaHub research project, which is dedicated to the creation and study of literature produced with artificial intelligence.',page:'4',font:{size:'18.56',family:'Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#after1',text:'The first experiment concerned forgiveness and its history matters because the final text was produced through failure and correction.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#after2',text:'The second experiment asked what an AI might say about human beings more generally and why witnesses matter.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#after3',text:'The collection is strangely insightful even where its scientific status remains uncertain.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}}
+  ]};
+  const fonts={ebgaramond:'"pdf-font-9e82528ffc0c", Georgia, serif'};
+  const compared=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert(compared.findings.some(f=>f.category==='source_typography_unmapped'&&f.location==='#unmapped'));
+  const action=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts,sourceFontWeights:{ebgaramond:[400]}}).find(a=>a.selector==='#unmapped');
+  assert.equal(action.properties['font-family'],fonts.ebgaramond);
+  assert.equal(action.properties['font-weight'],'400');
+  assert.equal(action.properties['font-size'],`calc(var(--reader-font-size, var(--standalone-size, 18.56px)) * ${(11*4/3)/18.56} * var(--validatebook-page-scale, 1))`);
+});
+
 test('split table lines and rebranded copyright are not unmatched source omissions',()=>{
   const pages=[{page:3,text:'Copyright © [2026] Axiologic Research\nAll rights reserved.\nKDP publishing rights held by Outfinity SRL (Iasi, Romania).'},{page:67,text:'RCT and longitudinal             Stronger for causality and direction; may be short or\nstudy                            unrepresentative.'}];
   const document={records:[{tag:'p',selector:'#page_3',text:'Copyright © [2026] ScriptaHub All rights reserved.'},{tag:'p',selector:'#t',text:'RCT and longitudinal study Stronger for causality and direction; may be short or unrepresentative.'}],text:'Copyright © [2026] ScriptaHub All rights reserved. KDP publishing rights held by Outfinity SRL (Iasi, Romania). Available for free on ScriptaHub website. This work was created under the umbrella of ScriptaHub as part of two interconnected research programs. RCT and longitudinal study Stronger for causality and direction; may be short or unrepresentative.'};

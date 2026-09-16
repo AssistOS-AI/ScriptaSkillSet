@@ -73,7 +73,13 @@ export async function discover(root, options = {}) {
   return { root, pdf: await fs.realpath(pdf), documents, absent };
 }
 
-const responsiveCss = '/* validateBook local layout repair */\nimg,svg,video{max-width:100%;height:auto}\ntable{max-width:100%;border-collapse:collapse}\nth,td{overflow-wrap:anywhere}\np,li,blockquote,figcaption{overflow-wrap:anywhere}\n';
+const responsiveCss = '/* validateBook local layout repair */\nimg,svg,video{max-width:100%;height:auto}\n.pdf-table-wrap{max-width:100%;overflow-x:auto}\ntable{max-width:100%;border-collapse:collapse}\nth,td{overflow-wrap:normal;word-break:normal;hyphens:none}\np,li,blockquote,figcaption{overflow-wrap:anywhere}\n';
+export function splitSafeVisibleContentRepairs(actions) {
+  const safeKinds = new Set(['remove_generated_caption']);
+  const safe = [], batch = [];
+  for (const action of actions) (safeKinds.has(action.kind) || action.safeTranslationStyle ? safe : batch).push(action);
+  return { safe, batch };
+}
 export async function collectAssets(document) {
   const inputs = [], findings = [], seen = new Set();
   const visit = async url => {
@@ -177,6 +183,30 @@ export async function prepare(root, options = {}) {
     let english;
     const unresolved = [];
     const expectedCurrent = new Map(initialInputs.map(i => [i.file, i.sha256]));
+    async function backupOriginal(item) {
+      if (backups.some(b => b.file === item.file)) return;
+      const expected = expectedCurrent.get(item.file);
+      const backup = path.join(directory, 'recovery', item.language, path.basename(item.file));
+      await fs.mkdir(path.dirname(backup), { recursive: true });
+      await fs.copyFile(item.file, backup, fs.constants.COPYFILE_EXCL);
+      backups.push({ file: item.file, backup, sha256: expected });
+    }
+    async function applySafeVisibleContent(item, actions) {
+      if (!actions.length) return false;
+      await navigate(browser, item.file);
+      const result = await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify(actions)})`);
+      if (!result.changes.length || result.html === await fs.readFile(item.file, 'utf8')) return false;
+      const expected = expectedCurrent.get(item.file);
+      const temp = item.file + '.validatebook-' + hash(directory).slice(0, 10) + '.tmp';
+      await fs.writeFile(temp, result.html, { flag: 'wx' });
+      if (await fileHash(item.file) !== expected) { await fs.unlink(temp); throw Error('Concurrent source change during safe visible-content repair: ' + item.file); }
+      await backupOriginal(item);
+      await fs.rename(temp, item.file);
+      expectedCurrent.set(item.file, await fileHash(item.file));
+      corrections.push(...result.changes.map(c => ({ ...c, file: item.file, language: item.language, safe: true })));
+      await writeJson(path.join(directory, 'recovery.json'), { backups, corrections });
+      return true;
+    }
     async function apply(item, actions, presentation, repairShells = false, mode='all') {
       if (!actions.length && !repairShells && mode==='all' && !options.paginate) return;
       const structure=mode==='all'||mode==='structure';
@@ -196,23 +226,32 @@ export async function prepare(root, options = {}) {
       if(structure&&item.language==='en'&&decorations?.lists)listRepair=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)},true)`);
       const result = {changes:[...applied.changes]};
       if(listRepair)result.changes.push(...listRepair.changes);
-      if(options.paginate&&item.language==='en'&&(mode==='all'||mode==='pagination')){
-        const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
-        const blankPages=item.language==='en'?sourceBlankPages(pages,anchors):[];
-        const paginated=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:item.language==='en'?'source':'translation',expectedPages:item.language==='en'?pages.length:null})})`);
-        // Measure and consolidate against the same page geometry that will be
-        // installed. Otherwise cover auto margins are captured before reflow.
-        await browser.evaluate(`{const style=document.createElement('style');style.dataset.validatebookCandidatePages='';style.textContent=${JSON.stringify(paginationCss(pagePresentation))};document.head.append(style);}`);
+      if(options.paginate&&pagePresentation&&(mode==='all'||mode==='pagination')){
+        let paginated=null;
+        if(item.language==='en'){
+          const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
+          const blankPages=sourceBlankPages(pages,anchors);
+          paginated=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:'source',expectedPages:pages.length})})`);
+          // Measure and consolidate against the same page geometry that will be
+          // installed. Otherwise cover auto margins are captured before reflow.
+          await browser.evaluate(`{const style=document.createElement('style');style.dataset.validatebookCandidatePages='';style.textContent=${JSON.stringify(paginationCss(pagePresentation))};document.head.append(style);}`);
+        }
         const contents=await browser.evaluate(`(${applyContentsPresentation.toString()})(${JSON.stringify({profile:pagePresentation,language:item.language,mapping:contentsMapping})})`);
         if(item.language==='en')contentsMapping=contents.mapping;
         result.changes.push(...contents.changes);
         if(item.language==='en'){
           const images=await browser.evaluate(`(${applySourceImagePresentation.toString()})(${JSON.stringify(pagePresentation)})`);
           result.changes.push(...images.changes);
+          result.changes.push({kind:'pagination',before:'page anchors in continuous text',after:paginated});
+          delete result.changes.at(-1).after.html;
+          result.changes.push({kind:'source_page_presentation',margins:pagePresentation.margins,contents:contents.mapping,unmatched:contents.unmatched});
+        }else{
+          const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
+          const blankPages=sourceBlankPages(pages,anchors);
+          const translatedPages=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:'translation',repaginateExisting:true})})`);
+          result.changes.push({kind:'translated_pagination',before:'translated page anchors in continuous text',after:{pages:translatedPages.pages,blankPages:translatedPages.blankPages,origin:translatedPages.origin,textPreserved:translatedPages.textPreserved}});
+          if(contents.changes.length||contents.unmatched.length)result.changes.push({kind:'translated_contents_presentation',contents:contents.mapping,unmatched:contents.unmatched});
         }
-        result.changes.push({kind:'pagination',before:'page anchors in continuous text',after:paginated});
-        delete result.changes.at(-1).after.html;
-        result.changes.push({kind:'source_page_presentation',margins:pagePresentation.margins,contents:contents.mapping,unmatched:contents.unmatched});
       }
       if(item.language==='en'&&(mode==='all'||mode==='display'))result.changes.push(...await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(displayPages)},${JSON.stringify(Object.keys(sourceFontMap).length?sourceFontMap:presentation.sourceDisplayFamily)},${presentation.defaultSizePx*(presentation.scale||1)})`));
       result.changes.push(...await browser.evaluate(`(${repairPageShells.toString()})()`));
@@ -234,17 +273,17 @@ export async function prepare(root, options = {}) {
       if (!result.changes.length) return;
       if(result.html===await fs.readFile(item.file,'utf8')&&cssBefore&&result.stylesheet.css===await fs.readFile(cssFile,'utf8'))return false;
       await guardInstallation(browser,item,result,presentation,pagePresentation);
-      const expected = initialInputs.find(i => i.file === item.file).sha256;
+      const expected = expectedCurrent.get(item.file);
       if (await fileHash(item.file) !== expected) throw Error('Concurrent source change before repair: ' + item.file);
-      const backup = path.join(directory, 'recovery', item.language, path.basename(item.file)); await fs.mkdir(path.dirname(backup), { recursive: true });
-      await fs.copyFile(item.file, backup, fs.constants.COPYFILE_EXCL);
-      backups.push({ file: item.file, backup, sha256: expected });
+      await backupOriginal(item);
       if(result.stylesheet){
         if(cssBefore){
           await verifyInputs([cssBefore]);
-          const cssBackup=path.join(path.dirname(backup),'validatebook-layout.css');
-          await fs.copyFile(cssFile,cssBackup,fs.constants.COPYFILE_EXCL);
-          backups.push({...cssBefore,backup:cssBackup});
+          const cssBackup=path.join(directory,'recovery',item.language,'validatebook-layout.css');
+          if(!backups.some(b=>b.file===cssFile)){
+            await fs.copyFile(cssFile,cssBackup,fs.constants.COPYFILE_EXCL);
+            backups.push({...cssBefore,backup:cssBackup});
+          }
         }
         const cssTemporary=cssFile+'.validatebook-'+hash(directory).slice(0,10)+'.tmp';
         await fs.writeFile(cssTemporary,result.stylesheet.css,{flag:'wx'});
@@ -310,26 +349,38 @@ export async function prepare(root, options = {}) {
         if(!english||!unresolved.some(f=>f.language==='en'&&f.severity==='error'))actions.push(...tableComparison.actions);
         if(borderComparison)actions.push(...decorationActions(borderComparison));
         actions.unshift(...typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',masterTypography:english?.typography||typeComparison,sourceFontMap,sourceFontWeights}));
-        if(translatedStyles)actions.push(...translatedStyleCheck(before,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).actions);
+        if(translatedStyles)actions.push(...translatedStyleCheck(before,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).actions.map(action=>({...action,safeTranslationStyle:true})));
         if(presentation.articleContract){
           const imported=await measure(browser,item.file,{importedArticle:presentation.articleContract});
           presentation.geometryCss=await browser.evaluate(`(${readerGeometryCss.toString()})(${JSON.stringify(await fs.readFile(fileURLToPath(presentation.articleContract.readerCss),'utf8'))})`);
           actions.unshift(...readerTypographyRepairs(before,imported,presentation.defaultSizePx*(presentation.scale||1)));
         }
-        if (before.language.toLowerCase() !== item.language.toLowerCase()) actions.unshift({ kind: 'language_tag', language: item.language });
+        if (before.language.toLowerCase() !== item.language.toLowerCase()) actions.unshift({ kind: 'language_tag', language: item.language, safeTranslationStyle: item.language !== 'en' });
         if (beforeDisplay.some(f => ['horizontal_overflow', 'outside_content'].includes(f.category))) actions.push({ kind: 'stylesheet', css: responsiveCss });
-        // English presentation is the master. Propagate only when its local layout has no unresolved errors.
-        if (english && !unresolved.some(f => f.language === 'en' && f.severity === 'error')) {
-          actions.push(...compareImageStyles(english,before,item.language).actions);
-          actions.push(...structure.findings.filter(f => f.repair).map(f => f.repair));
-          actions.push(...decorationActions(compareDecorations(targetDecorations,before,item.language)));
+        if(english && item.language !== 'en'){
+          actions.push(...compareImageStyles(english,before,item.language).actions.map(action=>({...action,safeTranslationStyle:true})));
           const inherited = await sheets(browser, selection.documents[0].file, item.file);
           const bodyAttributes = await browser.evaluate('Object.fromEntries(["class","data-pdf-fidelity"].map(k=>[k,document.body.getAttribute(k)]).filter(p=>p[1]))');
-          actions.push({ kind: 'inherit_styles', sheets: inherited, bodyAttributes });
+          actions.push({ kind: 'inherit_styles', sheets: inherited, bodyAttributes, safeTranslationStyle: true });
           for (const match of structure.matches) {
             const sourceBlock=english.records.find(r=>r.selector===match.source);
-            if(sourceBlock?.tag==='p')actions.push({kind:'presentation',selector:match.target,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${parseFloat(sourceBlock.font.size)/presentation.defaultSizePx})`,'line-height':String(parseFloat(sourceBlock.style.lineHeight)/parseFloat(sourceBlock.font.size))}});
+            if(sourceBlock?.tag==='p')actions.push({kind:'presentation',selector:match.target,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${parseFloat(sourceBlock.font.size)/presentation.defaultSizePx})`,'line-height':String(parseFloat(sourceBlock.style.lineHeight)/parseFloat(sourceBlock.font.size))},safeTranslationStyle:true});
           }
+        }
+        // English presentation is the master. Propagate only when its local layout has no unresolved errors.
+        if (english && !unresolved.some(f => f.language === 'en' && f.severity === 'error')) {
+          actions.push(...structure.findings.filter(f => f.repair).map(f => f.repair));
+          actions.push(...decorationActions(compareDecorations(targetDecorations,before,item.language)));
+        }
+        const safeRejected=[];
+        const split=splitSafeVisibleContentRepairs(actions);
+        if(split.safe.length){
+          try{await applySafeVisibleContent(item,split.safe);}
+          catch(error){
+            await writeJson(path.join(directory,'rejected-candidate-'+item.language+'-safe-visible-content.json'),{file:item.file,batch:'safe-visible-content',error:error.message,findings:error.findings||[],actions:split.safe.map(a=>a.kind)});
+            safeRejected.push(issue(item.language,'safe_content_correction_rejected','safe-visible-content',error.message));
+          }
+          actions.splice(0,actions.length,...split.batch);
         }
         const batches=[{name:'all',actions}];
         if(item.language==='en')batches.push({name:'pagination',actions:[]},{name:'tables',actions:tableComparison.actions},{name:'typography',actions:typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',sourceFontMap,sourceFontWeights})},{name:'display',actions:[]},{name:'structure',actions:[]});
@@ -339,7 +390,8 @@ export async function prepare(root, options = {}) {
           rejected.push(issue(item.language,'correction_batch_rejected',batch.name,error.message));
         });
         // Failed attempts stay in the report even when another batch succeeds.
-        initialFindings.push(...rejected);
+        initialFindings.push(...safeRejected,...rejected);
+        if(safeRejected.length)unresolved.push(...safeRejected);
         if(!accepted)unresolved.push(...rejected);
       }
       if(options.autoCorrect && item.language==='en' && decorations?.lists?.length && !actions.length)

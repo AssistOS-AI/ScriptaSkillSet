@@ -1,5 +1,5 @@
 // Runs inside the audit browser. Split containers at existing page anchors without rewriting prose.
-export function paginateDocument({blankPages=[],origin='source',expectedPages=null}={}) {
+export function paginateDocument({blankPages=[],origin='source',expectedPages=null,repaginateExisting=false}={}) {
   const root=document.querySelector('[data-validatebook-root]')||document.body;
   const narrative=()=>{const copy=root.cloneNode(true);copy.querySelectorAll('script,style,template,noscript').forEach(n=>n.remove());return copy.textContent;};
   const before=narrative();
@@ -8,11 +8,17 @@ export function paginateDocument({blankPages=[],origin='source',expectedPages=nu
   root.setAttribute('data-reader-content','true');
   root.querySelectorAll('[data-reader-content]').forEach(n=>n.removeAttribute('data-reader-content'));
   const existing=[...root.querySelectorAll(':scope > .pdf-source-page')];
-  if(existing.length){
+  if(existing.length&&!repaginateExisting){
     const pages=existing.map(n=>Number(n.getAttribute('data-reader-page')));
     if(expectedPages&&(pages.length!==expectedPages||pages.some((n,i)=>n!==i+1)))throw Error('Existing source pagination is incomplete');
     if(pages.some((n,i)=>!Number.isInteger(n)||n<1||(i&&n<=pages[i-1])))throw Error('Existing page order is invalid');
     return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,pages,blankPages:existing.filter(n=>n.hasAttribute('data-blank-page')).map(n=>Number(n.getAttribute('data-reader-page'))),origin,textPreserved:true};
+  }
+  if(existing.length&&repaginateExisting){
+    const nodes=[];
+    for(const section of existing)nodes.push(...section.childNodes);
+    const trailing=[...root.childNodes].filter(n=>!(n.nodeType===Node.ELEMENT_NODE&&n.matches('.pdf-source-page')));
+    root.replaceChildren(...nodes,...trailing);
   }
   const markers=[...root.querySelectorAll('[id]')].filter(n=>/^page_\d+$/.test(n.id));
   if(!markers.length)throw Error('No page anchors; source boundary evidence is required');
@@ -199,53 +205,130 @@ export function applySourceImagePresentation({width,margins,images=[]}) {
 export function applyContentsPresentation({profile,language='en',mapping=[]}) {
   const normalize=s=>s.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'');
   const result=[],unmatched=[],changes=[];
-  if(language==='en')for(const table of document.querySelectorAll('table.pdf-toc')){
-    const entries=profile.contents||[];
-    const linked=entries.filter(source=>source.kind!=='part');
-    if(!linked.length||linked.some(source=>!document.getElementById('page_'+source.destination))){unmatched.push('Contents source structure');continue;}
+  const sourceEntries=profile.contents||[];
+  const levels=[...new Set(sourceEntries.map(r=>r.indent))].sort((a,b)=>a-b);
+  const rowParts=tr=>{
+    const cells=[...tr.children].filter(cell=>/^(td|th)$/i.test(cell.tagName));
+    if(cells.length<2)return null;
+    const number=cells[cells.length-1].textContent.replace(/\s+/g,' ').trim();
+    const label=cells.slice(0,-1).map(cell=>cell.textContent.replace(/\s+/g,' ').trim()).filter(Boolean).join(' ');
+    return label&&/^\d{1,4}$/.test(number)?{label,number}:null;
+  };
+  const tableRows=table=>[...table.querySelectorAll('tr')].map(rowParts).filter(Boolean);
+  const contentsContext=table=>{
+    if(table.classList.contains('pdf-toc'))return true;
+    const rows=tableRows(table);
+    if(rows.length<3)return false;
+    const before=[];let node=table.closest('.pdf-table-wrap')||table;
+    for(let prev=node.previousElementSibling;prev&&before.length<6;prev=prev.previousElementSibling)before.push(prev);
+    if(before.some(el=>el.classList?.contains('source-toc')||/^(contents|indice|índice|table des matières|inhalt)$/i.test(el.textContent.replace(/\s+/g,' ').trim())))return true;
+    const page=table.closest('.pdf-source-page');
+    const heading=page?.querySelector('h1,h2,h3,h4,h5,h6');
+    if(heading&&/^(contents|indice|índice|table des matières|inhalt)$/i.test(heading.textContent.replace(/\s+/g,' ').trim()))return true;
+    let previous=page?.previousElementSibling;
+    for(let i=0;previous&&i<3;i++,previous=previous.previousElementSibling){
+      if(previous.querySelector?.('.source-contents-heading,.source-toc'))return true;
+    }
+    return false;
+  };
+  const makeAnchor=({label,number,href,source})=>{
+    const a=document.createElement('a');
+    if(href)a.href=href;
+    a.setAttribute('data-page-label',number);
+    a.setAttribute('data-page-label-origin',language==='en'?'pdf':'translation');
+    const labelSpan=document.createElement('span');labelSpan.className='validatebook-toc-label';labelSpan.textContent=label;
+    const folio=document.createElement('span');folio.className='validatebook-toc-page';folio.textContent=' '+number;
+    a.append(labelSpan,folio);
+    const size=source?.size||profile.contentsFontSize;if(size>0)a.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
+    return a;
+  };
+  const replaceTableWithList=(table,entries,{sourceBacked=false}={})=>{
     const list=document.createElement('ol');list.className='source-toc';
-    for(const source of entries){
+    for(const entry of entries){
       const li=document.createElement('li');
-      if(source.kind==='part'){
-        li.className='source-toc-part';li.textContent=source.label;
-      }else{
-        const a=document.createElement('a');a.href='#page_'+source.destination;
-        a.textContent=source.label;
-        li.append(a);
+      if(entry.kind==='part'){li.className='source-toc-part';li.textContent=entry.label;}
+      else{
+        const source=entry.source||entry;
+        const href=entry.href||(source.destination?'#page_'+source.destination:null);
+        li.append(makeAnchor({label:entry.label,number:entry.number,href,source}));
+        if(source?.indent!==undefined)li.setAttribute('data-toc-level',String(Math.max(0,levels.indexOf(source.indent))));
       }
       list.append(li);
     }
-    const before=table.outerHTML;const page=table.closest('.pdf-source-page'),wrap=table.closest('.pdf-table-wrap');if(wrap)wrap.replaceWith(list);else table.replaceWith(list);
+    const before=table.outerHTML;const page=table.closest('.pdf-source-page'),wrap=table.closest('.pdf-table-wrap');
+    const boundaryId=wrap?.id||table.id;
+    if(/^page_\d+$/.test(boundaryId)&&!list.id)list.id=boundaryId;
+    if(wrap)wrap.replaceWith(list);else table.replaceWith(list);
     const heading=page?.querySelector('h1,h2,h3,h4,h5,h6');if(heading)heading.classList.add('source-contents-heading');
-    if(profile.contentsNote&&!page?.textContent.includes(profile.contentsNote)){
+    if(sourceBacked&&profile.contentsNote&&!page?.textContent.includes(profile.contentsNote)){
       const note=document.createElement('p');note.className='source-contents-note';note.textContent=profile.contentsNote;list.after(note);
     }
-    changes.push({kind:'source_contents_recovery',before,after:list.outerHTML,sourceEntries:entries});
+    changes.push({kind:'source_contents_recovery',before,after:list.outerHTML,sourceEntries:entries.map(entry=>entry.source||entry)});
+  };
+  if(language==='en'){
+    const linked=sourceEntries.filter(source=>source.kind!=='part');
+    for(const table of document.querySelectorAll('table.pdf-toc')){
+      if(!linked.length||linked.some(source=>!document.getElementById('page_'+source.destination))){unmatched.push('Contents source structure');continue;}
+      replaceTableWithList(table,sourceEntries,{sourceBacked:true});
+    }
+    for(const table of document.querySelectorAll('table.pdf-table')){
+      if(!contentsContext(table))continue;
+      const converted=[];
+      for(const row of tableRows(table)){
+        const matches=sourceEntries.filter(source=>source.kind!=='part'&&normalize(source.label)===normalize(row.label));
+        converted.push({...row,source:matches.length===1?matches[0]:undefined,href:matches.length===1?'#page_'+matches[0].destination:null,number:matches.length===1?matches[0].number:row.number});
+      }
+      if(converted.length)replaceTableWithList(table,converted,{sourceBacked:false});
+    }
+  }else{
+    for(const table of document.querySelectorAll('table.pdf-table,table.pdf-toc')){
+      if(!contentsContext(table))continue;
+      const converted=tableRows(table).map((row,index)=>({label:row.label,number:row.number,source:mapping[index]}));
+      if(converted.length)replaceTableWithList(table,converted,{sourceBacked:false});
+    }
   }
+  const repairExistingContentsBoundaries=()=>{
+    const headings=[...document.querySelectorAll('h1[id^="page_"],h2[id^="page_"],h3[id^="page_"],h4[id^="page_"],h5[id^="page_"],h6[id^="page_"]')].filter(h=>/^(contents|indice|índice|table des matières|inhalt)$/i.test(h.textContent.replace(/\s+/g,' ').trim()));
+    for(const heading of headings){
+      const start=Number(heading.id.slice(5));if(!Number.isInteger(start))continue;
+      const lists=[];
+      for(let node=heading.nextElementSibling;node;node=node.nextElementSibling){
+        if(/^page_\d+$/.test(node.id||'')&&!node.classList.contains('source-toc'))break;
+        if(/^H[1-6]$/.test(node.tagName)&&/^page_\d+$/.test(node.id||''))break;
+        if(node.classList.contains('source-toc'))lists.push(node);
+      }
+      lists.forEach((list,index)=>{
+        if(index===0||/^page_\d+$/.test(list.id||''))return;
+        list.id='page_'+(start+index);
+        changes.push({kind:'source_contents_boundary',before:null,after:list.id});
+      });
+    }
+  };
+  repairExistingContentsBoundaries();
   const lineHeight=(profile.contentsLineHeight>0&&profile.contentsFontSize>0)?profile.contentsLineHeight/profile.contentsFontSize:null;
   if(language==='en')for(const li of document.querySelectorAll('.source-toc-part')){
-    const matches=profile.contents.filter(row=>row.kind==='part'&&normalize(row.label)===normalize(li.textContent));
+    const matches=sourceEntries.filter(row=>row.kind==='part'&&normalize(row.label)===normalize(li.textContent));
     if(matches.length!==1){unmatched.push(li.textContent.trim());continue;}
     const source=matches[0],size=source.size||profile.contentsFontSize;
     if(size>0)li.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
     if(lineHeight)li.style.lineHeight=String(lineHeight);
   }
-  for(const a of document.querySelectorAll('.source-toc a[href^="#"]')){
+  for(const a of document.querySelectorAll('.source-toc a')){
+    if(lineHeight)a.parentElement.style.lineHeight=String(lineHeight);
+    if(!a.hasAttribute('href'))continue;
     const label=a.querySelector('.validatebook-toc-label')?.textContent||a.textContent;
-    const matches=language==='en'?profile.contents.filter(r=>r.kind!=='part'&&normalize(r.label)===normalize(label)):mapping.filter(r=>r.href===a.getAttribute('href'));
+    const matches=language==='en'?sourceEntries.filter(r=>r.kind!=='part'&&normalize(r.label)===normalize(label)):mapping.filter(r=>r.href===a.getAttribute('href'));
     if(matches.length!==1){unmatched.push(label);continue;}
     const source=matches[0],target=document.getElementById(a.getAttribute('href').slice(1));
     const size=source.size||profile.contentsFontSize;
     if(size>0)a.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
-    if(lineHeight)a.parentElement.style.lineHeight=String(lineHeight);
     const destination=target?.closest('.pdf-source-page');
     const page=language==='en'?source.number:destination?String([...destination.parentElement.querySelectorAll(':scope > .pdf-source-page')].indexOf(destination)+1):null;
     if(!page){unmatched.push(label);continue;}
     if(!a.querySelector('.validatebook-toc-label')){const span=document.createElement('span');span.className='validatebook-toc-label';span.append(...a.childNodes);a.append(span);}
     a.setAttribute('data-page-label',page);a.setAttribute('data-page-label-origin',language==='en'?'pdf':'reader');
     let folio=a.querySelector('.validatebook-toc-page');if(!folio){folio=document.createElement('span');folio.className='validatebook-toc-page';a.append(folio);}folio.textContent=' '+page;
-    const levels=[...new Set(profile.contents.map(r=>r.indent))].sort((a,b)=>a-b);
-    a.parentElement.setAttribute('data-toc-level',String(levels.indexOf(source.indent)));
+    a.parentElement.setAttribute('data-toc-level',String(Math.max(0,levels.indexOf(source.indent))));
     result.push({href:a.getAttribute('href'),number:source.number,indent:source.indent,label});
   }
   return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,mapping:result,unmatched,changes};
@@ -262,18 +345,14 @@ export function pageHeightDifferences(layout,profile) {
     .map(p=>({page:p.number,width:layout.width,height:p.height,minimumHeight:p.width*profile.height/profile.width}));
 }
 
-export function translatedPaginationCss({width,height}) {
-  if(!(width>0&&height>0))throw Error('Source PDF page dimensions required');
-  return '/* validateBook translated flow */\n[data-validatebook-root] > .pdf-source-page{min-height:'+height/width*100+'cqw;--validatebook-page-scale:max(1,calc(100cqw / '+width*4/3+'px));font-size:calc(1em * var(--validatebook-page-scale))}\n';
-}
-
-export function paginationCss({width,height,margins,contents=[],contentsLineHeight,contentsFontSize}) {
-  if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw Error('Source PDF page dimensions required');
-  const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
-  const toc=contents.length?`
+function contentsCss({contents=[],contentsLineHeight,contentsFontSize}) {
+  if(!contents.length)return '';
+  const lineHeight=(contentsLineHeight>0&&contentsFontSize>0)?contentsLineHeight/contentsFontSize:1.4;
+  const sizeBase=contentsFontSize>0?contentsFontSize:1;
+  return `
 [data-validatebook-root] .source-contents-heading{margin:0 0 .25em!important;text-align:left!important}
 [data-validatebook-root] .source-toc{box-sizing:border-box;width:100%;list-style:none;margin:0;padding:0}
-[data-validatebook-root] .source-toc li{margin:0!important;line-height:${contentsLineHeight/contentsFontSize};text-indent:0}
+[data-validatebook-root] .source-toc li{margin:0!important;line-height:${lineHeight};text-indent:0}
 [data-validatebook-root] .source-toc .source-toc-part{font-weight:400;margin-top:1em!important}
 [data-validatebook-root] .source-contents-note{font-style:italic;margin-top:1.5em}
 [data-validatebook-root] .source-toc a[data-page-label]{display:flex;align-items:baseline;gap:.12em;color:inherit;text-decoration:none}
@@ -282,8 +361,28 @@ export function paginationCss({width,height,margins,contents=[],contentsLineHeig
 [data-validatebook-root] .source-toc a[data-page-label]::after{content:attr(data-page-label);order:2;flex:none;text-align:right;font-variant-numeric:lining-nums}
 [data-validatebook-root] .source-toc a:has(.validatebook-toc-page)::after{content:none}
 [data-validatebook-root] .source-toc .validatebook-toc-page{order:2;flex:none;font-variant-numeric:lining-nums}
-${[...new Set(contents.map(r=>r.indent))].sort((a,b)=>a-b).map((indent,i)=>`[data-validatebook-root] .source-toc li[data-toc-level="${i}"]{padding-left:${indent/contentsFontSize}em}`).join('\n')}
-`.replaceAll('[data-validatebook-root]','[data-validatebook-root][data-validatebook-root]'):'';
+${[...new Set(contents.map(r=>r.indent))].sort((a,b)=>a-b).map((indent,i)=>`[data-validatebook-root] .source-toc li[data-toc-level="${i}"]{padding-left:${(Number(indent)||0)/sizeBase}em}`).join('\n')}
+`.replaceAll('[data-validatebook-root]','[data-validatebook-root][data-validatebook-root]');
+}
+
+export function translatedPaginationCss({width,height,margins=null,contents=[],contentsLineHeight,contentsFontSize}) {
+  if(!(width>0&&height>0))throw Error('Source PDF page dimensions required');
+  const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
+  return `/* validateBook translated flow */
+[data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size;background:var(--reader-surround,var(--standalone-surround,#e3e6e4));box-shadow:none;border-color:transparent}
+[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:max(1,calc(100cqw / ${width*4/3}px));font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
+[data-validatebook-root] > .pdf-source-page:last-of-type{margin-bottom:0;break-after:auto}
+[data-validatebook-root] > .pdf-source-page:has(figure#page_1){padding:0}
+.pdf-source-page figure#page_1{margin:0}
+.pdf-source-page figure#page_1 img{display:block;width:100%;height:auto;margin:0}
+@media print{[data-validatebook-root]:has(> .pdf-source-page){width:100%;max-width:none;padding:0;border:0;background:transparent}[data-validatebook-root] > .pdf-source-page{min-height:0;margin:0;border:0;box-shadow:none;break-after:page}.pdf-source-page[data-blank-page]{min-height:90vh}}
+`+contentsCss({contents,contentsLineHeight,contentsFontSize});
+}
+
+export function paginationCss({width,height,margins,contents=[],contentsLineHeight,contentsFontSize}) {
+  if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw Error('Source PDF page dimensions required');
+  const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
+  const toc=contentsCss({contents,contentsLineHeight,contentsFontSize});
   return `/* validateBook source pagination */
 @property --validatebook-page-scale{syntax:"<number>";inherits:true;initial-value:1}
 [data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size;background:var(--reader-surround,var(--standalone-surround,#e3e6e4));box-shadow:none;border-color:transparent}
@@ -293,10 +392,9 @@ ${[...new Set(contents.map(r=>r.indent))].sort((a,b)=>a-b).map((indent,i)=>`[dat
 .pdf-source-page figure#page_1{margin:0}
 .pdf-source-page figure#page_1 img{display:block;width:100%;height:auto;margin:0}
 .pdf-source-page p[data-page-continuation]{text-indent:0!important}
-[data-validatebook-root] img, [data-validatebook-root] svg, [data-validatebook-root] video{max-width:100%;height:auto}
 [data-validatebook-root] .pdf-table-wrap{max-width:100%;overflow-x:auto}
 [data-validatebook-root] table{max-width:100%;border-collapse:collapse}
-[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:anywhere}
+[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:normal;word-break:normal;hyphens:none}
 ${toc}
 @media print{[data-validatebook-root]:has(> .pdf-source-page){width:100%;max-width:none;padding:0;border:0;background:transparent}[data-validatebook-root] > .pdf-source-page{min-height:0;margin:0;border:0;box-shadow:none;break-after:page}.pdf-source-page[data-blank-page]{min-height:90vh}}
 `;

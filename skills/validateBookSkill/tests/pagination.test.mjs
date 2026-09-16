@@ -67,7 +67,16 @@ test('plain positioned PDF contents rebuilds an incomplete converted table',{ski
  assert.equal(await browser.evaluate('document.querySelector(".source-toc-part").textContent'),'PART I: PATTERNS');
  assert.equal(await browser.evaluate('document.querySelector(".source-contents-note").textContent'),'Page numbers refer to the numbered body.');
 });
-test('pagination CSS uses source page proportions and never clips flowing text',()=>{const css=paginationCss({width:432,height:648});assert(css.includes('min-height:150cqw'));assert(css.includes('break-after:page'));assert(css.includes('--validatebook-page-scale:max(1,calc(100cqw / 576px))'));assert(!css.includes('overflow:hidden'));assert.throws(()=>paginationCss({width:0,height:648}));});
+test('pagination CSS uses source page proportions and never clips flowing text',()=>{
+ const css=paginationCss({width:432,height:648});
+ assert(css.includes('min-height:150cqw'));
+ assert(css.includes('break-after:page'));
+ assert(css.includes('--validatebook-page-scale:max(1,calc(100cqw / 576px))'));
+ assert(css.includes('[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:normal;word-break:normal;hyphens:none}'));
+ assert(!css.includes('[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:anywhere}'));
+ assert(!css.includes('overflow:hidden'));
+ assert.throws(()=>paginationCss({width:0,height:648}));
+});
 test('native pagination separates cover/title, splits nested contents, preserves text and is idempotent',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
  const root=await fs.mkdtemp(path.join(os.tmpdir(),'source-pages-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));const file=path.join(root,'book.html');
  await fs.writeFile(file,'<!doctype html><html><head><style>body{width:600px;margin:auto}'+paginationCss({width:432,height:648})+'</style></head><body data-validatebook-root><figure id="page_1">Cover</figure><h1 id="page_2">Title</h1><p>Subtitle</p><p>Epigraph.</p><p id="page_3">Copyright</p><ol id="contents"><li id="page_4">First</li><li><span id="page_5"></span>Second</li></ol><span class="source-anchor" id="chapter"></span><h2 id="page_6">Chapter</h2><p>Prose <em>with emphasis</em>.</p></body></html>');
