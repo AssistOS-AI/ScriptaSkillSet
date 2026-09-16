@@ -75,9 +75,13 @@ export async function discover(root, options = {}) {
 
 const responsiveCss = '/* validateBook local layout repair */\nimg,svg,video{max-width:100%;height:auto}\n.pdf-table-wrap{max-width:100%;overflow-x:auto}\ntable{max-width:100%;border-collapse:collapse}\nth,td{overflow-wrap:normal;word-break:normal;hyphens:none}\np,li,blockquote,figcaption{overflow-wrap:anywhere}\n';
 export function splitSafeVisibleContentRepairs(actions) {
-  const safeKinds = new Set(['remove_generated_caption']);
+  const safeKinds = new Set(['remove_generated_caption','remove_running_matter']);
+  const removedSelectors = new Set(actions.filter(action => safeKinds.has(action.kind)).map(action => action.selector));
   const safe = [], batch = [];
-  for (const action of actions) (safeKinds.has(action.kind) || action.safeTranslationStyle ? safe : batch).push(action);
+  for (const action of actions) {
+    if (safeKinds.has(action.kind) || action.safeTranslationStyle) safe.push(action);
+    else if (!removedSelectors.has(action.selector)) batch.push(action);
+  }
   return { safe, batch };
 }
 export async function collectAssets(document) {
@@ -364,7 +368,7 @@ export async function prepare(root, options = {}) {
           actions.push({ kind: 'inherit_styles', sheets: inherited, bodyAttributes, safeTranslationStyle: true });
           for (const match of structure.matches) {
             const sourceBlock=english.records.find(r=>r.selector===match.source);
-            if(sourceBlock?.tag==='p')actions.push({kind:'presentation',selector:match.target,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${parseFloat(sourceBlock.font.size)/presentation.defaultSizePx})`,'line-height':String(parseFloat(sourceBlock.style.lineHeight)/parseFloat(sourceBlock.font.size))},safeTranslationStyle:true});
+            if(sourceBlock?.tag==='p')actions.push({kind:'presentation',selector:match.target,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${parseFloat(sourceBlock.font.size)/presentation.defaultSizePx} * var(--validatebook-page-scale, 1))`,'line-height':String(parseFloat(sourceBlock.style.lineHeight)/parseFloat(sourceBlock.font.size))},safeTranslationStyle:true});
           }
         }
         // English presentation is the master. Propagate only when its local layout has no unresolved errors.

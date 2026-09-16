@@ -10,6 +10,11 @@ const colorKey = value => {
 };
 export const familyKey = s => String(s||'').replace(/^[A-Z]{6}\+/,'').replace(/MT$/i,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman)$/i,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
 const words = text => normalizeText(text).match(/[\p{L}\p{N}]{3,}/gu)||[];
+const runningMatterKey = text => {
+  const value=String(text||'').normalize('NFKC').replace(/\s+/g,' ').trim();
+  const match=value.match(/^(.{6,}?)\s*[·•|]\s*\d{1,4}$/u);
+  return match?normalizeText(match[1]).replaceAll(' ',''):null;
+};
 
 function expectedFamilyStack(sourceFamilies, sourceFontMap) {
   const keys=[...new Set(sourceFamilies.filter(Boolean).map(familyKey))];
@@ -46,8 +51,10 @@ export function parsePdfTypography(xml) {
 export function readingSourceLines(pages) {
   const compact=s=>normalizeText(s).replaceAll(' ','');
   const headerCounts=new Map();
+  const footerCounts=new Map();
   for(const p of pages){
     const limit=Number.isFinite(p.height)&&p.height>0?p.height*.06:null;
+    const bottom=Number.isFinite(p.height)&&p.height>0?p.height*.88:null;
     if(limit==null)continue;
     const seen=new Set();
     for(const line of p.lines){
@@ -55,8 +62,17 @@ export function readingSourceLines(pages) {
       if(!text||seen.has(text)||!(line.top<limit))continue;
       seen.add(text);headerCounts.set(text,(headerCounts.get(text)||0)+1);
     }
+    if(bottom!=null){
+      const footerSeen=new Set();
+      for(const line of p.lines){
+        const key=runningMatterKey(line.text);
+        if(!key||footerSeen.has(key)||!(line.top>bottom))continue;
+        footerSeen.add(key);footerCounts.set(key,(footerCounts.get(key)||0)+1);
+      }
+    }
   }
   const running=new Set([...headerCounts].filter(([,count])=>count>=3).map(([text])=>text));
+  for(const [text,count] of footerCounts)if(count>=3)running.add(text);
   return pages.flatMap(p=>p.lines.map(line=>({...line,page:p.page,joined:compact(line.text)})).filter(line=>{
     if(!line.joined)return false;
     if(/^\d+$/.test(String(line.text).trim()))return false;

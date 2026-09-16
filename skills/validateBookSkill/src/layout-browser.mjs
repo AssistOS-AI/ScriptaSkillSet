@@ -96,7 +96,7 @@ export function applyDomRepairs(actions) {
   const text = () => { const c = document.body.cloneNode(true); c.querySelectorAll('script,style,template,noscript').forEach(n => n.remove()); return c.textContent; };
   const characterInventory=value=>[...value].filter(c=>!/\s/u.test(c)).sort().join('');
   const before = text(), changes = [];
-  let stylesheet,tableReflow=false;const removedGenerated=[];
+  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[];
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
@@ -184,18 +184,48 @@ export function applyDomRepairs(actions) {
       for (const sheet of a.sheets) { const n = document.createElement(sheet.href ? 'link' : 'style'); n.setAttribute('data-validatebook-inherited', ''); if (sheet.href) { n.rel = 'stylesheet'; n.setAttribute('href', sheet.href); } else n.textContent = sheet.css; document.head.append(n); }
       changes.push({ kind: a.kind, before: 'target text/styles retained', after: a.sheets }); continue;
     }
+    if(a.kind==='remove_generated_caption'){
+      const nodes = document.querySelectorAll(a.selector);
+      if(nodes.length===0){
+        const staleCaptions=[...document.querySelectorAll('figcaption')].filter(node=>node.textContent===a.text);
+        if(staleCaptions.length)throw Error('Repair selector is stale for generated caption: '+a.selector);
+        const staleAlt=[...document.querySelectorAll('img')].filter(image=>image.getAttribute('alt')===a.text);
+        if(staleAlt.length>1)throw Error('Generated caption alt text is ambiguous: '+a.text);
+        if(staleAlt.length===1&&/^figure from pdf page \d+$/i.test(a.text.trim())){
+          staleAlt[0].setAttribute('alt','');
+          changes.push({kind:a.kind,selector:a.selector,before:'stale generated caption already absent; image alt retained',after:'image alt cleared'});
+        }
+        continue;
+      }
+      if(nodes.length!==1)throw Error('Repair selector must match exactly one element: '+a.selector);
+      const n=nodes[0],old=n.outerHTML;
+      if(n.tagName!=='FIGCAPTION'||n.textContent!==a.text||!/^figure from pdf page \d+$/i.test(n.textContent.trim()))throw Error('Unsafe generated caption removal');
+      const image=n.closest('figure')?.querySelector('img');
+      if(image&&/^figure from pdf page \d+$/i.test(image.getAttribute('alt')||''))image.setAttribute('alt','');
+      removedGenerated.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});continue;
+    }
+    if(a.kind==='remove_running_matter'){
+      const nodes=document.querySelectorAll(a.selector);
+      if(nodes.length===0)continue;
+      if(nodes.length!==1)throw Error('Repair selector must match exactly one element: '+a.selector);
+      const n=nodes[0],old=n.outerHTML;
+      if(n.textContent.trim()!==a.text||!/^.{6,}\s*[·•|]\s*\d{1,4}$/u.test(n.textContent.trim()))throw Error('Unsafe running matter removal');
+      if(a.id&&n.id===a.id){
+        const anchor=document.createElement('span');
+        anchor.className='source-anchor';
+        anchor.id=a.id;
+        n.before(anchor);
+      }
+      removedRunning.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});continue;
+    }
     const nodes = document.querySelectorAll(a.selector);
+    if(nodes.length===0&&a.kind==='presentation'&&/> figcaption(?::nth-child\(\d+\))?$/.test(a.selector)&&![...document.querySelectorAll('figcaption')].some(node=>/^figure from pdf page \d+$/i.test(node.textContent.trim())))continue;
     if (nodes.length !== 1) throw Error('Repair selector must match exactly one element: ' + a.selector);
     const n = nodes[0], old = n.outerHTML;
     if (a.kind === 'tag') {
       if (!/^(p|h[1-6]|th|td|figcaption)$/.test(a.tag) || n.tagName.toLowerCase() !== a.expectedTag) throw Error('Unsafe or stale tag repair');
       const replacement = document.createElement(a.tag); for (const attr of n.attributes) replacement.setAttribute(attr.name, attr.value); while (n.firstChild) replacement.append(n.firstChild); n.replaceWith(replacement);
       changes.push({ kind: a.kind, selector: a.selector, before: old, after: replacement.outerHTML });
-    } else if(a.kind==='remove_generated_caption'){
-      if(n.tagName!=='FIGCAPTION'||n.textContent!==a.text||!/^figure from pdf page \d+$/i.test(n.textContent.trim()))throw Error('Unsafe generated caption removal');
-      const image=n.closest('figure')?.querySelector('img');
-      if(image&&/^figure from pdf page \d+$/i.test(image.getAttribute('alt')||''))image.setAttribute('alt','');
-      removedGenerated.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});
     } else if (a.kind === 'classes') {
       n.setAttribute('class', a.classes);
       changes.push({ kind:a.kind, selector:a.selector, before:old, after:n.outerHTML });
@@ -256,7 +286,8 @@ export function applyDomRepairs(actions) {
       changes.push({ kind: a.kind, selector: a.selector, before: beforeProperties, after: Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)])) });
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
-  if (text() !== before && (!(tableReflow||removedGenerated.length)||characterInventory(text()+removedGenerated.join(''))!==characterInventory(before))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
+  const removedText=removedGenerated.join('')+removedRunning.join('');
+  if (text() !== before && (!(tableReflow||removedText)||characterInventory(text()+removedText)!==characterInventory(before))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
   const dt = document.doctype;
   const doctype = dt ? '<!DOCTYPE ' + dt.name + (dt.publicId ? ' PUBLIC "' + dt.publicId + '"' : '') + (dt.systemId ? (dt.publicId ? '' : ' SYSTEM') + ' "' + dt.systemId + '"' : '') + '>\n' : '';
   return { html: doctype + document.documentElement.outerHTML, changes, stylesheet };

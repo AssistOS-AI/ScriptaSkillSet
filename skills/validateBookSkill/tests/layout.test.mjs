@@ -58,15 +58,28 @@ test('converter figure placeholders are visible-content errors with a native rem
   assert.equal(finding.repair.kind,'remove_generated_caption');
   assert.equal(finding.repair.selector,'#caption');
 });
-test('generated figure captions are split from layout batches as safe visible-content repairs',()=>{
+test('repeated title-number running matter is a safe visible-content repair',()=>{
+  const d=document([
+    {...record('f6','BEYOND THE LAST STONE · 6',{tag:'h2'}),selector:'#f6'},
+    {...record('f7','BEYOND THE LAST STONE · 7',{tag:'h2'}),selector:'#f7'},
+    {...record('f8','BEYOND THE LAST STONE · 8',{tag:'h2'}),selector:'#f8'}
+  ]);
+  const findings=checkDisplay(d,'en').filter(f=>f.category==='running_matter_visible');
+  assert.equal(findings.length,3);
+  assert.equal(findings[0].repair.kind,'remove_running_matter');
+});
+test('generated figure captions and running matter are split from layout batches as safe visible-content repairs',()=>{
   const actions=[
     {kind:'presentation',selector:'#p',properties:{'font-size':'1em'}},
     {kind:'remove_generated_caption',selector:'#cap',text:'Figure from PDF page 1'},
+    {kind:'presentation',selector:'#cap',properties:{'font-size':'1em'}},
+    {kind:'remove_running_matter',selector:'#footer',text:'BOOK · 2'},
+    {kind:'presentation',selector:'#footer',properties:{'font-size':'1em'}},
     {kind:'stylesheet',css:'p{overflow-wrap:anywhere}'}
   ];
   const split=splitSafeVisibleContentRepairs(actions);
-  assert.deepEqual(split.safe,[actions[1]]);
-  assert.deepEqual(split.batch,[actions[0],actions[2]]);
+  assert.deepEqual(split.safe,[actions[1],actions[3]]);
+  assert.deepEqual(split.batch,[actions[0],actions[5]]);
 });
 test('translation presentation layer is split from risky layout batches',()=>{
   const actions=[
@@ -78,6 +91,11 @@ test('translation presentation layer is split from risky layout batches',()=>{
   const split=splitSafeVisibleContentRepairs(actions);
   assert.deepEqual(split.safe,actions.slice(0,3));
   assert.deepEqual(split.batch,[actions[3]]);
+});
+
+test('translated paragraph fallback keeps page scaling in inherited font size',async()=>{
+  const audit=await fs.readFile(fileURLToPath(new URL('../src/audit.mjs',import.meta.url)),'utf8');
+  assert.match(audit,/sourceBlock\.font\.size[\s\S]*?var\(--validatebook-page-scale, 1\)/);
 });
 test('actual rendered fonts compared with PDF subset names',()=>{
   const source='ABCDEF+EBGaramond-Regular TrueType yes yes yes 1 0';

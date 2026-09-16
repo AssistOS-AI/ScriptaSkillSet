@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {openBrowser} from '../src/browser.mjs';
 import {navigate} from '../src/layout-browser.mjs';
-import {paginateDocument,paginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,sourceBlankPages} from '../src/pagination.mjs';
+import {paginateDocument,paginationCss,translatedPaginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,sourceBlankPages} from '../src/pagination.mjs';
 import {checkDisplay} from '../src/layout-checks.mjs';
 test('translations keep independent margins and source anchors without suppressing rendering errors',()=>{
  const profile={width:400,margins:{top:40,right:40,bottom:40,left:40}};
@@ -47,7 +47,7 @@ test('native contents repair preserves labels and uses each edition page numbers
  assert(Math.abs(await browser.evaluate('(()=>{const s=getComputedStyle(document.querySelector("li"));return parseFloat(s.lineHeight)/parseFloat(s.fontSize);})()')-17/11)<.001);
  await browser.evaluate('('+applyContentsPresentation.toString()+')('+JSON.stringify({profile,language:'fr',mapping:result.mapping})+')');assert.equal(await browser.evaluate('document.querySelector("a").dataset.pageLabel'),'1');assert.equal(await browser.evaluate('document.querySelectorAll(".validatebook-toc-label").length'),1);
  const rows=Array.from({length:32},(_,i)=>`<text top="${52+i*17}" left="${i===10?56:73}" width="${i===10?329:312}" height="14" font="1">A sufficiently long source paragraph line</text>`).join('');
- const xml='<pdf2xml><fontspec id="1" size="11"/>'+[1,2,3].map(n=>`<page number="${n}" width="432" height="648"><text top="22" left="56" width="120" height="10" font="1">Repeated running header</text>${rows}<text top="613" left="226" width="4" height="12" font="1">3</text></page>`).join('')+'</pdf2xml>';
+ const xml='<pdf2xml><fontspec id="1" size="11"/>'+[1,2,3].map(n=>`<page number="${n}" width="432" height="648"><text top="22" left="56" width="120" height="10" font="1">Repeated running header</text>${rows}<text top="613" left="180" width="120" height="12" font="1">BOOK TITLE · ${n}</text></page>`).join('')+'</pdf2xml>';
  const measured=await browser.evaluate('('+sourcePagePresentation.toString()+')('+JSON.stringify(xml)+')');assert.equal(measured.margins.left,56);assert.equal(measured.margins.right,47);assert.equal(measured.margins.top,52);assert(measured.margins.bottom>35);
  await assert.rejects(browser.evaluate('('+sourcePagePresentation.toString()+')('+JSON.stringify('<pdf2xml><page width="432" height="648"/></pdf2xml>')+')'),/Insufficient/);
 });
@@ -72,6 +72,9 @@ test('pagination CSS uses source page proportions and never clips flowing text',
  assert(css.includes('min-height:150cqw'));
  assert(css.includes('break-after:page'));
  assert(css.includes('--validatebook-page-scale:max(1,calc(100cqw / 576px))'));
+ const translated=translatedPaginationCss({width:432,height:648,margins:{top:52,right:47,bottom:51,left:56},contents:[{indent:0}],contentsLineHeight:17,contentsFontSize:11});
+ assert(translated.includes('--validatebook-font-size:var(--reader-font-size,var(--standalone-size,1em))'));
+ assert(translated.includes('padding:12.037037037037036cqw 10.87962962962963cqw 11.805555555555555cqw 12.962962962962962cqw'));
  assert(css.includes('[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:normal;word-break:normal;hyphens:none}'));
  assert(!css.includes('[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:anywhere}'));
  assert(!css.includes('overflow:hidden'));

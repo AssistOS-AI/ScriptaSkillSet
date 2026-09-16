@@ -5,6 +5,12 @@ export function issue(language, category, location, detail, extra = {}) {
   return { id: hash(JSON.stringify([language, category, location, detail])).slice(0, 20), language, category, location, detail, severity: 'error', provenance: 'local_code', ...extra };
 }
 
+function runningMatterKey(text) {
+  const value=String(text||'').normalize('NFKC').replace(/\s+/g,' ').trim();
+  const match=value.match(/^(.{6,}?)\s*[·•|]\s*\d{1,4}$/u);
+  return match?normalizeText(match[1]):null;
+}
+
 // Runs inside Chromium. Text is read, never evaluated as instructions.
 export function inspectLayout() {
   const nodes = [...document.querySelectorAll('*')], index = new Map(nodes.map((n, i) => [n, i]));
@@ -140,6 +146,12 @@ export function checkDisplay(document, language) {
     if(r.spacing?.excessive)findings.push(issue(language,'excessive_word_spacing',r.selector,'Justified word gaps exceed 0.65 em in sampled rendered lines.',{width:document.width,spacing:r.spacing,repair:{kind:'presentation',selector:r.selector,properties:{'text-align':'left','word-spacing':'normal','letter-spacing':'normal'}}}));
     if (/[\uFFFD\uE000-\uF8FF]/u.test(r.text)) findings.push(issue(language, 'suspect_character', r.selector, 'Replacement/private-use character. Preserve until its source mapping is established.', { excerpt: r.text.slice(0, 200) }));
   }
+  const runningCounts=new Map();
+  for(const r of document.records){const key=runningMatterKey(r.text);if(key)runningCounts.set(key,(runningCounts.get(key)||0)+1);}
+  for(const r of document.records){
+    const key=runningMatterKey(r.text);
+    if(key&&runningCounts.get(key)>=3&&/^(p|h[1-6])$/.test(r.tag))findings.push(issue(language,'running_matter_visible',r.selector,'Repeated source running header/footer is visible as book content and must not drive contents or typography mapping.',{repair:{kind:'remove_running_matter',selector:r.selector,text:r.text,id:r.id}}));
+  }
   const placed = document.records.filter(r=>r.text && r.tag!=='table' && r.bounds && !r.hidden).sort((a,b)=>a.bounds.top-b.bounds.top);
   for(let i=0;i<placed.length;i++) for(let j=i+1;j<placed.length && placed[j].bounds.top < placed[i].bounds.bottom-2;j++) {
     const a=placed[i],b=placed[j];
@@ -152,12 +164,19 @@ export function checkDisplay(document, language) {
 
 export function readingPages(pages) {
   const headers=new Map();
-  for(const p of pages){const first=p.text.trim().split('\n')[0].trim();if(first)headers.set(first,(headers.get(first)||0)+1);}
+  const footers=new Map();
+  for(const p of pages){
+    const lines=p.text.trim().split('\n').map(line=>line.trim()).filter(Boolean);
+    const first=lines[0],last=lines.at(-1),footer=runningMatterKey(last);
+    if(first)headers.set(first,(headers.get(first)||0)+1);
+    if(footer)footers.set(footer,(footers.get(footer)||0)+1);
+  }
   return pages.map(p=>{
     const lines=p.text.trim().split('\n');
     if(headers.get(lines[0]?.trim())>=3)lines.shift();
     while(lines.length&&!lines.at(-1).trim())lines.pop();
     if(/^\d+$/.test(lines.at(-1)?.trim()||''))lines.pop();
+    if(footers.get(runningMatterKey(lines.at(-1)))>=3)lines.pop();
     return {...p,text:lines.join('\n')};
   });
 }
