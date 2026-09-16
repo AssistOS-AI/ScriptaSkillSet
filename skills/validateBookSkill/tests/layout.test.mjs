@@ -127,6 +127,16 @@ test('report has only text/JSON, remains stale after source mutation',async t=>{
   await layoutReport(root);const files=await fs.readdir(root);assert(files.includes('report.txt'));assert(!files.includes('repair-tasks.json'));assert(!files.some(f=>/\.png$|report\.html$/.test(f)));assert(!textReport(result).includes('<img'));
   await fs.appendFile(file,'changed');await assert.rejects(layoutReport(root),/Stale input/);
 });
+test('report starts with grouped problem summary and translation causes',()=>{
+  const result={scope:'layout_and_structure',status:'needs_attention',documents:[{language:'en'},{language:'ro'}],pageCoverage:[{page:1}],corrections:[],initialFindings:[],limitations:[],backups:[],findings:[
+    {severity:'error',language:'ro',category:'block_sequence_difference',location:'document',detail:'Paragraph/heading/table/list sequence differs from the English canonical layout.'},
+    {severity:'error',language:'ro',category:'missing_structural_anchor',location:'id:p2',detail:'English p has no unique translated counterpart.'}
+  ]};
+  const report=textReport(result);
+  assert(report.indexOf('Problem summary')<report.indexOf('Problems found and corrections'));
+  assert(report.includes('Translation problems'));
+  assert(report.includes('poate lipsi un paragraf'));
+});
 test('preflight missing tools fails before creating output',async()=>{await assert.rejects(doctor({chromium:'/definitely-missing-layout-browser'}),/ENOENT/);});
 
 test('source bounds expose a body paragraph incorrectly enlarged as a heading',()=>{

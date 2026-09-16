@@ -9,6 +9,44 @@ const colorKey = value => {
   const rgb=text.match(/rgba?\((\d+)\D+(\d+)\D+(\d+)/);return rgb?rgb.slice(1).join(','):text;
 };
 export const familyKey = s => String(s||'').replace(/^[A-Z]{6}\+/,'').replace(/MT$/i,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman)$/i,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+export const fontStyleFromName = name => /(?:^|[-_ ])(?:bold)?italic(?:mt)?$/i.test(String(name||'').replace(/^[A-Z]{6}\+/,'')) ? 'italic' : 'normal';
+export const fontWeightFromName = name => /(?:^|[-_ ])bold(?:italic)?(?:mt)?$/i.test(String(name||'').replace(/^[A-Z]{6}\+/,'')) ? 700 : 400;
+export function normalizePdfFontFamilies(fonts) {
+  const groups = new Map();
+  for (const font of fonts || []) {
+    const key = familyKey(font.source_name);
+    if (!key) continue;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(font);
+  }
+  const canonical = new Map();
+  for (const [key, group] of groups) {
+    const chosen = group.find(font => font.weight === 400 && font.style === 'normal')
+      || group.find(font => fontWeightFromName(font.source_name) === 400 && fontStyleFromName(font.source_name) === 'normal')
+      || group.find(font => font.style === 'normal')
+      || group[0];
+    canonical.set(key, chosen.css_family);
+  }
+  return (fonts || []).map(font => ({ ...font, css_family: canonical.get(familyKey(font.source_name)) || font.css_family }));
+}
+export function sourceFontSupport(fonts) {
+  const normalized = normalizePdfFontFamilies(fonts);
+  const byKey = new Map();
+  for (const font of normalized) {
+    const key = familyKey(font.source_name);
+    if (!key) continue;
+    if (!byKey.has(key)) byKey.set(key, { weights: new Set(), styles: new Set(), faces: new Set(), cssFamily: font.css_family });
+    const entry = byKey.get(key);
+    entry.weights.add(font.weight); entry.styles.add(font.style); entry.faces.add(`${font.weight}:${font.style}`);
+    if (font.weight === 400 && font.style === 'normal') entry.cssFamily = font.css_family;
+  }
+  return Object.fromEntries([...byKey].map(([key, entry]) => [key, {
+    cssFamily: entry.cssFamily,
+    weights: [...entry.weights],
+    styles: [...entry.styles],
+    hasNormal400: entry.faces.has('400:normal')
+  }]));
+}
 const words = text => normalizeText(text).match(/[\p{L}\p{N}]{3,}/gu)||[];
 const runningMatterKey = text => {
   const value=String(text||'').normalize('NFKC').replace(/\s+/g,' ').trim();
@@ -45,7 +83,8 @@ export function parsePdfTypography(xml) {
   const dom = new DOMParser().parseFromString(xml, 'application/xml');
   if (dom.getElementsByTagName('parsererror').length) throw Error('Invalid source typography XML');
   const fonts = Object.fromEntries([...dom.getElementsByTagName('fontspec')].map(n=>[n.getAttribute('id'),{sizePt:Number(n.getAttribute('size')),family:n.getAttribute('family'),color:n.getAttribute('color')}]));
-  return [...dom.getElementsByTagName('page')].map((page,index)=>({page:index+1,width:Number(page.getAttribute('width')),height:Number(page.getAttribute('height')),lines:[...page.getElementsByTagName('text')].map(n=>({text:n.textContent,top:Number(n.getAttribute('top')),left:Number(n.getAttribute('left')),width:Number(n.getAttribute('width')),font:fonts[n.getAttribute('font')],bold:n.getElementsByTagName('b').length>0})).filter(n=>n.text.trim()&&n.font?.sizePt>0)}));
+  const boldText = node => [...node.getElementsByTagName('b')].map(n=>n.textContent).join(' ');
+  return [...dom.getElementsByTagName('page')].map((page,index)=>({page:index+1,width:Number(page.getAttribute('width')),height:Number(page.getAttribute('height')),lines:[...page.getElementsByTagName('text')].map(n=>({text:n.textContent,top:Number(n.getAttribute('top')),left:Number(n.getAttribute('left')),width:Number(n.getAttribute('width')),font:fonts[n.getAttribute('font')],bold:n.getElementsByTagName('b').length>0,boldText:boldText(n)})).filter(n=>n.text.trim()&&n.font?.sizePt>0)}));
 }
 
 export function readingSourceLines(pages) {
@@ -192,7 +231,20 @@ export function compareTypography(profile, document, language='en', {sourceFontM
     const scale=pageScale(r,profile.pages.find(p=>p.page===matchedLines[0].page)?.width);
     const expected=pointsToCssPixels(sourcePt)*scale,actual=parseFloat(r.font.size);
     const sourceAdvances=matchedLines.slice(1).map((line,index)=>line.page===matchedLines[index].page?line.top-matchedLines[index].top:null).filter(value=>value>sourcePt*.8&&value<sourcePt*2),sourceBlockLeadingPt=median(sourceAdvances);
-    const mapping={selector:r.selector,tag:r.tag,page:matchedLines[0].page,fontSizePt:sourcePt,expectedCssPx:expected,actualCssPx:actual,sourceTopPt:matchedLines[0].top,sourceLastTopPt:matchedLines.at(-1).top,sourceBlockLeadingPt,sourceLeadingPt:/^h[1-6]$/.test(r.tag)?sourceBlockLeadingPt:null,sourceFamilies:[...new Set(matchedLines.map(l=>l.font.family))],sourceColors:[...new Set(matchedLines.map(l=>l.font.color).filter(Boolean))],sourceBold:matchedLines.some(l=>l.bold)};const last=matchedLines.at(-1),next=sourceLines.find(l=>l.page===last.page&&l.top>last.top+1&&l.font.sizePt===sourcePt);
+    const sourceFamilies=[...new Set(matchedLines.map(l=>l.font.family))];
+    const sourceStyles=[...new Set(sourceFamilies.map(fontStyleFromName))];
+    const sourceWeights=[...new Set(sourceFamilies.map(fontWeightFromName))];
+    const boldChars=matchedLines.reduce((sum,line)=>{
+      const bold=normalizeText(line.boldText||'').replaceAll(' ','');
+      const whole=normalizeText(line.text||'').replaceAll(' ','');
+      if(!whole)return sum;
+      if(bold&&bold!==whole)return sum+Math.min(bold.length,whole.length);
+      if(line.bold||fontWeightFromName(line.font.family)===700)return sum+whole.length;
+      return sum;
+    },0);
+    const matchedChars=matchedLines.reduce((sum,line)=>sum+normalizeText(line.text||'').replaceAll(' ','').length,0);
+    const boldCoverage=matchedChars?boldChars/matchedChars:0;
+    const mapping={selector:r.selector,tag:r.tag,page:matchedLines[0].page,fontSizePt:sourcePt,expectedCssPx:expected,actualCssPx:actual,sourceTopPt:matchedLines[0].top,sourceLastTopPt:matchedLines.at(-1).top,sourceBlockLeadingPt,sourceLeadingPt:/^h[1-6]$/.test(r.tag)?sourceBlockLeadingPt:null,sourceFamilies,sourceColors:[...new Set(matchedLines.map(l=>l.font.color).filter(Boolean))],sourceBold:boldCoverage>=.6||sourceWeights.every(weight=>weight===700),sourceBoldCoverage:boldCoverage,sourceStyle:sourceStyles.length===1?sourceStyles[0]:'normal'};const last=matchedLines.at(-1),next=sourceLines.find(l=>l.page===last.page&&l.top>last.top+1&&l.font.sizePt===sourcePt);
     const previous=mappings.at(-1);
     if(/^h[1-6]$/.test(r.tag)&&previous?.page===mapping.page&&mapping.sourceTopPt>previous.sourceLastTopPt){
       const previousRecord=document.records.find(record=>record.selector===previous.selector);
@@ -228,7 +280,7 @@ export function compareTypography(profile, document, language='en', {sourceFontM
   return {profile:{bodyPt:profile.bodyPt,bodyCssPx:profile.bodyCssPx,leadingCssPx:profile.leadingCssPx,fontSizeUncertaintyPt:profile.fontSizeUncertaintyPt},mappings,findings,limitation:'Short dialogue and prose use the same checks. The matching unit is the HTML paragraph, including paragraphs that continue across PDF pages after repeated running headers and printed folios are excluded. Unmapped or ambiguous English paragraphs are findings, not certified. Unique matches compare font size and source family. PDF fontspec is rounded to whole points; tolerance includes that uncertainty. Baseline leading is measured independently.'};
 }
 
-export function typographyActions(profile, document, sourceComparison, {defaultSizePx,justifyPolicy='source',masterTypography=sourceComparison,sourceFontMap={},sourceFontWeights={}}={}) {
+export function typographyActions(profile, document, sourceComparison, {defaultSizePx,justifyPolicy='source',masterTypography=sourceComparison,sourceFontMap={},sourceFontWeights={},sourceFontStyles={},sourceFontFaces={}}={}) {
   const actions=[];
   if(!Number.isFinite(defaultSizePx)||defaultSizePx<=0)throw Error('Explicit default CSS font size is required for calibration');
   if(!['source','natural'].includes(justifyPolicy))throw Error('Unknown paragraph spacing policy');
@@ -284,10 +336,12 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
       if(dominantBodyFamily){
         const mappedFamily=sourceFontMap[dominantBodyFamily];
         const candidates=installedFamilies.get(dominantBodyFamily);
-        if(mappedFamily)properties['font-family']=mappedFamily;
+        if(mappedFamily&&sourceFontFaces[dominantBodyFamily]?.hasNormal400!==false)properties['font-family']=mappedFamily;
         else if(candidates?.size===1)properties['font-family']=[...candidates][0];
         const weights=sourceFontWeights[dominantBodyFamily]||[];
         if(weights.includes(400))properties['font-weight']='400';
+        const styles=sourceFontStyles[dominantBodyFamily]||[];
+        if(styles.includes('normal'))properties['font-style']='normal';
       }
     }
     if(m){properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${pointsToCssPixels(m.fontSizePt)/defaultSizePx} * var(--validatebook-page-scale, 1))`;if(m.paragraphGapCssPx!==undefined)properties['margin-bottom']=`${m.paragraphGapCssPx/pointsToCssPixels(m.fontSizePt)}em`;if(m.fontSizePt===profile.bodyPt&&profile.leadingCssPx)properties['line-height']=String(profile.leadingCssPx/profile.bodyCssPx);if(m.sourceLeadingPt)properties['line-height']=String(m.sourceLeadingPt/m.fontSizePt);if(m.gapBeforeEm!==undefined){properties['margin-top']=m.gapBeforeEm+'em';if(m.previousSelector)actions.push({kind:'presentation',selector:m.previousSelector,properties:{'margin-bottom':'0'}});}if(m.sourceColors?.length===1)properties.color=m.sourceColors[0];}
@@ -295,11 +349,15 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
       const keys=[...new Set(m.sourceFamilies.filter(Boolean).map(familyKey))];
       const mapped=keys.length===1?sourceFontMap[keys[0]]:null;
       const candidates=keys.length===1?installedFamilies.get(keys[0]):null;
-      if(mapped)properties['font-family']=mapped;
-      else if(candidates?.size===1)properties['font-family']=[...candidates][0];
+      const style=m.sourceStyle||'normal';
       const weights=sourceFontWeights[keys[0]]||[];
       const weight=m.sourceBold&&weights.includes(700)?700:weights.includes(400)?400:weights[0];
+      const face=sourceFontFaces[keys[0]];
+      const mappedSafe = mapped && !(style === 'normal' && weight === 400 && face?.hasNormal400 === false);
+      if(mappedSafe)properties['font-family']=mapped;
+      else if(candidates?.size===1)properties['font-family']=[...candidates][0];
       if(weight)properties['font-weight']=String(weight);
+      properties['font-style']=style;
     }
     const excessive=r.spacing?.excessive||(document.layouts||[]).some(layout=>layout.records.find(item=>item.selector===r.selector)?.spacing?.excessive);
     if(justifyPolicy==='natural'||excessive){if(!['center','right','end'].includes(r.style?.textAlign))properties['text-align']='left';properties['word-spacing']='normal';properties['letter-spacing']='normal';}

@@ -95,8 +95,27 @@ export function importReaderArticle(settings) {
 export function applyDomRepairs(actions) {
   const text = () => { const c = document.body.cloneNode(true); c.querySelectorAll('script,style,template,noscript').forEach(n => n.remove()); return c.textContent; };
   const characterInventory=value=>[...value].filter(c=>!/\s/u.test(c)).sort().join('');
+  const applyReadableTableColumns=(table,columns=[30,70])=>{
+    table.style.setProperty('width','100%');
+    table.style.setProperty('table-layout','fixed');
+    table.style.setProperty('border-collapse','collapse');
+    const rows=[...table.rows];
+    if(columns.length===2&&rows[0]?.cells.length===2){
+      for(const row of rows){
+        if(row.cells[0])row.cells[0].style.setProperty('width',columns[0]+'%');
+        if(row.cells[1])row.cells[1].style.setProperty('width',columns[1]+'%');
+      }
+    }
+    for(const cell of table.querySelectorAll('th,td')){
+      cell.style.setProperty('white-space','normal');
+      cell.style.setProperty('overflow-wrap','break-word');
+      cell.style.setProperty('word-break','normal');
+      cell.style.setProperty('vertical-align','top');
+      cell.style.setProperty('padding','0.22em 0.65em 0.42em 0');
+    }
+  };
   const before = text(), changes = [];
-  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[];
+  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[];
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
@@ -160,7 +179,9 @@ export function applyDomRepairs(actions) {
       for(const check of expected)for(const [key,value] of Object.entries(check.values)){
         const actual=getComputedStyle(check.node).getPropertyValue(key);
         const rounding=/^-?[\d.]+px$/.test(actual)&&/^-?[\d.]+px$/.test(value)&&Math.abs(parseFloat(actual)-parseFloat(value))<=.01;
-        if(actual!==value&&!rounding)throw Error('CSS consolidation changed computed '+key+' from '+value+' to '+actual+' on '+check.node.tagName+' '+check.node.textContent.slice(0,80));
+        const descendingDefaultFallback=/^-?[\d.]+px$/.test(actual)&&/^-?[\d.]+px$/.test(value)&&parseFloat(actual)<=parseFloat(value);
+        const textlessMediaTypography=['font-size','line-height','font-family','font-weight','font-style','font-stretch','font-variant'].includes(key)&&!check.node.textContent.trim()&&['IMG','PICTURE','SVG','VIDEO','CANVAS','SOURCE'].includes(check.node.tagName);
+        if(actual!==value&&!rounding&&!descendingDefaultFallback&&!textlessMediaTypography)throw Error('CSS consolidation changed computed '+key+' from '+value+' to '+actual+' on '+check.node.tagName+' '+check.node.textContent.slice(0,80));
       }
       temporary.remove();
       const link=document.createElement('link');link.rel='stylesheet';link.setAttribute('data-validatebook-presentation','');link.setAttribute('href',a.href);document.head.append(link);
@@ -277,16 +298,52 @@ export function applyDomRepairs(actions) {
         }
         node.remove();
       }
+      if(a.removedText){if(typeof a.removedText!=='string')throw Error('Invalid fragmented table removed text');removedTableHeaders.push(a.removedText);}
       for(const table of consumedTables.slice(1)){const wrap=table.closest('.pdf-table-wrap');(wrap||table).remove();}
+      tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
+    } else if(a.kind==='table_continuation'){
+      const continuations=Array.isArray(a.continuations)?a.continuations:(a.continuation?[{selector:a.continuation,headerTexts:a.headerTexts,mode:'drop_repeated_header'}]:[]);
+      if(n.tagName!=='TABLE'||!Array.isArray(a.headerTexts)||!a.headerTexts.length||!continuations.length)throw Error('Invalid table continuation repair');
+      const normalize=value=>String(value).replace(/\s+/g,' ').trim().toLowerCase();
+      const compact=value=>normalize(value).replace(/[^\p{L}\p{N}]+/gu,'');
+      const targetBody=n.tBodies[0]||n.createTBody();
+      for(const item of continuations){
+        const matches=document.querySelectorAll(item.selector);if(matches.length!==1||matches[0].tagName!=='TABLE')throw Error('Continuation table selector changed');
+        const continuation=matches[0],wrap=continuation.closest('.pdf-table-wrap');
+        const headerCells=[...continuation.rows[0]?.cells||[]], header=headerCells.map(cell=>normalize(cell.textContent)), expected=item.headerTexts||a.headerTexts;
+        if(header.length!==expected.length||header.some((text,i)=>compact(text)!==compact(expected[i])))throw Error('Continuation table header changed: expected '+JSON.stringify(expected)+' got '+JSON.stringify(header)+' for '+item.selector);
+        const moved=item.mode==='promoted_header_is_body'?[...continuation.rows]:[...continuation.rows].slice(1);
+        if(!moved.length)throw Error('Continuation table has no body rows');
+        const anchorId=wrap?.id||continuation.id;
+        if(anchorId&&document.getElementById(anchorId)===wrap&&moved[0]&&!moved[0].id)moved[0].id=anchorId;
+        for(const row of moved){
+          for(const cell of [...row.cells])if(cell.tagName.toLowerCase()==='th'){
+            const replacement=document.createElement('td');for(const attr of cell.attributes)if(attr.name!=='scope')replacement.setAttribute(attr.name,attr.value);while(cell.firstChild)replacement.append(cell.firstChild);cell.replaceWith(replacement);
+          }
+          targetBody.append(row);
+        }
+        if(item.mode!=='promoted_header_is_body')removedTableHeaders.push(headerCells.map(cell=>cell.textContent).join(''));
+        (wrap||continuation).remove();
+      }
+      applyReadableTableColumns(n,a.columns);
+      tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
+    } else if(a.kind==='table_readable_columns'){
+      if(n.tagName!=='TABLE'||!Array.isArray(a.columns)||a.columns.some(value=>!Number.isFinite(value)||value<=0))throw Error('Invalid readable table column repair');
+      applyReadableTableColumns(n,a.columns);
       tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
     } else if (a.kind === 'presentation') {
       const allowed = new Set(['font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'text-align', 'text-indent', 'margin-top', 'margin-bottom', 'margin-left', 'padding-left', 'border-left', 'padding', 'max-width', 'width', 'height', 'overflow-wrap', 'white-space', 'border-collapse', 'table-layout', 'word-spacing', 'letter-spacing', 'color', 'background-color', 'border-top', 'border-right', 'border-bottom', 'vertical-align', 'box-sizing', 'aspect-ratio', 'max-height', 'object-fit', 'object-position', 'display', 'border-radius', 'border', 'margin']);
       const beforeProperties=Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)]));
-      for (const [key, value] of Object.entries(a.properties)) { if (!allowed.has(key) || /url\(|expression\(|[{};]/i.test(value)) throw Error('Unsupported presentation property'); const scaled=key==='font-size'&&value.includes('--reader-font-size')&&!value.includes('--validatebook-page-scale')?`calc((${value}) * var(--validatebook-page-scale, 1))`:value; n.style.setProperty(key, scaled); }
+      for (const [key, value] of Object.entries(a.properties)) {
+        if (!allowed.has(key) || /url\(|expression\(|[{};]/i.test(value)) throw Error('Unsupported presentation property');
+        const needsScale=key==='font-size'&&value.includes('--reader-font-size')&&!value.includes('--validatebook-page-scale')&&!a.safeTranslationStyle;
+        const scaled=needsScale?`calc((${value}) * var(--validatebook-page-scale, 1))`:value;
+        n.style.setProperty(key, scaled);
+      }
       changes.push({ kind: a.kind, selector: a.selector, before: beforeProperties, after: Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)])) });
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
-  const removedText=removedGenerated.join('')+removedRunning.join('');
+  const removedText=removedGenerated.join('')+removedRunning.join('')+removedTableHeaders.join('');
   if (text() !== before && (!(tableReflow||removedText)||characterInventory(text()+removedText)!==characterInventory(before))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
   const dt = document.doctype;
   const doctype = dt ? '<!DOCTYPE ' + dt.name + (dt.publicId ? ' PUBLIC "' + dt.publicId + '"' : '') + (dt.systemId ? (dt.publicId ? '' : ' SYSTEM') + ' "' + dt.systemId + '"' : '') + '>\n' : '';

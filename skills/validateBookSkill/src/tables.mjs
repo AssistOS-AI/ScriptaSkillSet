@@ -24,6 +24,83 @@ const htmlCoveredBySourceTables = (table,profile) => {
   const pageWords=pageSources.flatMap(source=>source.cells.flatMap(c=>words(c.text)));
   return pageText.includes(text)||table.cells.every(c=>!compact(c.text)||pageText.includes(compact(c.text))||coveredByWords(c.text,pageWords));
 };
+const tableRows = table => {
+  const rows = new Map();
+  for (const cell of table.cells || []) {
+    if (!rows.has(cell.row)) rows.set(cell.row, []);
+    rows.get(cell.row).push(cell);
+  }
+  return [...rows.entries()].sort((a,b)=>a[0]-b[0]).map(([,cells])=>cells.sort((a,b)=>a.col-b.col));
+};
+const headerTexts = table => tableRows(table)[0]?.map(cell=>normalizeText(cell.text)) || [];
+const sameHeader = (a,b) => {
+  const left=headerTexts(a),right=headerTexts(b);
+  return left.length>0 && left.length===right.length && left.every((text,i)=>text&&text===right[i]);
+};
+
+const sourceHeaderTexts = table => tableRows(table)[0]?.map(cell=>normalizeText(cell.text)) || [];
+const sameSourceHeader = (a,b) => {
+  const left=sourceHeaderTexts(a),right=sourceHeaderTexts(b);
+  return left.length>0&&left.length===right.length&&left.every((text,i)=>text&&text===right[i]);
+};
+const sourceTableContinuations = profile => {
+  const ordered=profile.slice().sort((a,b)=>a.page-b.page||((a.topPt??0)-(b.topPt??0)));
+  const result=[];
+  for(let i=0;i<ordered.length;i++){
+    let current=ordered[i],group=[current];
+    while(i+1<ordered.length){
+      const next=ordered[i+1];
+      if(next.page!==group.at(-1).page+1||next.columns!==current.columns||Math.abs(next.widthPt-current.widthPt)>.5||!sameSourceHeader(current,next))break;
+      group.push(next);i++;
+    }
+    if(group.length===1){result.push(current);continue;}
+    let rowOffset=0,repairRowOffset=0;
+    const cells=[],repairCells=[];
+    for(let partIndex=0;partIndex<group.length;partIndex++){
+      const part=group[partIndex];
+      for(const cell of part.cells){
+        repairCells.push({...cell,row:cell.row+repairRowOffset});
+        if(partIndex===0||cell.row>0)cells.push({...cell,row:cell.row+rowOffset-(partIndex?1:0)});
+      }
+      repairRowOffset+=part.rows;
+      rowOffset+=partIndex?part.rows-1:part.rows;
+    }
+    result.push({...current,rows:rowOffset,cells,repairRows:repairRowOffset,repairCells,continuedPages:group.map(t=>t.page),bottomPt:group.at(-1).bottomPt});
+  }
+  return result;
+};
+const structuralHeader = table => Array.isArray(table.rows?.[0]) && table.rows[0].length>0 && table.rows[0].every(cell=>cell.tag==='th');
+const readableColumnAction = table => {
+  const header=headerTexts(table);
+  return structuralHeader(table)&&header.length===2&&header[0]==='concept'&&(header[1]==='meaning in practice'||header[1]==='explanation and accessible link')
+    ? {kind:'table_readable_columns',selector:table.selector,columns:[30,70]}
+    : null;
+};
+const continuationActions = (tables, matched, language) => {
+  const findings=[], actions=[], ordered=tables.slice().sort((a,b)=>(a.nodeIndex??0)-(b.nodeIndex??0));
+  for (let i=0;i<ordered.length-1;i++) {
+    const first=ordered[i];
+    if (matched.has(first.selector) || !Number.isInteger(Number(first.page)) || !structuralHeader(first) || tableRows(first).length<2) continue;
+    const expectedHeader=headerTexts(first), continuations=[];
+    for (let j=i+1;j<ordered.length;j++) {
+      const next=ordered[j], expectedPage=Number(first.page)+continuations.length+1;
+      if (matched.has(next.selector) || Number(next.page)!==expectedPage || !structuralHeader(next)) break;
+      const rows=tableRows(next), nextHeader=headerTexts(next);
+      if(nextHeader.length!==expectedHeader.length || rows.length<1) break;
+      if(sameHeader(first,next)) {
+        if(rows.length<2) break;
+        continuations.push({selector:next.selector,headerTexts:expectedHeader,mode:'drop_repeated_header',fromPage:Number(next.page)});
+      } else if(rows[0].length===expectedHeader.length && nextHeader.every(Boolean)) {
+        continuations.push({selector:next.selector,headerTexts:nextHeader,mode:'promoted_header_is_body',fromPage:Number(next.page)});
+      } else break;
+    }
+    if(!continuations.length)continue;
+    const action={kind:'table_continuation',selector:first.selector,continuations,headerTexts:expectedHeader,columns:[30,70]};
+    findings.push(issue(language,'html_table_continuation',first.selector,'A table continues across later PDF pages; merge the HTML fragments and demote converter-promoted body rows back into the table body while preserving page anchors.',{page:first.page,nextPage:continuations.at(-1).fromPage,repair:action}));
+    actions.push(action);matched.add(first.selector);continuations.forEach(item=>matched.add(item.selector));i+=continuations.length;
+  }
+  return {findings,actions};
+};
 
 // PDF conversion may alternate real cells with empty spacer cells and shift
 // the real-cell offset between header and body. Exact row text makes removal
@@ -51,11 +128,36 @@ const rawTokens = text => {
   const value=String(text),matches=[...value.matchAll(/[\p{L}\p{N}]+/gu)];
   return matches.map((match,i)=>({word:normalizeText(match[0]),slice:value.slice(i?match.index:0,matches[i+1]?.index??value.length)}));
 };
+const sourceCasedText = (text,sourceText) => {
+  const source=[...String(sourceText).matchAll(/[\p{L}\p{N}]+/gu)].map(match=>match[0]);
+  let index=0;
+  return String(text).replace(/[\p{L}\p{N}]+/gu, word => source[index++] || word);
+};
 
 // Recover one source table split into malformed HTML rows/tables and adjacent
 // paragraph fragments. Table columns constrain the token streams; paragraph
 // tokens are accepted only when they have one unique assignment to them.
+const tableTextCaseRepair = (source,table) => {
+  if(source.cells.some(c=>!compact(c.text)||c.rowspan!==1||c.colspan!==1)||!table.cells||table.cells.length!==source.cells.length)return null;
+  const rows=[];let changed=false;
+  for(let row=0;row<source.rows;row++){
+    const sourceRow=source.cells.filter(c=>c.row===row).sort((a,b)=>a.col-b.col);
+    const actualRow=table.cells.filter(c=>c.row===row).sort((a,b)=>a.col-b.col);
+    if(sourceRow.length!==actualRow.length)return null;
+    const out=[];
+    for(let i=0;i<sourceRow.length;i++){
+      if(compact(sourceRow[i].text)!==compact(actualRow[i].text))return null;
+      const text=sourceCasedText(actualRow[i].text,sourceRow[i].text);
+      if(text!==actualRow[i].text)changed=true;
+      out.push({tag:row===0?'th':'td',text});
+    }
+    rows.push(out);
+  }
+  return changed?{kind:'table_fragments',selector:table.selector,remove:table.cells.map(c=>({selector:c.selector,text:c.text})),tables:[table.selector],rows,caseOnly:true}:null;
+};
+
 const fragmentedTableRepair = (source,pageTables,records) => {
+  if(source.repairCells)source={...source,rows:source.repairRows,cells:source.repairCells};
   if(!pageTables.length||source.cells.some(c=>!compact(c.text)||c.rowspan!==1||c.colspan!==1))return null;
   const ordered=pageTables.slice().sort((a,b)=>(a.nodeIndex??0)-(b.nodeIndex??0));
   const firstIndex=ordered[0].nodeIndex,lastIndex=ordered.at(-1).nodeIndex;
@@ -81,6 +183,21 @@ const fragmentedTableRepair = (source,pageTables,records) => {
   const streams=Array.from({length:source.columns},(_,col)=>source.cells.filter(c=>c.col===col).sort((a,b)=>a.row-b.row).flatMap(c=>tokens(c.text).map(word=>({word,row:c.row}))));
   const items=fragments.flatMap((fragment,fragmentIndex)=>rawTokens(fragment.text).map(part=>({...part,col:fragment.col,fragmentIndex})));
   if(!items.length||items.some(item=>item.col!==null&&(item.col<0||item.col>=source.columns)))return null;
+  const finish=cellText=>{
+    const rows=Array.from({length:source.rows},(_,row)=>Array.from({length:source.columns},(_,col)=>{
+      const sourceCell=source.cells.find(c=>c.row===row&&c.col===col);
+      return {tag:row===0?'th':'td',text:sourceCasedText(cellText[row][col].trim(),sourceCell?.text||'')};
+    }));
+    if(rows.some((row,r)=>row.some((cell,col)=>compact(cell.text)!==compact(source.cells.find(c=>c.row===r&&c.col===col)?.text||''))))return null;
+    const headerKey=rows[0].map(cell=>compact(cell.text)).join('|');
+    const removedRows=[];
+    const outputRows=rows.filter((row,index)=>{
+      const repeated=index>0&&row.map(cell=>compact(cell.text)).join('|')===headerKey;
+      if(repeated)removedRows.push(row.map(cell=>cell.text).join(''));
+      return !repeated;
+    }).map((row,index)=>index?row.map(cell=>({...cell,tag:'td'})):row);
+    return {kind:'table_fragments',selector:ordered[0].selector,remove:fragments.map(f=>({selector:f.selector,text:f.text})),tables:ordered.map(t=>t.selector),rows:outputRows,removedText:removedRows.join('')};
+  };
   const memo=new Map();
   const solve=(at,positions)=>{
     const key=at+'|'+positions.join(',');if(memo.has(key))return memo.get(key);
@@ -93,16 +210,38 @@ const fragmentedTableRepair = (source,pageTables,records) => {
     }
     memo.set(key,solutions);return solutions;
   };
-  const solutions=solve(0,streams.map(()=>0));if(solutions.length!==1)return null;
-  const positions=streams.map(()=>0),cellText=Array.from({length:source.rows},()=>Array(source.columns).fill('')),lastFragment=Array.from({length:source.rows},()=>Array(source.columns).fill(-1));
-  for(let i=0;i<items.length;i++){
-    const col=solutions[0][i],entry=streams[col][positions[col]++],item=items[i],current=cellText[entry.row][col];
-    if(current&&lastFragment[entry.row][col]!==item.fragmentIndex&&!/\s$/u.test(current)&&!/^\s/u.test(item.slice))cellText[entry.row][col]+=' ';
-    cellText[entry.row][col]+=item.slice;lastFragment[entry.row][col]=item.fragmentIndex;
+  const solutions=solve(0,streams.map(()=>0));
+  if(solutions.length===1){
+    const positions=streams.map(()=>0),cellText=Array.from({length:source.rows},()=>Array(source.columns).fill('')),lastFragment=Array.from({length:source.rows},()=>Array(source.columns).fill(-1));
+    for(let i=0;i<items.length;i++){
+      const col=solutions[0][i],entry=streams[col][positions[col]++],item=items[i],current=cellText[entry.row][col];
+      if(current&&lastFragment[entry.row][col]!==item.fragmentIndex&&!/\s$/u.test(current)&&!/^\s/u.test(item.slice))cellText[entry.row][col]+=' ';
+      cellText[entry.row][col]+=item.slice;lastFragment[entry.row][col]=item.fragmentIndex;
+    }
+    const repaired=finish(cellText);if(repaired)return repaired;
   }
-  const rows=Array.from({length:source.rows},(_,row)=>Array.from({length:source.columns},(_,col)=>({tag:row===0?'th':'td',text:cellText[row][col].trim()})));
-  if(rows.some((row,r)=>row.some((cell,col)=>compact(cell.text)!==compact(source.cells.find(c=>c.row===r&&c.col===col)?.text||''))))return null;
-  return {kind:'table_fragments',selector:ordered[0].selector,remove:fragments.map(f=>({selector:f.selector,text:f.text})),tables:ordered.map(t=>t.selector),rows};
+  const sourceWordCounts=new Map(),itemWordCounts=new Map();
+  for(const cell of source.cells)for(const word of tokens(cell.text))sourceWordCounts.set(word,(sourceWordCounts.get(word)||0)+1);
+  for(const item of items)itemWordCounts.set(item.word,(itemWordCounts.get(item.word)||0)+1);
+  if(sourceWordCounts.size!==itemWordCounts.size||[...sourceWordCounts].some(([word,count])=>itemWordCounts.get(word)!==count))return null;
+  const used=Array(items.length).fill(false),cellText=Array.from({length:source.rows},()=>Array(source.columns).fill('')),lastFragment=Array.from({length:source.rows},()=>Array(source.columns).fill(-1));
+  for(const cell of source.cells.slice().sort((a,b)=>a.row-b.row||a.col-b.col)){
+    const wanted=tokens(cell.text);let start=0;
+    for(const word of wanted){
+      let found=-1;
+      for(let i=start;i<items.length;i++)if(!used[i]&&items[i].word===word){found=i;break;}
+      if(found<0)for(let i=0;i<items.length;i++)if(!used[i]&&items[i].word===word){found=i;break;}
+      if(found<0)break;
+      used[found]=true;start=found+1;
+      const item=items[found],current=cellText[cell.row][cell.col];
+      if(current&&lastFragment[cell.row][cell.col]!==item.fragmentIndex&&!/\s$/u.test(current)&&!/^\s/u.test(item.slice))cellText[cell.row][cell.col]+=' ';
+      cellText[cell.row][cell.col]+=item.slice;lastFragment[cell.row][cell.col]=item.fragmentIndex;
+    }
+  }
+  if(!used.some(value=>!value)){const repaired=finish(cellText);if(repaired)return repaired;}
+  const canonicalText=Array.from({length:source.rows},()=>Array(source.columns).fill(''));
+  for(const cell of source.cells)canonicalText[cell.row][cell.col]=cell.text;
+  return finish(canonicalText);
 };
 
 export function validateTableEvidence(tables) {
@@ -132,7 +271,8 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
   const findings=[],actions=[],matches=[];
   const tables=document.records.filter(r=>r.tag==='table');
   const matched=new Set();
-  for (const source of profile) {
+  const logicalProfile=sourceTableContinuations(profile);
+  for (const source of logicalProfile) {
     if(source.unmappedTranslation){findings.push(issue(language,'translated_table_unmapped','PDF page '+source.page,'Table has no unique translated counterpart; source styling cannot be certified.'));continue;}
     const candidates=tables.filter(t=>(!t.page||Number(t.page)===source.page)).map(t=>tableCandidate(source,t)).filter(Boolean);
     if(candidates.length!==1){
@@ -149,6 +289,8 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
     const candidate=candidates[0],table=candidate.table,actualCells=candidate.cells;
     if(matched.has(table.selector)){findings.push(issue(language,'source_table_ambiguous',table.selector,'Multiple source tables map to this HTML table.'));continue;}
     matched.add(table.selector);matches.push({source,table});
+    const caseRepair=tableTextCaseRepair(source,table);
+    if(caseRepair){findings.push(issue(language,'source_table_text_case_difference',table.selector,'Table text tokens match the PDF but word casing differs after converter repair; source casing provides a deterministic correction.',{page:source.page}));actions.push(caseRepair);}
     const tableWidth=table.bounds.right-table.bounds.left, scale=pageScale(table,source.pageWidthPt);
     let differs=false;
     const cellActions=[];
@@ -185,7 +327,13 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
     if(candidate.gridRepair)findings.push(issue(language,'source_table_grid_difference',table.selector,'Empty converter spacer cells split the source table into a false grid; exact ordered source rows provide a deterministic repair.',{page:source.page}));
     if(differs||candidate.gridRepair){actions.push({kind:'presentation',selector:table.selector,properties:{'table-layout':'fixed','border-collapse':'collapse',width:'100%'}},...cellActions);if(candidate.gridRepair)actions.push(candidate.gridRepair);}
   }
-  for(const table of tables)if(!matched.has(table.selector))findings.push(issue(language,'html_table_unmapped',table.selector,'HTML table has no certified source grid; unsupported or ambiguous tables require a native handler.',htmlCoveredBySourceTables(table,profile)?{severity:'warning',coverage:'HTML table text is covered by source table evidence or generated contents structure'}:{}));
+  const continuations=continuationActions(tables, matched, language);
+  findings.push(...continuations.findings);actions.push(...continuations.actions);
+  for(const table of tables)if(!matched.has(table.selector)){
+    const readable=readableColumnAction(table);
+    if(readable)actions.push(readable);
+    findings.push(issue(language,'html_table_unmapped',table.selector,'HTML table has no certified source grid; unsupported or ambiguous tables require a native handler.',htmlCoveredBySourceTables(table,profile)?{severity:'warning',coverage:'HTML table text is covered by source table evidence or generated contents structure'}:{}));
+  }
   // A collision invalidates all repair actions: do not let source iteration
   // order select which duplicate table wins.
   if(findings.some(f=>f.category==='source_table_ambiguous'))return {findings,actions:[],matches:[]};

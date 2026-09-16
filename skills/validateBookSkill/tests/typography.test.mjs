@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {pointsToCssPixels,sourceTypographyProfile,compareTypography,typographyActions} from '../src/typography.mjs';
+import {pointsToCssPixels,sourceTypographyProfile,compareTypography,typographyActions,normalizePdfFontFamilies,sourceFontSupport} from '../src/typography.mjs';
 import {assertReaderStyleIsolation,frameScale} from '../src/reader-presentation.mjs';
 import {checkDisplay, compareStructure, compareEnglish} from '../src/layout-checks.mjs';
 const text='A final address appeared: EQUATORIAL CONTINUITY ARCHIVE, NAIROBI. ACCESS TRUSTEE: NURU OKAFOR.';
@@ -104,6 +104,54 @@ test('a paragraph that continues across PDF pages still maps as one HTML paragra
   assert.equal(compared.findings.length,0);
   const actions=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts});
   assert.equal(actions.find(a=>a.selector==='#passage').properties['font-family'],fonts.ebgaramond);
+});
+
+test('PDF family normalization groups regular italic bold and bolditalic faces',()=>{
+  const raw=[
+    {source_name:'AAAAAA+EBGaramond-Regular',css_family:'pdf-font-regular',href:'regular.ttf',weight:400,style:'normal'},
+    {source_name:'BAAAAA+EBGaramond-Italic',css_family:'pdf-font-italic',href:'italic.ttf',weight:400,style:'italic'},
+    {source_name:'CAAAAA+EBGaramond-Bold',css_family:'pdf-font-bold',href:'bold.ttf',weight:700,style:'normal'},
+    {source_name:'DAAAAA+EBGaramond-BoldItalic',css_family:'pdf-font-bolditalic',href:'bolditalic.ttf',weight:700,style:'italic'}
+  ];
+  const normalized=normalizePdfFontFamilies(raw);
+  assert.deepEqual([...new Set(normalized.map(font=>font.css_family))],['pdf-font-regular']);
+  const support=sourceFontSupport(normalized);
+  assert.equal(support.ebgaramond.hasNormal400,true);
+  assert.deepEqual(support.ebgaramond.weights.sort(),[400,700]);
+  assert.deepEqual(support.ebgaramond.styles.sort(),['italic','normal']);
+  const source={...profile,pages:[{page:1,lines:[{text,top:100,font:{sizePt:11,family:'AAAAAA+EBGaramond-Regular',color:'#000000'}}]}]};
+  const target=doc(11*4/3,15.5*4/3);
+  target.records[0].font.family='"pdf-font-bolditalic", Georgia, serif';
+  target.records[0].font.size=String(11*4/3);
+  target.records[0].style.lineHeight=String(15.5*4/3);
+  target.records[0].style.marginBottom=0;
+  const sourceFontMap={ebgaramond:'"pdf-font-regular", Georgia, serif'};
+  const compared=compareTypography(source,target,'en',{sourceFontMap});
+  const action=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap,sourceFontWeights:{ebgaramond:[400,700]},sourceFontStyles:{ebgaramond:['normal','italic']},sourceFontFaces:support}).find(a=>a.selector==='#passage');
+  assert.equal(action.properties['font-family'],sourceFontMap.ebgaramond);
+  assert.equal(action.properties['font-weight'],'400');
+  assert.equal(action.properties['font-style'],'normal');
+});
+
+test('partial bold source phrases do not make the whole paragraph bold',()=>{
+  const paragraph='Elites are groups and persons with disproportionate influence over capital, infrastructure, knowledge, institutions, or symbols. They arise in every complex society, including communities that officially deny having them.';
+  const source={...profile,pages:[{page:10,height:648,lines:[{text:paragraph,top:100,font:{sizePt:11,family:'AAAAAA+EBGaramond-Regular',color:'#000000'},bold:true,boldText:'Elites'}]}]};
+  const target=doc(11*4/3,15.5*4/3);
+  target.records[0].text=paragraph;
+  target.records[0].page='10';
+  target.records[0].font.size=String(11*4/3);
+  target.records[0].font.family='"pdf-font-9e82528ffc0c", Georgia, serif';
+  target.records[0].font.weight='700';
+  target.records[0].style.lineHeight=String(15.5*4/3);
+  target.records[0].style.marginBottom=0;
+  target.records[0].style.color='rgb(0, 0, 0)';
+  const fonts={ebgaramond:'"pdf-font-9e82528ffc0c", Georgia, serif'};
+  const compared=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert.equal(compared.mappings[0].sourceBold,false);
+  assert(compared.mappings[0].sourceBoldCoverage < .1);
+  const action=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts,sourceFontWeights:{ebgaramond:[400,700]},sourceFontStyles:{ebgaramond:['normal']}}).find(a=>a.selector==='#passage');
+  assert.equal(action.properties['font-weight'],'400');
+  assert.equal(action.properties['font-style'],'normal');
 });
 
 test('running headers and printed folios do not split a cross-page paragraph match',()=>{

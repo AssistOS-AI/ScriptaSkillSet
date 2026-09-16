@@ -43,7 +43,7 @@ export function inspectLayout() {
       const cs = getComputedStyle(e), box = e.getBoundingClientRect();
       return /hidden|clip/.test(cs.overflowX) && textRects.some(v => v.left < box.left - 2 || v.right > box.right + 2) || /hidden|clip/.test(cs.overflowY) && textRects.some(v => v.top < box.top - 2 || v.bottom > box.bottom + 2);
     });
-    records.push({ selector: selector(n), nodeIndex: index.get(n), id: n.id || null, sourceId: n.getAttribute('data-unit-id') || n.getAttribute('data-source-id'), chapter, tag: n.tagName.toLowerCase(), text, classes: n.className || '', page: n.closest('[data-source-page]')?.getAttribute('data-source-page') || null,
+    records.push({ selector: selector(n), nodeIndex: index.get(n), id: n.id || null, sourceId: n.getAttribute('data-unit-id') || n.getAttribute('data-source-id'), chapter, tag: n.tagName.toLowerCase(), text, classes: n.className || '', page: n.closest('[data-source-page]')?.getAttribute('data-source-page') || n.closest('[data-reader-page]')?.getAttribute('data-reader-page') || null,
       hidden: Boolean(text && (s.display === 'none' || s.visibility !== 'visible' || [...function*(){for(let e=n;e;e=e.parentElement)yield e;}()].some(e=>Number(getComputedStyle(e).opacity)===0) || !textRects.length)), clipped,
       outside: (r.left < -2 || r.right > innerWidth + 2) && ![...function*(){for(let e=n;e;e=e.parentElement)yield e;}()].some(e=>{const box=e.getBoundingClientRect(),ox=getComputedStyle(e).overflowX;return /auto|scroll/.test(ox)&&box.right<=innerWidth+2&&box.left>=-2;}), font: { family: s.fontFamily, size: s.fontSize, weight: s.fontWeight, style: s.fontStyle },
       bounds: {left:r.left,right:r.right,top:r.top,bottom:r.bottom}, ancestors:[...function*(){for(let e=n.parentElement;e;e=e.parentElement)yield index.get(e);}()],
@@ -222,7 +222,7 @@ export function compareStructure(english, target, language) {
   for (const r of english.records) {
     const k = key(r); if (!k) continue;
     const t = map.get(k);
-    if (!t) { findings.push(issue(language, 'missing_structural_anchor', k, `English ${r.tag} has no unique target counterpart. The local checker cannot create translated text.`, {})); continue; }
+    if (!t) { findings.push(issue(language, 'missing_structural_anchor', k, `English ${r.tag} has no unique translated counterpart. The translation may be missing a paragraph/block or may have lost its structural anchor; text is not invented automatically.`, {})); continue; }
     matches.push({ source: r.selector, target: t.selector, key: k });
     if (r.tag !== t.tag) findings.push(issue(language, 'structural_tag', t.selector, `${t.tag} differs from English ${r.tag}.`, { repair: { kind: 'tag', selector: t.selector, expectedTag: t.tag, tag: r.tag, sourceSelector: r.selector } }));
     if (r.rows && JSON.stringify(r.rows) !== JSON.stringify(t.rows)) {
@@ -235,10 +235,10 @@ export function compareStructure(english, target, language) {
   }
   const signature = d => d.records.filter(r => r.tag !== 'img').map(r => /^h\d$/.test(r.tag) ? 'heading' : r.tag);
   const a = signature(english), b = signature(target);
-  if (JSON.stringify(a) !== JSON.stringify(b)) findings.push(issue(language, 'block_sequence_difference', 'document', 'Paragraph/heading/table/list sequence differs. Independently paginated translations are not rewritten to the English sequence.', { english: a, translation: b, severity: 'warning' }));
+  if (JSON.stringify(a) !== JSON.stringify(b)) findings.push(issue(language, 'block_sequence_difference', 'document', 'Paragraph/heading/table/list sequence differs from the English canonical layout. This can indicate missing translated paragraphs, extra converter fragments, or a broken contents/table structure; text is preserved and the issue remains explicit.', { english: a, translation: b }));
   const images = d => d.records.filter(r => r.tag === 'img').length;
   if (images(english) !== images(target)) findings.push(issue(language, 'image_count_difference', 'document', `${images(english)} English images; ${images(target)} translated images.`));
-  return { findings, matches, limitation: 'Structural comparison only. Matching sequences do not prove translation meaning or detect a substituted paragraph of the same shape.' };
+  return { findings, matches, limitation: 'Translations must preserve the English visual structure and styles while keeping their own text. Matching sequences do not prove translation meaning or detect a substituted paragraph of the same shape.' };
 }
 
 export function comparePdfFonts(inventory, rendered, sourceFonts = []) {

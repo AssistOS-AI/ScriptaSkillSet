@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {checkDisplayPages, displayPageProfiles, displayRowsCentered} from '../src/display-pages.mjs';
+import {checkDisplayPages, displayPageProfiles, displayRowsCentered, isContentsDisplayPage} from '../src/display-pages.mjs';
 
 const profile={page:2,groups:[{size:26,leading:40,gapBefore:0,bold:true,italic:false,lines:[{}, {}, {}]},{size:15,leading:23,gapBefore:10,bold:false,italic:false,lines:[{},{}]}]};
 const record=(g,i)=>({page:'2',displayGroup:String(i),displayLines:g.lines.length,font:{size:String(g.size*96/72),weight:g.bold?'700':'400',style:g.italic?'italic':'normal'},style:{lineHeight:String(g.leading*96/72),textAlign:'center',marginTop:g.gapBefore*96/72}});
@@ -19,6 +19,11 @@ test('centered title pages survive one off-axis line',()=>{
 
 test('matching HTML delivery modes cannot hide merged source display groups',()=>{
   assert.equal(checkDisplayPages([profile],[{width:1440,records:[]}])[0].page,2);
+});
+test('contents pages are routed to the contents handler, not display pages',()=>{
+ assert.equal(isContentsDisplayPage([{text:'CONTENTS'},{text:'Chapter 1 · First chapter'}]),true);
+ assert.equal(isContentsDisplayPage([{text:'Table of Contents'},{text:'Chapter 1 · First chapter'}]),true);
+ assert.equal(isContentsDisplayPage([{text:'PREFACE'},{text:'Chapter 1 · First chapter'}]),false);
 });
 test('source display checks enforce size, emphasis, spacing and line grouping at each viewport',()=>{
   const records=profile.groups.map(record);
@@ -100,4 +105,31 @@ test('display page repair restores mismatched source text from PDF groups', {ski
  assert(changes.some(change=>change.kind==='source_display_text_restoration'));
  assert.equal(await browser.evaluate('document.body.textContent.includes("ARTIFICIAL")'),true);
  assert.equal(await browser.evaluate('document.body.textContent.includes("WRONG BRAND")'),false);
+});
+
+test('display page repair may flatten inline links when source text matches', {skip:!process.env.VALIDATEBOOK_INTEGRATION}, async t=>{
+ const directory=await fs.mkdtemp(path.join(os.tmpdir(),'display-link-'));
+ t.after(()=>fs.rm(directory,{recursive:true,force:true}));
+ const file=path.join(directory,'index.html');
+ await fs.writeFile(file,'<html><body data-validatebook-root><section class="pdf-source-page" data-reader-page="2" data-source-page="2"><h2 id="page_2">ARTIFICIAL IMPOSSIBILITY</h2><p>How Finance, Institutions, Biology, and Culture Make Feasible Futures Unbuildable</p><p>AN OUTFINITIST MAP FOR SCIENCE FICTION, PUBLIC DEBATE, AND THE AGE OF SCALABLE INTELLIGENCE</p><p><a href="https://example.test">ENGLISH EDITION | AUGUST 2026</a></p></section></body></html>');
+ const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+ await navigate(browser,file);
+ const profiles=await browser.evaluate(`(${displayPageProfiles.toString()})(${JSON.stringify(titleXml)},${JSON.stringify({horizontalRules:[]})})`);
+ const changes=await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(profiles)},${JSON.stringify({inter:'Arial, sans-serif',ebgaramond:'Georgia, serif'})},23.0144)`);
+ assert(changes.some(change=>change.kind==='source_display_links_flattened'));
+ assert.equal(await browser.evaluate('document.querySelector("a")'),null);
+ assert.equal(await browser.evaluate('document.body.textContent.includes("ENGLISH EDITION | AUGUST 2026")'),true);
+});
+
+test('display page repair reports structurally mapped pages without aborting', {skip:!process.env.VALIDATEBOOK_INTEGRATION}, async t=>{
+ const directory=await fs.mkdtemp(path.join(os.tmpdir(),'display-structural-'));
+ t.after(()=>fs.rm(directory,{recursive:true,force:true}));
+ const file=path.join(directory,'index.html');
+ await fs.writeFile(file,'<html><body data-validatebook-root><section class="pdf-source-page" data-reader-page="2" data-source-page="2"><h2 id="page_2">ARTIFICIAL IMPOSSIBILITY</h2><figure id="cover-image"><img src="cover.png" alt=""></figure><p>ENGLISH EDITION | AUGUST 2026</p></section></body></html>');
+ const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+ await navigate(browser,file);
+ const profiles=await browser.evaluate(`(${displayPageProfiles.toString()})(${JSON.stringify(titleXml)},${JSON.stringify({horizontalRules:[]})})`);
+ const changes=await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(profiles)},${JSON.stringify({inter:'Arial, sans-serif',ebgaramond:'Georgia, serif'})},23.0144)`);
+ assert.deepEqual(changes.filter(change=>change.kind==='source_display_page_unrepaired').map(change=>change.page),[2]);
+ assert.equal(await browser.evaluate('document.querySelector("figure#cover-image img") !== null'),true);
 });

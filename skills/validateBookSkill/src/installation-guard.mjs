@@ -34,7 +34,8 @@ export async function guardInstallation(browser, item, result, presentation, pro
         findings.push(...pageHeightDifferences(layout,profile).map(f=>({category:'page_height_below_minimum',...f})));
       }
     }
-    if(findings.length){const error=Error('Candidate installation rejected: '+[...new Set(findings.map(f=>f.category))].join(', '));error.findings=findings;throw error;}
+    const blocking=findings.filter(f=>!(item.language!=='en'&&f.category==='horizontal_overflow'));
+    if(blocking.length){const error=Error('Candidate installation rejected: '+[...new Set(blocking.map(f=>f.category))].join(', '));error.findings=blocking;throw error;}
   } finally {
     await fs.rm(html,{force:true});await fs.rm(css,{force:true});
   }

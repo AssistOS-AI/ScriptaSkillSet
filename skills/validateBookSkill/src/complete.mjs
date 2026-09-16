@@ -9,11 +9,18 @@ export async function resetPreviousResults(root, ownLock) {
   const directories=['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'].map(n=>path.join(root,n));
   const ownDirectory=ownLock&&path.dirname(ownLock);
   if(ownDirectory&&!directories.includes(ownDirectory))directories.push(ownDirectory);
+  const staleLock=async file=>{
+    const stat=await fs.stat(file).catch(()=>null);
+    return stat&&Date.now()-stat.mtimeMs>=30000;
+  };
   async function inspect(directory) {
     for(const entry of await fs.readdir(directory,{withFileTypes:true}).catch(e=>{if(e.code==='ENOENT')return [];throw e;})) {
       const file=path.join(directory,entry.name);
       if(entry.isDirectory())await inspect(file);
-      else if(entry.name.endsWith('.lock')&&file!==ownLock)throw Error('Previous results are locked: '+file);
+      else if(entry.name.endsWith('.lock')&&file!==ownLock){
+        if(await staleLock(file))await fs.unlink(file);
+        else throw Error('Previous results are locked: '+file);
+      }
     }
   }
   for(const directory of directories)await inspect(directory);
@@ -91,6 +98,7 @@ export async function runCorrections(runPass, onPass = async () => {}) {
     passes.push(pass);
     await onPass(pass, passes);
     if (!pass.result.findings.some(f=>f.severity==='error')) return { passes, result:pass.result };
+    if (passes.length >= 6) return { passes, result:pass.result, exhausted:true };
     const state = installedState(pass.inputs);
     if (seen.has(state)) return { passes, result:pass.result, exhausted:true };
     seen.add(state);
@@ -148,7 +156,15 @@ export async function complete(root,options={}) {
   const directory=path.resolve(options.jobDir||path.join(selection.root,'.validatebook-layout'));
   await fs.mkdir(directory,{recursive:true});
   const lockFile=path.join(directory,'transaction.lock');
-  const lock=await fs.open(lockFile,'wx');
+  let lock;
+  try{lock=await fs.open(lockFile,'wx');}
+  catch(error){
+    if(error.code!=='EEXIST')throw error;
+    const stat=await fs.stat(lockFile).catch(()=>null);
+    if(!stat||Date.now()-stat.mtimeMs<30000)throw error;
+    await fs.unlink(lockFile);
+    lock=await fs.open(lockFile,'wx');
+  }
   try{
     await resetPreviousResults(selection.root,lockFile);
     const transaction=await fs.mkdtemp(path.join(directory,'transaction-'));

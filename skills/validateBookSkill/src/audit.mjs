@@ -5,7 +5,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { openBrowser } from './browser.mjs';
 import { guardInstallation } from './installation-guard.mjs';
-import {translationStyles,translatedStyleCheck} from './translation-style.mjs';
+import {translationStyles,translatedStyleCheck,canonicalTranslationActions} from './translation-style.mjs';
 import {compareImageStyles} from './images.mjs';
 import {restorePublisherIdentity} from './source-identity.mjs';
 import { hash, fileHash, readJson, writeJson, exists, verifyInputs, inside } from './storage.mjs';
@@ -16,7 +16,7 @@ import { recoverLists } from './lists.mjs';
 import { compareTables, translatedTables } from './tables.mjs';
 import { sourceDecorations, sourceFonts, compareDecorations, decorationActions, translatedDecorations } from './decorations.mjs';
 
-import {parsePdfTypography,sourceTypographyProfile,compareTypography,typographyActions} from './typography.mjs';
+import {parsePdfTypography,sourceTypographyProfile,compareTypography,typographyActions,normalizePdfFontFamilies,sourceFontSupport} from './typography.mjs';
 import {readerPresentation} from './reader-presentation.mjs';
 import {readerTypographyRepairs,readerGeometryCss} from './reader-repairs.mjs';
 import {tryCorrectionBatches} from './correction-batches.mjs';
@@ -157,7 +157,8 @@ export async function prepare(root, options = {}) {
     const pdfSha256=initialInputs.find(i=>i.file===selection.pdf).sha256;
     const decorations = await sourceDecorations(selection.pdf, pdfSha256, graphicsProvider);
     const fontDirectory=path.join(path.dirname(selection.documents[0].file),path.basename(selection.documents[0].file,'.html')+'.assets','fonts');
-    const sourceFontsList=options.autoCorrect?await sourceFonts(selection.pdf,pdfSha256,graphicsProvider,fontDirectory):[];
+    const sourceFontsList=options.autoCorrect?normalizePdfFontFamilies(await sourceFonts(selection.pdf,pdfSha256,graphicsProvider,fontDirectory)):[];
+    const sourceFontFaces=sourceFontSupport(sourceFontsList);
     const fontKey=name=>name.replace(/^[A-Z]{6}\+/,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman|mt)$/ig,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
     const sourceFontMap=Object.fromEntries(sourceFontsList.flatMap(font=>{
       const name=`${font.source_name} ${font.css_family}`.toLowerCase();
@@ -166,10 +167,13 @@ export async function prepare(root, options = {}) {
       return [[fontKey(font.source_name),stack],[font.source_name,stack]];
     }));
     const sourceFontWeights={};
+    const sourceFontStyles={};
     for(const font of sourceFontsList){
       const key=fontKey(font.source_name);
       if(!sourceFontWeights[key])sourceFontWeights[key]=[];
       if(!sourceFontWeights[key].includes(font.weight))sourceFontWeights[key].push(font.weight);
+      if(!sourceFontStyles[key])sourceFontStyles[key]=[];
+      if(!sourceFontStyles[key].includes(font.style))sourceFontStyles[key].push(font.style);
     }
     const sourceEvidence = { pages, decorations, fonts:sourceFontsList, fontInventory: fontInfo.stdout, imageInventory: imageInfo.stdout, wordAndLineBounds: boxes.stdout, typographyXml:typography.stdout };
     await writeJson(path.join(directory, 'source-evidence.json'), sourceEvidence);
@@ -250,10 +254,13 @@ export async function prepare(root, options = {}) {
           delete result.changes.at(-1).after.html;
           result.changes.push({kind:'source_page_presentation',margins:pagePresentation.margins,contents:contents.mapping,unmatched:contents.unmatched});
         }else{
-          const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
-          const blankPages=sourceBlankPages(pages,anchors);
-          const translatedPages=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:'translation',repaginateExisting:true})})`);
-          result.changes.push({kind:'translated_pagination',before:'translated page anchors in continuous text',after:{pages:translatedPages.pages,blankPages:translatedPages.blankPages,origin:translatedPages.origin,textPreserved:translatedPages.textPreserved}});
+          const alreadyPaginated=await browser.evaluate('!!document.querySelector(".pdf-source-page[data-reader-page]")');
+          if(!alreadyPaginated){
+            const anchors=await browser.evaluate('Array.from(document.querySelectorAll("[id]"),n=>/^page_\\d+$/.test(n.id)?Number(n.id.slice(5)):null).filter(Boolean)');
+            const blankPages=sourceBlankPages(pages,anchors);
+            const translatedPages=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages,origin:'translation',repaginateExisting:true})})`);
+            result.changes.push({kind:'translated_pagination',before:'translated page anchors in continuous text',after:{pages:translatedPages.pages,blankPages:translatedPages.blankPages,origin:translatedPages.origin,textPreserved:translatedPages.textPreserved}});
+          }
           if(contents.changes.length||contents.unmatched.length)result.changes.push({kind:'translated_contents_presentation',contents:contents.mapping,unmatched:contents.unmatched});
         }
       }
@@ -335,6 +342,10 @@ export async function prepare(root, options = {}) {
       if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const listCheck=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);initialFindings.push(...listCheck.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure differs from HTML.',f)));}
       const beforeDisplay = before.layouts.flatMap(l => checkDisplay(l, item.language));
       const translatedStyles=english?translationStyles(english,sourceType,sourceFontMap):null;
+      const canonicalTranslation=english?canonicalTranslationActions(english,before,item.language,presentation.defaultSizePx*(presentation.scale||1)):null;
+      const translationPresentationActions=[
+        ...(canonicalTranslation?.actions||[])
+      ];
       const repairShells=beforeDisplay.some(f=>['page_spacing_ownership_conflict','reader_root_incomplete'].includes(f.category));
       const structure = english ? compareStructure(english, before, item.language) : null;
       if(english)initialFindings.push(...compareImageStyles(english,before,item.language).findings);
@@ -352,9 +363,9 @@ export async function prepare(root, options = {}) {
         if(fidelityMarker)actions.push({kind:'source_fidelity'});
         if(!english||!unresolved.some(f=>f.language==='en'&&f.severity==='error'))actions.push(...tableComparison.actions);
         if(borderComparison)actions.push(...decorationActions(borderComparison));
-        actions.unshift(...typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',masterTypography:english?.typography||typeComparison,sourceFontMap,sourceFontWeights}));
-        if(translatedStyles)actions.push(...translatedStyleCheck(before,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).actions.map(action=>({...action,safeTranslationStyle:true})));
-        if(presentation.articleContract){
+        if(item.language==='en')actions.unshift(...typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',masterTypography:typeComparison,sourceFontMap,sourceFontWeights,sourceFontStyles,sourceFontFaces}));
+        actions.push(...translationPresentationActions);
+        if(item.language==='en'&&presentation.articleContract){
           const imported=await measure(browser,item.file,{importedArticle:presentation.articleContract});
           presentation.geometryCss=await browser.evaluate(`(${readerGeometryCss.toString()})(${JSON.stringify(await fs.readFile(fileURLToPath(presentation.articleContract.readerCss),'utf8'))})`);
           actions.unshift(...readerTypographyRepairs(before,imported,presentation.defaultSizePx*(presentation.scale||1)));
@@ -368,7 +379,14 @@ export async function prepare(root, options = {}) {
           actions.push({ kind: 'inherit_styles', sheets: inherited, bodyAttributes, safeTranslationStyle: true });
           for (const match of structure.matches) {
             const sourceBlock=english.records.find(r=>r.selector===match.source);
-            if(sourceBlock?.tag==='p')actions.push({kind:'presentation',selector:match.target,properties:{'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${parseFloat(sourceBlock.font.size)/presentation.defaultSizePx} * var(--validatebook-page-scale, 1))`,'line-height':String(parseFloat(sourceBlock.style.lineHeight)/parseFloat(sourceBlock.font.size))},safeTranslationStyle:true});
+            const sourceScale=Number(sourceBlock?.pageScale)>0?Number(sourceBlock.pageScale):1;
+            const sourceSize=parseFloat(sourceBlock?.font?.size)/sourceScale;
+            const sourceLeading=parseFloat(sourceBlock?.style?.lineHeight)/sourceScale;
+            if(sourceBlock?.tag==='p'&&Number.isFinite(sourceSize)&&sourceSize>0){
+              const properties={'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${sourceSize/presentation.defaultSizePx})`};
+              if(Number.isFinite(sourceLeading)&&sourceLeading>0)properties['line-height']=String(sourceLeading/sourceSize);
+              actions.push({kind:'presentation',selector:match.target,properties,safeTranslationStyle:true});
+            }
           }
         }
         // English presentation is the master. Propagate only when its local layout has no unresolved errors.
@@ -387,7 +405,11 @@ export async function prepare(root, options = {}) {
           actions.splice(0,actions.length,...split.batch);
         }
         const batches=[{name:'all',actions}];
-        if(item.language==='en')batches.push({name:'pagination',actions:[]},{name:'tables',actions:tableComparison.actions},{name:'typography',actions:typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',sourceFontMap,sourceFontWeights})},{name:'display',actions:[]},{name:'structure',actions:[]});
+        if(item.language==='en')batches.push({name:'pagination',actions:[]},{name:'tables',actions:tableComparison.actions},{name:'typography',actions:typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',sourceFontMap,sourceFontWeights,sourceFontStyles,sourceFontFaces})},{name:'display',actions:[]},{name:'structure',actions:[]});
+        else {
+          if(options.paginate&&pagePresentation)batches.push({name:'pagination',actions:[]});
+          if(translationPresentationActions.length)batches.push({name:'translation-presentation',actions:translationPresentationActions});
+        }
         const rejected=[];
         const accepted=await tryCorrectionBatches(batches,batch=>apply(item,batch.actions,presentation,repairShells,batch.name),async(batch,error)=>{
           await writeJson(path.join(directory,'rejected-candidate-'+item.language+'-'+batch.name+'.json'),{file:item.file,batch:batch.name,error:error.message,findings:error.findings||[]});
@@ -408,6 +430,7 @@ export async function prepare(root, options = {}) {
       const displayFindings=layouts=>item.language==='en'?checkDisplayPages(displayPages,layouts,sourceFontMap).map(f=>issue('en','source_display_page_difference','page '+f.page,f.detail,f)):[];
       const assets = await collectAssets(final); resourceInputs.push(...assets.inputs);
       let findings = [...listFindings,...final.typography.findings, ...final.layouts.flatMap(l => checkDisplay(l, item.language)), ...assets.findings];
+      if(canonicalTranslation)findings.push(...canonicalTranslation.findings);
       for(const layout of final.layouts.slice(1))findings.push(...compareTypography(sourceType,{...layout,platformFonts:final.platformFonts},item.language,{sourceFontMap}).findings);
       if(translatedStyles)findings.push(...final.layouts.flatMap(layout=>translatedStyleCheck(layout,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).findings));
       findings.push(...final.layouts.flatMap(l=>compareTables(tableProfile,{...l,platformFonts:final.platformFonts},tableOptions).findings));

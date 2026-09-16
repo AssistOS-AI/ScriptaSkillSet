@@ -7,7 +7,16 @@ export function displayRowsCentered(rows, width) {
   return near >= Math.max(2, rows.length - 1);
 }
 
+export function isContentsDisplayPage(rows) {
+  const firstText = rows[0]?.text?.replace(/\s+/g, ' ').trim().toLowerCase();
+  return firstText === 'contents' || firstText === 'table of contents';
+}
+
 export function displayPageProfiles(xml, decorations = {}) {
+  const isContentsPage = rows => {
+    const firstText = rows[0]?.text?.replace(/\s+/g, ' ').trim().toLowerCase();
+    return firstText === 'contents' || firstText === 'table of contents';
+  };
   const centeredRows = (rows, width) => {
     const mid = width / 2;
     const left = Math.min(...rows.map(r => r.left));
@@ -28,6 +37,7 @@ export function displayPageProfiles(xml, decorations = {}) {
       left: Number(n.getAttribute('left')), width: Number(n.getAttribute('width')), height: Number(n.getAttribute('height')),
       ...fonts.get(n.getAttribute('font')), bold: !!n.querySelector('b'), italic: !!n.querySelector('i')
     })).filter(r => r.text && r.top >= height * .06 && r.top < height * .9);
+    if (isContentsPage(rows)) continue;
     if (rows.length < 3 || rows.length > 14 || Math.max(...rows.map(r => r.size)) < 20) continue;
     const centered = centeredRows(rows, width);
     const left = Math.min(...rows.map(r => r.left)), right = Math.max(...rows.map(r => r.left + r.width));
@@ -71,17 +81,23 @@ export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
   };
   const changes = [];
   if(typeof fontMap==='string'&&new Set(profiles.flatMap(p=>p.groups.map(g=>key(g.family)))).size>1)throw Error('Mixed display fonts require a family map');
-  const plans = profiles.map(profile => {
+  const plans = profiles.flatMap(profile => {
     const page = document.querySelector(`.pdf-source-page[data-reader-page="${profile.page}"]`);
     if (!page) throw Error(`Display page ${profile.page} requires a source page container`);
-    if (page.querySelector('a,img,table,svg') || [...page.querySelectorAll('[id]')].some(n => n.id !== `page_${profile.page}`)) throw Error('Display page has content requiring structural mapping');
+    const structuralTags = ['img','table','svg'].filter(tag => page.querySelector(tag));
+    const structuralIds = [...page.querySelectorAll('[id]')].map(n => n.id).filter(id => id !== `page_${profile.page}`);
+    if (structuralTags.length || structuralIds.length) {
+      changes.push({kind:'source_display_page_unrepaired',page:profile.page,structuralTags,structuralIds});
+      return [];
+    }
     const sourceText=profile.groups.map(g => g.text).join(' ');
     const restoreText=compact(page.textContent) !== compact(sourceText);
+    const flattenedLinks=[...page.querySelectorAll('a[href]')].map(link=>({text:link.textContent,href:link.getAttribute('href')}));
     const families = profile.groups.map(g => resolveFamily(g.family));
     if (families.some(f => !f)) throw Error('Display page requires a verified source family for every group');
-    return {profile,page,families,restoreText};
+    return [{profile,page,families,restoreText,flattenedLinks}];
   });
-  for (const {profile,page,families,restoreText} of plans) {
+  for (const {profile,page,families,restoreText,flattenedLinks} of plans) {
     const before = page.innerHTML, original = page.textContent, fragment = document.createDocumentFragment();
     page.style.setProperty('container-type','inline-size');
     const maximum = Math.max(...profile.groups.map(g => g.size));
@@ -107,6 +123,7 @@ export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
     page.replaceChildren(fragment); page.setAttribute('data-source-display-page','');
     if (!restoreText && compact(original) !== compact(page.textContent)) throw Error('Display reconstruction changed source text');
     changes.push({kind:'source_display_page',page:profile.page,before,after:page.innerHTML,groups:profile.groups});
+    if(flattenedLinks.length)changes.push({kind:'source_display_links_flattened',page:profile.page,links:flattenedLinks});
     if(restoreText)changes.push({kind:'source_display_text_restoration',page:profile.page,before:original,after:page.textContent,source:'pdf_display_groups'});
   }
   return changes;

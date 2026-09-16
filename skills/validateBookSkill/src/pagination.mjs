@@ -20,10 +20,22 @@ export function paginateDocument({blankPages=[],origin='source',expectedPages=nu
     const trailing=[...root.childNodes].filter(n=>!(n.nodeType===Node.ELEMENT_NODE&&n.matches('.pdf-source-page')));
     root.replaceChildren(...nodes,...trailing);
   }
-  const markers=[...root.querySelectorAll('[id]')].filter(n=>/^page_\d+$/.test(n.id));
+  let markers=[...root.querySelectorAll('[id]')].filter(n=>/^page_\d+$/.test(n.id));
   if(!markers.length)throw Error('No page anchors; source boundary evidence is required');
-  const numbers=markers.map(n=>Number(n.id.slice(5)));
-  if(numbers[0]!==1||numbers.some((n,i)=>i&&n<=numbers[i-1]))throw Error('Page anchors must start at 1 and increase without duplicates');
+  let numbers=markers.map(n=>Number(n.id.slice(5)));
+  if(numbers[0]!==1||numbers.some((n,i)=>i&&n<=numbers[i-1])) {
+    const firstTargets=new Map();
+    markers.forEach((marker,index)=>{if(!firstTargets.has(marker.id))firstTargets.set(marker.id,'page_'+(index+1));});
+    const links=[...root.querySelectorAll('a[href^="#page_"],area[href^="#page_"]')].map(node=>({node,href:node.getAttribute('href')}));
+    markers.forEach((marker,index)=>{marker.id='validatebook-page-anchor-'+index;});
+    markers.forEach((marker,index)=>{marker.id='page_'+(index+1);});
+    for(const {node,href} of links){
+      const target=firstTargets.get(href.slice(1));
+      if(target)node.setAttribute('href','#'+target);
+    }
+    markers=[...root.querySelectorAll('[id]')].filter(n=>/^page_\d+$/.test(n.id));
+    numbers=markers.map(n=>Number(n.id.slice(5)));
+  }
   if(blankPages.some(n=>!Number.isInteger(n)||n<1||numbers.includes(n)))throw Error('Invalid or duplicate source-confirmed blank page');
   const all=[...numbers,...blankPages].sort((a,b)=>a-b);
   if(expectedPages&&(all.length!==expectedPages||all.some((n,i)=>n!==i+1)))throw Error('Source page coverage is incomplete');
@@ -151,22 +163,40 @@ export function sourcePagePresentation(xml) {
   const outline=[...doc.querySelectorAll('outline item')].map(item=>({label:item.childNodes[0]?.textContent?.trim()||item.textContent.trim(),destination:Number(item.getAttribute('page'))}));
   for(const page of doc.querySelectorAll('page')){
     const rows=[...page.querySelectorAll('text')];
-    const foundBefore=contents.length;
+    const pageNumber=Number(page.getAttribute('number'));
+    const linkedEntries=[];
     for(let i=0;i<rows.length;i++){
       const node=rows[i],a=node.querySelector('a');if(!a)continue;
       let value=node.textContent.trim();
       if(/\.{3,}$/.test(value)&&rows[i+1]?.querySelector('a')?.getAttribute('href')===a.getAttribute('href')&&/^\d+$/.test(rows[i+1].textContent.trim()))value+=' '+rows[i+1].textContent.trim();
       const match=value.match(/^(.*?)\.{3,}\s*(\d+)\s*$/);if(!match)continue;
-      contents.push({label:match[1].trim(),number:match[2],page:Number(page.getAttribute('number')),indent:Number(node.getAttribute('left'))-left,top:Number(node.getAttribute('top')),size:fonts.get(node.getAttribute('font')),destination:Number(a.getAttribute('href')?.match(/#(\d+)$/)?.[1])});
+      const href=a.getAttribute('href')||'';
+      const destination=Number(href.match(/#(\d+)$/)?.[1]);
+      linkedEntries.push({kind:'entry',label:match[1].trim(),number:match[2],page:pageNumber,indent:Number(node.getAttribute('left'))-left,top:Number(node.getAttribute('top')),size:fonts.get(node.getAttribute('font')),destination:Number.isFinite(destination)?destination:undefined});
     }
-    if(contents.length!==foundBefore||!rows.some(node=>/^contents\s*$/i.test(node.textContent.trim())))continue;
+    const hasContentsHeading=rows.some(node=>/^contents\s*$/i.test(node.textContent.trim()));
+    if(!hasContentsHeading){contents.push(...linkedEntries);continue;}
     const pageWidth=Number(page.getAttribute('width'));
+    const pageHeight=Number(page.getAttribute('height'));
     const ordered=rows.map(node=>({node,text:node.textContent.replace(/\s+/g,' ').trim(),top:Number(node.getAttribute('top')),left:Number(node.getAttribute('left')),size:fonts.get(node.getAttribute('font'))})).filter(row=>row.text).sort((a,b)=>a.top-b.top||a.left-b.left);
     const heading=ordered.find(row=>/^contents$/i.test(row.text));
     const noteRows=ordered.filter(row=>row.top>heading.top&&/^(?:page\s+numbers\s+refer|10\.$)/i.test(row.text));
     contentsNote=noteRows.map(row=>row.text).join(' ').replace(/\s+/g,' ').trim();
-    const numbers=ordered.filter(row=>/^\d+$/.test(row.text)&&row.left>pageWidth*.7&&row.top>heading.top+20&&row.top<Number(page.getAttribute('height'))*.9);
     const entries=[];
+    const pushEntry=(entry)=>{
+      if(entries.some(row=>compactExact(row.label)===compactExact(entry.label)&&row.number===entry.number))return;
+      entries.push(entry);
+    };
+    for(const row of ordered){
+      if(row.top<=heading.top+20||row.top>=pageHeight*.9)continue;
+      const match=row.text.match(/^(.*?)\.{3,}\s*(\d{1,4})\s*$/);
+      if(!match)continue;
+      const label=match[1].trim();
+      const destinations=outlineMatch(label);
+      if(destinations.length!==1)continue;
+      pushEntry({kind:'entry',label,number:match[2],page:pageNumber,indent:row.left-left,top:row.top,size:row.size,destination:destinations[0].destination});
+    }
+    const numbers=ordered.filter(row=>/^\d+$/.test(row.text)&&row.left>pageWidth*.7&&row.top>heading.top+20&&row.top<pageHeight*.9);
     for(let i=0;i<numbers.length;i++){
       const number=numbers[i];
       const nextTop=numbers[i+1]?.top??number.top+60;
@@ -175,16 +205,19 @@ export function sourcePagePresentation(xml) {
       const label=lines.map(row=>row.text).join(' ').replace(/\s+/g,' ').trim();
       const destinations=outlineMatch(label);
       if(destinations.length!==1)continue;
-      entries.push({kind:'entry',label,number:number.text,page:Number(page.getAttribute('number')),indent:lines[0].left-left,top:number.top,size:lines[0].size,lineAdvances:lines.slice(1).map((line,index)=>line.top-lines[index].top),destination:destinations[0].destination});
+      pushEntry({kind:'entry',label,number:number.text,page:pageNumber,indent:lines[0].left-left,top:number.top,size:lines[0].size,lineAdvances:lines.slice(1).map((line,index)=>line.top-lines[index].top),destination:destinations[0].destination});
     }
-    const parts=ordered.filter(row=>/^part\s+[ivxlcdm]+\s*:/i.test(row.text)).map(row=>({kind:'part',label:row.text,page:Number(page.getAttribute('number')),indent:row.left-left,top:row.top,size:row.size}));
-    contents.push(...parts,...entries);
-    if(!entries.length){
-      const contentRows=ordered.filter(row=>row.top>heading.top+20&&row.top<Number(page.getAttribute('height'))*.88&&!/^contents$/i.test(row.text)&&!/^part\s+[ivxlcdm]+\s*:/i.test(row.text)&&!/^page\s+numbers\s+refer/i.test(row.text)&&!runningMatterKey(row.text));
+    const parts=ordered.filter(row=>/^part\s+[ivxlcdm]+\s*:/i.test(row.text)).map(row=>({kind:'part',label:row.text,page:pageNumber,indent:row.left-left,top:row.top,size:row.size}));
+    if(entries.length){
+      contents.push(...parts,...entries);
+    }else if(linkedEntries.length){
+      contents.push(...linkedEntries);
+    }else{
+      const contentRows=ordered.filter(row=>row.top>heading.top+20&&row.top<pageHeight*.88&&!/^contents$/i.test(row.text)&&!/^part\s+[ivxlcdm]+\s*:/i.test(row.text)&&!/^page\s+numbers\s+refer/i.test(row.text)&&!runningMatterKey(row.text));
       for(const row of contentRows){
         const destinations=outlineMatch(row.text);
         if(destinations.length!==1)continue;
-        contents.push({kind:'entry',label:row.text,page:Number(page.getAttribute('number')),indent:row.left-left,top:row.top,size:row.size,destination:destinations[0].destination});
+        contents.push({kind:'entry',label:row.text,page:pageNumber,indent:row.left-left,top:row.top,size:row.size,destination:destinations[0].destination});
       }
     }
     contents.sort((a,b)=>a.page-b.page||a.top-b.top);
@@ -224,6 +257,7 @@ export function applySourceImagePresentation({width,margins,images=[]}) {
 // Preserve labels and links; page labels are generated presentation, never prose edits.
 export function applyContentsPresentation({profile,language='en',mapping=[]}) {
   const normalize=s=>s.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'');
+  const isContentsHeading=el=>/^(contents|cuprins|indice|índice|table des matières|inhalt)$/i.test(el?.textContent?.replace(/\s+/g,' ').trim()||'');
   const result=[],unmatched=[],changes=[];
   const sourceEntries=profile.contents||[];
   const levels=[...new Set(sourceEntries.map(r=>r.indent))].sort((a,b)=>a-b);
@@ -241,10 +275,10 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
     if(rows.length<3)return false;
     const before=[];let node=table.closest('.pdf-table-wrap')||table;
     for(let prev=node.previousElementSibling;prev&&before.length<6;prev=prev.previousElementSibling)before.push(prev);
-    if(before.some(el=>el.classList?.contains('source-toc')||/^(contents|indice|índice|table des matières|inhalt)$/i.test(el.textContent.replace(/\s+/g,' ').trim())))return true;
+    if(before.some(el=>el.classList?.contains('source-toc')||isContentsHeading(el)))return true;
     const page=table.closest('.pdf-source-page');
     const heading=page?.querySelector('h1,h2,h3,h4,h5,h6');
-    if(heading&&/^(contents|indice|índice|table des matières|inhalt)$/i.test(heading.textContent.replace(/\s+/g,' ').trim()))return true;
+    if(heading&&isContentsHeading(heading))return true;
     let previous=page?.previousElementSibling;
     for(let i=0;previous&&i<3;i++,previous=previous.previousElementSibling){
       if(previous.querySelector?.('.source-contents-heading,.source-toc'))return true;
@@ -305,14 +339,12 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
       if(converted.length)replaceTableWithList(table,converted,{sourceBacked:false});
     }
   }else{
-    for(const table of document.querySelectorAll('table.pdf-table,table.pdf-toc')){
-      if(!contentsContext(table))continue;
-      const converted=tableRows(table).map((row,index)=>({label:row.label,number:row.number,source:mapping[index]}));
-      if(converted.length)replaceTableWithList(table,converted,{sourceBacked:false});
-    }
+    // Translated contents must preserve translated labels and links. When the
+    // structure diverges from English, report it elsewhere instead of
+    // reconstructing entries from fragments and risking content corruption.
   }
   const repairExistingContentsBoundaries=()=>{
-    const headings=[...document.querySelectorAll('h1[id^="page_"],h2[id^="page_"],h3[id^="page_"],h4[id^="page_"],h5[id^="page_"],h6[id^="page_"]')].filter(h=>/^(contents|indice|índice|table des matières|inhalt)$/i.test(h.textContent.replace(/\s+/g,' ').trim()));
+    const headings=[...document.querySelectorAll('h1[id^="page_"],h2[id^="page_"],h3[id^="page_"],h4[id^="page_"],h5[id^="page_"],h6[id^="page_"]')].filter(isContentsHeading);
     for(const heading of headings){
       const start=Number(heading.id.slice(5));if(!Number.isInteger(start))continue;
       const lists=[];

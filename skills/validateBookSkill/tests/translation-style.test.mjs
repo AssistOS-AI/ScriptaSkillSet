@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {translationStyles,translatedStyleCheck} from '../src/translation-style.mjs';
+import {translationStyles,translatedStyleCheck,canonicalTranslationActions} from '../src/translation-style.mjs';
 const profile={bodyPt:12,bodyCssPx:16,leadingCssPx:24,pages:[{width:432}]};
 test('translated prose uses source role typography regardless of wording, length or page',()=>{
  const english={records:[{selector:'#en',tag:'p',classes:'prose',font:{weight:'400',style:'normal',size:'16px'},style:{lineHeight:'24px',textAlign:'left'}}],typography:{mappings:[{selector:'#en',fontSizePt:12,sourceFamilies:['Garamond'],paragraphGapCssPx:0}]}};
@@ -27,5 +27,15 @@ test('missing gap measurements do not split an otherwise identical source role',
  const record={...records[0],text:'Texte différent.',pageWidth:576,font:{size:'16px',family:'"Source Garamond", serif'},style:{lineHeight:'24px',marginBottom:0}};
  const result=translatedStyleCheck({records:[record]},styles,profile,'fr',18.56);
  assert.equal(result.findings.length,0);
- assert.equal(result.actions[0].properties['text-align'],undefined);
+ assert.equal(result.actions.length,0);
+});
+
+test('canonical translation actions copy English page role styling without changing text',()=>{
+ const master={records:[{selector:'#en-title',tag:'p',text:'TITLE',page:2,font:{family:'Garamond',size:'40px',weight:'700',style:'normal'},style:{lineHeight:'52px',textAlign:'center',color:'rgb(1, 2, 3)',marginBottom:0,marginTop:10}}]};
+ const target={records:[{selector:'#ro-title',tag:'h2',text:'TITLU TRADUS',page:2,font:{family:'Arial',size:'16px',weight:'400',style:'normal'},style:{lineHeight:'20px',textAlign:'left',color:'rgb(0, 0, 0)',marginBottom:0,marginTop:0}}]};
+ const result=canonicalTranslationActions(master,target,'ro',20);
+ assert.equal(result.actions[0].kind,'tag');
+ assert.equal(result.actions[1].properties['font-family'],'Garamond');
+ assert.equal(result.actions[1].properties['text-align'],'center');
+ assert.equal(target.records[0].text,'TITLU TRADUS');
 });

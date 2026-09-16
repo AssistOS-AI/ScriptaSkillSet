@@ -89,6 +89,53 @@ test('one malformed table absorbs an adjacent repeated header and split physical
   assert(repair.remove.some(fragment=>fragment.selector==='#page-header'));
 });
 
+test('source table with header word outside table reconstructs from exact PDF inventory',()=>{
+  const mkCell=(row,col,text)=>({row,col,rowspan:1,colspan:1,text,widthPt:80,background:row===0?'#193646':'#ffffff',borders:Object.fromEntries(['top','right','bottom','left'].map(side=>[side,'1.00pt solid #aabbcc'])),typography:{name:'Arial',family:'Arial',sizePt:9,color:row===0?'#ffffff':'#111111',weight:row===0?700:400,style:'normal',leadingPt:12,paddingPt:[3,4,3,4],indentPt:0,align:'left'}});
+  const rows=[['Domain','Coherence operation','Useful form','Perverse form'],['Mediation','Reframe accusations as a shared problem','Makes negotiation possible while preserving facts power and obligations','Creates fictional symmetry between abuse and the response to abuse'],['Education','One model for different examples','Declares the simplification and shows where it breaks','Turns the metaphor into a universal mechanism']];
+  const sourceTable={page:53,rows:3,columns:4,widthPt:320,pageWidthPt:432,topPt:193,bottomPt:300,cells:rows.flatMap((row,r)=>row.map((text,c)=>mkCell(r,c,text)))};
+  const table={tag:'table',selector:'#coherence',page:53,nodeIndex:20,rows:Array.from({length:6},()=>[{tag:'td'},{tag:'td'},{tag:'td'},{tag:'td'}]),cells:[
+    ['Domain','operation','Useful form Makes negotiation possible while','Perverse form Creates fictional'],
+    ['','Reframe accusations','','symmetry between'],
+    ['Mediation','','preserving facts,',''],
+    ['','as a shared problem','power, and obligations','abuse and the response to abuse'],
+    ['','One model for','Declares the simplification and','Turns the metaphor'],
+    ['Education','different examples','shows where it breaks','into a universal mechanism']
+  ].flatMap((row,r)=>row.map((text,c)=>({row:r,col:c,text,selector:`#h${r}_${c}`,nodeIndex:21+r*4+c})))};
+  const doc={width:1024,records:[{tag:'p',selector:'#caption',page:53,nodeIndex:19,text:'Coherence'},table,...table.cells.map(c=>({tag:'td',selector:c.selector,page:53,nodeIndex:c.nodeIndex,text:c.text}))]};
+  const result=compareTables([sourceTable],doc,options),repair=result.actions.find(a=>a.kind==='table_fragments');
+  const compact=value=>String(value).replace(/[^\p{L}\p{N}]+/gu,'').toLowerCase();
+  assert(repair);assert.deepEqual(repair.rows.map(row=>row.map(cell=>compact(cell.text))),rows.map(row=>row.map(compact)));
+  assert(!result.findings.some(f=>f.category==='source_table_unmapped'||f.category==='html_table_unmapped'));
+});
+
+test('continued source table is reconstructed from one malformed HTML table with repeated header',()=>{
+  const mkCell=(row,col,text)=>({row,col,rowspan:1,colspan:1,text,widthPt:80,background:row===0?'#193646':'#ffffff',borders:Object.fromEntries(['top','right','bottom','left'].map(side=>[side,'1.00pt solid #aabbcc'])),typography:{name:'Arial',family:'Arial',sizePt:9,color:row===0?'#ffffff':'#111111',weight:row===0?700:400,style:'normal',leadingPt:12,paddingPt:[3,4,3,4],indentPt:0,align:'left'}});
+  const header=['Stage','Operation','Local gain','Epistemic risk'];
+  const firstRows=[header,['Juxtaposition','The prompt places the phenomena together','Focuses comparison','Proximity is treated as a relation'],['Shared vocabulary','Terms valid for both are found','Creates a common language','Polysemy is confused with mechanism'],['Abstraction','A super category appears','Compresses and orders','The category no longer discriminates']];
+  const secondRows=[header,['Parallelism','Differences are formulated symmetrically','Memorability','Form appears to be evidence'],['Elaboration','The frame generates consequences and examples','Productivity','Internal confirmations appear to be independent support'],['Caveat','A local reservation is added','Verbal modesty','The conclusion remains unchanged']];
+  const sourceParts=[firstRows,secondRows].map((rows,index)=>({page:16+index,rows:rows.length,columns:4,widthPt:320,pageWidthPt:432,topPt:index?48:413,bottomPt:index?171:527,cells:rows.flatMap((row,r)=>row.map((text,c)=>mkCell(r,c,text)))}));
+  const table={tag:'table',selector:'#six',page:16,nodeIndex:10,rows:Array.from({length:12},()=>[{tag:'td'},{tag:'td'},{tag:'td'},{tag:'td'}]),cells:[
+    ['Stage','Operation The prompt places','Local gain','Epistemic risk Proximity is treated'],
+    ['Juxtaposition','the phenomena together Terms valid for both Creates a common','Focuses comparison','as a relation Polysemy is'],
+    ['Shared vocabulary','','','confused with'],
+    ['','are found','language','mechanism'],
+    ['Abstraction','A super-category','Compresses and','The category no'],
+    ['','appears','orders','longer discriminates'],
+    ['Stage','Operation Differences are','Local gain','Epistemic risk Form appears to be'],
+    ['Parallelism','formulated symmetrically The frame generates','Memorability','evidence Internal confirmations appear'],
+    ['Elaboration','consequences and Productivity examples','','to be independent support'],
+    ['','A local reservation is','','The conclusion'],
+    ['Caveat','','Verbal modesty',''],
+    ['','added','','remains unchanged']
+  ].flatMap((row,r)=>row.map((text,c)=>({row:r,col:c,text,selector:`#c${r}_${c}`,nodeIndex:11+r*4+c})))};
+  const doc={width:1024,records:[table,...table.cells.map(c=>({tag:'td',selector:c.selector,nodeIndex:c.nodeIndex,page:16,text:c.text}))]};
+  const result=compareTables(sourceParts,doc,options),repair=result.actions.find(a=>a.kind==='table_fragments');
+  assert(repair);assert.equal(repair.rows.length,7);
+  assert.deepEqual(repair.rows.map(row=>row[0].text),['Stage','Juxtaposition','Shared vocabulary','Abstraction','Parallelism','Elaboration','Caveat']);
+  assert.equal(repair.rows[5][3].text,'Internal confirmations appear to be independent support');
+  assert(!result.findings.some(f=>f.category==='source_table_unmapped'||f.category==='html_table_unmapped'));
+});
+
 test('source table fragments emitted as adjacent paragraphs are nonblocking when text is present',()=>{
   const doc=documentFixture();
   doc.records[0].cells=source.cells.filter(c=>c.row===0).map(c=>({...c,selector:c.selector+'h'}));
@@ -96,6 +143,58 @@ test('source table fragments emitted as adjacent paragraphs are nonblocking when
   const result=compareTables([source],doc,options);
   assert(result.findings.some(f=>f.category==='source_table_unmapped'&&f.severity==='warning'));
 });
+
+test('html table continuations across page breaks are merged when headers repeat',()=>{
+  const doc={width:1024,records:[
+    {tag:'table',selector:'#first',page:7,nodeIndex:10,rows:[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}]],cells:[
+      {row:0,col:0,text:'Concept',selector:'#h0'},{row:0,col:1,text:'Meaning in practice',selector:'#h1'},
+      {row:1,col:0,text:'Statistical bias',selector:'#a0'},{row:1,col:1,text:'A systematic estimation error.',selector:'#a1'}
+    ]},
+    {tag:'table',selector:'#next',page:8,nodeIndex:20,rows:[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}]],cells:[
+      {row:0,col:0,text:'Concept',selector:'#h2'},{row:0,col:1,text:'Meaning in practice',selector:'#h3'},
+      {row:1,col:0,text:'Normative choice',selector:'#b0'},{row:1,col:1,text:'A value judgment.',selector:'#b1'}
+    ]}
+  ]};
+  const result=compareTables([],doc,options);
+  assert(result.findings.some(f=>f.category==='html_table_continuation'));
+  assert.deepEqual(result.actions.map(a=>a.kind),['table_continuation']);
+  assert(!result.findings.some(f=>f.category==='html_table_unmapped'));
+});
+
+test('multi-page glossary tables demote converter-promoted body headers',()=>{
+  const doc={width:1024,records:[
+    {tag:'table',selector:'#first',page:156,nodeIndex:10,rows:[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}]],cells:[
+      {row:0,col:0,text:'Concept',selector:'#h0'},{row:0,col:1,text:'Explanation and accessible link',selector:'#h1'},
+      {row:1,col:0,text:'Authority bias',selector:'#a0'},{row:1,col:1,text:'The tendency to give more weight. Wikipedia',selector:'#a1'}
+    ]},
+    {tag:'table',selector:'#p157',page:157,nodeIndex:20,rows:[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}]],cells:[
+      {row:0,col:0,text:'Bayesian prior',selector:'#b0'},{row:0,col:1,text:'A prior is the belief before evidence. Wikipedia',selector:'#b1'},
+      {row:1,col:0,text:'Bibliometrics',selector:'#b2'},{row:1,col:1,text:'The quantitative study of publications. Wikipedia',selector:'#b3'}
+    ]},
+    {tag:'table',selector:'#p158',page:158,nodeIndex:30,rows:[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}]],cells:[
+      {row:0,col:0,text:'Conflict of interest',selector:'#c0'},{row:0,col:1,text:'A situation in which interests can affect judgment. Wikipedia',selector:'#c1'},
+      {row:1,col:0,text:'Counterfactual test',selector:'#c2'},{row:1,col:1,text:'A test that asks what would happen if one feature changed. Wikipedia',selector:'#c3'}
+    ]}
+  ]};
+  const result=compareTables([],doc,options),action=result.actions.find(a=>a.kind==='table_continuation');
+  assert(action);assert.equal(action.continuations.length,2);
+  assert(action.continuations.every(item=>item.mode==='promoted_header_is_body'));
+  assert(!result.findings.some(f=>f.category==='html_table_unmapped'));
+});
+
+test('already merged concept tables still receive readable column layout',()=>{
+  const doc={width:1024,records:[
+    {tag:'table',selector:'#merged',page:7,nodeIndex:10,rows:[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}],[{tag:'td'},{tag:'td'}]],cells:[
+      {row:0,col:0,text:'Concept',selector:'#h0'},{row:0,col:1,text:'Meaning in practice',selector:'#h1'},
+      {row:1,col:0,text:'Statistical bias',selector:'#a0'},{row:1,col:1,text:'A systematic estimation error.',selector:'#a1'},
+      {row:2,col:0,text:'Normative choice',selector:'#b0'},{row:2,col:1,text:'A value judgment.',selector:'#b1'}
+    ]}
+  ]};
+  const result=compareTables([],doc,options);
+  assert(result.findings.some(f=>f.category==='html_table_unmapped'));
+  assert(result.actions.some(a=>a.kind==='table_readable_columns'&&a.selector==='#merged'));
+});
+
 test('translated cell presentation requires the existing structural table correspondence',()=>{
   const en=documentFixture(),ro=documentFixture();ro.records[0].selector='#ro';ro.records[0].page=18;ro.records[0].cells.forEach(c=>c.text='Tradus '+c.text);
   const unmapped=translatedTables([source],en,ro,{matches:[]});
@@ -135,6 +234,21 @@ test('native table repair survives CSS consolidation and imported article at thr
       assert.deepEqual(result.findings,[],JSON.stringify({imported,width,findings:result.findings}));assert.equal(result.actions.length,0);
     }
   }
+});
+
+test('continued tables render with stable columns and wrapping', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-table-continuation-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const file=path.join(dir,'book.html');
+  await fs.writeFile(file,'<!doctype html><html><body data-validatebook-root><section data-source-page="7"><div><table id="first"><thead><tr><th>Concept</th><th>Meaning in practice</th></tr></thead><tbody><tr><td>Statistical bias</td><td>A systematic estimation error relative to a defined statistical target.</td></tr></tbody></table></div></section><section data-source-page="8"><div id="page_8"><table id="next"><thead><tr><th>Concept</th><th>Meaning in practice</th></tr></thead><tbody><tr><td>Normative choice</td><td>A value judgment about which differences are relevant, acceptable, compensable, or unjust.</td></tr></tbody></table></div></section></body></html>');
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());await navigate(browser,file);
+  const before=await browser.evaluate(`(${inspectLayout.toString()})()`);
+  const action=compareTables([],before,options).actions.find(a=>a.kind==='table_continuation');
+  assert(action);
+  await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([action])})`);
+  assert.equal(await browser.evaluate('document.querySelectorAll("table").length'),1);
+  assert.equal(await browser.evaluate('getComputedStyle(document.querySelector("#first")).tableLayout'),'fixed');
+  assert.equal(await browser.evaluate('getComputedStyle(document.querySelector("#first td")).overflowWrap'),'break-word');
+  assert.equal(await browser.evaluate('document.querySelector("#page_8")?.tagName'),'TR');
 });
 
 test('existing PDF table regression is repaired only in a temporary HTML copy', {skip:!process.env.VALIDATEBOOK_TABLE_PDF},async t=>{

@@ -67,6 +67,19 @@ test('plain positioned PDF contents rebuilds an incomplete converted table',{ski
  assert.equal(await browser.evaluate('document.querySelector(".source-toc-part").textContent'),'PART I: PATTERNS');
  assert.equal(await browser.evaluate('document.querySelector(".source-contents-note").textContent'),'Page numbers refer to the numbered body.');
 });
+test('PDF contents with partial links still rebuilds every dotted row',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+ const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+ const rows=Array.from({length:24},(_,i)=>`<text top="${52+i*17}" left="56" width="329" height="14" font="1">A sufficiently long source paragraph line</text>`).join('');
+ const bodyPages=[1,2,3].map(n=>`<page number="${n}" width="432" height="648">${rows}</page>`).join('');
+ const toc='<page number="4" width="432" height="648"><text top="50" left="56" width="90" height="24" font="2">CONTENTS</text><text top="100" left="75" width="310" height="14" font="1">The Argument in Ten Minutes....................................................................... 6</text><text top="125" left="75" width="310" height="14" font="1">Twenty-Five Years at the Edges..................................................................... 13</text><text top="150" left="75" width="310" height="14" font="1"><a href="book.html#66">SELECTED BIBLIOGRAPHY..................................................................... 66</a></text></page>';
+ const xml=`<pdf2xml><fontspec id="1" size="11"/><fontspec id="2" size="20"/>${bodyPages}${toc}<outline><item page="6">The Argument in Ten Minutes</item><item page="13">Twenty-Five Years at the Edges</item><item page="66">SELECTED BIBLIOGRAPHY</item></outline></pdf2xml>`;
+ const profile=await browser.evaluate('('+sourcePagePresentation.toString()+')('+JSON.stringify(xml)+')');
+ assert.deepEqual(profile.contents.map(row=>[row.label,row.number,row.destination]),[['The Argument in Ten Minutes','6',6],['Twenty-Five Years at the Edges','13',13],['SELECTED BIBLIOGRAPHY','66',66]]);
+ await browser.evaluate('document.body.innerHTML='+JSON.stringify('<main data-validatebook-root><section class="pdf-source-page" data-reader-page="4"><h2 id="page_4">CONTENTS</h2><ol class="source-toc"><li><a href="#page_66" data-page-label="66"><span class="validatebook-toc-label">SELECTED BIBLIOGRAPHY</span><span class="validatebook-toc-page"> 66</span></a></li></ol></section><section class="pdf-source-page" data-reader-page="6"><h2 id="page_6">The Argument in Ten Minutes</h2></section><section class="pdf-source-page" data-reader-page="13"><h2 id="page_13">Twenty-Five Years at the Edges</h2></section><section class="pdf-source-page" data-reader-page="66"><h2 id="page_66">SELECTED BIBLIOGRAPHY</h2></section></main>'));
+ const repaired=await browser.evaluate('('+applyContentsPresentation.toString()+')('+JSON.stringify({profile})+')');
+ assert.equal(repaired.unmatched.length,0);assert.equal(repaired.mapping.length,3);
+ assert.deepEqual(await browser.evaluate('Array.from(document.querySelectorAll(".validatebook-toc-label"),n=>n.textContent)'),['The Argument in Ten Minutes','Twenty-Five Years at the Edges','SELECTED BIBLIOGRAPHY']);
+});
 test('pagination CSS uses source page proportions and never clips flowing text',()=>{
  const css=paginationCss({width:432,height:648});
  assert(css.includes('min-height:150cqw'));
@@ -89,4 +102,14 @@ test('native pagination separates cover/title, splits nested contents, preserves
  assert.equal(checked[0].text,'Cover');assert.equal(checked[1].text,'TitleSubtitleEpigraph.');assert(checked[5].ids.includes('chapter'));assert(checked.every(p=>p.height>=899));for(let i=1;i<checked.length;i++)assert(checked[i].top>=checked[i-1].bottom+31);
  assert.equal(await browser.evaluate('document.querySelectorAll("#contents").length'),1);assert.equal(await browser.evaluate('document.querySelectorAll("ol").length'),2);
  const again=await browser.evaluate('('+paginateDocument.toString()+')('+JSON.stringify({expectedPages:7})+')');assert.equal(again.html,result.html);
+});
+
+test('native pagination normalizes duplicate or out-of-order page anchors before splitting',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'source-page-normalize-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));const file=path.join(root,'book.html');
+ await fs.writeFile(file,'<!doctype html><html><body data-validatebook-root><h1 id="page_2">Cover</h1><p><a href="#page_2">cover link</a></p><h2 id="page_2">Title</h2><p id="page_9">Prose</p></body></html>');
+ const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());await navigate(browser,file);
+ const result=await browser.evaluate('('+paginateDocument.toString()+')()');assert.deepEqual(result.pages,[1,2,3]);
+ const ids=await browser.evaluate('Array.from(document.querySelectorAll("[id^=page_]"),n=>n.id)');
+ assert.deepEqual(ids,['page_1','page_2','page_3']);
+ assert.equal(await browser.evaluate('document.querySelector("a").getAttribute("href")'),'#page_1');
 });
