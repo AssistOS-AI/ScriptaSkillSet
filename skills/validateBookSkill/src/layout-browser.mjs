@@ -241,7 +241,8 @@ export function applyDomRepairs(actions) {
     }
     const nodes = document.querySelectorAll(a.selector);
     if(nodes.length===0&&a.kind==='presentation'&&/> figcaption(?::nth-child\(\d+\))?$/.test(a.selector)&&![...document.querySelectorAll('figcaption')].some(node=>/^figure from pdf page \d+$/i.test(node.textContent.trim())))continue;
-    if (nodes.length !== 1) throw Error('Repair selector must match exactly one element: ' + a.selector);
+    if(nodes.length===0&&['presentation','table_readable_columns','table_continuation'].includes(a.kind))continue;
+    if (nodes.length !== 1) throw Error('Repair selector must match exactly one element [' + a.kind + ', count=' + nodes.length + ']: ' + a.selector);
     const n = nodes[0], old = n.outerHTML;
     if (a.kind === 'tag') {
       if (!/^(p|h[1-6]|th|td|figcaption)$/.test(a.tag) || n.tagName.toLowerCase() !== a.expectedTag) throw Error('Unsafe or stale tag repair');
@@ -332,7 +333,7 @@ export function applyDomRepairs(actions) {
       applyReadableTableColumns(n,a.columns);
       tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
     } else if (a.kind === 'presentation') {
-      const allowed = new Set(['font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'text-align', 'text-indent', 'margin-top', 'margin-bottom', 'margin-left', 'padding-left', 'border-left', 'padding', 'max-width', 'width', 'height', 'overflow-wrap', 'white-space', 'border-collapse', 'table-layout', 'word-spacing', 'letter-spacing', 'color', 'background-color', 'border-top', 'border-right', 'border-bottom', 'vertical-align', 'box-sizing', 'aspect-ratio', 'max-height', 'object-fit', 'object-position', 'display', 'border-radius', 'border', 'margin']);
+      const allowed = new Set(['font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'text-align', 'text-align-last', 'text-indent', 'margin-top', 'margin-bottom', 'margin-left', 'padding-left', 'border-left', 'padding', 'max-width', 'width', 'height', 'overflow-wrap', 'white-space', 'border-collapse', 'table-layout', 'word-spacing', 'letter-spacing', 'hyphens', 'color', 'background-color', 'border-top', 'border-right', 'border-bottom', 'vertical-align', 'box-sizing', 'aspect-ratio', 'max-height', 'object-fit', 'object-position', 'display', 'border-radius', 'border', 'margin']);
       const beforeProperties=Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)]));
       for (const [key, value] of Object.entries(a.properties)) {
         if (!allowed.has(key) || /url\(|expression\(|[{};]/i.test(value)) throw Error('Unsupported presentation property');

@@ -359,8 +359,21 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
       if(weight)properties['font-weight']=String(weight);
       properties['font-style']=style;
     }
-    const excessive=r.spacing?.excessive||(document.layouts||[]).some(layout=>layout.records.find(item=>item.selector===r.selector)?.spacing?.excessive);
-    if(justifyPolicy==='natural'||excessive){if(!['center','right','end'].includes(r.style?.textAlign))properties['text-align']='left';properties['word-spacing']='normal';properties['letter-spacing']='normal';}
+    const proseParagraph=r.tag==='p'&&(
+      m?.fontSizePt===profile.bodyPt||
+      contextualBodySelectors.has(r.selector)||
+      Math.abs(parseFloat(r.font?.size)-(document.presentation?.bodyFontSize||0))<.5
+    );
+    const protectedAlignment=['center','right','end'].includes(r.style?.textAlign);
+    if(proseParagraph&&!protectedAlignment){
+      properties['text-align']=justifyPolicy==='natural'?'left':'justify';
+      if(justifyPolicy==='source'){
+        properties['text-align-last']='left';
+        properties.hyphens='auto';
+      }
+      properties['word-spacing']='normal';
+      properties['letter-spacing']='normal';
+    }
     if(Object.keys(properties).length)actions.push({kind:'presentation',selector:r.selector,properties});
   }
   return actions;

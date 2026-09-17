@@ -124,18 +124,20 @@ test('report has only text/JSON, remains stale after source mutation',async t=>{
   const root=await fixture(t),file=path.join(root,'en/full_content.html');
   const result={scope:'layout_and_structure',status:'passed',documents:[{language:'en'}],pageCoverage:[{page:1}],corrections:[],findings:[],initialFindings:[],limitations:['No semantic translation review.'],backups:[]};
   await writeJson(path.join(root,'job.json'),{scope:'layout_and_structure',inputs:[{file,sha256:await fileHash(file)}],artifacts:[],result});
-  await layoutReport(root);const files=await fs.readdir(root);assert(files.includes('report.txt'));assert(!files.includes('repair-tasks.json'));assert(!files.some(f=>/\.png$|report\.html$/.test(f)));assert(!textReport(result).includes('<img'));
+  await layoutReport(root);const files=await fs.readdir(root);assert(files.includes('report.md'));assert(!files.includes('repair-tasks.json'));assert(!files.some(f=>/\.png$|report\.html$/.test(f)));assert(!textReport(result).includes('<img'));
   await fs.appendFile(file,'changed');await assert.rejects(layoutReport(root),/Stale input/);
 });
-test('report starts with grouped problem summary and translation causes',()=>{
-  const result={scope:'layout_and_structure',status:'needs_attention',documents:[{language:'en'},{language:'ro'}],pageCoverage:[{page:1}],corrections:[],initialFindings:[],limitations:[],backups:[],findings:[
+test('report starts with unresolved problems section and correction summary',()=>{
+  const result={scope:'layout_and_structure',status:'needs_attention',documents:[{language:'en'},{language:'ro'}],pageCoverage:[{page:1}],corrections:[
+    {language:'ro',kind:'presentation',file:'ro/full_content.html'}
+  ],initialFindings:[],limitations:[],backups:[],findings:[
     {severity:'error',language:'ro',category:'block_sequence_difference',location:'document',detail:'Paragraph/heading/table/list sequence differs from the English canonical layout.'},
     {severity:'error',language:'ro',category:'missing_structural_anchor',location:'id:p2',detail:'English p has no unique translated counterpart.'}
   ]};
   const report=textReport(result);
-  assert(report.indexOf('Problem summary')<report.indexOf('Problems found and corrections'));
-  assert(report.includes('Translation problems'));
-  assert(report.includes('poate lipsi un paragraf'));
+  assert(report.indexOf('## Probleme nerezolvate')<report.indexOf('## Sumar corecții aplicate'));
+  assert(report.includes('| error | ro | block_sequence_difference |'));
+  assert(report.includes('| 1 | ro | presentation | ro/full_content.html |'));
 });
 test('preflight missing tools fails before creating output',async()=>{await assert.rejects(doctor({chromium:'/definitely-missing-layout-browser'}),/ENOENT/);});
 

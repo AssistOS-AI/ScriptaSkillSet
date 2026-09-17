@@ -65,7 +65,7 @@ test('calibration is general, preserves control variables, and natural spacing n
 test('natural word spacing preserves centered and right-aligned display paragraphs',()=>{for(const textAlign of ['center','right','end']){const d=doc();d.records[0].style.textAlign=textAlign;const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'natural'});assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],undefined);}});
 test('route-based reader inflation and marker-based defaults are explicit, unsupported contracts fail',()=>{const routeScaling='const sourceScale = /\\/old\\/book/.test(new URL(state.htmlFrame.src).pathname) ? 1 : 1.24;';assert.equal(frameScale(routeScaling,'/new/book',true),1.24);assert.equal(frameScale(routeScaling,'/old/book',true),1);const current="const sourceScale = state.htmlFrame.contentDocument?.body?.matches('[data-pdf-fidelity], [data-validatebook-root]') ? 1 : 1.24;";assert.equal(frameScale(current,'/any/book',true),1);assert.equal(frameScale(current,'/any/book',false),1.24);assert.throws(()=>frameScale('unknown','/',true),/not recognized/);});
 test('reader CSS cannot style the inside of managed books',()=>{const gate=':not([data-pdf-fidelity]):not([data-validatebook-root])';assert.doesNotThrow(()=>assertReaderStyleIsolation(`.reader-html-content{--standalone-size:var(--reader-font-size);width:1240px;margin:auto}.reader-html-content${gate}{padding:2rem}.reader-html-content${gate} p{margin:0;color:black}.reader-html-content :is(script, style, noscript, [hidden]){display:none!important}`,`body{width:1240px;margin:auto}body${gate}{padding:2rem}body${gate} p{margin:0}`));assert.throws(()=>assertReaderStyleIsolation('.reader-html-content p{margin:1em}','body{}'),/does not exclude managed books/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{font-family:serif}','body{}'),/cannot set book typography/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{padding:2rem}','body{}'),/page padding/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content[data-pdf-fidelity="book"] p{color:red}','body{}'),/Book-specific presentation/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{}','p{margin:1em}'),/Standalone content selector/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{}','body{padding:2rem}'),/managed root cannot add page padding/);});
-test('rendered excessive word spacing is actionable even without overflow',()=>{const d={language:'en',duplicates:[],brokenLinks:[],scrollWidth:390,width:390,fontFaces:[],records:[{selector:'#p',tag:'p',text,spacing:{excessive:true,gapP90Em:1.2}}]};const f=checkDisplay(d,'en').find(f=>f.category==='excessive_word_spacing');assert.equal(f.repair.properties['text-align'],'left');});
+test('rendered excessive word spacing keeps justified prose with short final lines left',()=>{const d={language:'en',duplicates:[],brokenLinks:[],scrollWidth:390,width:390,fontFaces:[],records:[{selector:'#p',tag:'p',text,spacing:{excessive:true,gapP90Em:1.2}}]};const f=checkDisplay(d,'en').find(f=>f.category==='excessive_word_spacing');assert.equal(f.repair.properties['text-align'],'justify');assert.equal(f.repair.properties['text-align-last'],'left');assert.equal(f.repair.properties.hyphens,'auto');});
 test('translated prose inherits the English baseline rhythm without text matching or rewriting',()=>{const master=compareTypography(profile,doc());const target=doc();target.records[0].text='Un paragraf tradus care nu coincide lexical cu sursa engleză.';const own=compareTypography(profile,target,'ro');assert.equal(own.mappings.length,0);const actions=typographyActions(profile,target,own,{defaultSizePx:18.56,masterTypography:master});const p=actions.find(a=>a.selector==='#passage');assert.equal(p.properties['margin-bottom'],'0');assert.equal(Number(p.properties['line-height']),profile.leadingCssPx/profile.bodyCssPx);});
 
 test('short dialogue uses the same PDF font-size checks as surrounding prose',()=>{
@@ -205,12 +205,43 @@ test('unpaginated repeated passages map by document order instead of remaining a
   assert(!compared.findings.some(f=>f.category==='source_typography_ambiguous'));
 });
 
-test('excessive word spacing at a later viewport is still repaired',()=>{
+test('source policy keeps body prose justified when a later viewport has large gaps',()=>{
   const d=doc();
   d.records[0].spacing={excessive:false};
   d.layouts=[{width:1440,records:[{selector:'#passage',spacing:{excessive:false}}]},{width:390,records:[{selector:'#passage',spacing:{excessive:true}}]}];
   const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56});
-  assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],'left');
+  const properties=actions.find(a=>a.selector==='#passage').properties;
+  assert.equal(properties['text-align'],'justify');
+  assert.equal(properties['text-align-last'],'left');
+  assert.equal(properties.hyphens,'auto');
+});
+
+test('adaptive justification keeps justify for normal word gaps',()=>{
+  const d=doc();
+  d.records[0].style.textAlign='justify';
+  d.records[0].spacing={excessive:false,gapP90Em:0.2};
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  const properties=actions.find(a=>a.selector==='#passage').properties;
+  assert.equal(properties['text-align'],'justify');
+  assert.equal(properties['text-align-last'],'left');
+});
+
+test('short final lines stay left without disabling paragraph justification',()=>{
+  const d=doc();
+  d.records[0].style.textAlign='justify';
+  d.records[0].spacing={excessive:false,gapP90Em:0.55};
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  const properties=actions.find(a=>a.selector==='#passage').properties;
+  assert.equal(properties['text-align'],'justify');
+  assert.equal(properties['text-align-last'],'left');
+});
+
+test('adaptive justification boundary at 0.4em keeps justify',()=>{
+  const d=doc();
+  d.records[0].style.textAlign='justify';
+  d.records[0].spacing={excessive:false,gapP90Em:0.4};
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],'justify');
 });
 
 test('same-page repeated headings map by local order instead of remaining ambiguous',()=>{

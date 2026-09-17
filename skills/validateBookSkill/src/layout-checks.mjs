@@ -143,7 +143,7 @@ export function checkDisplay(document, language) {
   for (const r of document.records) {
     for (const type of ['hidden', 'clipped', 'outside', 'broken']) if (r[type]) findings.push(issue(language, type === 'broken' ? 'broken_image' : type + '_content', r.selector, r.text.slice(0, 160) || r.src || r.tag, { width: document.width }));
     if(r.tag==='figcaption'&&/^figure from pdf page \d+$/i.test(normalizeText(r.text)))findings.push(issue(language,'generated_figure_caption',r.selector,'A converter placeholder is visible as book content although it does not occur in the PDF.',{repair:{kind:'remove_generated_caption',selector:r.selector,text:r.text}}));
-    if(r.spacing?.excessive)findings.push(issue(language,'excessive_word_spacing',r.selector,'Justified word gaps exceed 0.65 em in sampled rendered lines.',{width:document.width,spacing:r.spacing,repair:{kind:'presentation',selector:r.selector,properties:{'text-align':'left','word-spacing':'normal','letter-spacing':'normal'}}}));
+    if(r.spacing?.excessive)findings.push(issue(language,'excessive_word_spacing',r.selector,'Justified word gaps exceed 0.65 em in sampled rendered lines.',{width:document.width,spacing:r.spacing,repair:{kind:'presentation',selector:r.selector,properties:{'text-align':'justify','text-align-last':'left','word-spacing':'normal','letter-spacing':'normal','hyphens':'auto'}}}));
     if (/[\uFFFD\uE000-\uF8FF]/u.test(r.text)) findings.push(issue(language, 'suspect_character', r.selector, 'Replacement/private-use character. Preserve until its source mapping is established.', { excerpt: r.text.slice(0, 200) }));
   }
   const runningCounts=new Map();

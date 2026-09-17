@@ -29,7 +29,7 @@ export async function resetPreviousResults(root, ownLock) {
       for(const name of await fs.readdir(directory))if(path.join(directory,name)!==ownLock)await fs.rm(path.join(directory,name),{recursive:true,force:true});
     } else await fs.rm(directory,{recursive:true,force:true});
   }
-  for(const name of ['RAPORT-CORECTII.txt','RAPORT-VERIFICARE.txt'])await fs.rm(path.join(root,name),{force:true});
+  for(const name of ['RAPORT-CORECTII.md','RAPORT-VERIFICARE.md'])await fs.rm(path.join(root,name),{force:true});
 }
 
 export function isDisposableJobDirectory(directory, bookRoot) {
@@ -68,7 +68,7 @@ export async function cleanupCompletedWork(root,transaction,result) {
   const relative=path.relative(transaction,root);
   if(!relative||(!relative.startsWith('..')&&!path.isAbsolute(relative)))throw Error('Refusing to clean the book or its ancestor');
   // A durable report and verified installation must precede cleanup.
-  await fs.access(path.join(root,'RAPORT-CORECTII.txt'));
+  await fs.access(path.join(root,'RAPORT-CORECTII.md'));
   const directories=['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'].map(n=>path.join(root,n));
   if(!directories.some(d=>transaction===d||transaction.startsWith(d+path.sep)))directories.push(transaction);
   const locks=[];
@@ -133,13 +133,13 @@ async function completeCandidate(root, options = {}) {
       initialFindings:[...new Map(execution.passes.flatMap(p=>p.result.initialFindings).map(f=>[f.id,f])).values()],
       corrections:execution.passes.flatMap(p=>p.result.corrections),
       backups:execution.passes.flatMap(p=>p.result.backups)};
-    const reportFile=path.join(selection.root,'RAPORT-CORECTII.txt');
+    const reportFile=path.join(selection.root,'RAPORT-CORECTII.md');
     const content=textReport({...aggregate,backups:[]})+(execution.failure?'\nExecution failure: '+execution.failure.detail+'\n':'');
     if(await exists(reportFile)) {
       const previous=await fs.readFile(reportFile,'utf8');
-      if(previous!==content)await fs.writeFile(path.join(runDirectory,'previous-RAPORT-CORECTII.txt'),previous,{flag:'wx'});
+      if(previous!==content)await fs.writeFile(path.join(runDirectory,'previous-RAPORT-CORECTII.md'),previous,{flag:'wx'});
     }
-    const temporary=path.join(runDirectory,'RAPORT-CORECTII.txt');
+    const temporary=path.join(runDirectory,'RAPORT-CORECTII.md');
     await fs.writeFile(temporary,content);
     await fs.copyFile(temporary,reportFile);
     Object.assign(state,{status:aggregate.status,failure:execution.failure,reportText:reportFile,reportSha256:hash(content)});
@@ -173,13 +173,13 @@ export async function complete(root,options={}) {
     let result;
     try{result=await completeCandidate(copy.stagedRoot,{...options,jobDir:path.join(transaction,'audit')});}
     catch(error){
-      const reportText=path.join(selection.root,'RAPORT-CORECTII.txt');
+      const reportText=path.join(selection.root,'RAPORT-CORECTII.md');
       await fs.writeFile(reportText,'Status: failed\nInstalled: false\nOriginal files preserved.\n'+error.message+'\nEvidence: '+transaction+'\n');
       throw error;
     }
     const accepted=!result.failure&&['passed','passed_with_warnings','completed_with_errors'].includes(result.status);
     const installation=accepted?await installWorkingCopy(copy,transaction,result):[];
-    const reportText=path.join(selection.root,'RAPORT-CORECTII.txt');
+    const reportText=path.join(selection.root,'RAPORT-CORECTII.md');
     const reportBody=(await fs.readFile(result.reportText,'utf8')).replaceAll(copy.stagedRoot,selection.root);
     const evidenceLine=accepted?`Temporary evidence: ${transaction} (removed after successful cleanup)`: `Evidence: ${transaction}`;
     await fs.writeFile(reportText,`Installed: ${accepted}\n${accepted?'Verified candidate installed.':'Candidate rejected; original files preserved.'}\n${evidenceLine}\n\n`+reportBody);

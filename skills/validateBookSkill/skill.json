@@ -12,13 +12,13 @@
   ],
   "optionalWorkflowSkills": [],
   "outputs": [
-    "report.txt",
+    "report.md",
     "report.json",
     "source-evidence.json",
     "*-layout.json",
     "validatebook-layout.css",
     "*-article-layout.json",
-    "RAPORT-CORECTII.txt"
+    "RAPORT-CORECTII.md"
   ],
   "entrypoints": [
     "SKILL.md",

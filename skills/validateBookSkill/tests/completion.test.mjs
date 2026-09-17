@@ -17,7 +17,7 @@ test('success cleanup requires a delivered report, preserves failures and locks,
  assert.deepEqual(await cleanupCompletedWork(root,transaction,{...accepted,installed:false}),[]);
  assert.deepEqual(await cleanupCompletedWork(root,transaction,{...accepted,status:'failed',failure:{}}),[]);
  await assert.rejects(cleanupCompletedWork(root,transaction,accepted),/ENOENT/);
- await fs.writeFile(path.join(root,'RAPORT-CORECTII.txt'),'durable final report');
+ await fs.writeFile(path.join(root,'RAPORT-CORECTII.md'),'durable final report');
  const lock=path.join(root,'.validatebook-jobs','prepare.lock');await fs.writeFile(lock,'');
  await assert.rejects(cleanupCompletedWork(root,transaction,accepted),/lock files/);
  assert.equal(await fs.readFile(path.join(transaction,'evidence.json'),'utf8'),'evidence');
@@ -26,7 +26,7 @@ test('success cleanup requires a delivered report, preserves failures and locks,
  await cleanupCompletedWork(root,transaction,accepted);
  for(const name of ['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'])await assert.rejects(fs.access(path.join(root,name)),/ENOENT/);
  assert.equal(await fs.readFile(path.join(root,'book.html'),'utf8'),'canonical');
- assert.equal(await fs.readFile(path.join(root,'RAPORT-CORECTII.txt'),'utf8'),'durable final report');
+ assert.equal(await fs.readFile(path.join(root,'RAPORT-CORECTII.md'),'utf8'),'durable final report');
 });
 
 test('page furniture does not interrupt paragraphs and reference numbers remain content',()=>{
@@ -76,13 +76,13 @@ test('fresh completion clears prior evidence and reports but keeps canonical fil
     await fs.writeFile(path.join(root,name,'stale.json'),'stale');
   }
   await fs.writeFile(path.join(directory,'old-transaction.json'),'stale');
-  await fs.writeFile(path.join(root,'RAPORT-CORECTII.txt'),'old report');
+  await fs.writeFile(path.join(root,'RAPORT-CORECTII.md'),'old report');
   await fs.writeFile(path.join(root,'book.html'),'canonical');
   await resetPreviousResults(root,ownLock);
   for(const name of ['.validatebook-jobs','.validatebook-layout','.validatebook-layout-jobs'])
     await assert.rejects(fs.access(path.join(root,name)),/ENOENT/);
   assert.deepEqual(await fs.readdir(directory),['transaction.lock']);
-  await assert.rejects(fs.access(path.join(root,'RAPORT-CORECTII.txt')),/ENOENT/);
+  await assert.rejects(fs.access(path.join(root,'RAPORT-CORECTII.md')),/ENOENT/);
   assert.equal(await fs.readFile(path.join(root,'book.html'),'utf8'),'canonical');
 });
 
@@ -106,7 +106,7 @@ test('complete discards job directories and leftover atomic temps, never the boo
   await fs.writeFile(path.join(job,'job.json'),'{}\n');
   await fs.mkdir(path.join(book,'.validatebook-layout'));
   await fs.writeFile(path.join(book,'en.full_content.html.validatebook-abc123def0.tmp'),'tmp');
-  await fs.writeFile(path.join(book,'RAPORT-CORECTII.txt'),'keep');
+  await fs.writeFile(path.join(book,'RAPORT-CORECTII.md'),'keep');
   assert.equal(isDisposableJobDirectory(job,book),true);
   assert.equal(isDisposableJobDirectory(book,book),false);
   assert.equal(isDisposableJobDirectory(path.join(book,'.validatebook-layout'),book),false);
@@ -115,5 +115,5 @@ test('complete discards job directories and leftover atomic temps, never the boo
   assert.equal(await fs.access(job).then(()=>true,()=>false),false);
   assert.equal(await fs.access(path.join(book,'.validatebook-layout')).then(()=>true,()=>false),false);
   assert.equal(await fs.access(path.join(book,'en.full_content.html.validatebook-abc123def0.tmp')).then(()=>true,()=>false),false);
-  assert.equal(await fs.readFile(path.join(book,'RAPORT-CORECTII.txt'),'utf8'),'keep');
+  assert.equal(await fs.readFile(path.join(book,'RAPORT-CORECTII.md'),'utf8'),'keep');
 });

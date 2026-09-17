@@ -405,9 +405,10 @@ export async function prepare(root, options = {}) {
           actions.splice(0,actions.length,...split.batch);
         }
         const batches=[{name:'all',actions}];
-        if(item.language==='en')batches.push({name:'pagination',actions:[]},{name:'tables',actions:tableComparison.actions},{name:'typography',actions:typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',sourceFontMap,sourceFontWeights,sourceFontStyles,sourceFontFaces})},{name:'display',actions:[]},{name:'structure',actions:[]});
+        if(item.language==='en')batches.push({name:'pagination',actions:[]},{name:'tables',actions:tableComparison.actions},{name:'typography',actions:typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',sourceFontMap,sourceFontWeights,sourceFontStyles,sourceFontFaces})},{name:'display',actions:displayRepairs},{name:'structure',actions:[]});
         else {
           if(options.paginate&&pagePresentation)batches.push({name:'pagination',actions:[]});
+          if(displayRepairs.length)batches.push({name:'display',actions:displayRepairs});
           if(translationPresentationActions.length)batches.push({name:'translation-presentation',actions:translationPresentationActions});
         }
         const rejected=[];

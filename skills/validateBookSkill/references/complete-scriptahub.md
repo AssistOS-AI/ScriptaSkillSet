@@ -7,7 +7,7 @@ A request to validate/correct a book under this skill covers structure and displ
 3. Propagate accepted English typography, layout, tables, images, headings and contents/reference presentation to every existing language. Preserve translated text, language tags and relative resources. Never invent an absent reader or paragraph.
 4. Run local structural-integrity and rendering checks on every translated HTML. Investigate only concrete missing-block/alignment and display defects. Do not humanise or semantically proofread translations.
 5. Verify canonical files/dependencies, and run the repository's relevant integration/link checks. Refresh generated pages only when the changed integration requires it; there is no metadata-authoring or summary stage.
-6. Deliver report.txt with problems, locations, before/after corrections, tests, recovery paths and unresolved cases. JSON evidence remains available. No screenshots or image reports.
+6. Deliver report.md with problems, locations, before/after corrections, tests, recovery paths and unresolved cases. JSON evidence remains available. No screenshots or image reports.
 
 `complete-plan` creates a small layout coordinator and points to its audit directory. `prepare --job-dir AUDIT_DIR --auto-correct` performs supported local checks/repairs. `complete-status` verifies the recorded audit and returns its actual status. No host-authored all-pass receipts or per-unit semantic review batches are required.
 
