@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
@@ -201,10 +201,6 @@ async function processBook(root, options, outDir) {
 
   const correctionReport = path.join(root, 'RAPORT-CORECTII.md');
   const reportText = await readFile(correctionReport, 'utf8').catch(() => '');
-  if (reportText) {
-    await writeFile(path.join(roundOut, 'RAPORT-CORECTII.md'), reportText);
-    await writeFile(path.join(bookOut, 'RAPORT-CORECTII.md'), reportText);
-  }
 
   return {
     root,
@@ -218,9 +214,37 @@ async function processBook(root, options, outDir) {
     findings: parsed.findings ?? null,
     corrections: parsed.corrections ?? null,
     report: correctionReport,
-    copiedReport: reportText ? path.join(bookOut, 'RAPORT-CORECTII.md') : '',
+    reportText,
+    copiedReport: '',
     out: bookOut,
   };
+}
+
+function finalReport(current,rounds){
+  const corrections=rounds.reduce((sum,round)=>sum+Number(round.corrections||0),0),groups=new Map();
+  for(const round of rounds){
+    const section=round.reportText?.match(/## Corecții aplicate\n\n([\s\S]*?)(?=\n## |\nCleanup completed:|$)/)?.[1]||'';
+    for(const match of section.matchAll(/^\| ([^|]+?) \| (\d+) \| (\d+) \|$/gm)){
+      if(match[1]==='Limbă / tip')continue;
+      const key=match[1].trim(),value=groups.get(key)||{count:0,files:0};
+      value.count+=Number(match[2]);value.files=Math.max(value.files,Number(match[3]));groups.set(key,value);
+    }
+  }
+  let summary='## Corecții aplicate\n\n';
+  if(!groups.size)summary+='Nicio corecție aplicată.\n';
+  else{
+    summary+='| Limbă / tip | Fixuri | Fișiere afectate |\n|---|---:|---:|\n';
+    for(const [key,value] of [...groups].sort(([a],[b])=>a.localeCompare(b)))summary+=`| ${key} | ${value.count} | ${value.files} |\n`;
+  }
+  return current.replace(/\| \*\*Corecții aplicate\*\* \| \d+ \|/,`| **Corecții aplicate** | ${corrections} |`)
+    .replace(/## Corecții aplicate\n\n[\s\S]*?(?=\n## |\nCleanup completed:|$)/,summary);
+}
+
+async function publishFinalReport(rounds){
+  const last=rounds.at(-1);if(!last?.reportText)return last;
+  const reportText=finalReport(last.reportText,rounds),copiedReport=path.join(last.out,'RAPORT-CORECTII.md');
+  await writeFile(last.report,reportText);await unlink(path.join(last.root,'RAPORT-CORECTII.txt')).catch(error=>{if(error.code!=='ENOENT')throw error;});await writeFile(copiedReport,reportText);
+  return {...last,corrections:rounds.reduce((sum,round)=>sum+Number(round.corrections||0),0),roundCorrections:rounds.map(round=>round.corrections),copiedReport};
 }
 
 function needsFollowup(record) {
@@ -331,13 +355,16 @@ async function main() {
     while (nextIndex < verifiedRoots.length) {
       const index = nextIndex++;
       const root = verifiedRoots[index];
-      let record;
+      let record;const rounds=[];
       for (let round = 1; round <= options.maxRounds; round += 1) {
         console.error(`[${index + 1}/${verifiedRoots.length}] validateBook round ${round}/${options.maxRounds} ${root}`);
         record = await processBook(root, { ...options, round }, outDir);
+        rounds.push(record);
         record.maxRounds = options.maxRounds;
         if (!shouldContinueRounds(record)) break;
       }
+      record=await publishFinalReport(rounds);
+      delete record.reportText;
       records[index] = record;
       summaryWrite = summaryWrite.then(() => writeSummaries(outDir, records.filter(Boolean), options));
       await summaryWrite;

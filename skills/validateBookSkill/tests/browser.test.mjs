@@ -110,11 +110,12 @@ test('managed CSS replaces inline declarations without altering computed typogra
 test('managed CSS accepts browser subpixel rounding during consolidation',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'presentation-rounding-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
   const file=path.join(root,'book.html');
-  await fs.writeFile(file,'<!doctype html><html><body><h2 style="margin-top:375.635px">How the Story Is Organized</h2></body></html>');
+  await fs.writeFile(file,'<!doctype html><html><body><h2 style="margin-top:375.635px">How the Story Is Organized</h2><h3 style="margin-top:0.000008px">Scientific notation margin</h3></body></html>');
   const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
   await measure(browser,file);
   const result=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css'}])})`);
   assert(result.stylesheet.css.includes('margin-top: 375.635px'));
+  assert(result.stylesheet.css.includes('margin-top: 8e-06px'));
 });
 
 test('managed CSS keeps inline repairs above source :is id specificity',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{

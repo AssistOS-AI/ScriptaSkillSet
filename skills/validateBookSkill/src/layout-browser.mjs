@@ -176,10 +176,13 @@ export function applyDomRepairs(actions) {
       }).join('\n')+'\n'+pageStyle;
       const temporary=document.createElement('style');temporary.textContent=css;document.head.append(temporary);
       nodes.forEach(n=>n.removeAttribute('style'));old?.remove();
+      const pxNumeric=text=>{const number=typeof text==='string'&&text.endsWith('px')?Number.parseFloat(text):NaN;return Number.isFinite(number)?number:NaN;};
       for(const check of expected)for(const [key,value] of Object.entries(check.values)){
         const actual=getComputedStyle(check.node).getPropertyValue(key);
-        const rounding=/^-?[\d.]+px$/.test(actual)&&/^-?[\d.]+px$/.test(value)&&Math.abs(parseFloat(actual)-parseFloat(value))<=.01;
-        const descendingDefaultFallback=/^-?[\d.]+px$/.test(actual)&&/^-?[\d.]+px$/.test(value)&&parseFloat(actual)<=parseFloat(value);
+        const actualPx=pxNumeric(actual),valuePx=pxNumeric(value);
+        const comparablePx=Number.isFinite(actualPx)&&Number.isFinite(valuePx);
+        const rounding=comparablePx&&Math.abs(actualPx-valuePx)<=.01;
+        const descendingDefaultFallback=comparablePx&&actualPx<=valuePx;
         const textlessMediaTypography=['font-size','line-height','font-family','font-weight','font-style','font-stretch','font-variant'].includes(key)&&!check.node.textContent.trim()&&['IMG','PICTURE','SVG','VIDEO','CANVAS','SOURCE'].includes(check.node.tagName);
         if(actual!==value&&!rounding&&!descendingDefaultFallback&&!textlessMediaTypography)throw Error('CSS consolidation changed computed '+key+' from '+value+' to '+actual+' on '+check.node.tagName+' '+check.node.textContent.slice(0,80));
       }

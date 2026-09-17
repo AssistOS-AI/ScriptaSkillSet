@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { sourceTables } from '../src/pdf2html/source-tables.mjs';
+import { borderlessGrids, sourceTables } from '../src/pdf2html/source-tables.mjs';
 import { inspectSource } from '../src/pdf2html/source.mjs';
 test('filled source tables are detected in an existing PDF', {skip:!process.env.PDF2HTML_TABLE_PDF}, async()=>{
   const source=await inspectSource(process.env.PDF2HTML_TABLE_PDF);
@@ -42,4 +42,25 @@ test('decorative fills, crossing text and missing row boundaries do not invent a
   for(const mutate of [p=>p.strokes=[],p=>p.rectangles=p.rectangles.filter(r=>r.x0===20),p=>p.words.forEach(w=>{w.x0=25;w.x1=300;})]){
     const page=filledPage();mutate(page);assert.deepEqual(sourceTables({pages:[page]}),[]);
   }
+});
+function borderlessPage(page,rows){
+  const item=(text,x0,x1,top)=>({text,x0,x1,top,bottom:top+10,size_pt:10,font_name:'Arial',font_family:'Arial',color:'#000000'});
+  const text_items=[item('Concept',70,110,50),item('Meaning in practice',190,285,50)];
+  rows.forEach((row,index)=>{
+    const top=70+index*30;text_items.push(item(row[0],70,145,top),item(row[1],190,360,top));
+    if(row[2])text_items.push(item(row[2],190,330,top+12));
+  });
+  return {page_number:page,width_pt:400,height_pt:600,text_items,words:[],rectangles:[],strokes:[]};
+}
+test('aligned borderless rows and a one-row repeated-header continuation are certified',()=>{
+  const pages=[borderlessPage(1,[['Statistical bias','A systematic estimation error','continued'],['Inductive bias','A structural preference']]),borderlessPage(2,[['Normative choice','A value judgment']])];
+  const grids=borderlessGrids(pages);assert.equal(grids.get(1).length,1);assert.equal(grids.get(2).length,1);
+  const tables=sourceTables({pages});assert.deepEqual(tables.map(table=>[table.page,table.rows,table.columns]),[[1,3,2],[2,2,2]]);
+  assert.deepEqual(tables[0].cells.map(cell=>cell.text),['Concept','Meaning in practice','Statistical bias','A systematic estimation error continued','Inductive bias','A structural preference']);
+});
+test('ordinary prose and an isolated two-column pair are not borderless tables',()=>{
+  const prose=borderlessPage(1,[['Only one label','Only one explanation']]);
+  assert.deepEqual(borderlessGrids([prose]).get(1),[]);
+  prose.text_items.push({text:'A paragraph crosses the proposed split',x0:70,x1:360,top:100,bottom:110,size_pt:10,font_name:'Arial',font_family:'Arial',color:'#000000'});
+  assert.deepEqual(sourceTables({pages:[prose]}),[]);
 });

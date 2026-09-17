@@ -11,8 +11,7 @@ and validator reports.
 
 The batch wrapper does not add a model, reviewer or prose-rewrite stage inside
 validateBook. It runs `scripts/validatebook complete` for each book root,
-captures the JSON result, copies `RAPORT-CORECTII.md` into a batch artifact
-folder, and writes an `AGENT-FOLLOWUP.md` packet for unresolved items.
+captures each JSON result, and writes an `AGENT-FOLLOWUP.md` packet for unresolved items. After the last correction round it overwrites the book-root `RAPORT-CORECTII.md` once with the final findings and the grouped fixes from this invocation only, then copies that report into the batch artifact folder. Reports from older invocations are not retained as the canonical result.
 
 The follow-up packet is deliberately outside the native validation contract.
 When it is used by an agent, the agent must first decide whether the unresolved
@@ -70,4 +69,4 @@ Each run creates:
   available.
 
 The canonical validator report remains at each book root as
-`RAPORT-CORECTII.md`.
+`RAPORT-CORECTII.md`. It is the single final report for the latest batch invocation; per-round reports are represented by JSON artifacts rather than additional book-root Markdown files.

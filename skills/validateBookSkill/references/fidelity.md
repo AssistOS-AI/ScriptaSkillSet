@@ -5,7 +5,7 @@
 
 Unmapped or ambiguous English paragraphs are errors regardless of token overlap. Nonvisual remote-script warnings may remain nonblocking; they do not certify typography. Completion stops successfully only after all structural/display errors are resolved.
 
-The required pdf2html `decorations` response includes hash-bound tables from closed grids or adjacent cell fills with horizontal row rules. It records source page width, spans, fills, individual edges, vertical alignment and uniform typography. Complete cell/text correspondence and rendered font identity are checked at all three widths in both delivery paths. Unsupported tables remain errors.
+The required pdf2html `decorations` response includes hash-bound tables from closed grids, complete fill partitions, or geometrically aligned borderless columns with a repeated-header continuation rule. It records source page width, spans, fills, individual edges, vertical alignment and uniform typography. Complete cell/text correspondence and rendered font identity are checked at all three widths in both delivery paths. Unsupported tables remain errors.
 
 For paginated content, expected type sizes, leading and gaps use max(1, rendered page width / physical source width). The page box is the container query for that inherited numeric scale, so a wider host cannot inflate type. Small screens retain the physical font-size floor and reflow; large pages retain source proportions. The host outer geometry stays intact. The source-fidelity marker disables legacy iframe inflation, and reader parity normalizes by independently measured page widths. Managed CSS keeps the measured standalone size. Tests cover missing fills, false font fallback, consolidation and a second repair.
 

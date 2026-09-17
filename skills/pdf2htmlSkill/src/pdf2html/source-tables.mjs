@@ -40,21 +40,97 @@ export function filledGrids(page) {
   return result;
 }
 
+const sameLine = (a,b) => Math.abs(a.top-b.top) < 1.5;
+const normalized = text => String(text).replace(/\s+/g,' ').trim().toLowerCase();
+const darkColor = hex => {
+  const [r,g,b]=hex.match(/[\da-f]{2}/gi).map(value=>parseInt(value,16));
+  return .2126*r+.7152*g+.0722*b<96;
+};
+function textLines(page) {
+  const lines=[];
+  for(const item of [...(page.text_items||[])].sort((a,b)=>a.top-b.top||a.x0-b.x0)){
+    let line=lines.find(candidate=>sameLine(candidate,item));
+    if(!line){line={top:item.top,bottom:item.bottom,items:[]};lines.push(line);}
+    line.top=Math.min(line.top,item.top);line.bottom=Math.max(line.bottom,item.bottom);line.items.push(item);
+  }
+  return lines.map(line=>({...line,items:line.items.sort((a,b)=>a.x0-b.x0)}));
+}
+function splitLine(line,pageWidth) {
+  let best=null;
+  for(let i=1;i<line.items.length;i++){
+    const gap=line.items[i].x0-line.items[i-1].x1;
+    if(gap>=Math.max(40,pageWidth*.065)&&(!best||gap>best.gap))best={gap,index:i};
+  }
+  if(!best)return null;
+  const left=line.items.slice(0,best.index),right=line.items.slice(best.index);
+  return {left,right,leftX:left[0].x0,rightX:right[0].x0,
+    leftText:normalized(left.map(item=>item.text).join(' ')),rightText:normalized(right.map(item=>item.text).join(' '))};
+}
+function borderlessCandidate(page,lines,headerIndex,minRows) {
+  const header=splitLine(lines[headerIndex],page.width_pt);
+  if(!header||header.rightX-header.leftX<80||!header.leftText||!header.rightText)return null;
+  const rows=[];let current=null;
+  for(let index=headerIndex+1;index<lines.length;index++){
+    const line=lines[index];
+    if(line.top-lines[Math.max(headerIndex,index-1)].bottom>36)break;
+    if(line.items.some(item=>item.x0<header.rightX-2&&item.x1>header.rightX+2))break;
+    const left=line.items.filter(item=>item.x0<header.rightX-2),right=line.items.filter(item=>item.x0>=header.rightX-2);
+    const startsRow=left.length&&right.length&&Math.abs(left[0].x0-header.leftX)<8&&Math.abs(right[0].x0-header.rightX)<8;
+    const continues=!left.length&&right.length&&Math.abs(right[0].x0-header.rightX)<8;
+    if(startsRow){current={lines:[line]};rows.push(current);}
+    else if(continues&&current)current.lines.push(line);
+    else break;
+  }
+  if(rows.length<minRows)return null;
+  const all=[lines[headerIndex],...rows.flatMap(row=>row.lines)],textRight=Math.max(...all.flatMap(line=>line.items.map(item=>item.x1)));
+  const headerFills=(page.rectangles||[]).filter(rect=>rect.x0<=header.leftX&&rect.x1>=header.leftX&&rect.top<=lines[headerIndex].top+1&&rect.bottom>=lines[headerIndex].bottom-1).sort((a,b)=>a.x0-b.x0);
+  const firstFill=headerFills.find(rect=>rect.x0<=header.leftX&&rect.x1<header.rightX);
+  const secondFill=firstFill&&(page.rectangles||[]).find(rect=>Math.abs(rect.x0-firstFill.x1)<1&&rect.x0<=header.rightX&&rect.x1>=header.rightX&&Math.abs(rect.top-firstFill.top)<1&&Math.abs(rect.bottom-firstFill.bottom)<1);
+  const left=firstFill?.x0??header.leftX,split=firstFill?.x1??header.rightX,right=secondFill?.x1??textRight;
+  if(right-left<page.width_pt*.45)return null;
+  const groups=[{lines:[lines[headerIndex]]},...rows],tops=groups.map(group=>group.lines[0].top);
+  const bottoms=groups.map((group,index)=>index+1<groups.length?(group.lines.at(-1).bottom+tops[index+1])/2:group.lines.at(-1).bottom+3);
+  const cells=groups.flatMap((group,row)=>[left,split].map((cellLeft,col)=>({start_row_offset_idx:row,start_col_offset_idx:col,row_span:1,col_span:1,bbox:{l:cellLeft,r:col?right:split,t:row?bottoms[row-1]:tops[0]-3,b:bottoms[row]}})));
+  return {kind:'borderless',header:[header.leftText,header.rightText],bbox:{l:left,r:right,t:tops[0]-3,b:bottoms.at(-1)},num_rows:groups.length,num_cols:2,table_cells:cells};
+}
+export function borderlessGrids(pages) {
+  const result=new Map(),previous=[];
+  for(const page of pages){
+    const lines=textLines(page),accepted=[];
+    for(let i=0;i<lines.length;i++){
+      let candidate=borderlessCandidate(page,lines,i,2);
+      if(!candidate){
+        const continuation=borderlessCandidate(page,lines,i,1);
+        const prior=previous.find(grid=>grid.page===page.page_number-1&&continuation&&grid.header.every((text,index)=>text===continuation.header[index])&&Math.abs((grid.bbox.r-grid.bbox.l)-(continuation.bbox.r-continuation.bbox.l))<.5);
+        if(prior)candidate=continuation;
+      }
+      if(!candidate||accepted.some(grid=>candidate.bbox.t<grid.bbox.b&&candidate.bbox.b>grid.bbox.t))continue;
+      accepted.push(candidate);previous.push({...candidate,page:page.page_number});
+    }
+    result.set(page.page_number,accepted);
+  }
+  return result;
+}
+
 // Export source evidence, not HTML or an executable repair plan. Reuse the
 // converter's closed-grid recognizer and per-edge stroke matching.
 export function sourceTables(evidence) {
   const tables = [];
+  const borderless=borderlessGrids(evidence.pages);
   for (const page of evidence.pages) for (const grid of (()=>{
     const ruled=ruledGrids(page.strokes||[]);
-    return [...ruled,...filledGrids(page).filter(g=>!ruled.some(r=>g.bbox.l<r.bbox.r&&g.bbox.r>r.bbox.l&&g.bbox.t<r.bbox.b&&g.bbox.b>r.bbox.t))];
+    const certified=[...ruled,...filledGrids(page).filter(g=>!ruled.some(r=>g.bbox.l<r.bbox.r&&g.bbox.r>r.bbox.l&&g.bbox.t<r.bbox.b&&g.bbox.b>r.bbox.t))];
+    return [...certified,...(borderless.get(page.page_number)||[]).filter(g=>!certified.some(r=>g.bbox.l<r.bbox.r&&g.bbox.r>r.bbox.l&&g.bbox.t<r.bbox.b&&g.bbox.b>r.bbox.t))];
   })()) {
     const cells = grid.table_cells.map(cell => {
       const b = cell.bbox;
-      const words = page.words.filter(w => {
+      const words = (grid.kind==='borderless'?page.text_items:page.words).filter(w => {
         const x = (w.x0 + w.x1) / 2, y = (w.top + w.bottom) / 2;
         return x > b.l && x < b.r && y > b.t && y < b.b;
       }).sort((a,b) => Math.abs(a.top-b.top) > 1 ? a.top-b.top : a.x0-b.x0);
-      const fills = (page.rectangles || []).filter(r => r.x0 <= b.l+1 && r.x1 >= b.r-1 && r.top <= b.t+1 && r.bottom >= b.b-1)
+      const fills = (page.rectangles || []).filter(r => grid.kind==='borderless'
+        ? r.x0 <= (b.l+b.r)/2 && r.x1 >= (b.l+b.r)/2 && r.top <= (b.t+b.b)/2 && r.bottom >= (b.t+b.b)/2
+        : r.x0 <= b.l+1 && r.x1 >= b.r-1 && r.top <= b.t+1 && r.bottom >= b.b-1)
         .sort((a,b) => (a.x1-a.x0)*(a.bottom-a.top)-(b.x1-b.x0)*(b.bottom-b.top));
       const sample = words[0];
       const uniform = sample && words.every(w => w.font_name === sample.font_name && Math.abs(w.size_pt-sample.size_pt)<.1 && w.color===sample.color && !!w.bold===!!sample.bold && !!w.italic===!!sample.italic);
@@ -67,11 +143,12 @@ export function sourceTables(evidence) {
       }
       const advances=lines.slice(1).map((l,i)=>l.top-lines[i].top).sort((a,b)=>a-b);
       const left=words.length?Math.min(...words.map(w=>w.x0)):b.l;
+      const background=fills[0]?.fill_color || '#ffffff';
       return { row:cell.start_row_offset_idx, col:cell.start_col_offset_idx, rowspan:cell.row_span, colspan:cell.col_span,
         text:words.map(w=>w.text).join(' '), widthPt:b.r-b.l,
-        background:fills[0]?.fill_color || '#ffffff',
+        background,
         borders:Object.fromEntries([['top',b.t,b.l,b.r],['right',b.r,b.t,b.b],['bottom',b.b,b.l,b.r],['left',b.l,b.t,b.b]].map(([side,pos,start,end])=>[side,sourceBorder(page.strokes,side,pos,start,end)])),
-        typography:uniform?{family:sample.font_family,name:sample.font_name,sizePt:sample.size_pt,color:sample.color,weight:sample.bold?700:400,style:sample.italic?'italic':'normal',
+        typography:uniform?{family:sample.font_family,name:sample.font_name,sizePt:sample.size_pt,color:darkColor(background)?'#ffffff':sample.color,weight:sample.bold?700:400,style:sample.italic?'italic':'normal',
           align:lines.every(l=>Math.abs((l.left-b.l)-(b.r-l.right))<1.5)?'center':'left',
           verticalAlign:Math.abs((Math.min(...words.map(w=>w.top))-b.t)-(b.b-Math.max(...words.map(w=>w.bottom))))<2?'middle':'top',
           leadingPt:advances.length?advances[Math.floor(advances.length/2)]:null,

@@ -19,77 +19,51 @@ function summarizeFindings(findings=[]){
   for(const f of findings)counts.set(f.category,(counts.get(f.category)||0)+1);
   return [...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
 }
+const missingTranslationCategories=new Set(['missing_structural_anchor','block_sequence_difference','translation_block_count_difference']);
+const clean=value=>String(value??'').replace(/\s+/g,' ').replace(/\|/g,'\\|').trim();
+function groupedFindings(findings=[]){
+  const groups=new Map();
+  for(const finding of findings){
+    const message=categoryReason[finding.category]||finding.detail;
+    const key=`${finding.language}|${finding.category}|${message}`;
+    if(!groups.has(key))groups.set(key,{language:finding.language,category:finding.category,message,count:0,locations:[]});
+    const group=groups.get(key);group.count++;
+    const location=clean(finding.location);
+    if(location&&!group.locations.includes(location)&&group.locations.length<3)group.locations.push(location);
+  }
+  return [...groups.values()].sort((a,b)=>b.count-a.count||a.language.localeCompare(b.language)||a.category.localeCompare(b.category));
+}
+function findingTable(lines,findings,empty){
+  const groups=groupedFindings(findings);
+  if(!groups.length){lines.push(empty,'');return;}
+  lines.push('| Limbă | Problemă | Cazuri | Exemple de locații |','|---|---|---:|---|');
+  for(const group of groups)lines.push(`| ${clean(group.language)} | ${clean(group.message)} | ${group.count} | ${group.locations.join('<br>')} |`);
+  lines.push('');
+}
 
 export function textReport(result) {
-  const lines = ['# ValidateBook: layout and structural integrity', '', `| | |`, `|---|---|`, `| **Status** | ${result.status} |`, `| **Mode** | ${result.scope} |`, `| **Documents** | ${result.documents.map(d => d.language).join(', ')} |`, `| **PDF pages checked** | ${result.pageCoverage.length} |`, `| **Applied corrections** | ${result.corrections.length} |`, `| **Unresolved findings** | ${result.findings.length} |`, ''];
   const unresolved = result.findings.filter(f => f.severity === 'error');
-  const warnings = result.findings.filter(f => f.severity !== 'error');
-  lines.push('## Probleme nerezolvate', '');
-  if (unresolved.length === 0) {
-    lines.push('Nicio problemă nerezolvată.', '');
-  } else {
-    lines.push('| # | Severitate | Limbă | Categorie | Locație | Detalii |', '|---|---|---|---|---|---|');
-    unresolved.forEach((f, i) => {
-      const detail = f.detail.replace(/\|/g, '\\|');
-      const location = String(f.location).replace(/\|/g, '\\|');
-      lines.push(`| ${i + 1} | ${f.severity} | ${f.language} | ${f.category} | ${location} | ${detail} |`);
-    });
-    lines.push('');
-    for (const f of unresolved) {
-      if (f.excerpts?.length) {
-        lines.push(`> **${f.category}** @ ${f.location}:`, '>');
-        for (const ex of f.excerpts) lines.push(`> ${ex.replace(/\n/g, '\n> ')} >`);
-        lines.push('');
-      }
-    }
-  }
-  if (warnings.length > 0) {
-    lines.push('### Avertismente', '');
-    lines.push('| # | Limbă | Categorie | Locație | Detalii |', '|---|---|---|---|---|');
-    warnings.forEach((f, i) => {
-      const detail = f.detail.replace(/\|/g, '\\|');
-      const location = String(f.location).replace(/\|/g, '\\|');
-      lines.push(`| ${i + 1} | ${f.language} | ${f.category} | ${location} | ${detail} |`);
-    });
-    lines.push('');
-  }
-  lines.push('## Sumar corecții aplicate', '');
+  const missing = unresolved.filter(f=>f.language!=='en'&&missingTranslationCategories.has(f.category));
+  const clear = unresolved.filter(f=>!missing.includes(f));
+  const lines = ['# ValidateBook: raport de corecție', '', `| | |`, `|---|---|`, `| **Status** | ${result.status} |`, `| **Limbi** | ${result.documents.map(d => d.language).join(', ')} |`, `| **Pagini PDF verificate** | ${result.pageCoverage.length} |`, `| **Corecții aplicate** | ${result.corrections.length} |`, `| **Erori rămase** | ${unresolved.length} |`, ''];
+  lines.push('## Erori clare rămase','');
+  findingTable(lines,clear,'Nicio eroare clară rămasă.');
+  lines.push('## Paragrafe sau blocuri posibil lipsă în traduceri','');
+  findingTable(lines,missing,'Nu au fost identificate paragrafe sau blocuri posibil lipsă în traduceri.');
+  lines.push('## Corecții aplicate', '');
   if (result.corrections.length === 0) {
     lines.push('Nicio corecție aplicată.', '');
   } else {
-    lines.push('| # | Limbă | Tip | Fișier |', '|---|---|---|---|');
-    result.corrections.forEach((c, i) => {
-      lines.push(`| ${i + 1} | ${c.language} | ${c.kind} | ${c.file} |`);
-    });
-    lines.push('');
-    const summary = {};
+    const summary = new Map();
     for (const c of result.corrections) {
       const key = `${c.language} / ${c.kind}`;
-      summary[key] = (summary[key] || 0) + 1;
+      if(!summary.has(key))summary.set(key,{count:0,files:new Set()});
+      const group=summary.get(key);group.count++;if(c.file)group.files.add(c.file);
     }
-    lines.push('**Grupat după limbă și tip:**', '');
-    for (const [key, count] of Object.entries(summary).sort()) {
-      lines.push(`- ${key}: ${count}`);
-    }
+    lines.push('| Limbă / tip | Fixuri | Fișiere afectate |','|---|---:|---:|');
+    for (const [key, group] of [...summary].sort(([a],[b])=>a.localeCompare(b)))lines.push(`| ${clean(key)} | ${group.count} | ${group.files.size} |`);
     lines.push('');
   }
-  lines.push('## Probleme inițiale detectate', '');
-  if (result.initialFindings?.length) {
-    for (const f of result.initialFindings) lines.push(`- [${f.language}] ${f.category} at ${f.location}: ${f.detail}`);
-  } else {
-    lines.push('Niciuna.');
-  }
-  lines.push('');
-  lines.push('## Limitări', '');
-  for (const l of result.limitations) lines.push(`- ${l}`);
-  lines.push('');
-  lines.push('## Recovery', '');
-  if (result.backups?.length) {
-    for (const b of result.backups) lines.push(`- ${b.file} → ${b.backup}`);
-  } else {
-    lines.push('Fișierele de lucru temporare au fost eliminate după livrarea raportului.');
-  }
-  lines.push('');
   return lines.join('\n') + '\n';
 }
 export async function writeLayoutReport(directory, result) {

@@ -42,6 +42,20 @@ function wordGroups(characters, styled, gap = 3) {
 function union(items) {
   return { x0: Math.min(...items.map(item => item.x0)), x1: Math.max(...items.map(item => item.x1)), top: Math.min(...items.map(item => item.top)), bottom: Math.max(...items.map(item => item.bottom)) };
 }
+function textItems(content, viewport, page) {
+  return content.items.flatMap(item => {
+    const text = expandLigatures(item.str || '').trim();
+    if (!text || !Number.isFinite(item.width) || item.width <= 0) return [];
+    const matrix = multiply(viewport.transform, item.transform);
+    const height = Math.abs(item.height || Math.hypot(matrix[2], matrix[3]));
+    const x0 = matrix[4], bottom = matrix[5], x1 = x0 + Math.abs(item.width);
+    const style = content.styles[item.fontName] || {}, font=page.commonObjs.get(item.fontName);
+    return [{ x0, x1, top:bottom-height, bottom, text, token:tokens(text)[0],
+      size_pt:height, font_name:font?.name || item.fontName || style.fontFamily || '',
+      font_family:fontFamily(font?.name || style.fontFamily || item.fontName || ''), color:'#000000',
+      bold:emphasis(font?.name || style.fontFamily || item.fontName || '').bold, italic:!!style.italic }];
+  });
+}
 
 function pageOperators(page, operators, styles, viewport) {
   const characters = [], rectangles = [], strokes = [], images = [], stack = [];
@@ -163,7 +177,7 @@ export async function inspectSource(input) {
         const indexes = words.flatMap((word, index) => word.x1 > box.x0 && word.x0 < box.x1 && word.bottom > box.top && word.top < box.bottom ? [index] : []);
         if (indexes.length) links.push({ word_indexes: indexes, href });
       }
-      pages.push({ page_number: number, width_pt: viewport.width, height_pt: viewport.height, words, lines, links, rectangles: extracted.rectangles, strokes: extracted.strokes, images: extracted.images });
+      pages.push({ page_number: number, width_pt: viewport.width, height_pt: viewport.height, words, lines, text_items:textItems(content,viewport,page), links, rectangles: extracted.rectangles, strokes: extracted.strokes, images: extracted.images });
       pageText.push(makeLines(2).map(line => line.text).join('\n'));
       page.cleanup();
     }
