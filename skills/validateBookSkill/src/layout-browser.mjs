@@ -115,7 +115,7 @@ export function applyDomRepairs(actions) {
     }
   };
   const before = text(), changes = [];
-  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[];
+  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[],addedTableHeaders=[];
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
@@ -244,7 +244,7 @@ export function applyDomRepairs(actions) {
     }
     const nodes = document.querySelectorAll(a.selector);
     if(nodes.length===0&&a.kind==='presentation'&&/> figcaption(?::nth-child\(\d+\))?$/.test(a.selector)&&![...document.querySelectorAll('figcaption')].some(node=>/^figure from pdf page \d+$/i.test(node.textContent.trim())))continue;
-    if(nodes.length===0&&['presentation','table_readable_columns','table_continuation'].includes(a.kind))continue;
+    if(nodes.length===0&&['presentation','table_readable_columns','table_continuation','table_source_pages'].includes(a.kind))continue;
     if (nodes.length !== 1) throw Error('Repair selector must match exactly one element [' + a.kind + ', count=' + nodes.length + ']: ' + a.selector);
     const n = nodes[0], old = n.outerHTML;
     if (a.kind === 'tag') {
@@ -305,6 +305,26 @@ export function applyDomRepairs(actions) {
       if(a.removedText){if(typeof a.removedText!=='string')throw Error('Invalid fragmented table removed text');removedTableHeaders.push(a.removedText);}
       for(const table of consumedTables.slice(1)){const wrap=table.closest('.pdf-table-wrap');(wrap||table).remove();}
       tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
+    } else if(a.kind==='table_source_pages'){
+      if(n.tagName!=='TABLE'||!Array.isArray(a.fragments)||a.fragments.length<2||a.fragments.some(fragment=>!Number.isInteger(fragment.page)||fragment.page<1||!Number.isInteger(fragment.bodyRows)||fragment.bodyRows<1))throw Error('Invalid source-page table distribution');
+      const rows=[...n.tBodies].flatMap(body=>[...body.rows]),expected=a.fragments.reduce((sum,fragment)=>sum+fragment.bodyRows,0);
+      if(rows.length!==expected)throw Error('Source-page table row count changed');
+      const firstPage=n.closest('.pdf-source-page'),firstNumber=Number(firstPage?.getAttribute('data-source-page')||firstPage?.getAttribute('data-reader-page'));
+      if(firstNumber!==a.fragments[0].page)throw Error('Source-page table starts in a different page container');
+      const header=n.tHead?.cloneNode(true);if(!header||!header.rows.length)throw Error('Source-page table has no repeatable header');
+      const headerText=header.textContent,tableTemplate=n.cloneNode(false),wrap=n.closest('.pdf-table-wrap'),wrapTemplate=wrap?.cloneNode(false);
+      let offset=0;
+      for(let index=0;index<a.fragments.length;index++){
+        const fragment=a.fragments[index],fragmentRows=rows.slice(offset,offset+fragment.bodyRows);offset+=fragment.bodyRows;
+        if(index&&fragmentRows[0]?.id!=='page_'+fragment.page)throw Error('Source-page table boundary anchor changed for page '+fragment.page);
+        if(index===0){const body=n.tBodies[0]||n.createTBody();body.replaceChildren(...fragmentRows);continue;}
+        const destination=document.querySelector('.pdf-source-page[data-source-page="'+fragment.page+'"],.pdf-source-page[data-reader-page="'+fragment.page+'"]');
+        if(!destination)throw Error('Missing destination page for source table fragment '+fragment.page);
+        const table=tableTemplate.cloneNode(false),thead=header.cloneNode(true),tbody=document.createElement('tbody');table.removeAttribute('id');tbody.append(...fragmentRows);table.append(thead,tbody);
+        const container=wrapTemplate?wrapTemplate.cloneNode(false):table;if(wrapTemplate){container.removeAttribute('id');container.append(table);}
+        destination.insertBefore(container,destination.firstChild);addedTableHeaders.push(headerText);
+      }
+      tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:a.fragments});
     } else if(a.kind==='table_continuation'){
       const continuations=Array.isArray(a.continuations)?a.continuations:(a.continuation?[{selector:a.continuation,headerTexts:a.headerTexts,mode:'drop_repeated_header'}]:[]);
       if(n.tagName!=='TABLE'||!Array.isArray(a.headerTexts)||!a.headerTexts.length||!continuations.length)throw Error('Invalid table continuation repair');
@@ -348,7 +368,8 @@ export function applyDomRepairs(actions) {
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
   const removedText=removedGenerated.join('')+removedRunning.join('')+removedTableHeaders.join('');
-  if (text() !== before && (!(tableReflow||removedText)||characterInventory(text()+removedText)!==characterInventory(before))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
+  const addedText=addedTableHeaders.join('');
+  if (text() !== before && (!(tableReflow||removedText||addedText)||characterInventory(text()+removedText)!==characterInventory(before+addedText))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
   const dt = document.doctype;
   const doctype = dt ? '<!DOCTYPE ' + dt.name + (dt.publicId ? ' PUBLIC "' + dt.publicId + '"' : '') + (dt.systemId ? (dt.publicId ? '' : ' SYSTEM') + ' "' + dt.systemId + '"' : '') + '>\n' : '';
   return { html: doctype + document.documentElement.outerHTML, changes, stylesheet };

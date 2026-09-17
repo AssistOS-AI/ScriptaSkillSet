@@ -65,7 +65,7 @@ const sourceTableContinuations = profile => {
       repairRowOffset+=part.rows;
       rowOffset+=partIndex?part.rows-1:part.rows;
     }
-    result.push({...current,rows:rowOffset,cells,repairRows:repairRowOffset,repairCells,continuedPages:group.map(t=>t.page),bottomPt:group.at(-1).bottomPt});
+    result.push({...current,rows:rowOffset,cells,repairRows:repairRowOffset,repairCells,continuedPages:group.map(t=>t.page),sourceParts:group,bottomPt:group.at(-1).bottomPt});
   }
   return result;
 };
@@ -130,6 +130,11 @@ const rawTokens = text => {
 };
 const sourceCasedText = (text,sourceText) => {
   const source=[...String(sourceText).matchAll(/[\p{L}\p{N}]+/gu)].map(match=>match[0]);
+  const target=[...String(text).matchAll(/[\p{L}\p{N}]+/gu)].map(match=>match[0]);
+  // PDF font extraction can split one word into glyph runs (for example
+  // "scienti fi c"). That is not a casing difference and must never authorize
+  // a prose rewrite.
+  if(source.length!==target.length||source.some((word,index)=>normalizeText(word)!==normalizeText(target[index])))return String(text);
   let index=0;
   return String(text).replace(/[\p{L}\p{N}]+/gu, word => source[index++] || word);
 };
@@ -271,8 +276,26 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
   const findings=[],actions=[],matches=[];
   const tables=document.records.filter(r=>r.tag==='table');
   const matched=new Set();
-  const logicalProfile=sourceTableContinuations(profile);
+  const splitSources=new Set();
+  for(const logical of sourceTableContinuations(profile).filter(source=>source.sourceParts?.length>1)){
+    const candidates=tables.filter(table=>(!table.page||Number(table.page)===logical.page)).map(table=>tableCandidate(logical,table)).filter(Boolean);
+    if(candidates.length===1){
+      const candidate=candidates[0],fragments=logical.sourceParts.map(part=>({page:part.page,bodyRows:part.rows-1}));
+      matched.add(candidate.table.selector);logical.sourceParts.forEach(part=>splitSources.add(part));
+      const repair={kind:'table_source_pages',selector:candidate.table.selector,fragments};
+      findings.push(issue(language,'source_table_page_distribution',candidate.table.selector,'A multipage source table was merged into one HTML page; distribute its certified rows back into their source page containers.',{page:logical.page,nextPage:logical.sourceParts.at(-1).page,repair}));
+      actions.push(repair);continue;
+    }
+    const pageTables=tables.filter(table=>(!table.page||Number(table.page)===logical.page)),repair=fragmentedTableRepair(logical,pageTables,document.records);
+    if(repair){
+      pageTables.forEach(table=>matched.add(table.selector));logical.sourceParts.forEach(part=>splitSources.add(part));
+      findings.push(issue(language,'source_table_fragmentation',repair.selector,'One multipage PDF table was split into malformed HTML rows or adjacent text; exact column token streams provide a deterministic reconstruction before source-page distribution.',{page:logical.page}));
+      actions.push(repair);
+    }
+  }
+  const logicalProfile=profile;
   for (const source of logicalProfile) {
+    if(splitSources.has(source))continue;
     if(source.unmappedTranslation){findings.push(issue(language,'translated_table_unmapped','PDF page '+source.page,'Table has no unique translated counterpart; source styling cannot be certified.'));continue;}
     const candidates=tables.filter(t=>(!t.page||Number(t.page)===source.page)).map(t=>tableCandidate(source,t)).filter(Boolean);
     if(candidates.length!==1){
@@ -296,7 +319,7 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
     const cellActions=[];
     for(let i=0;i<source.cells.length;i++){
       const c=source.cells[i], actual=actualCells[i], f=c.typography;
-      if(c.text&&!f){findings.push(issue(language,'source_table_typography_unmapped',actual.selector,'Mixed or missing source cell typography cannot be transferred as one style.'));continue;}
+      if(c.text&&!f)findings.push(issue(language,'source_table_typography_unmapped',actual.selector,'Mixed or missing source cell typography cannot be transferred as one style.'));
       const properties={'background-color':c.background,width:(100*c.widthPt/source.widthPt).toFixed(3)+'%','vertical-align':f?.verticalAlign||'top','box-sizing':'border-box'};
       let wrong=actual.background!==rgb(c.background) || Math.abs(actual.width/tableWidth-c.widthPt/source.widthPt)>.015;
       if(f?.verticalAlign&&actual.verticalAlign!==f.verticalAlign)wrong=true;

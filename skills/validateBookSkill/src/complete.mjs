@@ -174,23 +174,20 @@ export async function complete(root,options={}) {
     try{result=await completeCandidate(copy.stagedRoot,{...options,jobDir:path.join(transaction,'audit')});}
     catch(error){
       const reportText=path.join(selection.root,'RAPORT-CORECTII.md');
-      await fs.writeFile(reportText,'Status: failed\nInstalled: false\nOriginal files preserved.\n'+error.message+'\nEvidence: '+transaction+'\n');
+      await fs.writeFile(reportText,'Status: failed\nInstalled: false\nOriginal files preserved.\n'+error.message+'\n');
       throw error;
     }
     const accepted=!result.failure&&['passed','passed_with_warnings','completed_with_errors'].includes(result.status);
     const installation=accepted?await installWorkingCopy(copy,transaction,result):[];
     const reportText=path.join(selection.root,'RAPORT-CORECTII.md');
     const reportBody=(await fs.readFile(result.reportText,'utf8')).replaceAll(copy.stagedRoot,selection.root);
-    const evidenceLine=accepted?`Temporary evidence: ${transaction} (removed after successful cleanup)`: `Evidence: ${transaction}`;
-    await fs.writeFile(reportText,`Installed: ${accepted}\n${accepted?'Verified candidate installed.':'Candidate rejected; original files preserved.'}\n${evidenceLine}\n\n`+reportBody);
+    await fs.writeFile(reportText,`Installed: ${accepted}\n${accepted?'Verified candidate installed.':'Candidate rejected; original files preserved.'}\n\n`+reportBody);
     await writeJson(path.join(transaction,'transaction.json'),{accepted,installation,root:selection.root,stagedRoot:copy.stagedRoot,reportText});
     if(accepted){
       try{
         const removed=await cleanupCompletedWork(selection.root,transaction,{...result,installed:true});
-        await fs.appendFile(reportText,'Cleanup completed: '+removed.join(', ')+'\n');
         return {...result,installed:true,installation,reportText,job:null,stateFile:null,cleanup:{status:'completed',removed}};
       }catch(error){
-        await fs.appendFile(reportText,'Cleanup incomplete: '+error.message+'\n');
         return {...result,installed:true,installation,reportText,cleanup:{status:'incomplete',error:error.message}};
       }
     }

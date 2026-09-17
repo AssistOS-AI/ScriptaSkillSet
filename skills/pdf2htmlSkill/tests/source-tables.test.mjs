@@ -36,6 +36,7 @@ test('horizontal rules and alternating cell fills recover unstroked columns',()=
   assert.equal(tables[0].topPt,20);assert.equal(tables[0].bottomPt,110);
   assert.deepEqual(tables[0].cells.map(c=>c.widthPt),[100,200,100,200,100,200]);
   assert.equal(tables[0].cells[2].background,'#ffffff');
+  assert.equal(tables[0].cells[2].typography.paddingPt[0],tables[0].cells[2].typography.paddingPt[2]);
   assert(tables[0].cells.every(c=>c.borders.left==='0'&&c.borders.right==='0'));
 });
 test('decorative fills, crossing text and missing row boundaries do not invent a table',()=>{
@@ -57,6 +58,23 @@ test('aligned borderless rows and a one-row repeated-header continuation are cer
   const grids=borderlessGrids(pages);assert.equal(grids.get(1).length,1);assert.equal(grids.get(2).length,1);
   const tables=sourceTables({pages});assert.deepEqual(tables.map(table=>[table.page,table.rows,table.columns]),[[1,3,2],[2,2,2]]);
   assert.deepEqual(tables[0].cells.map(cell=>cell.text),['Concept','Meaning in practice','Statistical bias','A systematic estimation error continued','Inductive bias','A structural preference']);
+});
+test('one-row first page is certified by the following repeated grid',()=>{
+  const pages=[borderlessPage(1,[['Authority bias','An authority explanation']]),borderlessPage(2,[['Bayesian prior','A prior explanation'],['Bibliometrics','A publication explanation']])];
+  const tables=sourceTables({pages});
+  assert.deepEqual(tables.map(table=>[table.page,table.rows,table.columns]),[[1,2,2],[2,3,2]]);
+});
+test('indented inline text remains in the current right-column cell',()=>{
+  const page=borderlessPage(1,[['Authority bias','An authority explanation','Wikipedia'],['Bayesian prior','A prior explanation']]);
+  const link=page.text_items.find(item=>item.text==='Wikipedia');
+  link.x0=300;link.top-=2;link.bottom-=2;
+  assert.equal(sourceTables({pages:[page]})[0].cells[3].text,'An authority explanation Wikipedia');
+});
+test('a trailing link font does not hide dominant cell typography',()=>{
+  const page=borderlessPage(1,[['Authority bias','Line one','Line two'],['Bayesian prior','A prior explanation']]);
+  const link=page.text_items.find(item=>item.text==='Line two');link.text='Wikipedia';link.size_pt=12;
+  for(let index=0;index<8;index++)page.text_items.push({...page.text_items.find(item=>item.text==='Line one'),text:'Continuation '+index,top:82+index*2,bottom:92+index*2});
+  assert.equal(sourceTables({pages:[page]})[0].cells[3].typography.sizePt,10);
 });
 test('ordinary prose and an isolated two-column pair are not borderless tables',()=>{
   const prose=borderlessPage(1,[['Only one label','Only one explanation']]);

@@ -29,6 +29,21 @@ test('table validation catches white-on-light headers, changed fills, borders an
     const result=compareTables([source],broken,options);assert(result.findings.some(f=>f.category==='source_table_cell_difference'&&f.severity==='error'));assert(result.actions.some(a=>a.selector==='#c0'));
   }
 });
+test('split PDF glyph runs do not authorize a table text rewrite',()=>{
+  const split=structuredClone(source),doc=documentFixture();
+  split.cells[3].text='Public benefit scienti fi c';
+  doc.records[0].cells[3].text='Public benefit scientific';
+  const result=compareTables([split],doc,options);
+  assert(!result.actions.some(action=>action.kind==='table_fragments'));
+  assert(!result.findings.some(finding=>finding.category==='source_table_text_case_difference'));
+});
+test('mixed source typography still transfers structural cell presentation',()=>{
+  const mixed=structuredClone(source),doc=documentFixture();
+  mixed.cells[3].typography=null;doc.records[0].cells[3].width=300;
+  const result=compareTables([mixed],doc,options);
+  assert(result.findings.some(finding=>finding.category==='source_table_typography_unmapped'));
+  assert(result.actions.some(action=>action.selector==='#c3'&&action.properties.width==='66.667%'));
+});
 test('partial text, wrong spans, duplicate tables and unsupported source grids never authorize repairs',()=>{
   for(const mutate of [d=>d.records[0].cells[0].text+=' Extra',d=>d.records[0].cells[0].colspan=2,d=>d.records.push(structuredClone(d.records[0]))]){
     const doc=documentFixture();mutate(doc);const result=compareTables([source],doc,options);assert(result.findings.length);assert.equal(result.actions.length,0);
@@ -134,6 +149,17 @@ test('continued source table is reconstructed from one malformed HTML table with
   assert.deepEqual(repair.rows.map(row=>row[0].text),['Stage','Juxtaposition','Shared vocabulary','Abstraction','Parallelism','Elaboration','Caveat']);
   assert.equal(repair.rows[5][3].text,'Internal confirmations appear to be independent support');
   assert(!result.findings.some(f=>f.category==='source_table_unmapped'||f.category==='html_table_unmapped'));
+});
+
+test('a merged exact table is distributed back to certified source pages',()=>{
+  const first=structuredClone(source),second=structuredClone(source),doc=documentFixture();
+  second.page=15;second.cells[2].text='Other sponsor';second.cells[3].text='Other benefit';
+  const extra=doc.records[0].cells.slice(2).map((cell,index)=>({...cell,row:2,selector:'#extra'+index,text:second.cells[index+2].text}));
+  doc.records[0].cells.push(...extra);doc.records[0].rows=[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}],[{tag:'td'},{tag:'td'}]];
+  const result=compareTables([first,second],doc,options),action=result.actions.find(item=>item.kind==='table_source_pages');
+  assert(action);assert.deepEqual(action.fragments,[{page:14,bodyRows:1},{page:15,bodyRows:1}]);
+  assert(result.findings.some(finding=>finding.category==='source_table_page_distribution'));
+  assert(!result.findings.some(finding=>finding.category==='source_table_unmapped'||finding.category==='html_table_unmapped'));
 });
 
 test('source table fragments emitted as adjacent paragraphs are nonblocking when text is present',()=>{

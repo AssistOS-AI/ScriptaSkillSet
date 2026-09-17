@@ -76,7 +76,10 @@ function borderlessCandidate(page,lines,headerIndex,minRows) {
     if(line.items.some(item=>item.x0<header.rightX-2&&item.x1>header.rightX+2))break;
     const left=line.items.filter(item=>item.x0<header.rightX-2),right=line.items.filter(item=>item.x0>=header.rightX-2);
     const startsRow=left.length&&right.length&&Math.abs(left[0].x0-header.leftX)<8&&Math.abs(right[0].x0-header.rightX)<8;
-    const continues=!left.length&&right.length&&Math.abs(right[0].x0-header.rightX)<8;
+    // Inline links and superscripts can have a slightly shifted baseline and
+    // begin later inside the right column. They still belong to the current
+    // cell as long as no text crosses back into the left column.
+    const continues=!left.length&&right.length&&right[0].x0>=header.rightX-2;
     if(startsRow){current={lines:[line]};rows.push(current);}
     else if(continues&&current)current.lines.push(line);
     else break;
@@ -94,7 +97,7 @@ function borderlessCandidate(page,lines,headerIndex,minRows) {
   return {kind:'borderless',header:[header.leftText,header.rightText],bbox:{l:left,r:right,t:tops[0]-3,b:bottoms.at(-1)},num_rows:groups.length,num_cols:2,table_cells:cells};
 }
 export function borderlessGrids(pages) {
-  const result=new Map(),previous=[];
+  const result=new Map(),previous=[],pending=[];
   for(const page of pages){
     const lines=textLines(page),accepted=[];
     for(let i=0;i<lines.length;i++){
@@ -103,9 +106,18 @@ export function borderlessGrids(pages) {
         const continuation=borderlessCandidate(page,lines,i,1);
         const prior=previous.find(grid=>grid.page===page.page_number-1&&continuation&&grid.header.every((text,index)=>text===continuation.header[index])&&Math.abs((grid.bbox.r-grid.bbox.l)-(continuation.bbox.r-continuation.bbox.l))<.5);
         if(prior)candidate=continuation;
+        else if(continuation)pending.push({...continuation,page:page.page_number});
       }
       if(!candidate||accepted.some(grid=>candidate.bbox.t<grid.bbox.b&&candidate.bbox.b>grid.bbox.t))continue;
       accepted.push(candidate);previous.push({...candidate,page:page.page_number});
+      // A multipage table may start with only one body row. Certify that
+      // pending fragment once the next page establishes the repeated grid.
+      const predecessor=pending.find(grid=>grid.page===page.page_number-1&&grid.header.every((text,index)=>text===candidate.header[index])&&Math.abs((grid.bbox.r-grid.bbox.l)-(candidate.bbox.r-candidate.bbox.l))<.5);
+      if(predecessor){
+        const priorAccepted=result.get(predecessor.page)||[];
+        if(!priorAccepted.some(grid=>predecessor.bbox.t<grid.bbox.b&&predecessor.bbox.b>grid.bbox.t))priorAccepted.push(predecessor);
+        result.set(predecessor.page,priorAccepted);previous.push(predecessor);
+      }
     }
     result.set(page.page_number,accepted);
   }
@@ -127,13 +139,22 @@ export function sourceTables(evidence) {
       const words = (grid.kind==='borderless'?page.text_items:page.words).filter(w => {
         const x = (w.x0 + w.x1) / 2, y = (w.top + w.bottom) / 2;
         return x > b.l && x < b.r && y > b.t && y < b.b;
-      }).sort((a,b) => Math.abs(a.top-b.top) > 1 ? a.top-b.top : a.x0-b.x0);
+      // Link annotations and split glyph runs can sit a couple of points off
+      // the surrounding baseline. Keep visual-line reading order before
+      // moving to the next line.
+      }).sort((a,b) => Math.abs(a.top-b.top) > 2.5 ? a.top-b.top : a.x0-b.x0);
       const fills = (page.rectangles || []).filter(r => grid.kind==='borderless'
         ? r.x0 <= (b.l+b.r)/2 && r.x1 >= (b.l+b.r)/2 && r.top <= (b.t+b.b)/2 && r.bottom >= (b.t+b.b)/2
         : r.x0 <= b.l+1 && r.x1 >= b.r-1 && r.top <= b.t+1 && r.bottom >= b.b-1)
         .sort((a,b) => (a.x1-a.x0)*(a.bottom-a.top)-(b.x1-b.x0)*(b.bottom-b.top));
-      const sample = words[0];
-      const uniform = sample && words.every(w => w.font_name === sample.font_name && Math.abs(w.size_pt-sample.size_pt)<.1 && w.color===sample.color && !!w.bold===!!sample.bold && !!w.italic===!!sample.italic);
+      const styleKey=w=>[w.font_name,Math.round(w.size_pt*10),w.color,!!w.bold,!!w.italic].join('|');
+      const styles=new Map();
+      for(const word of words){const key=styleKey(word),entry=styles.get(key)||{count:0,sample:word};entry.count++;styles.set(key,entry);}
+      const dominant=[...styles.values()].sort((a,b)=>b.count-a.count)[0];
+      // A trailing link may have a larger annotation font while the cell's
+      // paragraph typography is otherwise uniform. Transfer that dominant
+      // base style; genuinely mixed cells remain explicit.
+      const sample=dominant&&dominant.count/words.length>=.8?dominant.sample:null;
       const lines = [];
       for (const w of words) {
         let line = lines.find(l => Math.abs(l.top-w.top)<1);
@@ -148,12 +169,15 @@ export function sourceTables(evidence) {
         text:words.map(w=>w.text).join(' '), widthPt:b.r-b.l,
         background,
         borders:Object.fromEntries([['top',b.t,b.l,b.r],['right',b.r,b.t,b.b],['bottom',b.b,b.l,b.r],['left',b.l,b.t,b.b]].map(([side,pos,start,end])=>[side,sourceBorder(page.strokes,side,pos,start,end)])),
-        typography:uniform?{family:sample.font_family,name:sample.font_name,sizePt:sample.size_pt,color:darkColor(background)?'#ffffff':sample.color,weight:sample.bold?700:400,style:sample.italic?'italic':'normal',
+        typography:sample?{family:sample.font_family,name:sample.font_name,sizePt:sample.size_pt,color:darkColor(background)?'#ffffff':sample.color,weight:sample.bold?700:400,style:sample.italic?'italic':'normal',
           align:lines.every(l=>Math.abs((l.left-b.l)-(b.r-l.right))<1.5)?'center':'left',
           verticalAlign:Math.abs((Math.min(...words.map(w=>w.top))-b.t)-(b.b-Math.max(...words.map(w=>w.bottom))))<2?'middle':'top',
           leadingPt:advances.length?advances[Math.floor(advances.length/2)]:null,
           indentPt:lines.length>1?Math.max(0,lines[0].left-left):0,
-          paddingPt:[Math.max(0,Math.min(...words.map(w=>w.top))-b.t),Math.max(0,left-b.l),Math.max(0,b.b-Math.max(...words.map(w=>w.bottom))),Math.max(0,left-b.l)]}:null };
+          // The empty area below short text is row height supplied by the
+          // adjacent cell, not CSS bottom padding. Use the observed top inset
+          // symmetrically so responsive rows can size to their content.
+          paddingPt:[Math.max(0,Math.min(...words.map(w=>w.top))-b.t),Math.max(0,left-b.l),Math.max(0,Math.min(...words.map(w=>w.top))-b.t),Math.max(0,left-b.l)]}:null };
     });
     tables.push({page:page.page_number,pageWidthPt:page.width_pt,topPt:grid.bbox.t,bottomPt:grid.bbox.b,rows:grid.num_rows,columns:grid.num_cols,widthPt:grid.bbox.r-grid.bbox.l,cells});
   }
