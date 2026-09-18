@@ -342,12 +342,12 @@ export async function prepare(root, options = {}) {
       if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const listCheck=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);initialFindings.push(...listCheck.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure differs from HTML.',f)));}
       const beforeDisplay = before.layouts.flatMap(l => checkDisplay(l, item.language));
       const translatedStyles=english?translationStyles(english,sourceType,sourceFontMap):null;
-      const canonicalTranslation=english?canonicalTranslationActions(english,before,item.language,presentation.defaultSizePx*(presentation.scale||1)):null;
+      const structure = english ? compareStructure(english, before, item.language) : null;
+      const canonicalTranslation=english?canonicalTranslationActions(english,before,item.language,presentation.defaultSizePx*(presentation.scale||1),structure?.alignment):null;
       const translationPresentationActions=[
         ...(canonicalTranslation?.actions||[])
       ];
       const repairShells=beforeDisplay.some(f=>['page_spacing_ownership_conflict','reader_root_incomplete'].includes(f.category));
-      const structure = english ? compareStructure(english, before, item.language) : null;
       if(english)initialFindings.push(...compareImageStyles(english,before,item.language).findings);
       const tableProfile=english?translatedTables(decorations.tables,english,before,structure):decorations.tables;
       const tableOptions={sourceFontMap,defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),language:item.language};
@@ -383,7 +383,7 @@ export async function prepare(root, options = {}) {
             const sourceSize=parseFloat(sourceBlock?.font?.size)/sourceScale;
             const sourceLeading=parseFloat(sourceBlock?.style?.lineHeight)/sourceScale;
             if(sourceBlock?.tag==='p'&&Number.isFinite(sourceSize)&&sourceSize>0){
-              const properties={'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${sourceSize/presentation.defaultSizePx})`};
+              const properties={'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${presentation.defaultSizePx}px)) * ${sourceSize/presentation.defaultSizePx} * var(--validatebook-page-scale, 1))`};
               if(Number.isFinite(sourceLeading)&&sourceLeading>0)properties['line-height']=String(sourceLeading/sourceSize);
               actions.push({kind:'presentation',selector:match.target,properties,safeTranslationStyle:true});
             }
@@ -394,13 +394,14 @@ export async function prepare(root, options = {}) {
           actions.push(...structure.findings.filter(f => f.repair).map(f => f.repair));
           actions.push(...decorationActions(compareDecorations(targetDecorations,before,item.language)));
         }
-        const safeRejected=[];
+        const safeRejected=[];let retryTranslationActions=[];
         const split=splitSafeVisibleContentRepairs(actions);
         if(split.safe.length){
           try{await applySafeVisibleContent(item,split.safe);}
           catch(error){
             await writeJson(path.join(directory,'rejected-candidate-'+item.language+'-safe-visible-content.json'),{file:item.file,batch:'safe-visible-content',error:error.message,findings:error.findings||[],actions:split.safe.map(a=>a.kind)});
             safeRejected.push(issue(item.language,'safe_content_correction_rejected','safe-visible-content',error.message));
+            retryTranslationActions=split.safe.filter(action=>action.safeTranslationStyle);
           }
           actions.splice(0,actions.length,...split.batch);
         }
@@ -409,7 +410,7 @@ export async function prepare(root, options = {}) {
         else {
           if(options.paginate&&pagePresentation)batches.push({name:'pagination',actions:[]});
           if(displayRepairs.length)batches.push({name:'display',actions:displayRepairs});
-          if(translationPresentationActions.length)batches.push({name:'translation-presentation',actions:translationPresentationActions});
+          if(retryTranslationActions.length)batches.push({name:'translation-presentation',actions:retryTranslationActions});
         }
         const rejected=[];
         const accepted=await tryCorrectionBatches(batches,batch=>apply(item,batch.actions,presentation,repairShells,batch.name),async(batch,error)=>{

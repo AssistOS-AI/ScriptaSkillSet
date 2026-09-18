@@ -123,6 +123,228 @@ const tableCandidate = (source,table) => {
   return projected.length===source.cells.length?{table,cells:projected,gridRepair:{kind:'table_grid',selector:table.selector,rows}}:null;
 };
 
+const groupPages = group => group.continuedPages?.length?group.continuedPages:[group.page];
+const groupEndsAt = group => groupPages(group).at(-1);
+const rowsFromCells = cells => {
+  const byRow = new Map();
+  for (const cell of cells) { if (!byRow.has(cell.row)) byRow.set(cell.row, []); byRow.get(cell.row).push(cell); }
+  return [...byRow.entries()].sort((a,b)=>a[0]-b[0]).map(([,row])=>row.sort((a,b)=>a.col-b.col));
+};
+const rowKey = cells => cells.map(cell=>compact(folioTrim(cell.text))).join('|');
+const folioTrim = text => String(text).replace(/\s+\d{1,4}(?:\s*[—–-]\s*)+\s*$/u,'');
+const characterKey = text => String(text).normalize('NFKC').replace(/[\s\u00ad]+/gu,'');
+const exactRowKey = cells => cells.map(cell=>characterKey(folioTrim(cell.text))).join('|');
+const characterBag = text => [...characterKey(text)].sort().join('');
+const uniqueTokenInterleave = (input,cells) => {
+  const streams=cells.map(cell=>normalizeText(cell.text).split(' ').filter(Boolean));
+  if(input.length!==streams.reduce((sum,stream)=>sum+stream.length,0))return false;
+  const memo=new Map();
+  const solve=(at,positions)=>{
+    if(at===input.length)return positions.every((position,index)=>position===streams[index].length)?1:0;
+    const key=at+'|'+positions.join(',');if(memo.has(key))return memo.get(key);
+    let ways=0;
+    for(let col=0;col<streams.length&&ways<2;col++)if(streams[col][positions[col]]===input[at]){
+      const next=positions.slice();next[col]++;ways+=solve(at+1,next);
+    }
+    ways=Math.min(2,ways);memo.set(key,ways);return ways;
+  };
+  return solve(0,streams.map(()=>0))===1;
+};
+const uniquelyInterleaves = (text,cells) => characterBag(text)===characterBag(cells.map(cell=>cell.text).join(' '))&&uniqueTokenInterleave(normalizeText(text).split(' ').filter(Boolean),cells);
+const paragraphCoversRows = (text,rows) => {
+  if(characterBag(text)!==characterBag(rows.flat().map(cell=>cell.text).join(' ')))return false;
+  const input=normalizeText(text).split(' ').filter(Boolean);let offset=0;
+  for(const row of rows){
+    const count=row.reduce((sum,cell)=>sum+normalizeText(cell.text).split(' ').filter(Boolean).length,0);
+    if(!uniqueTokenInterleave(input.slice(offset,offset+count),row))return false;
+    offset+=count;
+  }
+  return offset===input.length;
+};
+
+const paragraphTableRepair = (source,records) => {
+  if(source.cells.some(cell=>cell.rowspan!==1||cell.colspan!==1))return null;
+  const rows=rowsFromCells(source.cells),paragraphs=records.filter(record=>record.tag==='p'&&Number(record.page)===source.page&&record.text).sort((a,b)=>(a.nodeIndex??0)-(b.nodeIndex??0));
+  const solutions=[];
+  for(let start=0;start<paragraphs.length;start++){
+    const selected=[];let row=0,index=start,valid=true;
+    while(row<rows.length&&index<paragraphs.length){
+      const matches=[];
+      for(let count=1;count<=Math.min(4,rows.length-row);count++)if(paragraphCoversRows(paragraphs[index].text,rows.slice(row,row+count)))matches.push(count);
+      if(matches.length!==1){valid=false;break;}
+      selected.push(paragraphs[index]);row+=matches[0];index++;
+    }
+    if(valid&&row===rows.length)solutions.push(selected);
+  }
+  if(solutions.length!==1)return null;
+  const selected=solutions[0];
+  return {kind:'table_from_paragraphs',selector:selected[0].selector,paragraphs:selected.map(record=>({selector:record.selector,text:record.text})),rows:rows.map((cells,row)=>cells.map(cell=>({tag:row===0?'th':'td',text:cell.text})))};
+};
+
+// A converter can merge several distinct consecutive source tables into one
+// HTML table, dropping some repeated headers and keeping others. Exact row
+// mapping lets the repair restore both the logical table and page boundaries.
+const chainedTableMatch = (groups, table) => {
+  const htmlRows = rowsFromCells(table.cells || []);
+  if (!htmlRows.length) return null;
+  for (let start=0; start<groups.length; start++) {
+    const first = groups[start];
+    if (table.page && Number(first.page)!==Number(table.page)) continue;
+    const expected = [], headerRows = [], chained = [];
+    let totalRows = 0;
+    for (let end=start; end<groups.length; end++) {
+      const group = groups[end];
+      if (end>start) {
+        const previous = groups[end-1];
+        if (groupPages(group)[0]!==groupEndsAt(previous)+1) break;
+        if (group.columns!==previous.columns||Math.abs(group.widthPt-previous.widthPt)>.5) break;
+      }
+      if (group.cells.some(cell=>cell.rowspan!==1||cell.colspan!==1)) break;
+      const groupRows = rowsFromCells(group.cells), groupIndex = chained.length, rowBase = totalRows;
+      groupRows.forEach((row,r)=>expected.push({ row:rowBase+r, cells:row, groupIndex, isHeader:r===0, headerKey:rowKey(groupRows[0]) }));
+      headerRows[groupIndex] = expected.find(row=>row.groupIndex===groupIndex&&row.isHeader);
+      totalRows += group.rows;
+      chained.push(group);
+      if (chained.length<2) continue;
+      const mapping = [];
+      let index = 0, aligned = true;
+      for (const htmlRow of htmlRows) {
+        const key = rowKey(htmlRow);
+        if (index<expected.length && key===rowKey(expected[index].cells)) { mapping.push(expected[index]); index++; continue; }
+        const previous = expected[index-1];
+        if (previous && !previous.isHeader && key===previous.headerKey) { mapping.push(headerRows[previous.groupIndex]); continue; }
+        aligned = false; break;
+      }
+      if (!aligned || index!==expected.length) continue;
+      const sourceCells = [];
+      htmlRows.forEach((htmlRow,hi)=>htmlRow.forEach(htmlCell=>{
+        const target = mapping[hi], source = target.cells.find(cell=>cell.col===htmlCell.col);
+        sourceCells.push(source || target.cells[0]);
+      }));
+      return { groups: chained.slice(), source: { ...first, rows: totalRows, cells: sourceCells }, htmlRows, mapping };
+    }
+  }
+  return null;
+};
+
+// Normalize only source-proven conversion damage before page distribution:
+// adjacent physical rows may form one source row, and a source row may have
+// been emitted as one adjacent paragraph. Every non-whitespace character and
+// column boundary must match the PDF evidence exactly.
+const normalizedChainedTableRepair = (groups,table,records) => {
+  const htmlRows=rowsFromCells(table.cells||[]);
+  if(!htmlRows.length||htmlRows.some(row=>row.some(cell=>cell.rowspan!==1||cell.colspan!==1)))return null;
+  for(let start=0;start<groups.length;start++){
+    if(table.page&&Number(groups[start].page)!==Number(table.page))continue;
+    const chained=[],expected=[];
+    for(let end=start;end<groups.length;end++){
+      const group=groups[end];
+      if(end>start){
+        const previous=groups[end-1];
+        if(groupPages(group)[0]!==groupEndsAt(previous)+1||group.columns!==previous.columns||Math.abs(group.widthPt-previous.widthPt)>.5)break;
+      }
+      if(group.cells.some(cell=>cell.rowspan!==1||cell.colspan!==1))break;
+      const groupIndex=chained.length,groupRows=rowsFromCells(group.cells);
+      groupRows.forEach((cells,row)=>expected.push({cells,groupIndex,isHeader:row===0,headerKey:exactRowKey(groupRows[0])}));
+      chained.push(group);
+      const firstPage=groupPages(chained[0])[0],lastPage=groupEndsAt(group);
+      const paragraphs=records.filter(record=>record.tag==='p'&&Number(record.page)>=firstPage&&Number(record.page)<=lastPage&&record.text);
+      const usedParagraphs=new Set(),plan=[];let at=0,changed=false,valid=true;
+      for(let targetIndex=0;targetIndex<expected.length;targetIndex++){
+        const target=expected[targetIndex];
+        if(at<htmlRows.length&&exactRowKey(htmlRows[at])===exactRowKey(target.cells)){plan.push({rows:[at++]});continue;}
+        let merged=null;
+        for(let count=2;at+count<=htmlRows.length;count++){
+          const rows=htmlRows.slice(at,at+count);
+          if(rows.some(row=>row.length!==target.cells.length))break;
+          const key=target.cells.map((_,col)=>characterKey(rows.map(row=>row[col].text).join(' '))).join('|');
+          if(key===exactRowKey(target.cells)){merged=Array.from({length:count},(_,index)=>at+index);break;}
+          if(count===4)break;
+        }
+        if(merged){plan.push({rows:merged});at+=merged.length;changed=true;continue;}
+        const matches=paragraphs.filter(record=>!usedParagraphs.has(record.selector)&&uniquelyInterleaves(record.text,target.cells));
+        if(matches.length===1){
+          const paragraph=matches[0];usedParagraphs.add(paragraph.selector);plan.push({paragraph:paragraph.selector,text:paragraph.text,cells:target.cells.map(cell=>cell.text)});changed=true;continue;
+        }
+        if(at<htmlRows.length&&!target.isHeader&&exactRowKey(htmlRows[at])===target.headerKey){plan.push({rows:[at++]});targetIndex--;continue;}
+        valid=false;break;
+      }
+      while(valid&&at<htmlRows.length&&exactRowKey(htmlRows[at])===expected.at(-1)?.headerKey)plan.push({rows:[at++]});
+      if(!valid||at!==htmlRows.length||!changed)continue;
+      const used=plan.flatMap(item=>item.rows||[]);
+      if(used.length!==htmlRows.length||new Set(used).size!==htmlRows.length)return null;
+      return {groups:chained,action:{kind:'table_normalize_rows',selector:table.selector,rowKeys:htmlRows.map(exactRowKey),plan}};
+    }
+  }
+  return null;
+};
+
+const chainedTableRepair = (table, chain) => {
+  const groups=[];
+  for(let groupIndex=0;groupIndex<chain.groups.length;groupIndex++){
+    const group=chain.groups[groupIndex],parts=group.sourceParts||[group];
+    const mapped=chain.mapping.map((target,row)=>({target,row})).filter(item=>item.target.groupIndex===groupIndex);
+    const headerRows=mapped.filter(item=>item.target.isHeader).map(item=>item.row);
+    const bodyRows=mapped.filter(item=>!item.target.isHeader).map(item=>item.row);
+    if(!headerRows.length||bodyRows.length!==parts.reduce((sum,part)=>sum+part.rows-1,0))return null;
+    let offset=0,previousBody=-1;
+    const fragments=parts.map((part,index)=>{
+      const rows=bodyRows.slice(offset,offset+part.rows-1);offset+=part.rows-1;
+      if(!rows.length)return null;
+      const between=headerRows.filter(row=>row>previousBody&&row<rows[0]);
+      const headerRow=between.at(-1)??headerRows[0];previousBody=rows.at(-1);
+      const pageHeight=part.pageHeightPt||part.pageWidthPt*1.4142;
+      return {page:part.page,headerRow,bodyRows:rows,placement:index===0&&groupIndex===0?'original':part.topPt>pageHeight/2?'end':'start'};
+    });
+    if(fragments.some(fragment=>!fragment))return null;
+    groups.push({headerKey:rowKey(rowsFromCells(group.cells)[0]),fragments});
+  }
+  const used=new Set(groups.flatMap(group=>group.fragments.flatMap(fragment=>[fragment.headerRow,...fragment.bodyRows])));
+  if(used.size!==chain.htmlRows.length)return null;
+  return {kind:'table_source_groups',selector:table.selector,rowKeys:chain.htmlRows.map(rowKey),groups};
+};
+
+const tableCellPresentation = (source, table, actualCells, { sourceFontMap={}, defaultSizePx=16, document={}, language='en', findings=[] }) => {
+  const tableWidth = table.bounds.right-table.bounds.left, scale = pageScale(table, source.pageWidthPt);
+  let differs = false;
+  const actions = [];
+  for (let i=0; i<source.cells.length; i++) {
+    const c = source.cells[i], actual = actualCells[i], f = c.typography;
+    if (c.text&&!f) findings.push(issue(language,'source_table_typography_unmapped',actual.selector,'Mixed or missing source cell typography cannot be transferred as one style.'));
+    const properties = {'background-color':c.background,width:(100*c.widthPt/source.widthPt).toFixed(3)+'%','vertical-align':f?.verticalAlign||'top','box-sizing':'border-box'};
+    let wrong = actual.background!==rgb(c.background) || Math.abs(actual.width/tableWidth-c.widthPt/source.widthPt)>.015;
+    if (f?.verticalAlign&&actual.verticalAlign!==f.verticalAlign) wrong = true;
+    for (const side of ['top','right','bottom','left']) {
+      const b = c.borders[side], got = actual.borders?.[side];
+      properties['border-'+side] = f&&b!=='0' ? b.replace(/^([\d.]+)pt/,(_,n)=>(Number(n)/f.sizePt)+'em') : b;
+      const expected = b==='0' ? 0 : parseFloat(b)*(f?parseFloat(actual.font.size)/f.sizePt:4/3);
+      if (!got || (expected===0 ? got.width!==0 : got.width<=0||Math.abs(got.width-expected)>=1||got.style!=='solid'||got.color!==rgb(b.slice(-7)))) wrong = true;
+    }
+    if (f) {
+      const stack = sourceFontMap[f.name]||sourceFontMap[familyKey(f.name)]||sourceFontMap[familyKey(f.family)];
+      const face = stack?.match(/"([^"]+)"/)?.[1];
+      const samples = (document.platformFonts||[]).filter(s=>s.selector===actual.selector&&(!s.width||s.width===document.width));
+      const key = s=>familyKey(s.replace(/MT$/i,''));
+      const rendered = samples.some(s=>s.fonts.some(font=>font.glyphCount>0&&key(font.familyName)===key(f.name)));
+      const familyOK = face ? actual.font.family.includes(face)&&(document.platformFonts===undefined||rendered) : rendered;
+      if (!stack&&!familyOK) findings.push(issue(language,'source_table_font_unmapped',actual.selector,'Source cell font has no verified local font mapping.'));
+      if (stack) properties['font-family'] = stack;
+      properties['font-size'] = `calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${f.sizePt*4/3/defaultSizePx})`;
+      Object.assign(properties,{'font-weight':String(f.weight),'font-style':f.style,color:f.color,'text-align':f.align,'text-indent':(f.indentPt/f.sizePt)+'em',padding:f.paddingPt.map(n=>(n/f.sizePt)+'em').join(' ')});
+      if (f.leadingPt) properties['line-height'] = String(f.leadingPt/f.sizePt);
+      const size = parseFloat(actual.font.size);
+      const sourceSize = f.sizePt*scale;
+      if (Math.abs(size-sourceSize*4/3)>1 || !familyOK || actual.font.weight!==String(f.weight) || actual.font.style!==f.style || actual.color!==rgb(f.color) || actual.textAlign!==f.align || Math.abs(actual.indent-size*f.indentPt/f.sizePt)>.2 || actual.padding.some((p,j)=>Math.abs(p-size*f.paddingPt[j]/f.sizePt)>.2) || (f.leadingPt&&Math.abs(parseFloat(actual.lineHeight)-size*f.leadingPt/f.sizePt)>.2)) wrong = true;
+    }
+    if (wrong) {
+      differs = true;
+      findings.push(issue(language,'source_table_cell_difference',actual.selector,'Table cell fill, border, column proportion or typography differs from the PDF.',{page:source.page,width:document.width,expected:c,actual}));
+      actions.push({kind:'presentation',selector:actual.selector,properties});
+    }
+  }
+  return {differs,actions};
+};
+
 const tokens = text => normalizeText(text).match(/[\p{L}\p{N}]+/gu)||[];
 const rawTokens = text => {
   const value=String(text),matches=[...value.matchAll(/[\p{L}\p{N}]+/gu)];
@@ -277,10 +499,34 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
   const tables=document.records.filter(r=>r.tag==='table');
   const matched=new Set();
   const splitSources=new Set();
-  for(const logical of sourceTableContinuations(profile).filter(source=>source.sourceParts?.length>1)){
+  const groups=sourceTableContinuations(profile);
+  const paginated=Array.isArray(document.pageContainers)&&document.pageContainers.length>0;
+  const consumedGroups=new Set(),consumedRaw=new Set();
+  for(const table of tables){
+    const normalization=normalizedChainedTableRepair(groups,table,document.records);
+    if(!normalization)continue;
+    matched.add(table.selector);
+    normalization.groups.forEach(group=>{consumedGroups.add(group);(group.sourceParts||[group]).forEach(part=>consumedRaw.add(part));});
+    findings.push(issue(language,'source_table_row_normalization',table.selector,'Wrapped source rows or exact adjacent paragraph fragments must be restored before certified page distribution.',{page:normalization.groups[0].page,nextPage:groupEndsAt(normalization.groups.at(-1))}));
+    actions.push(normalization.action);
+  }
+  for(const table of paginated?tables:[]){
+    if(matched.has(table.selector))continue;
+    if(groups.some(group=>tableCandidate(group,table)))continue;
+    const chain=chainedTableMatch(groups,table);
+    if(!chain)continue;
+    const repair=chainedTableRepair(table,chain);
+    if(!repair)continue;
+    matched.add(table.selector);
+    chain.groups.forEach(group=>{consumedGroups.add(group);(group.sourceParts||[group]).forEach(part=>consumedRaw.add(part));});
+    findings.push(issue(language,'source_table_group_distribution',table.selector,'Distinct multipage source tables were merged into one HTML table; split the certified rows by header and source page.',{page:chain.groups[0].page,nextPage:groupEndsAt(chain.groups.at(-1)),repair}));
+    actions.push(repair);
+  }
+  for(const logical of groups.filter(source=>source.sourceParts?.length>1)){
+    if(consumedGroups.has(logical))continue;
     const candidates=tables.filter(table=>(!table.page||Number(table.page)===logical.page)).map(table=>tableCandidate(logical,table)).filter(Boolean);
-    if(candidates.length===1){
-      const candidate=candidates[0],fragments=logical.sourceParts.map(part=>({page:part.page,bodyRows:part.rows-1}));
+    if(paginated&&candidates.length===1){
+      const candidate=candidates[0],fragments=logical.sourceParts.map(part=>({page:part.page,bodyRows:part.rows-1,rowKeys:rowsFromCells(part.cells).slice(1).map(rowKey)}));
       matched.add(candidate.table.selector);logical.sourceParts.forEach(part=>splitSources.add(part));
       const repair={kind:'table_source_pages',selector:candidate.table.selector,fragments};
       findings.push(issue(language,'source_table_page_distribution',candidate.table.selector,'A multipage source table was merged into one HTML page; distribute its certified rows back into their source page containers.',{page:logical.page,nextPage:logical.sourceParts.at(-1).page,repair}));
@@ -296,10 +542,16 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
   const logicalProfile=profile;
   for (const source of logicalProfile) {
     if(splitSources.has(source))continue;
+    if(consumedRaw.has(source))continue;
     if(source.unmappedTranslation){findings.push(issue(language,'translated_table_unmapped','PDF page '+source.page,'Table has no unique translated counterpart; source styling cannot be certified.'));continue;}
     const candidates=tables.filter(t=>(!t.page||Number(t.page)===source.page)).map(t=>tableCandidate(source,t)).filter(Boolean);
     if(candidates.length!==1){
       const pageTables=tables.filter(t=>(!t.page||Number(t.page)===source.page));
+      const paragraphRepair=!pageTables.length&&paragraphTableRepair(source,document.records);
+      if(paragraphRepair){
+        findings.push(issue(language,'source_table_paragraph_reconstruction',paragraphRepair.selector,'A complete source table was emitted as contiguous paragraphs; exact row and column token streams provide a deterministic reconstruction.',{page:source.page}));
+        actions.push(paragraphRepair);continue;
+      }
       const repair=fragmentedTableRepair(source,pageTables,document.records);
       if(repair){
         pageTables.forEach(table=>matched.add(table.selector));
@@ -314,39 +566,7 @@ export function compareTables(profile, document, {sourceFontMap={},defaultSizePx
     matched.add(table.selector);matches.push({source,table});
     const caseRepair=tableTextCaseRepair(source,table);
     if(caseRepair){findings.push(issue(language,'source_table_text_case_difference',table.selector,'Table text tokens match the PDF but word casing differs after converter repair; source casing provides a deterministic correction.',{page:source.page}));actions.push(caseRepair);}
-    const tableWidth=table.bounds.right-table.bounds.left, scale=pageScale(table,source.pageWidthPt);
-    let differs=false;
-    const cellActions=[];
-    for(let i=0;i<source.cells.length;i++){
-      const c=source.cells[i], actual=actualCells[i], f=c.typography;
-      if(c.text&&!f)findings.push(issue(language,'source_table_typography_unmapped',actual.selector,'Mixed or missing source cell typography cannot be transferred as one style.'));
-      const properties={'background-color':c.background,width:(100*c.widthPt/source.widthPt).toFixed(3)+'%','vertical-align':f?.verticalAlign||'top','box-sizing':'border-box'};
-      let wrong=actual.background!==rgb(c.background) || Math.abs(actual.width/tableWidth-c.widthPt/source.widthPt)>.015;
-      if(f?.verticalAlign&&actual.verticalAlign!==f.verticalAlign)wrong=true;
-      for(const side of ['top','right','bottom','left']){
-        const b=c.borders[side], got=actual.borders?.[side];
-        properties['border-'+side]=f&&b!=='0'?b.replace(/^([\d.]+)pt/,(_,n)=>(Number(n)/f.sizePt)+'em'):b;
-        const expected=b==='0'?0:parseFloat(b)*(f?parseFloat(actual.font.size)/f.sizePt:4/3);
-        if(!got || (expected===0?got.width!==0:got.width<=0||Math.abs(got.width-expected)>=1||got.style!=='solid'||got.color!==rgb(b.slice(-7))))wrong=true;
-      }
-      if(f){
-        const stack=sourceFontMap[f.name]||sourceFontMap[familyKey(f.name)]||sourceFontMap[familyKey(f.family)];
-        const face=stack?.match(/"([^"]+)"/)?.[1];
-        const samples=(document.platformFonts||[]).filter(s=>s.selector===actual.selector&&(!s.width||s.width===document.width));
-        const key=s=>familyKey(s.replace(/MT$/i,''));
-        const rendered=samples.some(s=>s.fonts.some(font=>font.glyphCount>0&&key(font.familyName)===key(f.name)));
-        const familyOK=face?actual.font.family.includes(face)&&(document.platformFonts===undefined||rendered):rendered;
-        if(!stack&&!familyOK)findings.push(issue(language,'source_table_font_unmapped',actual.selector,'Source cell font has no verified local font mapping.'));
-        if(stack)properties['font-family']=stack;
-        properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${f.sizePt*4/3/defaultSizePx})`;
-        Object.assign(properties,{'font-weight':String(f.weight),'font-style':f.style,color:f.color,'text-align':f.align,'text-indent':(f.indentPt/f.sizePt)+'em',padding:f.paddingPt.map(n=>(n/f.sizePt)+'em').join(' ')});
-        if(f.leadingPt)properties['line-height']=String(f.leadingPt/f.sizePt);
-        const size=parseFloat(actual.font.size);
-        const sourceSize=f.sizePt*scale;
-        if(Math.abs(size-sourceSize*4/3)>1 || !familyOK || actual.font.weight!==String(f.weight) || actual.font.style!==f.style || actual.color!==rgb(f.color) || actual.textAlign!==f.align || Math.abs(actual.indent-size*f.indentPt/f.sizePt)>.2 || actual.padding.some((p,j)=>Math.abs(p-size*f.paddingPt[j]/f.sizePt)>.2) || (f.leadingPt&&Math.abs(parseFloat(actual.lineHeight)-size*f.leadingPt/f.sizePt)>.2))wrong=true;
-      }
-      if(wrong){differs=true;findings.push(issue(language,'source_table_cell_difference',actual.selector,'Table cell fill, border, column proportion or typography differs from the PDF.',{page:source.page,width:document.width,expected:c,actual}));cellActions.push({kind:'presentation',selector:actual.selector,properties});}
-    }
+    const {differs,actions:cellActions}=tableCellPresentation(source,table,actualCells,{sourceFontMap,defaultSizePx,document,language,findings});
     if(candidate.gridRepair)findings.push(issue(language,'source_table_grid_difference',table.selector,'Empty converter spacer cells split the source table into a false grid; exact ordered source rows provide a deterministic repair.',{page:source.page}));
     if(differs||candidate.gridRepair){actions.push({kind:'presentation',selector:table.selector,properties:{'table-layout':'fixed','border-collapse':'collapse',width:'100%'}},...cellActions);if(candidate.gridRepair)actions.push(candidate.gridRepair);}
   }

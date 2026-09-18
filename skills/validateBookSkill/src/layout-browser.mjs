@@ -115,7 +115,7 @@ export function applyDomRepairs(actions) {
     }
   };
   const before = text(), changes = [];
-  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[],addedTableHeaders=[];
+  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[],addedTableHeaders=[],addedTranslation=[];
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
@@ -242,13 +242,39 @@ export function applyDomRepairs(actions) {
       }
       removedRunning.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});continue;
     }
+    if(a.kind==='translation_placeholder'){
+      if(!/^(p|h[1-6]|li|blockquote|figcaption)$/.test(a.tag)||typeof a.text!=='string'||!a.text.trim()||typeof a.sourceSelector!=='string')throw Error('Invalid translation placeholder');
+      const existing=[...document.querySelectorAll('[data-validatebook-translation-placeholder="missing"]')].filter(node=>node.getAttribute('data-validatebook-translation-source')===a.sourceSelector);
+      if(existing.length>1)throw Error('Duplicate translation placeholder for '+a.sourceSelector);
+      if(existing.length===1){if(existing[0].tagName.toLowerCase()!==a.tag||existing[0].textContent!==a.text)throw Error('Translation placeholder changed for '+a.sourceSelector);continue;}
+      const resolve=(selector,text,tag)=>{const selected=selector?document.querySelector(selector):null;if(selected&&(!text||selected.textContent.trim()===text)&&(!tag||selected.tagName.toLowerCase()===tag))return selected;if(!text||!tag)return null;const candidates=[...document.querySelectorAll(tag)].filter(node=>node.textContent.trim()===text&&String(node.closest('[data-source-page]')?.getAttribute('data-source-page')||node.closest('[data-reader-page]')?.getAttribute('data-reader-page')||'unpaged')===String(a.page));return candidates.length===1?candidates[0]:null;};
+      const beforeNode=resolve(a.beforeSelector,a.beforeText,a.beforeTag),afterNode=resolve(a.afterSelector,a.afterText,a.afterTag);
+      let parent=beforeNode?.parentElement||afterNode?.parentElement;
+      if(!parent&&a.page!=='unpaged')parent=document.querySelector('.pdf-source-page[data-source-page="'+CSS.escape(String(a.page))+'"],.pdf-source-page[data-reader-page="'+CSS.escape(String(a.page))+'"]');
+      if(!parent||a.tag==='li'&&!['OL','UL'].includes(parent.tagName))throw Error('Translation placeholder has no safe insertion container for '+a.sourceSelector);
+      const placeholder=document.createElement(a.tag);placeholder.textContent=a.text;placeholder.lang='en';placeholder.setAttribute('data-validatebook-translation-placeholder','missing');placeholder.setAttribute('data-validatebook-translation-source',a.sourceSelector);
+      placeholder.className=[a.classes,'validatebook-translation-placeholder'].filter(Boolean).join(' ');if(a.styleId)placeholder.setAttribute('data-vb-style',a.styleId);if(a.id&&!document.getElementById(a.id))placeholder.id=a.id;
+      if(beforeNode&&beforeNode.parentElement===parent)parent.insertBefore(placeholder,beforeNode);else if(afterNode&&afterNode.parentElement===parent)afterNode.after(placeholder);else parent.append(placeholder);
+      addedTranslation.push(a.text);changes.push({kind:a.kind,sourceSelector:a.sourceSelector,before:null,after:placeholder.outerHTML});continue;
+    }
     const nodes = document.querySelectorAll(a.selector);
     if(nodes.length===0&&a.kind==='presentation'&&/> figcaption(?::nth-child\(\d+\))?$/.test(a.selector)&&![...document.querySelectorAll('figcaption')].some(node=>/^figure from pdf page \d+$/i.test(node.textContent.trim())))continue;
-    if(nodes.length===0&&['presentation','table_readable_columns','table_continuation','table_source_pages'].includes(a.kind))continue;
+    if(nodes.length===0&&['presentation','table_readable_columns','table_continuation','table_source_pages','table_source_groups'].includes(a.kind))continue;
     if (nodes.length !== 1) throw Error('Repair selector must match exactly one element [' + a.kind + ', count=' + nodes.length + ']: ' + a.selector);
     const n = nodes[0], old = n.outerHTML;
-    if (a.kind === 'tag') {
-      if (!/^(p|h[1-6]|th|td|figcaption)$/.test(a.tag) || n.tagName.toLowerCase() !== a.expectedTag) throw Error('Unsafe or stale tag repair');
+    if(a.kind==='translation_review'){
+      if(!/^(p|h[1-6]|li|blockquote|figcaption)$/.test(a.tag)||typeof a.text!=='string'||!a.text.trim()||typeof a.sourceSelector!=='string')throw Error('Invalid translation review marker');
+      const existing=[...document.querySelectorAll('[data-validatebook-translation-placeholder="review"]')].filter(node=>node.getAttribute('data-validatebook-translation-source')===a.sourceSelector);
+      if(existing.length>1||existing.length===1&&(existing[0].tagName.toLowerCase()!==a.tag||existing[0].textContent!==a.text))throw Error('Translation review placeholder changed for '+a.sourceSelector);
+      if(existing.length===1&&n.getAttribute('data-validatebook-translation-review')==='sentence-count')continue;
+      n.setAttribute('data-validatebook-translation-review','sentence-count');
+      if(!existing.length){const placeholder=document.createElement(a.tag);placeholder.textContent=a.text;placeholder.lang='en';placeholder.className='validatebook-translation-placeholder validatebook-translation-placeholder-review';placeholder.setAttribute('data-validatebook-translation-placeholder','review');placeholder.setAttribute('data-validatebook-translation-source',a.sourceSelector);n.after(placeholder);addedTranslation.push(a.text);}
+      changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
+    } else if (a.kind === 'tag') {
+      if (!/^(p|h[1-6]|th|td|figcaption)$/.test(a.tag)) throw Error('Unsafe or stale tag repair');
+      const currentTag=n.tagName.toLowerCase();
+      if(currentTag===a.tag)continue;
+      if(currentTag!==a.expectedTag)throw Error('Unsafe or stale tag repair');
       const replacement = document.createElement(a.tag); for (const attr of n.attributes) replacement.setAttribute(attr.name, attr.value); while (n.firstChild) replacement.append(n.firstChild); n.replaceWith(replacement);
       changes.push({ kind: a.kind, selector: a.selector, before: old, after: replacement.outerHTML });
     } else if (a.kind === 'classes') {
@@ -307,8 +333,12 @@ export function applyDomRepairs(actions) {
       tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
     } else if(a.kind==='table_source_pages'){
       if(n.tagName!=='TABLE'||!Array.isArray(a.fragments)||a.fragments.length<2||a.fragments.some(fragment=>!Number.isInteger(fragment.page)||fragment.page<1||!Number.isInteger(fragment.bodyRows)||fragment.bodyRows<1))throw Error('Invalid source-page table distribution');
+      const normalize=value=>String(value).replace(/\s+\d{1,4}(?:\s*[—–-]\s*)+\s*$/u,'').replace(/\s+/g,' ').trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'');
+      const rowKey=row=>[...row.cells].map(cell=>normalize(cell.textContent)).join('|');
       const rows=[...n.tBodies].flatMap(body=>[...body.rows]),expected=a.fragments.reduce((sum,fragment)=>sum+fragment.bodyRows,0);
       if(rows.length!==expected)throw Error('Source-page table row count changed');
+      const certified=a.fragments.flatMap(fragment=>fragment.rowKeys||[]);
+      if(certified.length&&(!a.fragments.every(fragment=>fragment.rowKeys?.length===fragment.bodyRows)||rows.some((row,index)=>rowKey(row)!==certified[index])))throw Error('Source-page table rows changed');
       const firstPage=n.closest('.pdf-source-page'),firstNumber=Number(firstPage?.getAttribute('data-source-page')||firstPage?.getAttribute('data-reader-page'));
       if(firstNumber!==a.fragments[0].page)throw Error('Source-page table starts in a different page container');
       const header=n.tHead?.cloneNode(true);if(!header||!header.rows.length)throw Error('Source-page table has no repeatable header');
@@ -316,7 +346,20 @@ export function applyDomRepairs(actions) {
       let offset=0;
       for(let index=0;index<a.fragments.length;index++){
         const fragment=a.fragments[index],fragmentRows=rows.slice(offset,offset+fragment.bodyRows);offset+=fragment.bodyRows;
-        if(index&&fragmentRows[0]?.id!=='page_'+fragment.page)throw Error('Source-page table boundary anchor changed for page '+fragment.page);
+        if(index){
+          const anchorId='page_'+fragment.page,firstRow=fragmentRows[0],existing=document.getElementById(anchorId);
+          if(!firstRow)throw Error('Source-page table boundary changed for page '+fragment.page);
+          if(existing&&!firstRow.contains(existing)&&existing!==firstRow){
+            const movable=!existing.textContent.trim()&&existing.children.length===0;
+            if(!movable)throw Error('Conflicting source-page anchor for page '+fragment.page);
+            existing.removeAttribute('id');
+          }
+          if(!firstRow.contains(document.getElementById(anchorId))&&document.getElementById(anchorId)!==firstRow){
+            if(/^page_\d+$/.test(firstRow.id)&&firstRow.id!==anchorId)throw Error('Conflicting table-row page anchor for page '+fragment.page);
+            if(!firstRow.id)firstRow.id=anchorId;
+            else {const cell=[...firstRow.cells].find(item=>!item.id);if(!cell)throw Error('Cannot preserve source-page anchor for page '+fragment.page);cell.id=anchorId;}
+          }
+        }
         if(index===0){const body=n.tBodies[0]||n.createTBody();body.replaceChildren(...fragmentRows);continue;}
         const destination=document.querySelector('.pdf-source-page[data-source-page="'+fragment.page+'"],.pdf-source-page[data-reader-page="'+fragment.page+'"]');
         if(!destination)throw Error('Missing destination page for source table fragment '+fragment.page);
@@ -325,6 +368,80 @@ export function applyDomRepairs(actions) {
         destination.insertBefore(container,destination.firstChild);addedTableHeaders.push(headerText);
       }
       tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:a.fragments});
+    } else if(a.kind==='table_normalize_rows'){
+      const normalize=value=>String(value).normalize('NFKC').replace(/[\s\u00ad]+/gu,'');
+      const bag=value=>[...normalize(value)].sort().join('');
+      if(n.tagName!=='TABLE'||!Array.isArray(a.rowKeys)||!Array.isArray(a.plan)||!a.plan.length)throw Error('Invalid table row normalization');
+      const rows=[...n.rows],rowKey=row=>[...row.cells].map(cell=>normalize(cell.textContent)).join('|');
+      if(rows.length!==a.rowKeys.length||rows.some((row,index)=>rowKey(row)!==a.rowKeys[index]))throw Error('Table rows changed before normalization');
+      const used=a.plan.flatMap(item=>item.rows||[]);
+      if(used.length!==rows.length||new Set(used).size!==rows.length||used.some(index=>!Number.isInteger(index)||index<0||index>=rows.length))throw Error('Table normalization plan does not preserve every row');
+      const output=[];
+      for(const item of a.plan){
+        if(item.rows){
+          if(!item.rows.length)throw Error('Empty table row merge');
+          const row=rows[item.rows[0]];
+          for(const index of item.rows.slice(1)){
+            const extra=rows[index];if(extra.cells.length!==row.cells.length)throw Error('Merged table rows have different columns');
+            for(let col=0;col<row.cells.length;col++){
+              const target=row.cells[col],source=extra.cells[col];if(target.textContent&&source.textContent)target.append(document.createTextNode(' '));while(source.firstChild)target.append(source.firstChild);
+            }
+            if(extra.id){if(row.id&&row.id!==extra.id)throw Error('Merged table rows contain multiple IDs');row.id=extra.id;}
+            extra.remove();
+          }
+          output.push(row);continue;
+        }
+        if(typeof item.paragraph!=='string'||typeof item.text!=='string'||!Array.isArray(item.cells)||!item.cells.length)throw Error('Invalid paragraph table row');
+        const matches=document.querySelectorAll(item.paragraph);if(matches.length!==1||matches[0].tagName!=='P')throw Error('Table row paragraph changed');
+        const paragraph=matches[0],sourceText=item.cells.join(' ');if(paragraph.textContent!==item.text||bag(paragraph.textContent)!==bag(sourceText))throw Error('Paragraph does not exactly reconstruct the source row');
+        const row=document.createElement('tr');if(paragraph.id)row.id=paragraph.id;
+        for(const value of item.cells){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}
+        paragraph.remove();output.push(row);
+      }
+      const headerRows=new Set([...n.tHead?.rows||[]]);
+      if(!headerRows.has(output[0])||output.slice(1).some(row=>headerRows.has(row)))throw Error('Table normalization changed the structural header');
+      const body=n.tBodies[0]||n.createTBody();body.replaceChildren(...output.slice(1));
+      tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
+    } else if(a.kind==='table_from_paragraphs'){
+      const bag=value=>[...String(value).normalize('NFKC').replace(/[\s\u00ad]+/gu,'')].sort().join('');
+      if(n.tagName!=='P'||!Array.isArray(a.paragraphs)||!a.paragraphs.length||!Array.isArray(a.rows)||a.rows.length<2||a.rows.some((row,index)=>!Array.isArray(row)||!row.length||row.some(cell=>cell.tag!==(index?'td':'th')||typeof cell.text!=='string')))throw Error('Invalid paragraph table reconstruction');
+      const paragraphs=a.paragraphs.map(item=>{const matches=document.querySelectorAll(item.selector);if(matches.length!==1||matches[0].tagName!=='P'||matches[0].textContent!==item.text||matches[0].querySelector('a,img'))throw Error('Source table paragraph changed');return matches[0];});
+      const sourceText=a.rows.flat().map(cell=>cell.text).join(' '),paragraphText=paragraphs.map(paragraph=>paragraph.textContent).join(' ');
+      if(bag(sourceText)!==bag(paragraphText))throw Error('Paragraph table character inventory changed');
+      const table=document.createElement('table');table.className='pdf-table';const thead=document.createElement('thead'),tbody=document.createElement('tbody');
+      a.rows.forEach((cells,index)=>{const row=document.createElement('tr');for(const item of cells){const cell=document.createElement(item.tag);if(item.tag==='th')cell.scope='col';cell.textContent=item.text;row.append(cell);}(index?tbody:thead).append(row);});
+      table.append(thead,tbody);const wrap=document.createElement('div');wrap.className='pdf-table-wrap';wrap.append(table);paragraphs[0].before(wrap);paragraphs.forEach(paragraph=>paragraph.remove());
+      tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:table.outerHTML});
+    } else if(a.kind==='table_source_groups'){
+      const normalize=value=>String(value).replace(/\s+/g,' ').trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'');
+      if(n.tagName!=='TABLE'||!Array.isArray(a.rowKeys)||!Array.isArray(a.groups)||a.groups.length<2)throw Error('Invalid source table group distribution');
+      const rows=[...n.rows];
+      if(rows.length!==a.rowKeys.length||rows.some((row,index)=>[...row.cells].map(cell=>normalize(cell.textContent)).join('|')!==a.rowKeys[index]))throw Error('Source table group rows changed');
+      const planned=a.groups.flatMap(group=>group.fragments.flatMap(fragment=>[fragment.headerRow,...fragment.bodyRows]));
+      if(planned.some(index=>!Number.isInteger(index)||index<0||index>=rows.length)||new Set(planned).size!==rows.length)throw Error('Source table group plan is incomplete');
+      const wrap=n.closest('.pdf-table-wrap'),wrapTemplate=wrap?.cloneNode(false),tableTemplate=n.cloneNode(false),headerUses=new Map();
+      const originalPage=n.closest('.pdf-source-page');
+      for(const group of a.groups)for(const fragment of group.fragments){
+        if(!Number.isInteger(fragment.page)||fragment.page<1||!['original','start','end'].includes(fragment.placement)||!Array.isArray(fragment.bodyRows)||!fragment.bodyRows.length)throw Error('Invalid source table group fragment');
+        const destination=document.querySelector('.pdf-source-page[data-source-page="'+fragment.page+'"],.pdf-source-page[data-reader-page="'+fragment.page+'"]');
+        if(!destination)throw Error('Missing destination page for source table group '+fragment.page);
+        const sourceHeader=rows[fragment.headerRow],headerKey=[...sourceHeader.cells].map(cell=>normalize(cell.textContent)).join('|');
+        if(headerKey!==group.headerKey)throw Error('Source table group header changed');
+        const headerRow=sourceHeader.cloneNode(true);if(headerRow.id!=='page_'+fragment.page)headerRow.removeAttribute('id');
+        for(const cell of [...headerRow.cells])if(cell.tagName.toLowerCase()!=='th'){
+          const replacement=document.createElement('th');replacement.scope='col';for(const attr of cell.attributes)replacement.setAttribute(attr.name,attr.value);while(cell.firstChild)replacement.append(cell.firstChild);cell.replaceWith(replacement);
+        }
+        const count=headerUses.get(fragment.headerRow)||0;if(count)addedTableHeaders.push(sourceHeader.textContent);headerUses.set(fragment.headerRow,count+1);
+        const table=tableTemplate.cloneNode(false),thead=document.createElement('thead'),tbody=document.createElement('tbody');table.removeAttribute('id');thead.append(headerRow);
+        for(const rowIndex of fragment.bodyRows)tbody.append(rows[rowIndex]);table.append(thead,tbody);
+        const container=wrapTemplate?wrapTemplate.cloneNode(false):table;if(wrapTemplate){container.removeAttribute('id');container.append(table);}
+        if(fragment.placement==='original'){
+          if(destination!==originalPage)throw Error('Original source table group page changed');(wrap||n).before(container);
+        }else if(fragment.placement==='start'){
+          const first=[...destination.children].find(child=>!child.matches('.pdf-page-anchor,.source-anchor'));destination.insertBefore(container,first||null);
+        }else destination.append(container);
+      }
+      (wrap||n).remove();tableReflow=true;changes.push({kind:a.kind,selector:a.selector,before:old,after:a.groups});
     } else if(a.kind==='table_continuation'){
       const continuations=Array.isArray(a.continuations)?a.continuations:(a.continuation?[{selector:a.continuation,headerTexts:a.headerTexts,mode:'drop_repeated_header'}]:[]);
       if(n.tagName!=='TABLE'||!Array.isArray(a.headerTexts)||!a.headerTexts.length||!continuations.length)throw Error('Invalid table continuation repair');
@@ -333,7 +450,7 @@ export function applyDomRepairs(actions) {
       const targetBody=n.tBodies[0]||n.createTBody();
       for(const item of continuations){
         const matches=document.querySelectorAll(item.selector);if(matches.length!==1||matches[0].tagName!=='TABLE')throw Error('Continuation table selector changed');
-        const continuation=matches[0],wrap=continuation.closest('.pdf-table-wrap');
+        const continuation=matches[0],parent=continuation.parentElement,wrap=continuation.closest('.pdf-table-wrap')||(parent?.tagName==='DIV'&&parent.children.length===1?parent:null);
         const headerCells=[...continuation.rows[0]?.cells||[]], header=headerCells.map(cell=>normalize(cell.textContent)), expected=item.headerTexts||a.headerTexts;
         if(header.length!==expected.length||header.some((text,i)=>compact(text)!==compact(expected[i])))throw Error('Continuation table header changed: expected '+JSON.stringify(expected)+' got '+JSON.stringify(header)+' for '+item.selector);
         const moved=item.mode==='promoted_header_is_body'?[...continuation.rows]:[...continuation.rows].slice(1);
@@ -368,7 +485,7 @@ export function applyDomRepairs(actions) {
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
   const removedText=removedGenerated.join('')+removedRunning.join('')+removedTableHeaders.join('');
-  const addedText=addedTableHeaders.join('');
+  const addedText=addedTableHeaders.join('')+addedTranslation.join('');
   if (text() !== before && (!(tableReflow||removedText||addedText)||characterInventory(text()+removedText)!==characterInventory(before+addedText))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
   const dt = document.doctype;
   const doctype = dt ? '<!DOCTYPE ' + dt.name + (dt.publicId ? ' PUBLIC "' + dt.publicId + '"' : '') + (dt.systemId ? (dt.publicId ? '' : ' SYSTEM') + ' "' + dt.systemId + '"' : '') + '>\n' : '';

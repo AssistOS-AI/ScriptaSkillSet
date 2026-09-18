@@ -55,33 +55,48 @@ function textLines(page) {
   }
   return lines.map(line=>({...line,items:line.items.sort((a,b)=>a.x0-b.x0)}));
 }
-function splitLine(line,pageWidth) {
+function splitLine(line,pageWidth,rectangles=[]) {
   let best=null;
   for(let i=1;i<line.items.length;i++){
     const gap=line.items[i].x0-line.items[i-1].x1;
     if(gap>=Math.max(40,pageWidth*.065)&&(!best||gap>best.gap))best={gap,index:i};
   }
-  if(!best)return null;
-  const left=line.items.slice(0,best.index),right=line.items.slice(best.index);
+  let left,right;
+  if(best){left=line.items.slice(0,best.index);right=line.items.slice(best.index);}
+  else {
+    const middle=(line.top+line.bottom)/2;
+    const fills=rectangles.filter(rect=>rect.top<=middle&&rect.bottom>=middle).sort((a,b)=>a.x0-b.x0);
+    const pair=fills.slice(0,-1).map((fill,index)=>[fill,fills[index+1]]).find(([a,b])=>Math.abs(a.x1-b.x0)<1);
+    if(!pair)return null;
+    const split=pair[0].x1;
+    left=line.items.filter(item=>(item.x0+item.x1)/2<split);
+    right=line.items.filter(item=>(item.x0+item.x1)/2>=split);
+    if(!left.length||!right.length)return null;
+  }
   return {left,right,leftX:left[0].x0,rightX:right[0].x0,
     leftText:normalized(left.map(item=>item.text).join(' ')),rightText:normalized(right.map(item=>item.text).join(' '))};
 }
 function borderlessCandidate(page,lines,headerIndex,minRows) {
-  const header=splitLine(lines[headerIndex],page.width_pt);
-  if(!header||header.rightX-header.leftX<80||!header.leftText||!header.rightText)return null;
-  const rows=[];let current=null;
+  const header=splitLine(lines[headerIndex],page.width_pt,page.rectangles||[]);
+  if(!header||header.rightX-header.leftX<35||!header.leftText||!header.rightText)return null;
+  const rows=[];let current=null,bodySize=null;
   for(let index=headerIndex+1;index<lines.length;index++){
     const line=lines[index];
     if(line.top-lines[Math.max(headerIndex,index-1)].bottom>36)break;
     if(line.items.some(item=>item.x0<header.rightX-2&&item.x1>header.rightX+2))break;
     const left=line.items.filter(item=>item.x0<header.rightX-2),right=line.items.filter(item=>item.x0>=header.rightX-2);
-    const startsRow=left.length&&right.length&&Math.abs(left[0].x0-header.leftX)<8&&Math.abs(right[0].x0-header.rightX)<8;
+    const sizes=line.items.map(item=>item.size_pt).filter(Number.isFinite).sort((a,b)=>a-b);
+    const lineSize=sizes.length?sizes[Math.floor(sizes.length/2)]:null;
+    const sameBodyScale=bodySize===null||lineSize===null||Math.abs(lineSize-bodySize)<=Math.max(1,bodySize*.2);
+    const previous=current?.lines.at(-1),lineHeight=Math.max(line.bottom-line.top,previous?previous.bottom-previous.top:0);
+    const startsRow=left.length&&right.length&&sameBodyScale&&Math.abs(left[0].x0-header.leftX)<8&&Math.abs(right[0].x0-header.rightX)<8;
+    const advance=previous?line.top-previous.top:Infinity;
+    const continues=current&&advance<=Math.max(3,lineHeight*1.75)&&!(startsRow&&advance<lineHeight*.75)&&(left.length||right.length);
     // Inline links and superscripts can have a slightly shifted baseline and
     // begin later inside the right column. They still belong to the current
     // cell as long as no text crosses back into the left column.
-    const continues=!left.length&&right.length&&right[0].x0>=header.rightX-2;
-    if(startsRow){current={lines:[line]};rows.push(current);}
-    else if(continues&&current)current.lines.push(line);
+    if(continues)current.lines.push(line);
+    else if(startsRow){bodySize??=lineSize;current={lines:[line]};rows.push(current);}
     else break;
   }
   if(rows.length<minRows)return null;

@@ -1,5 +1,5 @@
 import {familyKey,pointsToCssPixels,pageScale} from './typography.mjs';
-import {issue} from './layout-checks.mjs';
+import {issue,alignTranslationBlocks} from './layout-checks.mjs';
 
 const role=r=>r.tag+'|'+String(r.classes||'').split(/\s+/).filter(Boolean).sort().join(' ');
 const compact=s=>String(s||'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
@@ -49,7 +49,7 @@ export function translatedStyleCheck(document,styles,profile,language,defaultSiz
     const expected=display||contextual||styles[role(r)];
     if(!expected){findings.push(issue(language,'translation_style_unmapped',r.selector,'No unambiguous source presentation role; translated prose is preserved.'));continue;}
     const size=pointsToCssPixels(expected.sizePt),scale=pageScale(r,profile.pages[0].width);
-    const properties={'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${size/defaultSizePx})`,'font-family':expected.family,'font-weight':expected.weight,'font-style':expected.style};
+    const properties={'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${size/defaultSizePx} * var(--validatebook-page-scale, 1))`,'font-family':expected.family,'font-weight':expected.weight,'font-style':expected.style};
     // Preserve centered display roles, but never reintroduce stretched prose
     // justification after the native spacing handler has repaired it.
     if(expected.align!=='justify')properties['text-align']=expected.align;
@@ -86,7 +86,7 @@ const canonicalProperties=(source,defaultSizePx)=>{
   const marginBottom=unscaledPx(source.style.marginBottom,source);
   const marginTop=unscaledPx(source.style.marginTop,source);
   const properties={};
-  if(sizeRatio!==null)properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${sizeRatio})`;
+  if(sizeRatio!==null)properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${sizeRatio} * var(--validatebook-page-scale, 1))`;
   for(const [key,value] of [['font-family',source.font.family],['font-weight',source.font.weight],['font-style',source.font.style],['text-align',source.style.textAlign],['color',source.style.color]])if(value)properties[key]=value;
   if(Number.isFinite(size)&&Number.isFinite(leading)&&size>0)properties['line-height']=String(leading/size);
   if(Number.isFinite(size)&&Number.isFinite(marginBottom))properties['margin-bottom']=(marginBottom/size)+'em';
@@ -113,30 +113,16 @@ const canonicalDifference=(source,target)=>{
   return false;
 };
 
-export function canonicalTranslationActions(master,document,language,defaultSizePx) {
+export function canonicalTranslationActions(master,document,language,defaultSizePx,verifiedAlignment=null) {
   if(!master||language==='en')return {actions:[],findings:[]};
   const actions=[],findings=[];
-  const eligible=r=>/^(p|h[1-6]|li|figcaption)$/.test(r.tag)&&r.text.trim();
-  const byPage=records=>{
-    const pages=new Map();
-    for(const r of records.filter(eligible)){
-      const page=Number(r.page||r.selector?.match(/#page_(\d+)/)?.[1]);
-      if(!Number.isInteger(page))continue;
-      const list=pages.get(page)||[];list.push(r);pages.set(page,list);
-    }
-    return pages;
-  };
-  const sourcePages=byPage(master.records),targetPages=byPage(document.records);
-  for(const [page,source] of sourcePages){
-    const target=targetPages.get(page);
-    if(!target)continue;
-    const limit=Math.min(source.length,target.length);
-    for(let i=0;i<limit;i++){
-      const s=source[i],t=target[i];
-      if(s.tag!==t.tag&&/^h[1-6]$/.test(t.tag)&&s.tag==='p'&&t.selector.startsWith('#'))actions.push({kind:'tag',selector:t.selector,expectedTag:t.tag,tag:'p',safeTranslationStyle:true});
-      actions.push({kind:'presentation',selector:t.selector,properties:canonicalProperties(s,defaultSizePx),safeTranslationStyle:true});
-    }
-    if(target.length!==source.length)findings.push(issue(language,'translation_block_count_difference','page '+page,'Translation page has a different number of text blocks than the English canonical layout; text is preserved but layout correspondence is incomplete.',{englishBlocks:source.length,translationBlocks:target.length}));
+  const alignment=verifiedAlignment||alignTranslationBlocks(master,document,language);
+  for(const pair of alignment.matches){
+    const s=pair.source||master.records.find(record=>record.selector===pair.sourceSelector||record.selector===pair.source),t=pair.target||document.records.find(record=>record.selector===pair.targetSelector||record.selector===pair.target);
+    if(!s||!t)continue;
+    if(s.tag!==t.tag&&/^h[1-6]$/.test(t.tag)&&s.tag==='p'&&t.selector.startsWith('#'))actions.push({kind:'tag',selector:t.selector,expectedTag:t.tag,tag:'p',safeTranslationStyle:true});
+    actions.push({kind:'presentation',selector:t.selector,properties:canonicalProperties(s,defaultSizePx),safeTranslationStyle:true});
   }
+  for(const page of alignment.ambiguousPages||[])findings.push(issue(language,'translation_alignment_ambiguous','page '+page.page,'Translation layout is not propagated because block alignment is ambiguous.',page));
   return {actions,findings};
 }

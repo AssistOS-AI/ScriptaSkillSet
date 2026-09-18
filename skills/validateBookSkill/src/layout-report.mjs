@@ -6,6 +6,11 @@ const categoryReason={
   missing_structural_anchor:'Un bloc din engleza nu are corespondent unic in traducere; poate lipsi un paragraf sau s-a pierdut ancora structurala.',
   block_sequence_difference:'Ordinea sau tipurile de blocuri difera de layout-ul canonic englez; poate indica paragrafe lipsa, fragmente extra sau cuprins/tabele rupte.',
   translation_block_count_difference:'O pagina tradusa are alt numar de blocuri decat pagina engleza corespondenta; stilurile nu pot fi propagate complet.',
+  missing_translation_block:'Lipseste un bloc tradus; skillul a introdus temporar textul englez cu marker de placeholder pentru a pastra alinierea layout-ului.',
+  translation_placeholder:'Un placeholder englez este inca prezent si trebuie inlocuit cu traducerea, apoi trebuie eliminat markerul validateBook.',
+  translation_sentence_count_difference:'Numarul mecanic de propozitii difera intre blocul englez si traducere; blocul trebuie verificat inainte de certificarea layout-ului.',
+  translation_alignment_ambiguous:'Blocurile nu pot fi aliniate mecanic in mod unic; skillul nu propaga pozitional stilurile pe pagina afectata.',
+  extra_translation_block:'Traducerea contine un bloc suplimentar fara corespondent englez verificat.',
   translation_style_difference:'Un bloc tradus nu foloseste fontul, marimea, leading-ul, culoarea sau spacing-ul rolului englez corespondent.',
   translation_style_unmapped:'Skillul nu a gasit un rol englez neambiguu pentru blocul tradus; textul este pastrat, dar stilul nu este certificat.',
   translated_contents_presentation:'Cuprinsul tradus nu poate fi aliniat sigur cu structura engleza; textul si linkurile existente sunt pastrate, problema trebuie semnalata.',
@@ -19,7 +24,7 @@ function summarizeFindings(findings=[]){
   for(const f of findings)counts.set(f.category,(counts.get(f.category)||0)+1);
   return [...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
 }
-const missingTranslationCategories=new Set(['missing_structural_anchor','block_sequence_difference','translation_block_count_difference']);
+const missingTranslationCategories=new Set(['missing_structural_anchor','block_sequence_difference','translation_block_count_difference','missing_translation_block','translation_placeholder','translation_sentence_count_difference','translation_alignment_ambiguous','extra_translation_block']);
 const clean=value=>String(value??'').replace(/\s+/g,' ').replace(/\|/g,'\\|').trim();
 function groupedFindings(findings=[]){
   const groups=new Map();

@@ -43,7 +43,7 @@ export function inspectLayout() {
       const cs = getComputedStyle(e), box = e.getBoundingClientRect();
       return /hidden|clip/.test(cs.overflowX) && textRects.some(v => v.left < box.left - 2 || v.right > box.right + 2) || /hidden|clip/.test(cs.overflowY) && textRects.some(v => v.top < box.top - 2 || v.bottom > box.bottom + 2);
     });
-    records.push({ selector: selector(n), nodeIndex: index.get(n), id: n.id || null, sourceId: n.getAttribute('data-unit-id') || n.getAttribute('data-source-id'), chapter, tag: n.tagName.toLowerCase(), text, classes: n.className || '', page: n.closest('[data-source-page]')?.getAttribute('data-source-page') || n.closest('[data-reader-page]')?.getAttribute('data-reader-page') || null,
+    records.push({ selector: selector(n), nodeIndex: index.get(n), id: n.id || null, sourceId: n.getAttribute('data-unit-id') || n.getAttribute('data-source-id'), styleId:n.getAttribute('data-vb-style')||null, translationPlaceholder:n.getAttribute('data-validatebook-translation-placeholder')||null, translationSource:n.getAttribute('data-validatebook-translation-source')||null, chapter, tag: n.tagName.toLowerCase(), text, classes: n.className || '', page: n.closest('[data-source-page]')?.getAttribute('data-source-page') || n.closest('[data-reader-page]')?.getAttribute('data-reader-page') || null,
       hidden: Boolean(text && (s.display === 'none' || s.visibility !== 'visible' || [...function*(){for(let e=n;e;e=e.parentElement)yield e;}()].some(e=>Number(getComputedStyle(e).opacity)===0) || !textRects.length)), clipped,
       outside: (r.left < -2 || r.right > innerWidth + 2) && ![...function*(){for(let e=n;e;e=e.parentElement)yield e;}()].some(e=>{const box=e.getBoundingClientRect(),ox=getComputedStyle(e).overflowX;return /auto|scroll/.test(ox)&&box.right<=innerWidth+2&&box.left>=-2;}), font: { family: s.fontFamily, size: s.fontSize, weight: s.fontWeight, style: s.fontStyle },
       bounds: {left:r.left,right:r.right,top:r.top,bottom:r.bottom}, ancestors:[...function*(){for(let e=n.parentElement;e;e=e.parentElement)yield index.get(e);}()],
@@ -80,6 +80,7 @@ export function inspectLayout() {
   for (const n of document.querySelectorAll('[src],link[rel="stylesheet"]')) resources.push({ tag: n.tagName.toLowerCase(), url: n.src || n.href });
   const bodyText = document.body?.textContent || '';
   const pageAnchors=[...document.querySelectorAll('[id]')].filter(n=>/^page_\d+$/.test(n.id));
+  const pageContainers=[...document.querySelectorAll('.pdf-source-page')].map(n=>Number(n.getAttribute('data-source-page')||n.getAttribute('data-reader-page'))).filter(Number.isInteger);
   const pagination={anchors:pageAnchors.length,pages:[...document.querySelectorAll('section.pdf-source-page[data-reader-page]')].map(n=>{const r=n.getBoundingClientRect();const style=getComputedStyle(n);return {number:Number(n.getAttribute('data-reader-page')),top:r.top,bottom:r.bottom,width:r.width,height:r.height,padding:[style.paddingTop,style.paddingRight,style.paddingBottom,style.paddingLeft].map(parseFloat),cover:!!n.querySelector(':scope > figure#page_1')};}),misplacedAnchors:pageAnchors.filter(n=>n.closest('section.pdf-source-page')&&Number(n.id.slice(5))!==Number(n.closest('section.pdf-source-page').getAttribute('data-reader-page'))).map(n=>n.id)};
   // Inspect the entire container chain, not just the generated page box.
   // Author spacing is not reset speculatively: conflicting ownership blocks
@@ -108,7 +109,7 @@ export function inspectLayout() {
     probe.remove();
   }
   return { language: document.documentElement.lang, title: document.title, records, duplicates, brokenLinks: links, resources, localLinks,
-    readerPage, readerOmittedPages,
+    readerPage, readerOmittedPages, pageContainers,
     pagination,
     loadedResources: performance.getEntriesByType('resource').map(e => e.name), fontFaces: [...document.fonts].map(f => ({ family: f.family, status: f.status })),
     text: document.body ? (() => {
@@ -214,31 +215,101 @@ export function compareEnglish(pages, document) {
   return { findings, coverage };
 }
 
+const translationBlock = r => /^(p|h[1-6]|li|blockquote|figcaption)$/.test(r.tag)&&r.text?.trim()&&r.translationPlaceholder!=='review';
+const structuralKey = r => r.sourceId ? 'source:' + r.sourceId : r.id && !/^page_\d+$/.test(r.id) ? 'id:' + r.id : null;
+
+export function sentenceCount(text, language='en') {
+  const value=String(text||'').trim();if(!value)return 0;
+  try{return [...new Intl.Segmenter(language,{granularity:'sentence'}).segment(value)].filter(part=>/[\p{L}\p{N}]/u.test(part.segment)).length||1;}
+  catch{return value.split(/(?<=[.!?…])\s+/u).filter(part=>/[\p{L}\p{N}]/u.test(part)).length||1;}
+}
+
+export function alignTranslationBlocks(english,target,language) {
+  const sources=english.records.filter(translationBlock),targets=target.records.filter(translationBlock),pages=new Set([...sources,...targets].map(r=>String(r.page??'unpaged')));
+  const matches=[],missing=[],extra=[],ambiguousPages=[];
+  const key=r=>structuralKey(r);
+  for(const page of pages){
+    const left=sources.filter(r=>String(r.page??'unpaged')===page),right=targets.filter(r=>String(r.page??'unpaged')===page);
+    const rows=left.length+1,cols=right.length+1,cost=Array.from({length:rows},()=>Array(cols).fill(Infinity)),ways=Array.from({length:rows},()=>Array(cols).fill(0)),step=Array.from({length:rows},()=>Array(cols));
+    cost[0][0]=0;ways[0][0]=1;
+    const update=(i,j,value,op)=>{if(value<cost[i][j]-1e-9){cost[i][j]=value;ways[i][j]=ways[op.i][op.j];step[i][j]=op;}else if(Math.abs(value-cost[i][j])<=1e-9){ways[i][j]=Math.min(2,ways[i][j]+ways[op.i][op.j]);}};
+    for(let i=0;i<rows;i++)for(let j=0;j<cols;j++){
+      if(!Number.isFinite(cost[i][j]))continue;
+      if(i<left.length)update(i+1,j,cost[i][j]+3,{i,j,kind:'missing'});
+      if(j<right.length)update(i,j+1,cost[i][j]+3,{i,j,kind:'extra'});
+      if(i<left.length&&j<right.length){
+        const a=left[i],b=right[j],ak=key(a),bk=key(b);
+        let matchCost=Infinity;
+        if(b.translationPlaceholder==='missing')matchCost=b.translationSource===a.selector?0:Infinity;
+        else {
+          const tagCost=a.tag===b.tag?0:a.tag==='p'&&/^h[1-6]$/.test(b.tag)?1.5:Infinity;
+          if(Number.isFinite(tagCost))matchCost=tagCost+Math.min(4,Math.abs(sentenceCount(a.text,'en')-sentenceCount(b.text,language)))+(a.classes===b.classes?0:.25)+((a.roleContext&&b.roleContext&&a.roleContext!==b.roleContext)?.5:0)+(ak&&bk&&ak===bk?-10:0);
+        }
+        if(Number.isFinite(matchCost))update(i+1,j+1,cost[i][j]+matchCost,{i,j,kind:'match'});
+      }
+    }
+    const operations=[];let i=left.length,j=right.length;
+    while(i||j){const current=step[i][j];if(!current)break;operations.push({kind:current.kind,source:current.kind==='extra'?null:left[i-1],target:current.kind==='missing'?null:right[j-1]});i=current.i;j=current.j;}
+    operations.reverse();
+    if(ways[left.length][right.length]!==1){ambiguousPages.push({page,englishBlocks:left.length,translationBlocks:right.length});continue;}
+    for(let at=0;at<operations.length;at++){
+      const operation=operations[at];
+      if(operation.kind==='match')matches.push({source:operation.source,target:operation.target,page});
+      else if(operation.kind==='extra')extra.push({target:operation.target,page});
+      else {
+        const before=operations.slice(at+1).find(item=>item.target)?.target||null;
+        const after=[...operations.slice(0,at)].reverse().find(item=>item.target)?.target||null;
+        missing.push({source:operation.source,page,before,after});
+      }
+    }
+  }
+  return {matches,missing,extra,ambiguousPages};
+}
+
 export function compareStructure(english, target, language) {
-  const findings = [], matches = [];
-  const key = r => r.sourceId ? 'source:' + r.sourceId : r.id && !/^page_\d+$/.test(r.id) ? 'id:' + r.id : null;
+  const findings = [], matches = [], matchedSources=new Set(), matchedTargets=new Set();
+  const key = structuralKey;
+  const alignment=alignTranslationBlocks(english,target,language),alignedMissing=new Set(alignment.missing.map(item=>item.source.selector));
   const map = new Map();
   for (const r of target.records) { const k = key(r); if (k) map.set(k, map.has(k) ? null : r); }
-  for (const r of english.records) {
-    const k = key(r); if (!k) continue;
-    const t = map.get(k);
-    if (!t) { findings.push(issue(language, 'missing_structural_anchor', k, `English ${r.tag} has no unique translated counterpart. The translation may be missing a paragraph/block or may have lost its structural anchor; text is not invented automatically.`, {})); continue; }
-    matches.push({ source: r.selector, target: t.selector, key: k });
+  const addMatch=(r,t,k)=>{
+    if(matchedSources.has(r.selector)||matchedTargets.has(t.selector))return;
+    matchedSources.add(r.selector);matchedTargets.add(t.selector);matches.push({ source: r.selector, target: t.selector, key:k||null });
     if (r.tag !== t.tag) findings.push(issue(language, 'structural_tag', t.selector, `${t.tag} differs from English ${r.tag}.`, { repair: { kind: 'tag', selector: t.selector, expectedTag: t.tag, tag: r.tag, sourceSelector: r.selector } }));
     if (r.rows && JSON.stringify(r.rows) !== JSON.stringify(t.rows)) {
       const spans = rows => rows?.map(row=>row.map(({colspan,rowspan})=>({colspan,rowspan})));
       const safe = JSON.stringify(spans(r.rows)) === JSON.stringify(spans(t.rows));
       findings.push(issue(language, 'table_structure', t.selector, 'Row, cell, header or span structure differs from English.', safe ? {repair:{kind:'table_headers',selector:t.selector,rows:r.rows}} : {}));
     }
-    if (r.classes !== t.classes) findings.push(issue(language,'presentation_classes',t.selector,'English presentation classes differ.',{repair:{kind:'classes',selector:t.selector,classes:r.classes}}));
-    if (JSON.stringify(r.font) !== JSON.stringify(t.font)) findings.push(issue(language, 'font_style_difference', t.selector, 'Computed typography differs from the English counterpart; language-specific glyph fallback may be legitimate.', { source: r.font, target: t.font, severity: 'warning' }));
+    if (r.classes !== t.classes&&!t.translationPlaceholder) findings.push(issue(language,'presentation_classes',t.selector,'English presentation classes differ.',{repair:{kind:'classes',selector:t.selector,classes:r.classes}}));
+    if (JSON.stringify(r.font) !== JSON.stringify(t.font)&&!t.translationPlaceholder) findings.push(issue(language, 'font_style_difference', t.selector, 'Computed typography differs from the English counterpart; language-specific glyph fallback may be legitimate.', { source: r.font, target: t.font, severity: 'warning' }));
+  };
+  for (const r of english.records) {
+    const k = key(r); if (!k) continue;
+    const t = map.get(k);
+    if (!t) { if(!alignedMissing.has(r.selector))findings.push(issue(language, 'missing_structural_anchor', k, `English ${r.tag} has no unique translated counterpart.`, {})); continue; }
+    addMatch(r,t,k);
   }
-  const signature = d => d.records.filter(r => r.tag !== 'img').map(r => /^h\d$/.test(r.tag) ? 'heading' : r.tag);
+  for(const pair of alignment.matches){
+    addMatch(pair.source,pair.target,key(pair.source));
+    if(pair.target.translationPlaceholder==='missing')findings.push(issue(language,'translation_placeholder',pair.target.selector,'Translation is still missing; the English source placeholder must be replaced and its validateBook marker removed.',{page:pair.page,english:pair.source.text,englishSentences:sentenceCount(pair.source.text,'en'),translationSentences:0}));
+    else {
+      const englishSentences=sentenceCount(pair.source.text,'en'),translationSentences=sentenceCount(pair.target.text,language);
+      if(englishSentences!==translationSentences)findings.push(issue(language,'translation_sentence_count_difference',pair.target.selector,'English and translated blocks contain different mechanical sentence counts; review the translation before layout propagation.',{page:pair.page,englishSentences,translationSentences,english:pair.source.text,repair:{kind:'translation_review',selector:pair.target.selector,sourceSelector:pair.source.selector,tag:pair.source.tag,text:pair.source.text,safeTranslationStyle:true}}));
+    }
+  }
+  for(const item of alignment.missing){
+    const r=item.source,id=r.id&&!/^page_\d+$/.test(r.id)?r.id:null;
+    findings.push(issue(language,'missing_translation_block',key(r)||r.selector,'A translated block is missing. Insert an English placeholder so layout correspondence remains stable until translation correction.',{page:item.page,english:r.text,englishSentences:sentenceCount(r.text,'en'),translationSentences:0,repair:{kind:'translation_placeholder',sourceSelector:r.selector,beforeSelector:item.before?.selector||null,beforeText:item.before?.text||null,beforeTag:item.before?.tag||null,afterSelector:item.after?.selector||null,afterText:item.after?.text||null,afterTag:item.after?.tag||null,page:item.page,tag:r.tag,text:r.text,classes:r.classes,styleId:r.styleId,id,safeTranslationStyle:true}}));
+  }
+  for(const item of alignment.extra)findings.push(issue(language,'extra_translation_block',item.target.selector,'The translation contains an unmatched extra block; layout propagation is blocked for this page.',{page:item.page,translation:item.target.text}));
+  for(const item of alignment.ambiguousPages)findings.push(issue(language,'translation_alignment_ambiguous','page '+item.page,'Block order cannot be aligned uniquely from mechanical structure and sentence counts; no positional layout propagation is allowed.',item));
+  const signature = d => d.records.filter(r => r.tag !== 'img'&&r.translationPlaceholder!=='review').map(r => /^h\d$/.test(r.tag) ? 'heading' : r.tag);
   const a = signature(english), b = signature(target);
   if (JSON.stringify(a) !== JSON.stringify(b)) findings.push(issue(language, 'block_sequence_difference', 'document', 'Paragraph/heading/table/list sequence differs from the English canonical layout. This can indicate missing translated paragraphs, extra converter fragments, or a broken contents/table structure; text is preserved and the issue remains explicit.', { english: a, translation: b }));
   const images = d => d.records.filter(r => r.tag === 'img').length;
   if (images(english) !== images(target)) findings.push(issue(language, 'image_count_difference', 'document', `${images(english)} English images; ${images(target)} translated images.`));
-  return { findings, matches, limitation: 'Translations must preserve the English visual structure and styles while keeping their own text. Matching sequences do not prove translation meaning or detect a substituted paragraph of the same shape.' };
+  return { findings, matches, blockMatches:alignment.matches.map(pair=>({source:pair.source.selector,target:pair.target.selector,page:pair.page})), alignment, limitation: 'Translations preserve English block order. Sentence counts are mechanical indicators only; they do not prove semantic equivalence.' };
 }
 
 export function comparePdfFonts(inventory, rendered, sourceFonts = []) {

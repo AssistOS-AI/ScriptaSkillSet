@@ -359,11 +359,8 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
       if(weight)properties['font-weight']=String(weight);
       properties['font-style']=style;
     }
-    const proseParagraph=r.tag==='p'&&(
-      m?.fontSizePt===profile.bodyPt||
-      contextualBodySelectors.has(r.selector)||
-      Math.abs(parseFloat(r.font?.size)-(document.presentation?.bodyFontSize||0))<.5
-    );
+    const sourceDisplayText=r.displayGroup!==null&&r.displayGroup!==undefined;
+    const proseParagraph=r.tag==='p'&&!sourceDisplayText;
     const protectedAlignment=['center','right','end'].includes(r.style?.textAlign);
     if(proseParagraph&&!protectedAlignment){
       properties['text-align']=justifyPolicy==='natural'?'left':'justify';

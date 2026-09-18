@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { openBrowser } from '../src/browser.mjs';
-import { measure, applyDomRepairs } from '../src/layout-browser.mjs';
+import { navigate, measure, applyDomRepairs } from '../src/layout-browser.mjs';
 import {restorePublisherIdentity} from '../src/source-identity.mjs';
 import {compareImageStyles} from '../src/images.mjs';
 import {pathToFileURL} from 'node:url';
@@ -82,9 +82,25 @@ test('native layout, repair text preservation, table headers and blocked scripts
     const original=await measure(browser,file);assert(original.records.find(r=>r.id==='p').clipped);assert(!original.text.includes('MUTATED'));
     const actions=[{kind:'tag',selector:'#title',expectedTag:'h2',tag:'h1'},{kind:'table_headers',selector:'#t',rows:[[{tag:'th',colspan:1,rowspan:1}]]},{kind:'presentation',selector:'#p',properties:{height:'auto'}}];
     const repair=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify(actions)})`);assert(repair.html.includes('<h1 id="title">Titlu</h1>'));assert(repair.html.includes('<th>Coloană</th>'));assert(repair.html.includes('Un paragraf lung'));assert.equal(repair.changes.length,3);
+    const repeated=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([actions[0]])})`);assert.equal(repeated.changes.length,0);
     await assert.rejects(browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'rewrite',selector:'#p',text:'Changed'}])})`));
     assert(!(await fs.readdir(dir)).some(f=>f.endsWith('.png')));
   }finally{await browser.close();}
+});
+
+test('translation placeholders preserve English evidence and are idempotent',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'translation-placeholder-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const file=path.join(dir,'book.html');await fs.writeFile(file,'<!doctype html><html><body><section class="pdf-source-page" data-source-page="7"><p id="before">Traducere înainte.</p><p id="after">Traducere după.</p></section></body></html>');
+  const action={kind:'translation_placeholder',sourceSelector:'#source-missing',beforeSelector:'#after',beforeText:'Traducere după.',beforeTag:'p',afterSelector:'#before',afterText:'Traducere înainte.',afterTag:'p',page:'7',tag:'p',text:'Missing English sentence.',classes:'prose',styleId:null,id:null,safeTranslationStyle:true};
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());await navigate(browser,file);
+  const first=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([action])})`);assert(first.html.includes('data-validatebook-translation-placeholder="missing"'));assert(first.html.includes('Missing English sentence.'));
+  const second=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([action])})`);assert.equal(second.changes.length,0);
+  assert.deepEqual(await browser.evaluate('Array.from(document.querySelectorAll("section > *"),n=>n.textContent)'),['Traducere înainte.','Missing English sentence.','Traducere după.']);
+  const review={kind:'translation_review',selector:'#before',sourceSelector:'#english-before',tag:'p',text:'English one. English two.',safeTranslationStyle:true};
+  await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([review])})`);
+  const repeated=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([review])})`);assert.equal(repeated.changes.length,0);
+  assert.equal(await browser.evaluate('document.querySelector("#before").getAttribute("data-validatebook-translation-review")'),'sentence-count');
+  assert.equal(await browser.evaluate('document.querySelectorAll("[data-validatebook-translation-placeholder=review]").length'),1);
 });
 
 test('managed CSS replaces inline declarations without altering computed typography and survives reruns',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{

@@ -82,3 +82,42 @@ test('ordinary prose and an isolated two-column pair are not borderless tables',
   prose.text_items.push({text:'A paragraph crosses the proposed split',x0:70,x1:360,top:100,bottom:110,size_pt:10,font_name:'Arial',font_family:'Arial',color:'#000000'});
   assert.deepEqual(sourceTables({pages:[prose]}),[]);
 });
+test('a following two-part section heading is not absorbed as a table row',()=>{
+  const page=borderlessPage(1,[['Foundation model','Usually buy several providers'],['Agent framework','Use as an accelerator']]);
+  page.text_items.push(
+    {text:'10.2 Pricing, ROI,',x0:76,x1:198,top:130,bottom:146,size_pt:15.5,font_name:'Arial',font_family:'Arial',color:'#000000'},
+    {text:'pilots and outcomes',x0:203,x1:360,top:130,bottom:146,size_pt:15.5,font_name:'Arial',font_family:'Arial',color:'#000000'},
+  );
+  const tables=sourceTables({pages:[page]});
+  assert.equal(tables.length,1);
+  assert.equal(tables[0].rows,3);
+  assert(!tables[0].cells.some(cell=>cell.text.includes('Pricing')));
+});
+test('wrapped text in both columns remains one row and a distant folio is excluded',()=>{
+  const page=borderlessPage(56,[['OpenAI Agents SDK','Compact abstraction'],['Microsoft Agent Framework','Enterprise framework']]);
+  const microsoft=page.text_items.find(item=>item.text==='Microsoft Agent Framework');
+  const enterprise=page.text_items.find(item=>item.text==='Enterprise framework');
+  page.text_items.push(
+    {...microsoft,text:'1.0',x1:microsoft.x0+20,top:microsoft.top+11,bottom:microsoft.bottom+11},
+    {...enterprise,text:'directions and ecosystem fit',x1:enterprise.x0+140,top:enterprise.top+11,bottom:enterprise.bottom+11},
+    {...enterprise,text:'56',x0:200,x1:215,top:enterprise.top+52,bottom:enterprise.bottom+52,size_pt:11.5},
+  );
+  const table=sourceTables({pages:[page]})[0];
+  assert.equal(table.rows,3);
+  assert.deepEqual(table.cells.slice(-2).map(cell=>cell.text),['Microsoft Agent Framework 1.0','Enterprise framework directions and ecosystem fit']);
+  assert(!table.cells.some(cell=>cell.text.includes('56')));
+});
+test('header cell geometry certifies a narrow first column',()=>{
+  const page=borderlessPage(68,[['S1','First reference'],['S2','Second reference']]);
+  page.text_items[0]={...page.text_items[0],text:'Source',x0:70,x1:99};
+  page.text_items[1]={...page.text_items[1],text:'Reference',x0:117,x1:159};
+  for(const item of page.text_items.slice(2)){if(item.x0<190){item.x0=70;item.x1=88;}else{item.x0=117;item.x1=260;}}
+  page.rectangles=[
+    {x0:65,x1:111,top:45,bottom:65,fill_color:'#103a5b'},
+    {x0:111,x1:330,top:45,bottom:65,fill_color:'#103a5b'},
+  ];
+  const table=sourceTables({pages:[page]})[0];
+  assert.equal(table.columns,2);
+  assert.deepEqual(table.cells.slice(0,2).map(cell=>cell.text),['Source','Reference']);
+  assert.deepEqual(table.cells.slice(0,2).map(cell=>cell.widthPt),[46,219]);
+});

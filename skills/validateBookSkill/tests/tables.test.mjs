@@ -153,21 +153,126 @@ test('continued source table is reconstructed from one malformed HTML table with
 
 test('a merged exact table is distributed back to certified source pages',()=>{
   const first=structuredClone(source),second=structuredClone(source),doc=documentFixture();
+  doc.pageContainers=[14,15];
   second.page=15;second.cells[2].text='Other sponsor';second.cells[3].text='Other benefit';
   const extra=doc.records[0].cells.slice(2).map((cell,index)=>({...cell,row:2,selector:'#extra'+index,text:second.cells[index+2].text}));
   doc.records[0].cells.push(...extra);doc.records[0].rows=[[{tag:'th'},{tag:'th'}],[{tag:'td'},{tag:'td'}],[{tag:'td'},{tag:'td'}]];
   const result=compareTables([first,second],doc,options),action=result.actions.find(item=>item.kind==='table_source_pages');
-  assert(action);assert.deepEqual(action.fragments,[{page:14,bodyRows:1},{page:15,bodyRows:1}]);
+  assert(action);assert.deepEqual(action.fragments,[
+    {page:14,bodyRows:1,rowKeys:['sponsor|publicbenefit']},
+    {page:15,bodyRows:1,rowKeys:['othersponsor|otherbenefit']}
+  ]);
   assert(result.findings.some(finding=>finding.category==='source_table_page_distribution'));
   assert(!result.findings.some(finding=>finding.category==='source_table_unmapped'||finding.category==='html_table_unmapped'));
 });
 
-test('source table fragments emitted as adjacent paragraphs are nonblocking when text is present',()=>{
+test('an unpaginated book never receives source-page table distribution',()=>{
+  const first=structuredClone(source),second=structuredClone(source),doc=documentFixture();
+  second.page=15;second.cells[2].text='Other sponsor';second.cells[3].text='Other benefit';
+  doc.records[0].page=null;
+  doc.records[0].cells.push(...doc.records[0].cells.slice(2).map((cell,index)=>({...cell,row:2,selector:'#unpaginated'+index,text:second.cells[index+2].text})));
+  const result=compareTables([first,second],doc,options);
+  assert(!result.actions.some(action=>action.kind==='table_source_pages'||action.kind==='table_source_groups'));
+});
+
+test('certified table rows recreate a missing continuation-page anchor', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-table-anchor-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const file=path.join(dir,'book.html');
+  await fs.writeFile(file,'<!doctype html><html><body><section class="pdf-source-page" data-source-page="14"><table id="table"><thead><tr><th>Pattern</th><th>Meaning</th></tr></thead><tbody><tr><td>Sponsor</td><td>Public benefit</td></tr><tr><td>Other sponsor</td><td>Other benefit</td></tr></tbody></table></section><section class="pdf-source-page" data-source-page="15"></section></body></html>');
+  const action={kind:'table_source_pages',selector:'#table',fragments:[
+    {page:14,bodyRows:1,rowKeys:['sponsor|publicbenefit']},
+    {page:15,bodyRows:1,rowKeys:['othersponsor|otherbenefit']}
+  ]};
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());await navigate(browser,file);
+  await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([action])})`);
+  assert.equal(await browser.evaluate('document.querySelector("[data-source-page=\\"15\\"] tbody tr").id'),'page_15');
+  assert.equal(await browser.evaluate('document.querySelectorAll("table").length'),2);
+});
+
+test('distinct continued tables merged into one HTML table are split by header and source page',()=>{
+  const mkCell=(row,col,text)=>({row,col,rowspan:1,colspan:1,text,widthPt:col?200:100,background:row===0?'#103a5b':'#ffffff',borders:Object.fromEntries(['top','right','bottom','left'].map(side=>[side,'0'])),typography:{name:'Arial',family:'Arial',sizePt:9,color:row===0?'#ffffff':'#111111',weight:row===0?700:400,style:'normal',leadingPt:12,paddingPt:[3,4,3,4],indentPt:0,align:'left'}});
+  const part=(header,bodyRows,page)=>({page,rows:1+bodyRows.length,columns:2,widthPt:300,pageWidthPt:432,topPt:100,bottomPt:200,cells:[header,...bodyRows].flatMap((row,r)=>row.map((text,c)=>mkCell(r,c,text)))});
+  const headerA=['Control pattern','When it earns its complexity'];
+  const headerB=['Pattern','Engineering rule'];
+  const sourceParts=[
+    part(headerA,[['Reactive loop','Choose the next action']],14),
+    part(headerA,[['Planner-executor','Create an explicit decomposition']],15),
+    part(headerB,[['Deterministic boundary','Use code for identity']],16),
+    part(headerB,[['Graph state','Name phases and persist state']],17)
+  ];
+  const merged=[headerA,['Reactive loop','Choose the next action'],['Planner-executor','Create an explicit decomposition'],headerB,['Deterministic boundary','Use code for identity'],['Graph state','Name phases and persist state']];
+  const table={tag:'table',selector:'#chain',page:14,nodeIndex:10,bounds:{left:0,right:600},rows:[],cells:merged.flatMap((row,r)=>row.map((text,c)=>({
+    row:r,col:c,rowspan:1,colspan:1,text,selector:`#c${r}_${c}`,width:(c?200:100)*2,
+    background:r===0||r===3?'rgb(16, 58, 91)':'rgb(255, 255, 255)',color:r===0||r===3?'rgb(255, 255, 255)':'rgb(17, 17, 17)',
+    font:{family:'Arial, sans-serif',size:'12px',weight:r===0||r===3?'700':'400',style:'normal'},lineHeight:'16px',textAlign:'left',indent:0,padding:[4,16/3,4,16/3],
+    borders:Object.fromEntries(['top','right','bottom','left'].map(side=>[side,{width:1,style:'solid',color:'rgb(170, 187, 204)'}]))
+  })))};
+  const result=compareTables(sourceParts,{width:1024,pageContainers:[14,15,16,17],records:[table]},options);
+  assert(!result.findings.some(f=>f.category==='source_table_unmapped'||f.category==='html_table_unmapped'));
+  const repair=result.actions.find(a=>a.kind==='table_source_groups');assert(repair);
+  assert.deepEqual(repair.groups.map(group=>group.fragments.map(fragment=>({page:fragment.page,headerRow:fragment.headerRow,bodyRows:fragment.bodyRows}))),[
+    [{page:14,headerRow:0,bodyRows:[1]},{page:15,headerRow:0,bodyRows:[2]}],
+    [{page:16,headerRow:3,bodyRows:[4]},{page:17,headerRow:3,bodyRows:[5]}]
+  ]);
+  assert(!result.actions.some(a=>a.kind==='presentation'));
+});
+
+test('distinct merged tables are installed as page-local fragments', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-table-groups-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const file=path.join(dir,'book.html');
+  await fs.writeFile(file,'<!doctype html><html><body data-validatebook-root><section class="pdf-source-page" data-source-page="14"><div class="pdf-table-wrap"><table id="chain"><thead><tr><th>Control pattern</th><th>When it earns its complexity</th></tr></thead><tbody><tr><td>Reactive loop</td><td>Choose the next action</td></tr><tr id="page_15"><td>Planner-executor</td><td>Create an explicit decomposition</td></tr><tr><td>Pattern</td><td>Engineering rule</td></tr><tr><td>Deterministic boundary</td><td>Use code for identity</td></tr><tr id="page_17"><td>Pattern</td><td>Engineering rule</td></tr><tr><td>Graph state</td><td>Name phases and persist state</td></tr></tbody></table></div></section><section class="pdf-source-page" data-source-page="15"><h2>Next section</h2></section><section class="pdf-source-page" data-source-page="16"><p>Prose before table.</p></section><section class="pdf-source-page" data-source-page="17"></section></body></html>');
+  const action={kind:'table_source_groups',selector:'#chain',rowKeys:['controlpattern|whenitearnsitscomplexity','reactiveloop|choosethenextaction','plannerexecutor|createanexplicitdecomposition','pattern|engineeringrule','deterministicboundary|usecodeforidentity','pattern|engineeringrule','graphstate|namephasesandpersiststate'],groups:[
+    {headerKey:'controlpattern|whenitearnsitscomplexity',fragments:[{page:14,headerRow:0,bodyRows:[1],placement:'original'},{page:15,headerRow:0,bodyRows:[2],placement:'start'}]},
+    {headerKey:'pattern|engineeringrule',fragments:[{page:16,headerRow:3,bodyRows:[4],placement:'end'},{page:17,headerRow:5,bodyRows:[6],placement:'start'}]}
+  ]};
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());await navigate(browser,file);
+  await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([action])})`);
+  assert.deepEqual(await browser.evaluate(`Array.from(document.querySelectorAll('.pdf-source-page'),page=>({page:Number(page.dataset.sourcePage),tables:page.querySelectorAll('table').length,header:page.querySelector('th')?.textContent,body:page.querySelector('td')?.textContent,last:page.lastElementChild?.className}))`),[
+    {page:14,tables:1,header:'Control pattern',body:'Reactive loop',last:'pdf-table-wrap'},
+    {page:15,tables:1,header:'Control pattern',body:'Planner-executor',last:''},
+    {page:16,tables:1,header:'Pattern',body:'Deterministic boundary',last:'pdf-table-wrap'},
+    {page:17,tables:1,header:'Pattern',body:'Graph state',last:'pdf-table-wrap'}
+  ]);
+  assert.equal(await browser.evaluate(`document.querySelector('[data-source-page="17"] thead tr').id`),'page_17');
+});
+
+test('source table rows emitted as exact adjacent paragraphs are normalized deterministically',()=>{
   const doc=documentFixture();
   doc.records[0].cells=source.cells.filter(c=>c.row===0).map(c=>({...c,selector:c.selector+'h'}));
   doc.records.push({tag:'p',selector:'#adjacent',page:14,text:'Sponsor Public benefit'});
   const result=compareTables([source],doc,options);
-  assert(result.findings.some(f=>f.category==='source_table_unmapped'&&f.severity==='warning'));
+  const action=result.actions.find(item=>item.kind==='table_normalize_rows');
+  assert(action);assert.deepEqual(action.plan.map(item=>item.paragraph||item.rows),[[0],'#adjacent']);
+  assert(!result.findings.some(f=>f.category==='source_table_unmapped'||f.category==='html_table_unmapped'));
+});
+
+test('normalization composes missing paragraphs, wrapped rows and repeated continuation headers',()=>{
+  const mk=(row,col,text)=>({row,col,rowspan:1,colspan:1,text,widthPt:col?200:100,background:'#fff',borders:{top:'0',right:'0',bottom:'0',left:'0'},typography:null});
+  const part=(page,rows)=>({page,rows:rows.length,columns:2,widthPt:300,pageWidthPt:432,topPt:50,bottomPt:200,cells:rows.flatMap((values,row)=>values.map((text,col)=>mk(row,col,text)))});
+  const header=['Stack','Reason'];
+  const profile=[part(56,[header,['OpenAI','Compact abstraction'],['Microsoft Agent Framework 1.0','Enterprise ecosystem fit']]),part(57,[header,['Google ADK','Evaluation and deployment support']])];
+  const physical=[header,['OpenAI','Compact abstraction'],header,['Google ADK','Evaluation and'],['','deployment support']];
+  const table={tag:'table',selector:'#stack',page:56,nodeIndex:10,rows:physical.map((_,row)=>row?[{tag:'td'},{tag:'td'}]:[{tag:'th'},{tag:'th'}]),cells:physical.flatMap((values,row)=>values.map((text,col)=>({row,col,rowspan:1,colspan:1,text,selector:`#r${row}c${col}`})))};
+  const paragraph={tag:'p',selector:'#microsoft',page:56,nodeIndex:30,text:'Microsoft Agent Framework Enterprise ecosystem 1.0 fit'};
+  const result=compareTables(profile,{width:1024,records:[table,paragraph]},options),action=result.actions.find(item=>item.kind==='table_normalize_rows');
+  assert(action);
+  assert.deepEqual(action.plan.map(item=>item.paragraph||item.rows),[[0],[1],'#microsoft',[2],[3,4]]);
+  assert(!result.findings.some(f=>f.category==='source_table_unmapped'||f.category==='html_table_unmapped'));
+});
+
+test('a complete source table emitted as contiguous paragraphs is reconstructed',()=>{
+  const mk=(row,col,text)=>({row,col,rowspan:1,colspan:1,text,widthPt:100,background:'#fff',borders:{top:'0',right:'0',bottom:'0',left:'0'},typography:null});
+  const values=[['Review area','Question'],['Outcome','Is the outcome observable?'],['Scope','Which tasks are allowed?']];
+  const profile={page:65,rows:3,columns:2,widthPt:200,pageWidthPt:432,topPt:100,bottomPt:200,cells:values.flatMap((row,r)=>row.map((text,c)=>mk(r,c,text)))};
+  const records=[
+    {tag:'p',selector:'#intro',page:65,nodeIndex:1,text:'Introductory prose.'},
+    {tag:'p',selector:'#first',page:65,nodeIndex:2,text:'Review area Question Outcome Is the outcome observable?'},
+    {tag:'p',selector:'#second',page:65,nodeIndex:3,text:'Scope Which tasks are allowed?'}
+  ];
+  const result=compareTables([profile],{width:1024,records},options),action=result.actions.find(item=>item.kind==='table_from_paragraphs');
+  assert(action);assert.deepEqual(action.paragraphs.map(item=>item.selector),['#first','#second']);
+  assert.deepEqual(action.rows.map(row=>row.map(cell=>cell.text)),values);
+  assert(!result.findings.some(f=>f.category==='source_table_unmapped'));
 });
 
 test('html table continuations across page breaks are merged when headers repeat',()=>{

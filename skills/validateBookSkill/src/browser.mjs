@@ -39,13 +39,13 @@ export async function openBrowser(executable) {
       clearTimeout(entry.timer); pending.delete(message.id);
       message.error ? entry.reject(Error(message.error.message)) : entry.resolve(message.result);
     });
-    const send = (method, params = {}) => new Promise((resolve, reject) => {
+    const send = (method, params = {}, timeoutMs = 30000) => new Promise((resolve, reject) => {
       const id = ++sequence;
-      const timer = setTimeout(() => { pending.delete(id); reject(Error(`CDP timeout: ${method}`)); }, 30000);
+      const timer = setTimeout(() => { pending.delete(id); reject(Error(`CDP timeout: ${method}`)); }, timeoutMs);
       pending.set(id, { resolve, reject, timer }); socket.send(JSON.stringify({ id, method, params }));
     });
     const evaluate = async expression => {
-      const result = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
+      const result = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }, 120000);
       if (result.exceptionDetails) throw Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text);
       return result.result.value;
     };

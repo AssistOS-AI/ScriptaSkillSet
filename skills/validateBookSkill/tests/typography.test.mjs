@@ -216,6 +216,19 @@ test('source policy keeps body prose justified when a later viewport has large g
   assert.equal(properties.hyphens,'auto');
 });
 
+test('source policy justifies prose below body size but preserves PDF display text',()=>{
+  const d=doc();
+  d.records=[
+    {tag:'p',selector:'#note',text:'A shorter front-matter note at a smaller point size.',font:{size:'14.66'},style:{lineHeight:'21',textAlign:'left',marginBottom:0}},
+    {tag:'p',selector:'#display',text:'The Hidden Cost of Saving Humanity',font:{size:'16'},style:{lineHeight:'24',textAlign:'left',marginBottom:0},displayGroup:'1'}
+  ];
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  const note=actions.find(a=>a.selector==='#note').properties;
+  assert.equal(note['text-align'],'justify');
+  assert.equal(note['text-align-last'],'left');
+  assert.equal(actions.find(a=>a.selector==='#display')?.properties?.['text-align'],undefined);
+});
+
 test('adaptive justification keeps justify for normal word gaps',()=>{
   const d=doc();
   d.records[0].style.textAlign='justify';

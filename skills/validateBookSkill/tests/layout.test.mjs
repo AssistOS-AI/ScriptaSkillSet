@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { compareEnglish, compareStructure, checkDisplay, comparePdfFonts, comparePdfGeometry } from '../src/layout-checks.mjs';
+import { compareEnglish, compareStructure, checkDisplay, comparePdfFonts, comparePdfGeometry, alignTranslationBlocks, sentenceCount } from '../src/layout-checks.mjs';
 import { discover, collectAssets, doctor, splitSafeVisibleContentRepairs } from '../src/audit.mjs';
 import { textReport, layoutReport } from '../src/layout-report.mjs';
 import { planComplete, completeStatus } from '../src/complete.mjs';
@@ -39,7 +39,30 @@ test('missing translated paragraph and equal-count anchor substitution are detec
   const missing=compareStructure(en,document([record('p1','Traducere.')]),'ro');
   assert(missing.findings.some(f=>f.category==='block_sequence_difference'));assert(missing.findings.some(f=>f.location==='id:p2'));
   const substitute=compareStructure(en,document([record('p1'),record('different')]),'ro');assert(substitute.findings.some(f=>f.location==='id:p2'));
-  assert(!missing.findings.some(f=>f.repair?.text));
+  const placeholder=missing.findings.find(f=>f.category==='missing_translation_block')?.repair;
+  assert.equal(placeholder.kind,'translation_placeholder');assert.equal(placeholder.text,'A paragraph.');
+});
+test('translation blocks align without shifting after one missing paragraph',()=>{
+  const en=document([
+    record('a','First sentence.',{page:'7'}),
+    record('b','Missing first sentence. Missing second sentence.',{page:'7'}),
+    record('c','Third one. Third two. Third three.',{page:'7'})
+  ]);
+  const ro=document([
+    record('a','Prima propoziție.',{page:'7'}),
+    record('c','A treia unu. A treia doi. A treia trei.',{page:'7'})
+  ]);
+  const alignment=alignTranslationBlocks(en,ro,'ro');
+  assert.deepEqual(alignment.matches.map(pair=>[pair.source.id,pair.target.id]),[['a','a'],['c','c']]);
+  assert.deepEqual(alignment.missing.map(item=>item.source.id),['b']);
+  assert.equal(alignment.ambiguousPages.length,0);
+});
+test('sentence counts are mechanical and mismatches request an English review placeholder',()=>{
+  assert.equal(sentenceCount('One sentence. A second sentence!','en'),2);
+  const en=document([record('p','One sentence. A second sentence!',{page:'8'})]);
+  const ro=document([record('p','O singură propoziție.',{page:'8'})]);
+  const finding=compareStructure(en,ro,'ro').findings.find(item=>item.category==='translation_sentence_count_difference');
+  assert.equal(finding.englishSentences,2);assert.equal(finding.translationSentences,1);assert.equal(finding.repair.kind,'translation_review');assert.equal(finding.repair.text,'One sentence. A second sentence!');
 });
 test('only unambiguous table header differences have an automatic repair',()=>{
   const en=document([record('table','',{tag:'table',rows:[[{tag:'th',colspan:1,rowspan:1}]]})]);
@@ -95,7 +118,7 @@ test('translation presentation layer is split from risky layout batches',()=>{
 
 test('translated paragraph fallback keeps page scaling in inherited font size',async()=>{
   const audit=await fs.readFile(fileURLToPath(new URL('../src/audit.mjs',import.meta.url)),'utf8');
-  assert.match(audit,/sourceBlock\.font\.size[\s\S]*?var\(--validatebook-page-scale, 1\)/);
+  assert.match(audit,/sourceBlock\?\.font\?\.size[\s\S]*?var\(--validatebook-page-scale, 1\)/);
 });
 test('actual rendered fonts compared with PDF subset names',()=>{
   const source='ABCDEF+EBGaramond-Regular TrueType yes yes yes 1 0';
@@ -133,14 +156,14 @@ test('report groups clear errors, missing translation blocks and repeated correc
     ,{language:'ro',kind:'presentation',file:'ro/full_content.html'}
   ],initialFindings:[],limitations:[],backups:[],findings:[
     {severity:'error',language:'ro',category:'block_sequence_difference',location:'document',detail:'Paragraph/heading/table/list sequence differs from the English canonical layout.'},
-    {severity:'error',language:'ro',category:'missing_structural_anchor',location:'id:p2',detail:'English p has no unique translated counterpart.'},
+    {severity:'error',language:'ro',category:'missing_translation_block',location:'id:p2',detail:'A translated block is missing.'},
     {severity:'error',language:'en',category:'html_table_unmapped',location:'table:nth-child(1)',detail:'HTML table has no certified source grid.'},
     {severity:'warning',language:'en',category:'remote_asset',location:'script',detail:'Remote script was disabled.'}
   ]};
   const report=textReport(result);
   assert(report.indexOf('## Erori clare rămase')<report.indexOf('## Paragrafe sau blocuri posibil lipsă în traduceri'));
   assert(report.includes('HTML table has no certified source grid.'));
-  assert(report.includes('poate lipsi un paragraf'));
+  assert(report.includes('Lipseste un bloc tradus'));
   assert(report.includes('| ro / presentation | 2 | 1 |'));
   assert(!report.includes('Remote script was disabled.'));
   assert(!report.includes('## Probleme inițiale'));
