@@ -1,0 +1,16 @@
+{
+  "title": "Scripta HTML to Audiobook",
+  "family": "document-conversion",
+  "summary": "Narrates local HTML books using ebook2audiobook and Piper, with audited chapters and M4B/MP3 delivery.",
+  "aliases": ["html2Audiobook", "html2audiobook", "html-to-audiobook"],
+  "dependsOn": [],
+  "outputs": ["<source-stem>-audiobook/book.m4b", "<source-stem>-audiobook/chapters/*.mp3", "<source-stem>-audiobook/report.json"],
+  "entrypoints": ["SKILL.md", "scripts/html2audiobook", "references/runtime.md", "references/validation.md"],
+  "selfContained": true,
+  "narrationDefaults": {
+    "sentencePauseSeconds": 0.5,
+    "paragraphPauseSeconds": 1.0,
+    "headingPauseSeconds": 1.5,
+    "segmentation": "sentence-first"
+  }
+}

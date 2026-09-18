@@ -3,24 +3,21 @@ requires = ["setuptools>=75"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "translatehtml-skill"
+name = "html2audiobook-skill"
 version = "0.1.0"
-description = "Structure-preserving HTML translation orchestrated by the active LLM."
+description = "Local HTML book narration through ebook2audiobook and Piper"
 requires-python = ">=3.10,<3.14"
-dependencies = [
-  "beautifulsoup4>=4.12,<5",
-  "langcodes>=3.5,<4",
-]
+dependencies = ["beautifulsoup4>=4.12,<5", "langdetect>=1.0.9,<2"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]
 
 [project.scripts]
-translatehtml = "translatehtml_skill.cli:main"
+html2audiobook = "html2audiobook_skill.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
-addopts = "-q"
 testpaths = ["tests"]
+addopts = "-q"

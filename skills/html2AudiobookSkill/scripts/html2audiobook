@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+skill_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+UV_CACHE_DIR="${UV_CACHE_DIR:-${TMPDIR:-/tmp}/html2audiobook-uv-cache}"
+UV_PROJECT_ENVIRONMENT="$skill_root/.venv"
+export UV_CACHE_DIR UV_PROJECT_ENVIRONMENT
+if ! command -v uv >/dev/null 2>&1; then
+  echo "html2audiobook requires uv: https://docs.astral.sh/uv/" >&2
+  exit 1
+fi
+exec uv --project "$skill_root" run --python 3.12 html2audiobook "$@"
