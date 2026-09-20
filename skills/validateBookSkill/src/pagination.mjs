@@ -68,6 +68,69 @@ export function paginateDocument({blankPages=[],origin='source',expectedPages=nu
   return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,pages:all,blankPages,origin,textPreserved:true};
 }
 
+// Runs inside the audit browser. A converter may repeat one complete contents
+// list on every page it spans. Keep only the entries actually printed on each
+// PDF page, without losing any entry from the contents as a whole.
+export function splitDuplicateSourceToc(pages) {
+  const normalize=value=>String(value||'').normalize('NFKC').replace(/[.·•]{2,}/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+  const lists=[...document.querySelectorAll('ol.source-toc')];
+  if(lists.length<2)return [];
+  const entries=list=>[...list.children].filter(node=>node.tagName==='LI');
+  const signature=list=>entries(list).map(item=>normalize(item.textContent)).join('\u0001');
+  const pageOf=list=>String(list.closest('[data-source-page]')?.getAttribute('data-source-page')||list.closest('[data-reader-page]')?.getAttribute('data-reader-page')||'');
+  const groups=new Map();
+  for(const list of lists){const key=signature(list);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(list);}
+  const pageText=new Map(pages.map(page=>[String(page.page),normalize(page.text)]));
+  const changes=[];
+  for(const group of groups.values()){
+    if(group.length<2)continue;
+    const union=new Set(entries(group[0]).map(item=>normalize(item.textContent)));
+    const removals=[];
+    for(const list of group){
+      const text=pageText.get(pageOf(list))||'';
+      for(const item of entries(list)){
+        const value=normalize(item.textContent);
+        if(!value||text.includes(value))continue;
+        const survives=group.some(other=>other!==list&&entries(other).some(node=>normalize(node.textContent)===value&&(pageText.get(pageOf(other))||'').includes(value)));
+        if(survives)removals.push({list,item});
+      }
+    }
+    if(!removals.length)continue;
+    const removed=new Map();
+    for(const removal of removals)removed.set(removal.list,(removed.get(removal.list)||0)+1);
+    if(group.some(list=>entries(list).length-(removed.get(list)||0)<1))continue;
+    const remaining=new Set();
+    for(const list of group)for(const item of entries(list))if(!removals.some(removal=>removal.item===item))remaining.add(normalize(item.textContent));
+    if([...union].some(value=>!remaining.has(value)))continue;
+    for(const removal of removals)removal.item.remove();
+    for(const [list,count] of removed)changes.push({kind:'duplicate_source_toc',page:pageOf(list)||null,removed:count,kept:entries(list).length});
+  }
+  return changes;
+}
+
+// Runs inside the audit browser. Translated pages left empty by reflow carry no
+// prose, image or table; drop them and keep their anchors on the previous page.
+export function removeEmptyTranslatedPages(){
+  const changes=[];
+  const root=document.querySelector('[data-validatebook-root]')||document.body;
+  for(const page of [...root.querySelectorAll('.pdf-source-page')]){
+    if(page.hasAttribute('data-source-page'))continue;
+    const text=page.textContent.replace(/[\s\d]/gu,'');
+    if(text)continue;
+    if(page.querySelector('img,figure,picture,svg,table,canvas,video'))continue;
+    const previous=page.previousElementSibling;
+    for(const node of [...page.querySelectorAll('[id]')]){
+      const id=node.id;if(!id||document.getElementById(id)!==node)continue;
+      if(previous){const marker=document.createElement('span');marker.className='source-anchor';marker.id=id;previous.append(marker);}
+      node.removeAttribute('id');
+    }
+    const readerPage=page.getAttribute('data-reader-page');
+    page.remove();
+    changes.push({kind:'empty_translated_page_removed',page:readerPage});
+  }
+  return changes;
+}
+
 export function sourceBlankPages(pages, anchors=[]) {
   const anchored=new Set(anchors);
   const lineKey=line=>line.normalize('NFKC').replace(/\s+/g,' ').trim();
@@ -295,7 +358,7 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
     const size=source?.size||profile.contentsFontSize;if(size>0)a.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
     return a;
   };
-  const replaceTableWithList=(table,entries,{sourceBacked=false}={})=>{
+  const makeList=entries=>{
     const list=document.createElement('ol');list.className='source-toc';
     for(const entry of entries){
       const li=document.createElement('li');
@@ -308,6 +371,10 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
       }
       list.append(li);
     }
+    return list;
+  };
+  const replaceTableWithList=(table,entries,{sourceBacked=false}={})=>{
+    const list=makeList(entries);
     const before=table.outerHTML;const page=table.closest('.pdf-source-page'),wrap=table.closest('.pdf-table-wrap');
     const boundaryId=wrap?.id||table.id;
     if(/^page_\d+$/.test(boundaryId)&&!list.id)list.id=boundaryId;
@@ -320,10 +387,25 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
   };
   if(language==='en'){
     const linked=sourceEntries.filter(source=>source.kind!=='part');
-    for(const list of document.querySelectorAll('.source-toc')){
-      const current=[...list.querySelectorAll('.validatebook-toc-label,.source-toc-part')].map(node=>normalize(node.textContent));
-      const expected=sourceEntries.map(entry=>normalize(entry.label));
-      if(expected.length&&JSON.stringify(current)!==JSON.stringify(expected))replaceTableWithList(list,sourceEntries,{sourceBacked:true});
+    const lists=[...document.querySelectorAll('.source-toc')];
+    const sizes=lists.map(list=>list.querySelectorAll('li').length);
+    // A contents list split across pages keeps each page's own entries; never
+    // copy the whole contents onto every page.
+    if(lists.length>1&&sizes.reduce((sum,count)=>sum+count,0)===sourceEntries.length){
+      let offset=0;
+      lists.forEach((list,index)=>{
+        const slice=sourceEntries.slice(offset,offset+sizes[index]);offset+=sizes[index];
+        const replacement=makeList(slice);
+        if(/^page_\d+$/.test(list.id))replacement.id=list.id;
+        const before=list.outerHTML;list.replaceWith(replacement);
+        changes.push({kind:'source_contents_recovery',before,after:replacement.outerHTML,sourceEntries:slice.map(entry=>entry.source||entry)});
+      });
+    }else{
+      for(const list of lists){
+        const current=[...list.querySelectorAll('.validatebook-toc-label,.source-toc-part')].map(node=>normalize(node.textContent));
+        const expected=sourceEntries.map(entry=>normalize(entry.label));
+        if(expected.length&&JSON.stringify(current)!==JSON.stringify(expected))replaceTableWithList(list,sourceEntries,{sourceBacked:true});
+      }
     }
     for(const table of document.querySelectorAll('table.pdf-toc')){
       if(!linked.length||linked.some(source=>!document.getElementById('page_'+source.destination))){unmatched.push('Contents source structure');continue;}
@@ -428,8 +510,9 @@ export function translatedPaginationCss({width,height,margins=null,contents=[],c
   if(!(width>0&&height>0))throw Error('Source PDF page dimensions required');
   const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
   return `/* validateBook translated flow */
+@property --validatebook-page-scale{syntax:"<number>";inherits:true;initial-value:1}
 [data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size;background:var(--reader-surround,var(--standalone-surround,#e3e6e4));box-shadow:none;border-color:transparent}
-[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:max(1,calc(100cqw / ${width*4/3}px));--validatebook-font-size:var(--reader-font-size,var(--standalone-size,1em));font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
+[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:max(1,calc(100cqw / ${width*4/3}px));font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
 [data-validatebook-root] > .pdf-source-page:last-of-type{margin-bottom:0;break-after:auto}
 [data-validatebook-root] > .pdf-source-page:has(figure#page_1){padding:0}
 .pdf-source-page figure#page_1{margin:0}

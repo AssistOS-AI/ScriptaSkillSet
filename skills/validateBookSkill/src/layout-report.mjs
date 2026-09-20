@@ -6,9 +6,7 @@ const categoryReason={
   missing_structural_anchor:'Un bloc din engleza nu are corespondent unic in traducere; poate lipsi un paragraf sau s-a pierdut ancora structurala.',
   block_sequence_difference:'Ordinea sau tipurile de blocuri difera de layout-ul canonic englez; poate indica paragrafe lipsa, fragmente extra sau cuprins/tabele rupte.',
   translation_block_count_difference:'O pagina tradusa are alt numar de blocuri decat pagina engleza corespondenta; stilurile nu pot fi propagate complet.',
-  missing_translation_block:'Lipseste un bloc tradus; skillul a introdus temporar textul englez cu marker de placeholder pentru a pastra alinierea layout-ului.',
-  translation_placeholder:'Un placeholder englez este inca prezent si trebuie inlocuit cu traducerea, apoi trebuie eliminat markerul validateBook.',
-  translation_sentence_count_difference:'Numarul mecanic de propozitii difera intre blocul englez si traducere; blocul trebuie verificat inainte de certificarea layout-ului.',
+  translation_page_retranslation_required:'Alinierea determinista a gasit unitati de text lipsa sau cu numar de propozitii diferit; agentul insereaza doar textul unitatii lipsa/partiale si lasa restul structurii sa reflueze.',
   translation_alignment_ambiguous:'Blocurile nu pot fi aliniate mecanic in mod unic; skillul nu propaga pozitional stilurile pe pagina afectata.',
   extra_translation_block:'Traducerea contine un bloc suplimentar fara corespondent englez verificat.',
   translation_style_difference:'Un bloc tradus nu foloseste fontul, marimea, leading-ul, culoarea sau spacing-ul rolului englez corespondent.',
@@ -24,7 +22,7 @@ function summarizeFindings(findings=[]){
   for(const f of findings)counts.set(f.category,(counts.get(f.category)||0)+1);
   return [...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
 }
-const missingTranslationCategories=new Set(['missing_structural_anchor','block_sequence_difference','translation_block_count_difference','missing_translation_block','translation_placeholder','translation_sentence_count_difference','translation_alignment_ambiguous','extra_translation_block']);
+const missingTranslationCategories=new Set(['missing_structural_anchor','translation_page_retranslation_required']);
 const clean=value=>String(value??'').replace(/\s+/g,' ').replace(/\|/g,'\\|').trim();
 function groupedFindings(findings=[]){
   const groups=new Map();
@@ -53,8 +51,8 @@ export function textReport(result) {
   const lines = ['# ValidateBook: raport de corecție', '', `| | |`, `|---|---|`, `| **Status** | ${result.status} |`, `| **Limbi** | ${result.documents.map(d => d.language).join(', ')} |`, `| **Pagini PDF verificate** | ${result.pageCoverage.length} |`, `| **Corecții aplicate** | ${result.corrections.length} |`, `| **Erori rămase** | ${unresolved.length} |`, ''];
   lines.push('## Erori clare rămase','');
   findingTable(lines,clear,'Nicio eroare clară rămasă.');
-  lines.push('## Paragrafe sau blocuri posibil lipsă în traduceri','');
-  findingTable(lines,missing,'Nu au fost identificate paragrafe sau blocuri posibil lipsă în traduceri.');
+  lines.push('## Pagini de traducere de corectat','');
+  findingTable(lines,missing,'Nu au fost identificate pagini de traducere de corectat.');
   lines.push('## Corecții aplicate', '');
   if (result.corrections.length === 0) {
     lines.push('Nicio corecție aplicată.', '');

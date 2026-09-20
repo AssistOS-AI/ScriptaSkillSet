@@ -224,52 +224,149 @@ export function sentenceCount(text, language='en') {
   catch{return value.split(/(?<=[.!?…])\s+/u).filter(part=>/[\p{L}\p{N}]/u.test(part)).length||1;}
 }
 
+export function sentenceSegments(text, language='en') {
+  const value=String(text||'').trim();if(!value)return [];
+  try{return [...new Intl.Segmenter(language,{granularity:'sentence'}).segment(value)].map(part=>part.segment.trim()).filter(part=>/[\p{L}\p{N}]/u.test(part));}
+  catch{return value.split(/(?<=[.!?…])\s+/u).map(part=>part.trim()).filter(part=>/[\p{L}\p{N}]/u.test(part));}
+}
+
+// Sentence units keep every character of the source text: punctuation-only
+// fragments are attached to the surrounding sentence unit instead of dropped,
+// so a sentence-boundary reflow never loses prose.
+export function sentenceUnits(text, language='en') {
+  const value=String(text||'').trim();if(!value)return [];
+  let parts;
+  try{parts=[...new Intl.Segmenter(language,{granularity:'sentence'}).segment(value)].map(part=>part.segment);}
+  catch{parts=value.split(/(?<=[.!?…])\s+/u);}
+  const units=[];let current='';
+  for(const part of parts){current+=part;if(/[\p{L}\p{N}]/u.test(part)){const unit=current.trim();if(unit)units.push(unit);current='';}}
+  if(current.trim()){if(units.length)units[units.length-1]+=current.trim();else units.push(current.trim());}
+  return units;
+}
+
+const flowTag=tag=>/^(p|h[1-6]|blockquote)$/.test(tag);
+// Only prose-to-prose and matching list/figure roles may align; translations
+// keep their own pagination, so alignment is by document order and sentence
+// count, never by page number.
+const blockTagCost=(source,target)=>{
+  if(source.tag===target.tag)return 0;
+  if(flowTag(source.tag)&&flowTag(target.tag))return .5;
+  return Infinity;
+};
+const translatedBlockShape=(record,language)=>({selector:record.selector,tag:record.tag,classes:record.classes,sentences:sentenceSegments(record.text,language),text:record.text});
+
 export function alignTranslationBlocks(english,target,language) {
-  const sources=english.records.filter(translationBlock),targets=target.records.filter(translationBlock),pages=new Set([...sources,...targets].map(r=>String(r.page??'unpaged')));
-  const matches=[],missing=[],extra=[],ambiguousPages=[];
-  const key=r=>structuralKey(r);
-  for(const page of pages){
-    const left=sources.filter(r=>String(r.page??'unpaged')===page),right=targets.filter(r=>String(r.page??'unpaged')===page);
-    const rows=left.length+1,cols=right.length+1,cost=Array.from({length:rows},()=>Array(cols).fill(Infinity)),ways=Array.from({length:rows},()=>Array(cols).fill(0)),step=Array.from({length:rows},()=>Array(cols));
-    cost[0][0]=0;ways[0][0]=1;
-    const update=(i,j,value,op)=>{if(value<cost[i][j]-1e-9){cost[i][j]=value;ways[i][j]=ways[op.i][op.j];step[i][j]=op;}else if(Math.abs(value-cost[i][j])<=1e-9){ways[i][j]=Math.min(2,ways[i][j]+ways[op.i][op.j]);}};
-    for(let i=0;i<rows;i++)for(let j=0;j<cols;j++){
-      if(!Number.isFinite(cost[i][j]))continue;
-      if(i<left.length)update(i+1,j,cost[i][j]+3,{i,j,kind:'missing'});
-      if(j<right.length)update(i,j+1,cost[i][j]+3,{i,j,kind:'extra'});
-      if(i<left.length&&j<right.length){
-        const a=left[i],b=right[j],ak=key(a),bk=key(b);
-        let matchCost=Infinity;
-        if(b.translationPlaceholder==='missing')matchCost=b.translationSource===a.selector?0:Infinity;
-        else {
-          const tagCost=a.tag===b.tag?0:a.tag==='p'&&/^h[1-6]$/.test(b.tag)?1.5:Infinity;
-          if(Number.isFinite(tagCost))matchCost=tagCost+Math.min(4,Math.abs(sentenceCount(a.text,'en')-sentenceCount(b.text,language)))+(a.classes===b.classes?0:.25)+((a.roleContext&&b.roleContext&&a.roleContext!==b.roleContext)?.5:0)+(ak&&bk&&ak===bk?-10:0);
-        }
-        if(Number.isFinite(matchCost))update(i+1,j+1,cost[i][j]+matchCost,{i,j,kind:'match'});
+  const sources=english.records.filter(translationBlock),targets=target.records.filter(translationBlock);
+  const n=sources.length,m=targets.length;
+  const sourceSentences=sources.map(record=>sentenceCount(record.text,'en'));
+  const targetSentences=targets.map(record=>sentenceCount(record.text,language));
+  const width=m+1,at=(i,j)=>i*width+j;
+  const cost=new Float64Array((n+1)*width).fill(Infinity);
+  const operation=new Uint8Array((n+1)*width),span=new Uint8Array((n+1)*width);
+  cost[0]=0;
+  // A skip costs more than a small sentence-count difference, so a misplaced
+  // or partial unit stays identifiable instead of being dropped as missing.
+  const skipCost=2.5,splitStep=.1,mergeStep=1,maxGroup=4;
+  for(let i=0;i<=n;i++)for(let j=0;j<=m;j++){
+    const base=cost[at(i,j)];if(!Number.isFinite(base))continue;
+    if(i<n&&base+skipCost<cost[at(i+1,j)]){cost[at(i+1,j)]=base+skipCost;operation[at(i+1,j)]=1;span[at(i+1,j)]=1;}
+    if(j<m&&base+skipCost<cost[at(i,j+1)]){cost[at(i,j+1)]=base+skipCost;operation[at(i,j+1)]=2;span[at(i,j+1)]=1;}
+    if(i<n&&j<m){
+      const tagCost=blockTagCost(sources[i],targets[j]);
+      if(Number.isFinite(tagCost)){
+        const value=base+tagCost+Math.abs(sourceSentences[i]-targetSentences[j]);
+        if(value<cost[at(i+1,j+1)]){cost[at(i+1,j+1)]=value;operation[at(i+1,j+1)]=3;span[at(i+1,j+1)]=1;}
       }
     }
-    const operations=[];let i=left.length,j=right.length;
-    while(i||j){const current=step[i][j];if(!current)break;operations.push({kind:current.kind,source:current.kind==='extra'?null:left[i-1],target:current.kind==='missing'?null:right[j-1]});i=current.i;j=current.j;}
-    operations.reverse();
-    if(ways[left.length][right.length]!==1){ambiguousPages.push({page,englishBlocks:left.length,translationBlocks:right.length});continue;}
-    for(let at=0;at<operations.length;at++){
-      const operation=operations[at];
-      if(operation.kind==='match')matches.push({source:operation.source,target:operation.target,page});
-      else if(operation.kind==='extra')extra.push({target:operation.target,page});
-      else {
-        const before=operations.slice(at+1).find(item=>item.target)?.target||null;
-        const after=[...operations.slice(0,at)].reverse().find(item=>item.target)?.target||null;
-        missing.push({source:operation.source,page,before,after});
+    if(i<n&&j<m&&flowTag(sources[i].tag)){
+      let tagTotal=blockTagCost(sources[i],targets[j]);
+      if(Number.isFinite(tagTotal)&&flowTag(targets[j].tag)){
+        let sentenceTotal=targetSentences[j];
+        for(let k=2;k<=maxGroup&&j+k<=m;k++){
+          const tagCost=blockTagCost(sources[i],targets[j+k-1]);
+          if(!Number.isFinite(tagCost)||!flowTag(targets[j+k-1].tag))break;
+          tagTotal+=tagCost;sentenceTotal+=targetSentences[j+k-1];
+          const value=base+tagTotal+Math.abs(sourceSentences[i]-sentenceTotal)+splitStep*(k-1),cell=at(i+1,j+k);
+          if(value<cost[cell]){cost[cell]=value;operation[cell]=4;span[cell]=k;}
+        }
+      }
+    }
+    if(i<n&&j<m&&flowTag(targets[j].tag)){
+      let tagTotal=blockTagCost(sources[i],targets[j]);
+      if(Number.isFinite(tagTotal)&&flowTag(sources[i].tag)){
+        let sentenceTotal=sourceSentences[i];
+        for(let k=2;k<=maxGroup&&i+k<=n;k++){
+          const tagCost=blockTagCost(sources[i+k-1],targets[j]);
+          if(!Number.isFinite(tagCost)||!flowTag(sources[i+k-1].tag))break;
+          tagTotal+=tagCost;sentenceTotal+=sourceSentences[i+k-1];
+          const value=base+tagTotal+Math.abs(sentenceTotal-targetSentences[j])+mergeStep*(k-1),cell=at(i+k,j+1);
+          if(value<cost[cell]){cost[cell]=value;operation[cell]=5;span[cell]=k;}
+        }
       }
     }
   }
-  return {matches,missing,extra,ambiguousPages};
+  const operations=[];
+  for(let i=n,j=m;i>0||j>0;){
+    const op=operation[at(i,j)],k=span[at(i,j)]||1;
+    if(op===1){operations.push({kind:'missing',source:sources[i-1]});i--;}
+    else if(op===2){operations.push({kind:'extra',target:targets[j-1]});j--;}
+    else if(op===3){operations.push({kind:'match',source:sources[i-1],target:targets[j-1]});i--;j--;}
+    else if(op===4){operations.push({kind:'split',source:sources[i-1],targets:targets.slice(j-k,j)});i--;j-=k;}
+    else if(op===5){operations.push({kind:'merge',sources:sources.slice(i-k,i),target:targets[j-1]});i-=k;j--;}
+    else break;
+  }
+  operations.reverse();
+  const matches=[],missing=[],extra=[],sentenceDifferences=[],unitsByPage=new Map(),sourcesByPage=new Map(),targetsByPage=new Map();
+  const pageOf=record=>String(record?.page??'unpaged');
+  const addUnit=(page,unit)=>{const key=String(page);if(!unitsByPage.has(key))unitsByPage.set(key,[]);unitsByPage.get(key).push(unit);};
+  const pushSource=(page,record)=>{const key=String(page),list=sourcesByPage.get(key)||[];if(!list.includes(record))list.push(record);sourcesByPage.set(key,list);};
+  const pushTarget=(page,record)=>{const key=String(page),list=targetsByPage.get(key)||[];if(!list.includes(record))list.push(record);targetsByPage.set(key,list);};
+  let lastPage='unpaged';
+  for(const op of operations){
+    const page=pageOf(op.source||op.sources?.[0]);
+    if(op.kind==='match'){
+      lastPage=page;pushSource(page,op.source);pushTarget(page,op.target);
+      const englishSentences=sentenceCount(op.source.text,'en'),translationSentences=sentenceCount(op.target.text,language);
+      if(englishSentences!==translationSentences){sentenceDifferences.push({source:op.source,target:op.target,page});addUnit(page,{kind:'sentence_count_difference',page,sourceSelector:op.source.selector,sourceTag:op.source.tag,sourceText:op.source.text,englishSentences,translationSelector:op.target.selector,translationTag:op.target.tag,translationText:op.target.text,translationSentences});}
+      else matches.push({source:op.source,target:op.target,targets:[op.target],page,kind:op.source.tag===op.target.tag?'match':'tag'});
+    }else if(op.kind==='split'){
+      lastPage=page;pushSource(page,op.source);op.targets.forEach(record=>pushTarget(page,record));
+      const englishSentences=sentenceCount(op.source.text,'en'),translationSentences=op.targets.reduce((sum,item)=>sum+sentenceCount(item.text,language),0);
+      if(englishSentences!==translationSentences)addUnit(page,{kind:'sentence_count_difference',page,sourceSelector:op.source.selector,sourceTag:op.source.tag,sourceText:op.source.text,englishSentences,translationSelectors:op.targets.map(item=>item.selector),translationText:op.targets.map(item=>item.text).join(' '),translationSentences});
+      else matches.push({source:op.source,target:op.targets[0],targets:op.targets,page,kind:'split_target'});
+    }else if(op.kind==='merge'){
+      lastPage=page;op.sources.forEach(record=>pushSource(pageOf(record),record));pushTarget(page,op.target);
+      const englishSentences=op.sources.reduce((sum,item)=>sum+sentenceCount(item.text,'en'),0),translationSentences=sentenceCount(op.target.text,language);
+      if(englishSentences!==translationSentences)addUnit(page,{kind:'sentence_count_difference',page,sourceSelector:op.sources[0].selector,sourceTag:op.sources[0].tag,sourceText:op.sources.map(item=>item.text).join(' '),englishSentences,translationSelector:op.target.selector,translationTag:op.target.tag,translationText:op.target.text,translationSentences});
+      else matches.push({source:op.sources[0],sources:op.sources,target:op.target,targets:[op.target],page,kind:'merge_target'});
+    }else if(op.kind==='missing'){
+      lastPage=page;pushSource(page,op.source);
+      missing.push({source:op.source,page});
+      addUnit(page,{kind:'missing_translation',page,sourceSelector:op.source.selector,sourceTag:op.source.tag,sourceText:op.source.text,englishSentences:sentenceCount(op.source.text,'en')});
+    }else if(op.kind==='extra'){
+      extra.push({target:op.target,page:pageOf(op.target)});
+      pushTarget(lastPage,op.target);
+      addUnit(lastPage,{kind:'extra_translation',page:lastPage,translationSelector:op.target.selector,translationTag:op.target.tag,translationText:op.target.text});
+    }
+  }
+  const defectivePages=new Set(unitsByPage.keys());
+  const mismatchedPages=[...unitsByPage].map(([page,units])=>{
+    const englishRecords=sourcesByPage.get(page)||[],translationRecords=targetsByPage.get(page)||[];
+    const englishBlocks=englishRecords.map(record=>translatedBlockShape(record,'en'));
+    const translationBlocks=translationRecords.map(record=>translatedBlockShape(record,language));
+    return {page,units,englishBlocks,translationBlocks,englishRecords,translationRecords,
+      englishShape:englishBlocks.map(block=>({tag:block.tag,sentences:block.sentences.length})),
+      translationShape:translationBlocks.map(block=>({tag:block.tag,sentences:block.sentences.length})),
+      englishLastSentence:englishBlocks.at(-1)?.sentences.at(-1)||null,
+      translationLastSentence:translationBlocks.at(-1)?.sentences.at(-1)||null};
+  }).sort((a,b)=>(Number(a.page)||0)-(Number(b.page)||0)||a.page.localeCompare(b.page));
+  return {matches:matches.filter(pair=>!defectivePages.has(String(pair.page))),allMatches:matches,operations,missing,extra,sentenceDifferences,ambiguousPages:[],mismatchedPages};
 }
 
 export function compareStructure(english, target, language) {
   const findings = [], matches = [], matchedSources=new Set(), matchedTargets=new Set();
   const key = structuralKey;
-  const alignment=alignTranslationBlocks(english,target,language),alignedMissing=new Set(alignment.missing.map(item=>item.source.selector));
+  const alignment=alignTranslationBlocks(english,target,language),mismatchedPages=new Set(alignment.mismatchedPages.map(item=>String(item.page)));
   const map = new Map();
   for (const r of target.records) { const k = key(r); if (k) map.set(k, map.has(k) ? null : r); }
   const addMatch=(r,t,k)=>{
@@ -282,34 +379,19 @@ export function compareStructure(english, target, language) {
       findings.push(issue(language, 'table_structure', t.selector, 'Row, cell, header or span structure differs from English.', safe ? {repair:{kind:'table_headers',selector:t.selector,rows:r.rows}} : {}));
     }
     if (r.classes !== t.classes&&!t.translationPlaceholder) findings.push(issue(language,'presentation_classes',t.selector,'English presentation classes differ.',{repair:{kind:'classes',selector:t.selector,classes:r.classes}}));
-    if (JSON.stringify(r.font) !== JSON.stringify(t.font)&&!t.translationPlaceholder) findings.push(issue(language, 'font_style_difference', t.selector, 'Computed typography differs from the English counterpart; language-specific glyph fallback may be legitimate.', { source: r.font, target: t.font, severity: 'warning' }));
   };
   for (const r of english.records) {
+    if(mismatchedPages.has(String(r.page??'unpaged')))continue;
     const k = key(r); if (!k) continue;
     const t = map.get(k);
-    if (!t) { if(!alignedMissing.has(r.selector))findings.push(issue(language, 'missing_structural_anchor', k, `English ${r.tag} has no unique translated counterpart.`, {})); continue; }
+    if (!t) { findings.push(issue(language, 'missing_structural_anchor', k, `English ${r.tag} has no unique translated counterpart.`, {})); continue; }
     addMatch(r,t,k);
   }
-  for(const pair of alignment.matches){
-    addMatch(pair.source,pair.target,key(pair.source));
-    if(pair.target.translationPlaceholder==='missing')findings.push(issue(language,'translation_placeholder',pair.target.selector,'Translation is still missing; the English source placeholder must be replaced and its validateBook marker removed.',{page:pair.page,english:pair.source.text,englishSentences:sentenceCount(pair.source.text,'en'),translationSentences:0}));
-    else {
-      const englishSentences=sentenceCount(pair.source.text,'en'),translationSentences=sentenceCount(pair.target.text,language);
-      if(englishSentences!==translationSentences)findings.push(issue(language,'translation_sentence_count_difference',pair.target.selector,'English and translated blocks contain different mechanical sentence counts; review the translation before layout propagation.',{page:pair.page,englishSentences,translationSentences,english:pair.source.text,repair:{kind:'translation_review',selector:pair.target.selector,sourceSelector:pair.source.selector,tag:pair.source.tag,text:pair.source.text,safeTranslationStyle:true}}));
-    }
-  }
-  for(const item of alignment.missing){
-    const r=item.source,id=r.id&&!/^page_\d+$/.test(r.id)?r.id:null;
-    findings.push(issue(language,'missing_translation_block',key(r)||r.selector,'A translated block is missing. Insert an English placeholder so layout correspondence remains stable until translation correction.',{page:item.page,english:r.text,englishSentences:sentenceCount(r.text,'en'),translationSentences:0,repair:{kind:'translation_placeholder',sourceSelector:r.selector,beforeSelector:item.before?.selector||null,beforeText:item.before?.text||null,beforeTag:item.before?.tag||null,afterSelector:item.after?.selector||null,afterText:item.after?.text||null,afterTag:item.after?.tag||null,page:item.page,tag:r.tag,text:r.text,classes:r.classes,styleId:r.styleId,id,safeTranslationStyle:true}}));
-  }
-  for(const item of alignment.extra)findings.push(issue(language,'extra_translation_block',item.target.selector,'The translation contains an unmatched extra block; layout propagation is blocked for this page.',{page:item.page,translation:item.target.text}));
-  for(const item of alignment.ambiguousPages)findings.push(issue(language,'translation_alignment_ambiguous','page '+item.page,'Block order cannot be aligned uniquely from mechanical structure and sentence counts; no positional layout propagation is allowed.',item));
-  const signature = d => d.records.filter(r => r.tag !== 'img'&&r.translationPlaceholder!=='review').map(r => /^h\d$/.test(r.tag) ? 'heading' : r.tag);
-  const a = signature(english), b = signature(target);
-  if (JSON.stringify(a) !== JSON.stringify(b)) findings.push(issue(language, 'block_sequence_difference', 'document', 'Paragraph/heading/table/list sequence differs from the English canonical layout. This can indicate missing translated paragraphs, extra converter fragments, or a broken contents/table structure; text is preserved and the issue remains explicit.', { english: a, translation: b }));
+  for(const pair of alignment.matches)for(const t of pair.targets||[pair.target])if(t)addMatch(pair.source,t,key(pair.source));
+  for(const page of alignment.mismatchedPages)findings.push(issue(language,'translation_page_retranslation_required','page '+page.page,'The deterministic unit alignment found a missing, partial or structural translation unit. Insert the translated text for the listed unit(s) and let the following deterministic structure reflow; do not retranslate already matching units.',page));
   const images = d => d.records.filter(r => r.tag === 'img').length;
   if (images(english) !== images(target)) findings.push(issue(language, 'image_count_difference', 'document', `${images(english)} English images; ${images(target)} translated images.`));
-  return { findings, matches, blockMatches:alignment.matches.map(pair=>({source:pair.source.selector,target:pair.target.selector,page:pair.page})), alignment, limitation: 'Translations preserve English block order. Sentence counts are mechanical indicators only; they do not prove semantic equivalence.' };
+  return { findings, matches, blockMatches:alignment.matches.flatMap(pair=>(pair.targets||[pair.target]).filter(Boolean).map(t=>({source:pair.source.selector,target:t.selector,page:pair.page}))), alignment, limitation: 'Translations preserve the English block order and mechanical sentence counts; pagination may differ because alignment is by document order, not page number. Unit-level missing/partial text is inserted by the translation agent.' };
 }
 
 export function comparePdfFonts(inventory, rendered, sourceFonts = []) {

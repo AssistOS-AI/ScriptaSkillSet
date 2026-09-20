@@ -11,8 +11,9 @@ validatebook prepare BOOK_ROOT [--languages en,ro,...] [--filename full_content.
 validatebook complete BOOK_ROOT [--job-dir DIR] [same native tool options as prepare]
 validatebook status JOB | report JOB
 validatebook complete-plan BOOK_ROOT [--job-dir DIR] | complete-status COMPLETE_JSON
-Local, deterministic layout/structure checks, corrections and text-only reports.
-No Python, LLM/model review, screenshots, editorial review, translation rewriting or metadata.
+Local, deterministic layout/structure checks, native corrections and text-only reports.
+This executable does not translate prose; the validateBook skill agent consumes page-retranslation findings.
+No Python, external model API, screenshots, general editorial review or metadata.
 Tool paths also accept VALIDATEBOOK_CHROMIUM/PDFTOTEXT/PDFFONTS/PDFIMAGES.`;
 try {
   const { positionals: [command, input, ...extra], values } = parseArgs({ allowPositionals: true, options: {

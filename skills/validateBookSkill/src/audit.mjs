@@ -5,7 +5,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { openBrowser } from './browser.mjs';
 import { guardInstallation } from './installation-guard.mjs';
-import {translationStyles,translatedStyleCheck,canonicalTranslationActions} from './translation-style.mjs';
+import {canonicalTranslationActions} from './translation-style.mjs';
 import {compareImageStyles} from './images.mjs';
 import {restorePublisherIdentity} from './source-identity.mjs';
 import { hash, fileHash, readJson, writeJson, exists, verifyInputs, inside } from './storage.mjs';
@@ -24,7 +24,7 @@ import {readingPages} from './layout-checks.mjs';
 import {restoreReferenceBoundaries,restoreSplitSourcePhrases} from './source-boundaries.mjs';
 import {displayPageProfiles,repairDisplayPages,checkDisplayPages} from './display-pages.mjs';
 import {repairFalseHeadings} from './false-headings.mjs';
-import {paginateDocument,repairPageShells,paginationCss,translatedPaginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,pageHeightDifferences,sourceBlankPages} from './pagination.mjs';
+import {paginateDocument,repairPageShells,paginationCss,translatedPaginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,pageHeightDifferences,sourceBlankPages,splitDuplicateSourceToc,removeEmptyTranslatedPages} from './pagination.mjs';
 const execute = promisify(execFile);
 export const report = layoutReport;
 export async function doctor(options = {}) {
@@ -230,6 +230,8 @@ export async function prepare(root, options = {}) {
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)})`));
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreReferenceBoundaries.toString()})(${JSON.stringify(readingPages(pages))})`));
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreSplitSourcePhrases.toString()})(${JSON.stringify(typography.stdout)})`));
+      if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${splitDuplicateSourceToc.toString()})(${JSON.stringify(pages)})`));
+      if(structure&&item.language!=='en')applied.changes.push(...await browser.evaluate(`(${removeEmptyTranslatedPages.toString()})()`));
       let listRepair=null;
       if(structure&&item.language==='en'&&decorations?.lists)listRepair=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)},true)`);
       const result = {changes:[...applied.changes]};
@@ -328,7 +330,8 @@ export async function prepare(root, options = {}) {
       resourceInputs.push(...presentation.inputs);
       const before=presentation.scale&&presentation.scale!==1?await measure(browser,item.file,presentation):standalone;
       before.delivery=presentation;
-      const typeComparison=compareTypography(sourceType,before,item.language,{sourceFontMap});
+      const validateVisual=item.language==='en';
+      const typeComparison=validateVisual?compareTypography(sourceType,before,item.language,{sourceFontMap}):{findings:[],mappings:[]};
       if(displayPages.length&&item.language==='en'){
         const familyKey=s=>s.replace(/^[A-Z]{6}\+/,'').replace(/[^a-z]/gi,'').toLowerCase();
         const sourceFamilies=new Set(displayPages.flatMap(p=>p.groups.map(g=>familyKey(g.family))));
@@ -340,19 +343,18 @@ export async function prepare(root, options = {}) {
       if(borderComparison)initialFindings.push(...borderComparison.findings);
       initialFindings.push(...typeComparison.findings);
       if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const listCheck=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);initialFindings.push(...listCheck.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure differs from HTML.',f)));}
-      const beforeDisplay = before.layouts.flatMap(l => checkDisplay(l, item.language));
-      const translatedStyles=english?translationStyles(english,sourceType,sourceFontMap):null;
+      const beforeDisplay = validateVisual?before.layouts.flatMap(l => checkDisplay(l, item.language)):[];
       const structure = english ? compareStructure(english, before, item.language) : null;
       const canonicalTranslation=english?canonicalTranslationActions(english,before,item.language,presentation.defaultSizePx*(presentation.scale||1),structure?.alignment):null;
       const translationPresentationActions=[
         ...(canonicalTranslation?.actions||[])
       ];
       const repairShells=beforeDisplay.some(f=>['page_spacing_ownership_conflict','reader_root_incomplete'].includes(f.category));
-      if(english)initialFindings.push(...compareImageStyles(english,before,item.language).findings);
+      if(validateVisual&&english)initialFindings.push(...compareImageStyles(english,before,item.language).findings);
       const tableProfile=english?translatedTables(decorations.tables,english,before,structure):decorations.tables;
       const tableOptions={sourceFontMap,defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),language:item.language};
       const tableComparison=compareTables(tableProfile,before,tableOptions);
-      initialFindings.push(...tableComparison.findings);
+      if(validateVisual)initialFindings.push(...tableComparison.findings);
       initialFindings.push(...beforeDisplay, ...(structure?.findings || []));
       const targetDecorations=english?translatedDecorations(decorations,english,before,structure,item.language):decorations;
       const actions = [];
@@ -428,27 +430,25 @@ export async function prepare(root, options = {}) {
       final.delivery=presentation;
       if(item.language==='en')final.displayProfiles=displayPages;
       let listFindings=[];if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const checked=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);listFindings=checked.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure or typography differs from HTML.',f));}
-      final.typography=compareTypography(sourceType,final,item.language,{sourceFontMap});
+      final.typography=validateVisual?compareTypography(sourceType,final,item.language,{sourceFontMap}):{findings:[],mappings:[]};
       const displayFindings=layouts=>item.language==='en'?checkDisplayPages(displayPages,layouts,sourceFontMap).map(f=>issue('en','source_display_page_difference','page '+f.page,f.detail,f)):[];
       const assets = await collectAssets(final); resourceInputs.push(...assets.inputs);
-      let findings = [...listFindings,...final.typography.findings, ...final.layouts.flatMap(l => checkDisplay(l, item.language)), ...assets.findings];
+      let findings = validateVisual?[...listFindings,...final.typography.findings,...final.layouts.flatMap(l=>checkDisplay(l,item.language)),...assets.findings]:[...assets.findings];
       if(canonicalTranslation)findings.push(...canonicalTranslation.findings);
-      for(const layout of final.layouts.slice(1))findings.push(...compareTypography(sourceType,{...layout,platformFonts:final.platformFonts},item.language,{sourceFontMap}).findings);
-      if(translatedStyles)findings.push(...final.layouts.flatMap(layout=>translatedStyleCheck(layout,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).findings));
-      findings.push(...final.layouts.flatMap(l=>compareTables(tableProfile,{...l,platformFonts:final.platformFonts},tableOptions).findings));
+      if(validateVisual)for(const layout of final.layouts.slice(1))findings.push(...compareTypography(sourceType,{...layout,platformFonts:final.platformFonts},item.language,{sourceFontMap}).findings);
+      if(validateVisual)findings.push(...final.layouts.flatMap(l=>compareTables(tableProfile,{...l,platformFonts:final.platformFonts},tableOptions).findings));
       findings.push(...displayFindings(final.layouts));
       if(item.language==='en')findings.push(...(await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)},false)`)).map(f=>issue('en','false_heading_in_paragraph','page '+f.page,f.detail,f)));
-      findings.push(...final.layouts.flatMap(l=>compareDecorations(targetDecorations,l,item.language).findings));
+      if(validateVisual)findings.push(...final.layouts.flatMap(l=>compareDecorations(targetDecorations,l,item.language).findings));
       const paddingFindings=layouts=>layouts.flatMap(l=>pagePaddingDifferences(l,pagePresentation,item.language)).map(detail=>issue(item.language,'source_page_padding_difference','page '+detail.page,'Rendered page padding differs from measured PDF text bounds.',detail));
-      findings.push(...paddingFindings(final.layouts));
+      if(validateVisual)findings.push(...paddingFindings(final.layouts));
       const heightFindings=layouts=>layouts.flatMap(l=>pageHeightDifferences(l,pagePresentation)).map(detail=>issue(item.language,'page_height_below_minimum','page '+detail.page,'Rendered page is shorter than the source page proportions; translations retain full pages while allowing content growth.',detail));
-      findings.push(...heightFindings(final.layouts));
-      if(english)findings.push(...final.layouts.flatMap((l,i)=>compareImageStyles(english.layouts[i],l,item.language).findings));
-      if(presentation.articleContract){
+      if(validateVisual)findings.push(...heightFindings(final.layouts));
+      if(validateVisual&&english)findings.push(...final.layouts.flatMap((l,i)=>compareImageStyles(english.layouts[i],l,item.language).findings));
+      if(validateVisual&&presentation.articleContract){
         const article=await measure(browser,item.file,{importedArticle:presentation.articleContract});
         article.typography=compareTypography(sourceType,article,item.language,{sourceFontMap});
         for(const layout of article.layouts.slice(1))findings.push(...compareTypography(sourceType,{...layout,platformFonts:article.platformFonts},item.language,{sourceFontMap}).findings);
-        if(translatedStyles)findings.push(...article.layouts.flatMap(layout=>translatedStyleCheck(layout,translatedStyles,sourceType,item.language,presentation.defaultSizePx*(presentation.scale||1)).findings));
         findings.push(...article.layouts.flatMap(l=>compareTables(tableProfile,{...l,platformFonts:article.platformFonts},tableOptions).findings));
         findings.push(...displayFindings(article.layouts));
         if(item.language==='en'&&decorations?.lists){const checked=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);findings.push(...checked.findings.map(f=>issue('en',f.kind,'page '+f.page,'Imported reader list structure or typography differs from PDF.',f)));}
@@ -469,7 +469,7 @@ export async function prepare(root, options = {}) {
         const articleFile=path.join(directory,item.language+'-article-layout.json');await writeJson(articleFile,article);artifacts.push({file:articleFile,sha256:await fileHash(articleFile)});
         if(item.language==='en')final.articleLayouts=article.layouts;
       }
-      for (const f of final.platformFonts) if (!f.fonts.some(font => font.glyphCount > 0)) findings.push(issue(item.language, 'unrendered_text', f.selector, 'No platform font reports rendered glyphs for this nonempty text block.'));
+      if(validateVisual)for (const f of final.platformFonts) if (!f.fonts.some(font => font.glyphCount > 0)) findings.push(issue(item.language, 'unrendered_text', f.selector, 'No platform font reports rendered glyphs for this nonempty text block.'));
       if (!english) {
         // Font inventories include faces used only for blank layout runs. Do not
         // require an invisible source face to render invented HTML characters.
@@ -498,7 +498,7 @@ export async function prepare(root, options = {}) {
     const result = { scope: 'layout_and_structure', status: findings.some(f => f.severity === 'error') ? 'needs_attention' : findings.length ? 'passed_with_warnings' : 'passed', job: directory,
       documents: measurements, absent: selection.absent, pageCoverage, initialFindings: [...new Map(initialFindings.map(f => [f.id, f])).values()], findings, corrections, backups,
       coverage: { pdfPages: pages.length, htmlDocuments: measurements.length, viewportsPerDocument: 3, localAutomationOnly: true, externalReviewsRequired: 0, screenshots: 0 },
-      limitations: ['Layout/structural checks only; translation meaning, humanisation, summaries and metadata are not reviewed.', 'No font +/− tests, enlarged-text tests, screenshots, PDF rasterization or image reports.', 'Source PDF text, fonts, image inventory and bounding boxes are retained as text. Cases that local evidence cannot resolve deterministically remain explicit failed or warning findings.', 'Equal block counts or matching font names do not prove semantic completeness or every glyph. Unmatched source lines and ambiguous structural mappings remain findings.', 'Book scripts and remote traffic are disabled. Interactive host application behavior is outside this standalone layout audit.'] };
+      limitations: ['English receives source-PDF visual validation. Translations receive deterministic structural equality, sentence-count and canonical-style propagation checks without independent visual-conformance findings.', 'Translation meaning, humanisation, summaries and metadata are not reviewed.', 'No font +/− tests, enlarged-text tests, screenshots, PDF rasterization or image reports.', 'Source PDF text, fonts, image inventory and bounding boxes are retained as text. Cases that local evidence cannot resolve deterministically remain explicit failed or warning findings.', 'Equal block and sentence counts do not prove semantic completeness. Unmatched source lines and ambiguous structural mappings remain findings.', 'Book scripts and remote traffic are disabled. Interactive host application behavior is outside this standalone layout audit.'] };
     await writeJson(path.join(directory, 'job.json'), { scope: 'layout_and_structure', requestHash, inputs, artifacts, result, runtime: runtime.runtime });
     await verifyInputs(inputs);
     return await writeLayoutReport(directory, result);

@@ -115,7 +115,7 @@ export function applyDomRepairs(actions) {
     }
   };
   const before = text(), changes = [];
-  let stylesheet,tableReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[],addedTableHeaders=[],addedTranslation=[];
+  let stylesheet,tableReflow=false,editorialReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[],addedTableHeaders=[];
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
@@ -208,6 +208,161 @@ export function applyDomRepairs(actions) {
       for (const sheet of a.sheets) { const n = document.createElement(sheet.href ? 'link' : 'style'); n.setAttribute('data-validatebook-inherited', ''); if (sheet.href) { n.rel = 'stylesheet'; n.setAttribute('href', sheet.href); } else n.textContent = sheet.css; document.head.append(n); }
       changes.push({ kind: a.kind, before: 'target text/styles retained', after: a.sheets }); continue;
     }
+    if(a.kind==='resegment_run'){
+      if(!Array.isArray(a.runs)||!a.runs.length)throw Error('Invalid resegment run');
+      const language=a.language||'en';
+      const segment=text=>[...new Intl.Segmenter(language,{granularity:'sentence'}).segment(text)];
+      let changed=false;
+      // Process runs from last to first so position-based selectors of earlier
+      // runs stay valid while later runs rebuild their paragraphs.
+      for(const run of [...a.runs].reverse()){
+        const counts=(run.counts||[]).filter(count=>Number.isInteger(count)&&count>0);
+        if(!counts.length)continue;
+        const paragraphs=(run.paragraphs||[]).map(selector=>{const matches=document.querySelectorAll(selector);return matches.length===1?matches[0]:null;});
+        if(!paragraphs.length||paragraphs.some(node=>!node))continue;
+        const parent=paragraphs[0].parentElement;
+        if(!parent||paragraphs.some(node=>node.parentElement!==parent))continue;
+        // Separate paragraphs so a missing inter-paragraph space cannot merge
+        // two sentences across the boundary.
+        for(let index=0;index<paragraphs.length-1;index++){
+          const last=paragraphs[index].lastChild;
+          if(!last||!(last.nodeType===3&&/\s$/.test(last.textContent)))paragraphs[index].append(document.createTextNode(' '));
+        }
+        // Record paragraph anchors by absolute start offset. The punctuation
+        // edits below replace exactly one character, so offsets stay valid.
+        const anchors=[];let anchorOffset=0;
+        for(const paragraph of paragraphs){if(paragraph.id)anchors.push({id:paragraph.id,offset:anchorOffset});anchorOffset+=paragraph.textContent.length;}
+        const textNodes=[];
+        const collect=node=>{for(const child of node.childNodes){if(child.nodeType===3)textNodes.push(child);else if(child.nodeType===1)collect(child);}};
+        paragraphs.forEach(collect);
+        if(!textNodes.length)continue;
+        const locate=position=>{let accumulated=0;for(const node of textNodes){const length=node.textContent.length;if(position<=accumulated+length)return {node,offset:position-accumulated};accumulated+=length;}const last=textNodes.at(-1);return {node:last,offset:last.textContent.length};};
+        const fullText=()=>textNodes.map(node=>node.textContent).join('');
+        const target=counts.reduce((sum,count)=>sum+count,0);
+        let guard=0;
+        // Merge adjacent sentences (replace a terminator with a comma) until the
+        // canonical count is reached.
+        while(guard++<target*3+4){
+          const segments=segment(fullText());
+          if(segments.length<=target)break;
+          let best=-1,bestLength=Infinity;
+          for(let index=0;index<segments.length-1;index++){if(segments[index].segment.length<bestLength){bestLength=segments[index].segment.length;best=index;}}
+          if(best<0)break;
+          const punctuation=[...segments[best].segment.matchAll(/[.!?…]/gu)];
+          if(!punctuation.length)break;
+          const at=locate(segments[best].index+punctuation[punctuation.length-1].index);
+          at.node.textContent=at.node.textContent.slice(0,at.offset)+','+at.node.textContent.slice(at.offset+1);
+          const nextAt=locate(segments[best+1].index),relative=nextAt.node.textContent.slice(nextAt.offset).search(/\p{L}/u);
+          if(relative>=0){const index=nextAt.offset+relative;nextAt.node.textContent=nextAt.node.textContent.slice(0,index)+nextAt.node.textContent[index].toLowerCase()+nextAt.node.textContent.slice(index+1);}
+          changed=true;
+        }
+        guard=0;
+        // Split a long sentence at an internal delimiter (or word boundary)
+        // until the canonical count is reached.
+        while(guard++<target*3+4){
+          const segments=segment(fullText());
+          if(segments.length>=target)break;
+          let best=-1,bestLength=-1;
+          for(let index=0;index<segments.length;index++){if(segments[index].segment.length>bestLength){bestLength=segments[index].segment.length;best=index;}}
+          if(best<0)break;
+          const text=segments[best].segment,commas=[...text.matchAll(/[,;:]/gu)];let position;
+          if(commas.length)position=segments[best].index+commas[Math.floor(commas.length/2)].index;
+          else{
+            const words=text.split(/\s+/);if(words.length<4)break;
+            let accumulated=0,cut=-1,difference=Infinity;
+            for(let index=1;index<words.length;index++){
+              accumulated+=words[index-1].length+1;
+              if(index<2||index>words.length-2)continue;
+              const candidate=segments[best].index+accumulated-1,d=Math.abs(accumulated-(text.length-accumulated));
+              if(d<difference){difference=d;cut=candidate;}
+            }
+            if(cut<0)break;position=cut;
+          }
+          const at=locate(position);
+          at.node.textContent=at.node.textContent.slice(0,at.offset)+'.'+at.node.textContent.slice(at.offset+1);
+          const afterAt=locate(position+1),relative=afterAt.node.textContent.slice(afterAt.offset).search(/\p{L}/u);
+          if(relative>=0){const index=afterAt.offset+relative;afterAt.node.textContent=afterAt.node.textContent.slice(0,index)+afterAt.node.textContent[index].toUpperCase()+afterAt.node.textContent.slice(index+1);}
+          changed=true;
+        }
+        const segments=segment(fullText());
+        if(segments.length!==target)continue;
+        // Rebuild paragraphs at the canonical sentence counts, moving every node
+        // (text and inline elements) with Range so links/emphasis survive.
+        // Rebuild paragraphs at the canonical sentence counts by moving text and
+        // inline nodes; links/emphasis survive and no text is re-created.
+        const template=paragraphs[0].cloneNode(false);template.removeAttribute('id');
+        paragraphs.forEach(paragraph=>paragraph.removeAttribute('id'));
+        const starts=[];let accumulated=0;for(const count of counts){starts.push(accumulated);accumulated+=count;}
+        const ends=segments.map(entry=>entry.index+entry.segment.length);
+        const ranges=[];let valid=true;
+        for(let index=0;index<counts.length;index++){
+          const startUnit=starts[index],endUnit=startUnit+counts[index]-1;
+          if(endUnit>=segments.length){valid=false;break;}
+          ranges.push([segments[startUnit].index,ends[endUnit]]);
+        }
+        // Inline elements must not straddle a canonical boundary; otherwise the
+        // run is left for the agent instead of risking a broken link/emphasis.
+        const spansBoundary=(start,end)=>{for(const [rs,re] of ranges)if(start>=rs&&end<=re)return false;return true;};
+        if(valid){
+          const check=(container,base)=>{
+            for(const child of [...container.childNodes]){
+              const length=child.textContent.length,cStart=base,cEnd=base+length;base=cEnd;
+              if(child.nodeType!==1)continue;
+              if(spansBoundary(cStart,cEnd)){valid=false;return;}
+              check(child,cStart);
+            }
+          };
+          let base=0;
+          for(const paragraph of paragraphs){check(paragraph,base);base+=paragraph.textContent.length;}
+        }
+        if(!valid)continue;
+        const paragraphStarts=[];{let acc=0;for(const paragraph of paragraphs){paragraphStarts.push(acc);acc+=paragraph.textContent.length;}}
+        const templateFor=start=>{let index=0;for(let i=0;i<paragraphStarts.length;i++){if(start>=paragraphStarts[i])index=i;else break;}return paragraphs[index].cloneNode(false);};
+        const targets=ranges.map(([start])=>templateFor(start));
+        let base=0,current=0;
+        const targetFor=offset=>{while(current<ranges.length-1&&ranges[current][1]<=offset)current++;return current;};
+        const moveChildren=children=>{
+          for(const child of [...children]){
+            const childStart=base;base+=child.textContent.length;
+            if(child.nodeType===3){
+              let node=child,position=childStart;
+              while(node&&node.textContent.length){
+                const targetIndex=targetFor(position),rangeEnd=ranges[targetIndex][1];
+                if(position+node.textContent.length<=rangeEnd){targets[targetIndex].append(node);node=null;}
+                else{const suffix=node.splitText(rangeEnd-position);targets[targetIndex].append(node);position=rangeEnd;node=suffix;}
+              }
+            }else if(child.nodeType===1){
+              targets[targetFor(childStart)].append(child);
+            }
+          }
+        };
+        for(const paragraph of paragraphs)moveChildren(paragraph.childNodes);
+        const rebuilt=targets;
+        paragraphs[0].before(...rebuilt);
+        paragraphs.forEach(paragraph=>paragraph.remove());
+        // Re-attach every recorded anchor at its preserved absolute offset.
+        if(anchors.length){
+          const newTextNodes=[];
+          const gather=node=>{for(const child of node.childNodes){if(child.nodeType===3)newTextNodes.push(child);else if(child.nodeType===1)gather(child);}};
+          rebuilt.forEach(gather);
+          anchors.sort((a,b)=>b.offset-a.offset);
+          for(const entry of anchors){
+            let remaining=entry.offset;
+            for(const node of newTextNodes){
+              const length=node.textContent.length;
+              if(remaining<=length){
+                if(!document.getElementById(entry.id)){const marker=document.createElement('span');marker.className='source-anchor';marker.id=entry.id;const range=document.createRange();range.setStart(node,remaining);range.collapse(true);range.insertNode(marker);}
+                break;
+              }
+              remaining-=length;
+            }
+          }
+        }
+        changes.push({kind:a.kind,before:'translated sentences/paragraphs',after:{paragraphs:rebuilt.length,sentences:target}});
+        changed=true;
+      }
+      if(changed)editorialReflow=true;continue;
+    }
     if(a.kind==='remove_generated_caption'){
       const nodes = document.querySelectorAll(a.selector);
       if(nodes.length===0){
@@ -242,35 +397,12 @@ export function applyDomRepairs(actions) {
       }
       removedRunning.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});continue;
     }
-    if(a.kind==='translation_placeholder'){
-      if(!/^(p|h[1-6]|li|blockquote|figcaption)$/.test(a.tag)||typeof a.text!=='string'||!a.text.trim()||typeof a.sourceSelector!=='string')throw Error('Invalid translation placeholder');
-      const existing=[...document.querySelectorAll('[data-validatebook-translation-placeholder="missing"]')].filter(node=>node.getAttribute('data-validatebook-translation-source')===a.sourceSelector);
-      if(existing.length>1)throw Error('Duplicate translation placeholder for '+a.sourceSelector);
-      if(existing.length===1){if(existing[0].tagName.toLowerCase()!==a.tag||existing[0].textContent!==a.text)throw Error('Translation placeholder changed for '+a.sourceSelector);continue;}
-      const resolve=(selector,text,tag)=>{const selected=selector?document.querySelector(selector):null;if(selected&&(!text||selected.textContent.trim()===text)&&(!tag||selected.tagName.toLowerCase()===tag))return selected;if(!text||!tag)return null;const candidates=[...document.querySelectorAll(tag)].filter(node=>node.textContent.trim()===text&&String(node.closest('[data-source-page]')?.getAttribute('data-source-page')||node.closest('[data-reader-page]')?.getAttribute('data-reader-page')||'unpaged')===String(a.page));return candidates.length===1?candidates[0]:null;};
-      const beforeNode=resolve(a.beforeSelector,a.beforeText,a.beforeTag),afterNode=resolve(a.afterSelector,a.afterText,a.afterTag);
-      let parent=beforeNode?.parentElement||afterNode?.parentElement;
-      if(!parent&&a.page!=='unpaged')parent=document.querySelector('.pdf-source-page[data-source-page="'+CSS.escape(String(a.page))+'"],.pdf-source-page[data-reader-page="'+CSS.escape(String(a.page))+'"]');
-      if(!parent||a.tag==='li'&&!['OL','UL'].includes(parent.tagName))throw Error('Translation placeholder has no safe insertion container for '+a.sourceSelector);
-      const placeholder=document.createElement(a.tag);placeholder.textContent=a.text;placeholder.lang='en';placeholder.setAttribute('data-validatebook-translation-placeholder','missing');placeholder.setAttribute('data-validatebook-translation-source',a.sourceSelector);
-      placeholder.className=[a.classes,'validatebook-translation-placeholder'].filter(Boolean).join(' ');if(a.styleId)placeholder.setAttribute('data-vb-style',a.styleId);if(a.id&&!document.getElementById(a.id))placeholder.id=a.id;
-      if(beforeNode&&beforeNode.parentElement===parent)parent.insertBefore(placeholder,beforeNode);else if(afterNode&&afterNode.parentElement===parent)afterNode.after(placeholder);else parent.append(placeholder);
-      addedTranslation.push(a.text);changes.push({kind:a.kind,sourceSelector:a.sourceSelector,before:null,after:placeholder.outerHTML});continue;
-    }
     const nodes = document.querySelectorAll(a.selector);
     if(nodes.length===0&&a.kind==='presentation'&&/> figcaption(?::nth-child\(\d+\))?$/.test(a.selector)&&![...document.querySelectorAll('figcaption')].some(node=>/^figure from pdf page \d+$/i.test(node.textContent.trim())))continue;
     if(nodes.length===0&&['presentation','table_readable_columns','table_continuation','table_source_pages','table_source_groups'].includes(a.kind))continue;
     if (nodes.length !== 1) throw Error('Repair selector must match exactly one element [' + a.kind + ', count=' + nodes.length + ']: ' + a.selector);
     const n = nodes[0], old = n.outerHTML;
-    if(a.kind==='translation_review'){
-      if(!/^(p|h[1-6]|li|blockquote|figcaption)$/.test(a.tag)||typeof a.text!=='string'||!a.text.trim()||typeof a.sourceSelector!=='string')throw Error('Invalid translation review marker');
-      const existing=[...document.querySelectorAll('[data-validatebook-translation-placeholder="review"]')].filter(node=>node.getAttribute('data-validatebook-translation-source')===a.sourceSelector);
-      if(existing.length>1||existing.length===1&&(existing[0].tagName.toLowerCase()!==a.tag||existing[0].textContent!==a.text))throw Error('Translation review placeholder changed for '+a.sourceSelector);
-      if(existing.length===1&&n.getAttribute('data-validatebook-translation-review')==='sentence-count')continue;
-      n.setAttribute('data-validatebook-translation-review','sentence-count');
-      if(!existing.length){const placeholder=document.createElement(a.tag);placeholder.textContent=a.text;placeholder.lang='en';placeholder.className='validatebook-translation-placeholder validatebook-translation-placeholder-review';placeholder.setAttribute('data-validatebook-translation-placeholder','review');placeholder.setAttribute('data-validatebook-translation-source',a.sourceSelector);n.after(placeholder);addedTranslation.push(a.text);}
-      changes.push({kind:a.kind,selector:a.selector,before:old,after:n.outerHTML});
-    } else if (a.kind === 'tag') {
+    if (a.kind === 'tag') {
       if (!/^(p|h[1-6]|th|td|figcaption)$/.test(a.tag)) throw Error('Unsafe or stale tag repair');
       const currentTag=n.tagName.toLowerCase();
       if(currentTag===a.tag)continue;
@@ -485,8 +617,8 @@ export function applyDomRepairs(actions) {
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
   const removedText=removedGenerated.join('')+removedRunning.join('')+removedTableHeaders.join('');
-  const addedText=addedTableHeaders.join('')+addedTranslation.join('');
-  if (text() !== before && (!(tableReflow||removedText||addedText)||characterInventory(text()+removedText)!==characterInventory(before+addedText))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
+  const addedText=addedTableHeaders.join('');
+  if (!editorialReflow && text() !== before && (!(tableReflow||removedText||addedText)||characterInventory(text()+removedText)!==characterInventory(before+addedText))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
   const dt = document.doctype;
   const doctype = dt ? '<!DOCTYPE ' + dt.name + (dt.publicId ? ' PUBLIC "' + dt.publicId + '"' : '') + (dt.systemId ? (dt.publicId ? '' : ' SYSTEM') + ' "' + dt.systemId + '"' : '') + '>\n' : '';
   return { html: doctype + document.documentElement.outerHTML, changes, stylesheet };

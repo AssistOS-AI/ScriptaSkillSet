@@ -1,5 +1,5 @@
 import {familyKey,pointsToCssPixels,pageScale} from './typography.mjs';
-import {issue,alignTranslationBlocks} from './layout-checks.mjs';
+import {issue,alignTranslationBlocks,sentenceCount,sentenceUnits} from './layout-checks.mjs';
 
 const role=r=>r.tag+'|'+String(r.classes||'').split(/\s+/).filter(Boolean).sort().join(' ');
 const compact=s=>String(s||'').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
@@ -118,11 +118,236 @@ export function canonicalTranslationActions(master,document,language,defaultSize
   const actions=[],findings=[];
   const alignment=verifiedAlignment||alignTranslationBlocks(master,document,language);
   for(const pair of alignment.matches){
-    const s=pair.source||master.records.find(record=>record.selector===pair.sourceSelector||record.selector===pair.source),t=pair.target||document.records.find(record=>record.selector===pair.targetSelector||record.selector===pair.target);
-    if(!s||!t)continue;
-    if(s.tag!==t.tag&&/^h[1-6]$/.test(t.tag)&&s.tag==='p'&&t.selector.startsWith('#'))actions.push({kind:'tag',selector:t.selector,expectedTag:t.tag,tag:'p',safeTranslationStyle:true});
-    actions.push({kind:'presentation',selector:t.selector,properties:canonicalProperties(s,defaultSizePx),safeTranslationStyle:true});
+    const s=pair.source||master.records.find(record=>record.selector===pair.sourceSelector||record.selector===pair.source),targets=pair.targets||[pair.target||document.records.find(record=>record.selector===pair.targetSelector||record.selector===pair.target)];
+    if(!s||sentenceCount(s.text,'en')!==targets.reduce((sum,target)=>sum+sentenceCount(target?.text,language),0))continue;
+    for(const t of targets){
+      if(!t)continue;
+      if(s.tag!==t.tag&&/^h[1-6]$/.test(t.tag)&&s.tag==='p'&&t.selector.startsWith('#'))actions.push({kind:'tag',selector:t.selector,expectedTag:t.tag,tag:'p',safeTranslationStyle:true});
+      actions.push({kind:'presentation',selector:t.selector,properties:canonicalProperties(s,defaultSizePx),safeTranslationStyle:true});
+    }
   }
   for(const page of alignment.ambiguousPages||[])findings.push(issue(language,'translation_alignment_ambiguous','page '+page.page,'Translation layout is not propagated because block alignment is ambiguous.',page));
+  // Pages that did not fully reconcile still inherit the canonical English
+  // presentation by pairing same-tag blocks in order, so translated text never
+  // keeps a divergent font size/family/spacing from the source edition.
+  const styled=new Set(alignment.matches.flatMap(pair=>pair.targets||[pair.target]).filter(Boolean).map(target=>target.selector));
+  for(const page of alignment.mismatchedPages||[]){
+    const sources=page.englishRecords||[],targets=page.translationRecords||[];
+    let sourceIndex=0;
+    for(const target of targets){
+      if(styled.has(target.selector))continue;
+      if(!/^(p|h[1-6]|li|blockquote|figcaption)$/.test(target.tag)||!target.text?.trim())continue;
+      let source=null;
+      for(let index=sourceIndex;index<sources.length;index++)if(sources[index].tag===target.tag){source=sources[index];sourceIndex=index+1;break;}
+      if(!source)for(const candidate of sources)if(candidate.tag===target.tag){source=candidate;break;}
+      if(!source)continue;
+      actions.push({kind:'presentation',selector:target.selector,properties:canonicalProperties(source,defaultSizePx),safeTranslationStyle:true});
+      styled.add(target.selector);
+    }
+  }
+  const semantic=semanticStructurePlan(alignment,language);
+  if(semantic.length)actions.push({kind:'resegment_run',language,runs:semantic,safeTranslationStyle:true});
   return {actions,findings};
+}
+
+const translationRuns=alignment=>{
+  const groups=[];
+  for(const op of alignment?.operations||[]){
+    if(op.kind==='match'||op.kind==='split'||op.kind==='merge'){
+      const sources=op.sources||[op.source],targetBlocks=op.targets||[op.target];
+      groups.push({sources,targetBlocks,reflowable:sources.every(item=>item.tag==='p')&&targetBlocks.length>0&&targetBlocks.every(item=>item.tag==='p')});
+    }else groups.push({sources:op.source?[op.source]:[],targetBlocks:op.target?[op.target]:[],reflowable:false});
+  }
+  const runs=[];let run=[],runPage=null;
+  for(const group of groups){
+    if(!group.reflowable){if(run.length)runs.push(run);run=[];runPage=null;continue;}
+    const page=(group.targetBlocks[0]||group.sources[0])?.page??null;
+    if(run.length&&String(page)!==String(runPage)){runs.push(run);run=[];}
+    runPage=page;run.push(group);
+  }
+  if(run.length)runs.push(run);
+  return runs;
+};
+
+// Grouping-only runs (sentence counts already match) are fixed by moving whole
+// paragraph nodes, so inline links and emphasis survive untouched.
+export function paragraphGroupPlan(alignment,language){
+  const plan=[];
+  for(const run of translationRuns(alignment)){
+    const sourceCounts=run.flatMap(group=>group.sources.map(source=>sentenceUnits(source.text,'en').length));
+    const targets=run.flatMap(group=>group.targetBlocks.map(target=>({selector:target.selector,units:sentenceUnits(target.text,language).length})));
+    const sourceTotal=sourceCounts.reduce((sum,count)=>sum+count,0),targetTotal=targets.reduce((sum,item)=>sum+item.units,0);
+    if(!sourceTotal||sourceTotal!==targetTotal)continue;
+    const merges=[];let index=0,valid=true;
+    for(const count of sourceCounts){
+      let sum=0;const group=[];
+      while(sum<count&&index<targets.length){sum+=targets[index].units;group.push(targets[index]);index++;}
+      if(sum!==count){valid=false;break;}
+      if(group.length>1)merges.push({keep:group[0].selector,remove:group.slice(1).map(item=>item.selector)});
+    }
+    if(!valid||index!==targets.length)continue;
+    plan.push(...merges);
+  }
+  return plan;
+}
+
+const upperFirst=value=>String(value).replace(/(\p{L})/u,letter=>letter.toUpperCase());
+const lowerFirst=value=>String(value).replace(/(\p{L})/u,letter=>letter.toLowerCase());
+
+// Joining two translated sentences keeps every word; only the boundary
+// punctuation/case changes so the paragraph reaches the canonical count.
+export function mergeSentenceUnits(left,right){
+  const head=String(left).replace(/\s*[.!?…]+\s*["»'’)\]]*$/u,'').trim();
+  return head+', '+lowerFirst(String(right).trim());
+}
+
+export function splitSentenceUnit(unit){
+  const value=String(unit).trim();
+  const matches=[...value.matchAll(/[,;:]\s+/gu)];
+  if(matches.length){
+    const boundary=matches[Math.floor(matches.length/2)];
+    const cut=boundary.index+boundary[0].length;
+    const head=value.slice(0,boundary.index).trim();
+    const tail=value.slice(cut).trim();
+    if(head&&tail)return [head+'.',upperFirst(tail)];
+  }
+  // No internal punctuation: split at the word boundary closest to the middle.
+  const words=value.split(/\s+/);
+  if(words.length<4)return null;
+  let best=-1,bestDifference=Infinity;
+  for(let index=2;index<=words.length-2;index++){
+    const difference=Math.abs(index-(words.length-index));
+    if(difference<bestDifference){bestDifference=difference;best=index;}
+  }
+  if(best<0)return null;
+  const head=words.slice(0,best).join(' ').replace(/[.!?…]+$/,'');
+  const tail=words.slice(best).join(' ');
+  if(!head||!tail)return null;
+  return [head+'.',upperFirst(tail)];
+}
+
+export function normalizeSentenceCounts(units,target){
+  const result=[...units];
+  while(result.length>target){
+    let best=-1,bestLength=Infinity;
+    for(let index=0;index<result.length-1;index++){const length=result[index].length+result[index+1].length;if(length<bestLength){bestLength=length;best=index;}}
+    if(best<0)break;
+    result.splice(best,2,mergeSentenceUnits(result[best],result[best+1]));
+  }
+  let guard=0;
+  while(result.length<target&&guard++<target*2+4){
+    let index=-1,length=-1;
+    for(let candidate=0;candidate<result.length;candidate++)if(result[candidate].length>length){length=result[candidate].length;index=candidate;}
+    if(index<0)break;
+    const parts=splitSentenceUnit(result[index]);
+    if(!parts)break;
+    result.splice(index,1,...parts);
+  }
+  return result;
+}
+
+// Align a whole chapter run to the canonical English paragraph/sentence
+// structure. Sentences are merged or split at their boundary (words preserved)
+// so every paragraph carries exactly the English sentence count; paragraphs are
+// created or removed so the chapter keeps the English paragraph count.
+export function semanticStructurePlan(alignment,language){
+  const plan=[];
+  for(const run of translationRuns(alignment)){
+    const counts=run.flatMap(group=>group.sources.map(source=>sentenceUnits(source.text,'en').length));
+    const targets=run.flatMap(group=>group.targetBlocks.map(target=>({selector:target.selector,units:sentenceUnits(target.text,language).length})));
+    const sourceTotal=counts.reduce((sum,count)=>sum+count,0);
+    if(!sourceTotal||!targets.length)continue;
+    if(counts.length===targets.length&&counts.every((count,index)=>count===targets[index].units))continue;
+    const units=run.flatMap(group=>group.targetBlocks.flatMap(target=>sentenceUnits(target.text,language)));
+    if(!units.length||normalizeSentenceCounts(units,sourceTotal).length!==sourceTotal)continue;
+    plan.push({paragraphs:targets.map(target=>target.selector),counts});
+  }
+  return plan;
+}
+
+// A sentence broken across two translated paragraphs inflates that paragraph's
+// sentence count. Re-join the fragments (and merge the paragraphs) until the
+// group carries the canonical English sentence count. Text is never replaced.
+export function paragraphMergePlan(alignment,language){
+  const plan=[];
+  for(const op of alignment?.operations||[]){
+    if(op.kind!=='match'&&op.kind!=='split'&&op.kind!=='merge')continue;
+    const sources=op.sources||[op.source],targets=op.targets||[op.target];
+    if(targets.length<2||!targets.every(item=>item.tag==='p')||!sources.every(item=>item.tag==='p'))continue;
+    const sourceCount=sources.reduce((sum,item)=>sum+sentenceUnits(item.text,'en').length,0);
+    const blocks=targets.map(item=>({selector:item.selector,text:item.text}));
+    const count=()=>blocks.reduce((sum,block)=>sum+sentenceUnits(block.text,language).length,0);
+    const remove=[];
+    while(count()>sourceCount){
+      let merged=false;
+      for(let index=0;index<blocks.length-1;index++){
+        const left=blocks[index],right=blocks[index+1];
+        const joined=sentenceUnits(left.text+' '+right.text,language);
+        if(joined.length<sentenceUnits(left.text,language).length+sentenceUnits(right.text,language).length){
+          blocks[index]={selector:left.selector,text:left.text+' '+right.text};
+          remove.push(right.selector);
+          blocks.splice(index+1,1);
+          merged=true;break;
+        }
+      }
+      if(!merged)break;
+    }
+    if(count()!==sourceCount)continue;
+    plan.push({targets:blocks.map(block=>({selector:block.selector,text:block.text})),remove});
+  }
+  return plan;
+}
+
+// Redistribute translated sentences across existing prose paragraphs so each
+// paragraph carries the canonical English sentence count. Only whole balanced
+// runs between structural anchors are touched; text is never replaced, only its
+// paragraph boundaries. Inline markup and unbalanced runs stay with the agent.
+export function sentenceReflowPlan(alignment,language){
+  const operations=alignment?.operations||[];
+  const groups=[];
+  for(const op of operations){
+    if(op.kind==='match'||op.kind==='split'||op.kind==='merge'){
+      const sources=op.sources||[op.source],targetBlocks=op.targets||[op.target];
+      groups.push({sources,targetBlocks,sourceCount:sources.reduce((sum,item)=>sum+sentenceUnits(item.text,'en').length,0),targetCount:targetBlocks.reduce((sum,item)=>sum+sentenceUnits(item.text,language).length,0),
+        reflowable:sources.every(item=>item.tag==='p')&&targetBlocks.length>0&&targetBlocks.every(item=>item.tag==='p')});
+    }else if(op.kind==='missing'){
+      groups.push({sources:[op.source],targetBlocks:[],sourceCount:sentenceUnits(op.source.text,'en').length,targetCount:0,reflowable:false});
+    }else if(op.kind==='extra'){
+      groups.push({sources:[],targetBlocks:[op.target],sourceCount:0,targetCount:sentenceUnits(op.target.text,language).length,reflowable:false});
+    }
+  }
+  const regions=[],plan=[];
+  let region=[],balance=0;
+  const flush=()=>{if(region.length&&balance===0)regions.push(region);region=[];balance=0;};
+  for(const group of groups){
+    if(!group.reflowable){flush();continue;}
+    region.push(group);balance+=group.sourceCount-group.targetCount;
+    if(balance===0){regions.push(region);region=[];}
+  }
+  flush();
+  for(const regionGroups of regions){
+    if(regionGroups.every(group=>group.sourceCount===group.targetCount))continue;
+    const sentences=regionGroups.flatMap(group=>group.targetBlocks.flatMap(block=>sentenceUnits(block.text,language)));
+    if(sentences.length!==regionGroups.reduce((sum,group)=>sum+group.sourceCount,0))continue;
+    let cursor=0,valid=true;
+    const targets=[],remove=[];
+    for(const group of regionGroups){
+      const counts=group.targetBlocks.map(block=>sentenceUnits(block.text,language).length);
+      let deficit=group.sourceCount-counts.reduce((sum,count)=>sum+count,0);
+      for(let index=counts.length-1;index>=0&&deficit!==0;index--){
+        if(deficit>0){counts[index]+=deficit;deficit=0;}
+        else{const take=Math.min(counts[index],-deficit);counts[index]-=take;deficit+=take;}
+      }
+      if(deficit!==0){valid=false;break;}
+      group.targetBlocks.forEach((block,index)=>{
+        const text=sentences.slice(cursor,cursor+counts[index]).join(' ');
+        cursor+=counts[index];
+        if(counts[index]===0)remove.push(block.selector);
+        else targets.push({selector:block.selector,text});
+      });
+    }
+    if(!valid||cursor!==sentences.length||!targets.length)continue;
+    plan.push({sources:regionGroups.flatMap(group=>group.sources.map(source=>source.selector)),targets,remove});
+  }
+  return plan;
 }

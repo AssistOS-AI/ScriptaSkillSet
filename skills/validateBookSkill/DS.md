@@ -13,7 +13,7 @@ The required pdf2html `decorations` response includes hash-bound `tables`: close
 
 Paginated readers scale text, leading and paragraph gaps by max(1, rendered page width / source CSS-pixel page width). The page box is the container query for --validatebook-page-scale, so a wider host cannot inflate type; nested containers inherit that number. Narrow screens retain physical source font sizes and allow page growth; larger pages preserve text-to-page proportions. The host keeps its outer width and padding. A source-fidelity marker neutralizes legacy iframe inflation, and imported parity compares sizes normalized by the independently measured page widths. Managed CSS keeps the measured standalone size. Repairs remain stable across CSS consolidation and reruns.
 
-Native table repairs preserve prose and responsive flow, restore source fills/edges and proportional columns, and consolidate cell styles into managed CSS. Cell selector specificity survives subsequent consolidation and source stylesheet order. Translations require a unique structural table correspondence and matching spans; their text is never rewritten. Regression tests cover lost dark header fills, column proportions, ambiguous mappings, CSS consolidation and imported delivery.
+Native table repairs preserve prose and responsive flow, restore source fills/edges and proportional columns, and consolidate cell styles into managed CSS. Cell selector specificity survives subsequent consolidation and source stylesheet order. Translations require the canonical English block order and matching spans; native actions never rewrite translation text and only the agent inserts a missing or corrected unit. Regression tests cover lost dark header fills, column proportions, ambiguous mappings, CSS consolidation and imported delivery.
 
 
 ## Problem and resulting behavior
@@ -41,7 +41,7 @@ The skill checks HTML/PDF structural integrity, typography and rendering with lo
 | Contents/references | IDs, duplicate IDs, fragment destinations, block sequence | Preserve links and require unique destinations |
 | Font display | Computed styles, FontFace load status, actual CDP font/glyph inventory, PDF families | Failed/unmatched fonts are findings; subset naming/fallback ambiguity remains explicit |
 | Layout | Full block geometry at 1440/1024/390 px, hidden/clipped/overflowing content | Deterministic responsive and presentation repairs, then remeasure |
-| Translation completeness | Stable mappings and structural sequence | Equal counts are not semantic proof; no translation rewriting |
+| Translation completeness | Deterministic order/tag/sentence alignment | Unreconciled units pinpointed with selectors and text; the agent inserts only the missing or corrected unit text |
 | Installation | Original hash, recovery copy, atomic replacement, final resource closure | Concurrent changes fail rather than overwrite |
 | Reporting | Initial findings, corrections, remaining findings and recovery | complete delivers RAPORT-CORECTII.md at the book root, then deletes the private job directory and leftover helper temps; no screenshots |
 
