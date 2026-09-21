@@ -35,7 +35,14 @@ export async function guardInstallation(browser, item, result, presentation, pro
       }
     }
     const blocking=findings.filter(f=>!(item.language!=='en'&&f.category==='horizontal_overflow'));
-    if(blocking.length){const error=Error('Candidate installation rejected: '+[...new Set(blocking.map(f=>f.category))].join(', '));error.findings=blocking;throw error;}
+    if(blocking.length){
+      const overflow=blocking.find(f=>f.category==='horizontal_overflow'&&f.overflowing?.length);
+      if(overflow)console.error('validatebook overflow diagnostic: '+JSON.stringify(overflow.overflowing));
+      const geometry=blocking.find(f=>f.category==='reader_page_geometry_override');
+      if(geometry)console.error('validatebook geometry diagnostic: '+JSON.stringify({width:geometry.width,actual:geometry.actual,expected:geometry.expected}));
+      const error=Error('Candidate installation rejected: '+[...new Set(blocking.map(f=>f.category))].join(', ')+(overflow?' ['+overflow.overflowing.map(n=>n.tag+':'+n.selector+' w='+n.width+' right='+n.right).join(' | ')+']':''));
+      error.findings=blocking;throw error;
+    }
   } finally {
     await fs.rm(html,{force:true});await fs.rm(css,{force:true});
   }

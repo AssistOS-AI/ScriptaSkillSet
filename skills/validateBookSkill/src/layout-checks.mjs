@@ -99,16 +99,25 @@ export function inspectLayout() {
   let readerPage;
   const article=document.querySelector('article.reader-html-content');
   if(article){
-    const style=getComputedStyle(article),probe=document.createElement('div');
+    const style=getComputedStyle(article),probe=document.createElement('article');
     probe.className='reader-html-content';
     probe.setAttribute('data-reader-host-probe','');
+    // Mirror the branch that governs the real article: book-owned marker and,
+    // for paginated editions, the presence of a source page box. Otherwise the
+    // narrow continuous-edition measure is misread as an override.
+    for(const name of ['data-validatebook-root','data-pdf-fidelity'])if(article.hasAttribute(name))probe.setAttribute(name,'');
+    if(article.querySelector('.pdf-source-page')){const box=document.createElement('section');box.className='pdf-source-page';probe.append(box);}
     for(const key of ['font-size','font-family','font-weight','font-style'])probe.style.setProperty(key,style.getPropertyValue(key));
     article.parentElement.append(probe);
     const expected=getComputedStyle(probe),actualBox=article.getBoundingClientRect(),expectedBox=probe.getBoundingClientRect();
     readerPage={actual:{width:actualBox.width,left:actualBox.left,padding:[style.paddingTop,style.paddingRight,style.paddingBottom,style.paddingLeft]},expected:{width:expectedBox.width,left:expectedBox.left,padding:[expected.paddingTop,expected.paddingRight,expected.paddingBottom,expected.paddingLeft]}};
     probe.remove();
   }
+  const overflowing=document.documentElement.scrollWidth>innerWidth+2?[...document.querySelectorAll('body *')].map(n=>{const r=n.getBoundingClientRect();return {node:n,r};}).filter(({r})=>r.width>0&&r.right>innerWidth+2).slice(0,12).map(({node,r})=>({selector:selector(node),tag:node.tagName.toLowerCase(),right:Math.round(r.right),width:Math.round(r.width),scrollWidth:node.scrollWidth,clientWidth:node.clientWidth})):[];
+  const conversionNotices=[...document.querySelectorAll('[data-pdf-conversion-warning],.pdf-conversion-warning,[data-conversion-notice]')].map(selector);
   return { language: document.documentElement.lang, title: document.title, records, duplicates, brokenLinks: links, resources, localLinks,
+    overflowing,
+    conversionNotices,
     readerPage, readerOmittedPages, pageContainers,
     pagination,
     loadedResources: performance.getEntriesByType('resource').map(e => e.name), fontFaces: [...document.fonts].map(f => ({ family: f.family, status: f.status })),
@@ -140,7 +149,8 @@ export function checkDisplay(document, language) {
   if (document.language.toLowerCase() !== language.toLowerCase()) findings.push(issue(language, 'language_tag', 'html', document.language, { repair: { kind: 'language_tag', language } }));
   for (const id of document.duplicates) findings.push(issue(language, 'duplicate_id', id, 'Anchor is not unique; automatic renaming could break references.'));
   for (const href of document.brokenLinks) findings.push(issue(language, 'broken_anchor', href, 'Contents/reference destination does not exist.'));
-  if (document.scrollWidth > document.width + 2) findings.push(issue(language, 'horizontal_overflow', 'document', `Content width ${document.scrollWidth}, viewport ${document.width}.`));
+  if (document.scrollWidth > document.width + 2) findings.push(issue(language, 'horizontal_overflow', 'document', `Content width ${document.scrollWidth}, viewport ${document.width}.`, { overflowing: document.overflowing }));
+  for (const selector of document.conversionNotices || []) findings.push(issue(language,'generated_conversion_notice',selector,'An automatically generated PDF conversion notice is visible book content and must not be delivered.',{repair:{kind:'remove_conversion_notice',selector}}));
   for (const r of document.records) {
     for (const type of ['hidden', 'clipped', 'outside', 'broken']) if (r[type]) findings.push(issue(language, type === 'broken' ? 'broken_image' : type + '_content', r.selector, r.text.slice(0, 160) || r.src || r.tag, { width: document.width }));
     if(r.tag==='figcaption'&&/^figure from pdf page \d+$/i.test(normalizeText(r.text)))findings.push(issue(language,'generated_figure_caption',r.selector,'A converter placeholder is visible as book content although it does not occur in the PDF.',{repair:{kind:'remove_generated_caption',selector:r.selector,text:r.text}}));

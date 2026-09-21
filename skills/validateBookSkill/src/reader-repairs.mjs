@@ -8,6 +8,10 @@ export function readerGeometryCss(readerCss) {
   if(!article)throw Error('Reader geometry root unavailable');
   const probe=document.createElement('article');probe.className='reader-html-content';
   probe.setAttribute('data-pdf-fidelity','');probe.setAttribute('data-validatebook-root','');
+  // Mirror the real article: if the edition is paginated, the probe must contain
+  // a source page box so page-aware reader rules match and continuous-edition
+  // geometry is not baked into a paginated edition.
+  if(article.querySelector('.pdf-source-page')){const box=document.createElement('section');box.className='pdf-source-page';probe.append(box);}
   document.body.append(probe);
   const selector='article.reader-html-content'+'[data-validatebook-root]'.repeat(16);
   const geometry=new Set(['width','min-width','max-width','height','min-height','max-height','margin','margin-top','margin-right','margin-bottom','margin-left','padding','padding-top','padding-right','padding-bottom','padding-left','box-sizing']);

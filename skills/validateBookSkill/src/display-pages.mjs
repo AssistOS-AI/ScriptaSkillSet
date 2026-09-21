@@ -83,7 +83,7 @@ export function repairDisplayPages(profiles, fontMap, defaultSizePx) {
   if(typeof fontMap==='string'&&new Set(profiles.flatMap(p=>p.groups.map(g=>key(g.family)))).size>1)throw Error('Mixed display fonts require a family map');
   const plans = profiles.flatMap(profile => {
     const page = document.querySelector(`.pdf-source-page[data-reader-page="${profile.page}"]`);
-    if (!page) throw Error(`Display page ${profile.page} requires a source page container`);
+    if (!page) { changes.push({kind:'source_display_page_unrepaired',page:profile.page,reason:'no source page container'}); return []; }
     const structuralTags = ['img','table','svg'].filter(tag => page.querySelector(tag));
     const structuralIds = [...page.querySelectorAll('[id]')].map(n => n.id).filter(id => id !== `page_${profile.page}`);
     if (structuralTags.length || structuralIds.length) {

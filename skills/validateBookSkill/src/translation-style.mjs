@@ -79,6 +79,11 @@ const unscaledPx=(value,record)=>{
   return Number.isFinite(n)?n/recordScale(record):NaN;
 };
 
+// The PDF subset faces only cover the English glyph set. For a translated
+// edition keep the fallback faces (full language coverage) as the primary
+// family so diacritics do not fall back glyph-by-glyph into mixed fonts.
+export const glyphSafeFamily=family=>{const parts=String(family||'').split(',').map(part=>part.trim()).filter(Boolean);return parts.length>1?parts.slice(1).join(', '):(family||'');};
+
 const canonicalProperties=(source,defaultSizePx)=>{
   const size=unscaledPx(source.font.size,source);
   const sizeRatio=pxRatio(size,defaultSizePx);
@@ -88,6 +93,7 @@ const canonicalProperties=(source,defaultSizePx)=>{
   const properties={};
   if(sizeRatio!==null)properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${sizeRatio} * var(--validatebook-page-scale, 1))`;
   for(const [key,value] of [['font-family',source.font.family],['font-weight',source.font.weight],['font-style',source.font.style],['text-align',source.style.textAlign],['color',source.style.color]])if(value)properties[key]=value;
+  if(properties['font-family'])properties['font-family']=glyphSafeFamily(properties['font-family']);
   if(Number.isFinite(size)&&Number.isFinite(leading)&&size>0)properties['line-height']=String(leading/size);
   if(Number.isFinite(size)&&Number.isFinite(marginBottom))properties['margin-bottom']=(marginBottom/size)+'em';
   if(Number.isFinite(size)&&Number.isFinite(marginTop))properties['margin-top']=(marginTop/size)+'em';
@@ -113,8 +119,15 @@ const canonicalDifference=(source,target)=>{
   return false;
 };
 
-export function canonicalTranslationActions(master,document,language,defaultSizePx,verifiedAlignment=null) {
-  if(!master||language==='en')return {actions:[],findings:[]};
+const rewriteSelectorTag=(selector,tag)=>{
+  const parts=String(selector).split(' > ');
+  const last=parts[parts.length-1];
+  if(!last||/^#/.test(last))return selector;
+  parts[parts.length-1]=last.replace(/^[a-zA-Z][a-zA-Z0-9]*/,tag);
+  return parts.join(' > ');
+};
+
+export function canonicalTranslationActions(master,document,language,defaultSizePx,verifiedAlignment=null) {  if(!master||language==='en')return {actions:[],findings:[]};
   const actions=[],findings=[];
   const alignment=verifiedAlignment||alignTranslationBlocks(master,document,language);
   for(const pair of alignment.matches){
@@ -122,8 +135,21 @@ export function canonicalTranslationActions(master,document,language,defaultSize
     if(!s||sentenceCount(s.text,'en')!==targets.reduce((sum,target)=>sum+sentenceCount(target?.text,language),0))continue;
     for(const t of targets){
       if(!t)continue;
-      if(s.tag!==t.tag&&/^h[1-6]$/.test(t.tag)&&s.tag==='p'&&t.selector.startsWith('#'))actions.push({kind:'tag',selector:t.selector,expectedTag:t.tag,tag:'p',safeTranslationStyle:true});
-      actions.push({kind:'presentation',selector:t.selector,properties:canonicalProperties(s,defaultSizePx),safeTranslationStyle:true});
+      const properties=canonicalProperties(s,defaultSizePx);
+      let selector=t.selector;
+      // The translated edition must carry the English block roles: headings keep
+      // their level and short label paragraphs become headings, so the layout
+      // maps to the same display styles as the source edition.
+      if(s.tag!==t.tag){
+        const promoteToHeading=/^h[1-6]$/.test(s.tag)&&(/^h[1-6]$/.test(t.tag)||(t.tag==='p'&&t.text.length<=80));
+        const demoteToParagraph=/^h[1-6]$/.test(t.tag)&&s.tag==='p';
+        if(promoteToHeading||demoteToParagraph){
+          const tag=promoteToHeading?s.tag:'p';
+          actions.push({kind:'tag',selector:t.selector,expectedTag:t.tag,tag,safeTranslationStyle:true});
+          selector=rewriteSelectorTag(t.selector,tag);
+        }
+      }
+      actions.push({kind:'presentation',selector,properties,safeTranslationStyle:true});
     }
   }
   for(const page of alignment.ambiguousPages||[])findings.push(issue(language,'translation_alignment_ambiguous','page '+page.page,'Translation layout is not propagated because block alignment is ambiguous.',page));
@@ -145,8 +171,23 @@ export function canonicalTranslationActions(master,document,language,defaultSize
       styled.add(target.selector);
     }
   }
-  const semantic=semanticStructurePlan(alignment,language);
-  if(semantic.length)actions.push({kind:'resegment_run',language,runs:semantic,safeTranslationStyle:true});
+  // Sentence-count reconciliation is intentionally not applied: merging or
+  // splitting sentences rewrites punctuation and casing, and a translation's
+  // prose is immutable. Page anchors and heading levels provide the structural
+  // mapping without touching the translated text.
+  // Finally align every heading level to the English master, chapter by chapter.
+  // Tag changes run after presentation, so applied styles and selectors stay
+  // valid; the replacement copies attributes and children unchanged.
+  const tagged=new Set(actions.filter(action=>action.kind==='tag').map(action=>action.selector));
+  const headingSegments=records=>{const out=[];let current=[];for(const record of records){if(!/^h[1-6]$/.test(record.tag))continue;if(record.tag==='h1'){if(current.length)out.push(current);current=[record];}else current.push(record);}if(current.length)out.push(current);return out;};
+  const masterSegments=headingSegments(master.records),targetSegments=headingSegments(document.records);
+  for(let s=0;s<Math.min(masterSegments.length,targetSegments.length);s++){
+    const source=masterSegments[s],target=targetSegments[s];
+    for(let i=0;i<Math.min(source.length,target.length);i++){
+      const s0=source[i],t0=target[i];
+      if(s0.tag!==t0.tag&&!tagged.has(t0.selector))actions.push({kind:'tag',selector:t0.selector,expectedTag:t0.tag,tag:s0.tag,safeTranslationStyle:true});
+    }
+  }
   return {actions,findings};
 }
 
@@ -212,10 +253,12 @@ export function splitSentenceUnit(unit){
     if(head&&tail)return [head+'.',upperFirst(tail)];
   }
   // No internal punctuation: split at the word boundary closest to the middle.
+  // Never split a short sentence: fragments must stay whole phrases so a
+  // sentence-count reflow can never reduce prose to single words.
   const words=value.split(/\s+/);
-  if(words.length<4)return null;
+  if(words.length<8)return null;
   let best=-1,bestDifference=Infinity;
-  for(let index=2;index<=words.length-2;index++){
+  for(let index=3;index<=words.length-3;index++){
     const difference=Math.abs(index-(words.length-index));
     if(difference<bestDifference){bestDifference=difference;best=index;}
   }
@@ -259,6 +302,11 @@ export function semanticStructurePlan(alignment,language){
     if(!sourceTotal||!targets.length)continue;
     if(counts.length===targets.length&&counts.every((count,index)=>count===targets[index].units))continue;
     const units=run.flatMap(group=>group.targetBlocks.flatMap(target=>sentenceUnits(target.text,language)));
+    const targetTotal=units.length;
+    // A run is only reflowed when both editions carry a comparable amount of
+    // prose. Forcing a wildly different count would split sentences into
+    // fragments and corrupt the translation.
+    if(!targetTotal||targetTotal<sourceTotal*.5||targetTotal>sourceTotal*1.8)continue;
     if(!units.length||normalizeSentenceCounts(units,sourceTotal).length!==sourceTotal)continue;
     plan.push({paragraphs:targets.map(target=>target.selector),counts});
   }

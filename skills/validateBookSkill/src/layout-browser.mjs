@@ -115,7 +115,7 @@ export function applyDomRepairs(actions) {
     }
   };
   const before = text(), changes = [];
-  let stylesheet,tableReflow=false,editorialReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[],addedTableHeaders=[];
+  let stylesheet,tableReflow=false,editorialReflow=false;const removedGenerated=[],removedRunning=[],removedTableHeaders=[],removedNotices=[],addedTableHeaders=[];
   for (const a of actions) {
     if (a.kind === 'consolidate_styles') {
       if(a.href!=='validatebook-layout.css')throw Error('Unexpected managed stylesheet path');
@@ -135,6 +135,12 @@ export function applyDomRepairs(actions) {
         for(const key of n.style)declaration.setProperty(key,n.style.getPropertyValue(key),n.style.getPropertyPriority(key));
         const size=declaration.getPropertyValue('font-size');
         if(!size.includes('--validatebook-font-size'))declaration.setProperty('font-size',size.replace(/var\(--reader-font-size,\s*var\(--standalone-size,\s*[\d.]+px\)\)/g,'var(--validatebook-font-size, $&)'),declaration.getPropertyPriority('font-size'));
+        // A translated edition must not keep the English PDF subset face as the
+        // primary family: drop it so diacritics use the fallback face.
+        if(a.glyphSafe){
+          const family=declaration.getPropertyValue('font-family');
+          if(family){const parts=family.split(',').map(part=>part.trim()).filter(Boolean);if(parts.length>1&&/pdf-font/i.test(parts[0]))declaration.setProperty('font-family',parts.slice(1).join(', '),declaration.getPropertyPriority('font-family'));}
+        }
         const signature=declaration.cssText;if(!signature){n.removeAttribute('style');continue;}
         const computed=getComputedStyle(n);expected.push({node:n,values:Object.fromEntries([...declaration].map(key=>[key,computed.getPropertyValue(key)]))});
         let id=signatures.get(signature);if(!id){id='s'+(signatures.size+1);signatures.set(signature,id);}
@@ -363,6 +369,24 @@ export function applyDomRepairs(actions) {
       }
       if(changed)editorialReflow=true;continue;
     }
+    if(a.kind==='translation_page_anchors'){
+      if(!Array.isArray(a.anchors)||!a.anchors.length)throw Error('Invalid translation page anchors');
+      // Rebuilding drops stale page anchors (including contents targets) so the
+      // new aligned anchors define the page boundaries; links re-point to them.
+      if(a.rebuild)document.querySelectorAll('[id^="page_"]').forEach(node=>node.removeAttribute('id'));
+      const missing=[];let added=0;
+      // Insert from the end so earlier nth-child selectors stay valid.
+      for(const anchor of [...a.anchors].reverse()){
+        const id='page_'+anchor.page;
+        if(document.getElementById(id))continue;
+        const matches=document.querySelectorAll(anchor.selector);
+        if(matches.length!==1){missing.push(id);continue;}
+        const marker=document.createElement('span');marker.className='source-anchor';marker.id=id;
+        matches[0].before(marker);added++;
+      }
+      changes.push({kind:a.kind,added,missing});
+      if(added)tableReflow=true;continue;
+    }
     if(a.kind==='remove_generated_caption'){
       const nodes = document.querySelectorAll(a.selector);
       if(nodes.length===0){
@@ -382,6 +406,12 @@ export function applyDomRepairs(actions) {
       const image=n.closest('figure')?.querySelector('img');
       if(image&&/^figure from pdf page \d+$/i.test(image.getAttribute('alt')||''))image.setAttribute('alt','');
       removedGenerated.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});continue;
+    }
+    if(a.kind==='remove_conversion_notice'){
+      const notices=[...document.querySelectorAll('[data-pdf-conversion-warning],.pdf-conversion-warning,[data-conversion-notice]')];
+      if(!notices.length)continue;
+      for(const n of notices){const old=n.outerHTML;removedNotices.push(n.textContent);n.remove();changes.push({kind:a.kind,selector:a.selector,before:old,after:null});}
+      continue;
     }
     if(a.kind==='remove_running_matter'){
       const nodes=document.querySelectorAll(a.selector);
@@ -616,7 +646,7 @@ export function applyDomRepairs(actions) {
       changes.push({ kind: a.kind, selector: a.selector, before: beforeProperties, after: Object.fromEntries(Object.keys(a.properties).map(key=>[key,n.style.getPropertyValue(key)])) });
     } else throw Error('Unsupported repair kind: ' + a.kind);
   }
-  const removedText=removedGenerated.join('')+removedRunning.join('')+removedTableHeaders.join('');
+  const removedText=removedGenerated.join('')+removedRunning.join('')+removedTableHeaders.join('')+removedNotices.join('');
   const addedText=addedTableHeaders.join('');
   if (!editorialReflow && text() !== before && (!(tableReflow||removedText||addedText)||characterInventory(text()+removedText)!==characterInventory(before+addedText))) throw Error('Repair changed text; layout-only changes must preserve prose exactly');
   const dt = document.doctype;

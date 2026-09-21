@@ -6,7 +6,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { compareEnglish, compareStructure, checkDisplay, comparePdfFonts, comparePdfGeometry, alignTranslationBlocks, sentenceCount } from '../src/layout-checks.mjs';
-import { sentenceReflowPlan, paragraphMergePlan, normalizeSentenceCounts, semanticStructurePlan, paragraphGroupPlan } from '../src/translation-style.mjs';
+import { sentenceReflowPlan, paragraphMergePlan, normalizeSentenceCounts, semanticStructurePlan, paragraphGroupPlan, splitSentenceUnit, mergeSentenceUnits } from '../src/translation-style.mjs';
 import { discover, collectAssets, doctor, splitSafeVisibleContentRepairs } from '../src/audit.mjs';
 import { textReport, layoutReport } from '../src/layout-report.mjs';
 import { planComplete, completeStatus } from '../src/complete.mjs';
@@ -288,4 +288,29 @@ test('status rejects unrelated or malformed jobs without overwriting evidence',a
     await assert.rejects(completeStatus(coordinator),/Invalid layout coordinator contract/);
     assert.deepEqual(JSON.parse(await fs.readFile(coordinator,'utf8')),state);
   }
+});
+
+test('paginated presentation wraps long tokens inside the reading column',async()=>{
+  const {paginationCss,translatedPaginationCss}=await import('../src/pagination.mjs');
+  const profile={width:595,height:842,margins:{top:60,right:60,bottom:60,left:60},contents:[],contentsLineHeight:0,contentsFontSize:0};
+  for(const css of [paginationCss(profile),translatedPaginationCss(profile)]){
+    assert.match(css,/\[data-validatebook-root\] :is\([^)]*p[^)]*\)\{overflow-wrap:anywhere\}/);
+  }
+});
+
+test('converter adapter keeps the managed stylesheet contract in every pass',async()=>{
+  const source=await fs.readFile(fileURLToPath(new URL('../src/pagination.mjs',import.meta.url)),'utf8');
+  assert.match(source,/data-validatebook-converter/);
+  assert.match(source,/styles\\?\.css/);
+  assert.match(source,/pdf-document/);
+  assert.match(source,/pdf-table-wrap/);
+});
+
+test('sentence reflow never fragments translated prose into single words',async()=>{
+  assert.equal(splitSentenceUnit('unu doi trei patru cinci șase șapte'),null);
+  const unit='Teza noastră arhitecturală este că mulți agenți fiabili pentru organizații vor combina o componentă învățată relativ mică cu un strat substanțial.';
+  const out=normalizeSentenceCounts([unit],6);
+  const words=text=>text.replace(/[.,;:]/g,'').split(/\s+/).filter(Boolean).map(word=>word.toLowerCase());
+  assert.deepEqual(words(out.join(' ')),words(unit));
+  assert(out.every(fragment=>words(fragment).length>=3));
 });
