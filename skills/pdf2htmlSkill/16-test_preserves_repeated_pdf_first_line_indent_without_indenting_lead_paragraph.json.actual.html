@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><title>Indented prose</title><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="pdf2html-skill"><link rel="stylesheet" href="assets/styles.css"></head><body><main class="pdf-document" data-reader-content><section class="source-page" id="page_1" data-source-page="1" aria-label="PDF page 1" data-page-label style="--pdf-page-top: 8.00%; --pdf-page-left: 10.00%; --pdf-page-right: 44.00%; --pdf-page-bottom: 102.00%; --pdf-reader-size: var(--reader-font-size, var(--standalone-size, 10.00pt)); font-size: var(--pdf-reader-size)"><p style="min-height: 24.00pt">Lead paragraph continues at the body edge and closes here.</p><p style="min-height: 24.00pt; text-indent: 15.00pt">First indented paragraph begins from source and continues at the body edge.</p><p style="min-height: 24.00pt; text-indent: 15.00pt">Second indented paragraph begins from source and continues at the body edge.</p><p style="min-height: 24.00pt; text-indent: 15.00pt">Third indented paragraph begins from source and continues at the body edge.</p><p style="text-indent: 15.00pt">A short indented paragraph.</p></section></main><script id="pdf2html-reader-bridge">(() => {
+  window.addEventListener("message", (event) => {
+    if (event.data?.type !== "axiologic-reader-settings") return;
+    const size = Number(event.data.fontSize);
+    if (Number.isFinite(size) && size > 0) {
+      document.documentElement.style.setProperty("--standalone-size", `${size}rem`);
+    }
+    if (event.data.theme) document.documentElement.dataset.theme = event.data.theme;
+  });
+})();</script></body></html>

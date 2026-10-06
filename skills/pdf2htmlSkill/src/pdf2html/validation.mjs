@@ -6,6 +6,8 @@ import { tokens, counter, round, escapeHtml } from './common.mjs';
 import { parseHtml, text } from './dom.mjs';
 import { launchBrowser } from './runtime.mjs';
 import { renderPage, PNG } from './raster.mjs';
+import { validateContent } from './content-validation.mjs';
+import { validateSourceImages } from './image-validation.mjs';
 export function coverage(source, output) {
   if (!source.length) return 1;
   const a = counter(source), b = counter(output);
@@ -42,7 +44,7 @@ export async function validateAssets($, htmlPath) {
   }
   return findings;
 }
-async function browserChecks(htmlPath, previewDir, browser) {
+export async function browserChecks(htmlPath, previewDir, browser) {
   const findings = [], metrics = { chromium: browser.version(), viewports: {} }, samples = [];
   for (const width of [1440, 1024, 390]) {
     const height = Math.min(12000, Math.floor(20000000 / width));
@@ -55,16 +57,49 @@ async function browserChecks(htmlPath, previewDir, browser) {
         for (const image of document.images) image.loading = 'eager';
         await Promise.all([...document.images].map(image => image.decode().catch(() => {})));
         await document.fonts.ready;
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       });
       const result = await page.evaluate(() => ({
         documentHeight: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
         bodyOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
         brokenImages: [...document.images].filter(image => !image.complete || !image.naturalWidth).length,
+        failedFonts: [...document.fonts].filter(font => font.status === 'error').length,
+        hiddenContent: [...document.querySelectorAll('section[data-source-page] *')].filter(element => {
+          if (['SCRIPT','STYLE'].includes(element.tagName)) return false;
+          if (![...element.childNodes].some(node => node.nodeType === 3 && node.textContent.trim()) && element.tagName !== 'IMG') return false;
+          for (let node = element; node; node = node.parentElement) {
+            const style = getComputedStyle(node);
+            if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0 || style.contentVisibility === 'hidden') return true;
+          }
+          const rect = element.getBoundingClientRect();
+          return (getComputedStyle(element).display !== 'contents' && (rect.width === 0 || rect.height === 0)) || parseFloat(getComputedStyle(element).fontSize) === 0;
+        }).length,
+        clippedContent: [...document.querySelectorAll('section[data-source-page],section[data-source-page] *')].filter(element => {
+          const style = getComputedStyle(element);
+          return (['hidden','clip'].includes(style.overflowY) && element.scrollHeight > element.clientHeight + 1)
+            || (['hidden','clip'].includes(style.overflowX) && element.scrollWidth > element.clientWidth + 1);
+        }).length,
         overflowingElements: [...document.querySelectorAll('body *')].filter(element => {
           if (element.closest('.table-scroll')) return false;
           const rect = element.getBoundingClientRect();
           return rect.right > document.documentElement.clientWidth + 1 || rect.left < -1;
         }).length,
+        fixedGeometryErrors: [...document.querySelectorAll('.pdf-page-frame')].flatMap(frame => {
+          const page = frame.querySelector('.source-page');
+          if (!page) return ['missing-page'];
+          const sheet = page.getBoundingClientRect(), outer = frame.getBoundingClientRect();
+          const expectedWidth = Number(frame.dataset.pdfWidth) * 96 / 72;
+          const expectedHeight = Number(frame.dataset.pdfHeight) * 96 / 72;
+          const scale = sheet.width / expectedWidth;
+          const errors = [];
+          if (!Number.isFinite(scale) || scale <= 0 || Math.abs(sheet.height - expectedHeight * scale) > 1 || Math.abs(outer.width - sheet.width) > 1 || Math.abs(outer.height - sheet.height) > 1) errors.push(`page-${page.dataset.sourcePage}-size`);
+          for (const child of page.children) {
+            const rect = child.getBoundingClientRect(), style = getComputedStyle(child);
+            const left = parseFloat(style.left), top = parseFloat(style.top);
+            if (style.position !== 'absolute' || !Number.isFinite(left) || !Number.isFinite(top) || Math.abs(rect.left - sheet.left - left * scale) > 1 || Math.abs(rect.top - sheet.top - top * scale) > 1) errors.push(`page-${page.dataset.sourcePage}-${child.tagName.toLowerCase()}`);
+          }
+          return errors;
+        }),
       }));
       const segments = segmentRanges(result.documentHeight, width), indexes = [...new Set([0, Math.floor(segments.length/2), segments.length-1])];
       for (const [index, [top, segmentHeight]] of segments.entries()) {
@@ -77,8 +112,10 @@ async function browserChecks(htmlPath, previewDir, browser) {
       }
       Object.assign(result, { segmentCount: segments.length, segmentHeightLimit: height, sampledSegments: indexes.map(index => index+1), consoleErrors: errors });
       metrics.viewports[width] = result;
+      if (result.failedFonts || result.hiddenContent || result.clippedContent) findings.push(finding('error', 'browser-invisible-content', `Hidden, clipped content or failed fonts at ${width}px.`, result));
       if (result.brokenImages) findings.push(finding('error', 'browser-broken-images', `Broken images at ${width}px.`, result));
       if (result.bodyOverflow || result.overflowingElements) findings.push(finding('error', 'browser-overflow', `Content overflows at ${width}px.`, result));
+      if (result.fixedGeometryErrors.length) findings.push(finding('error', 'browser-fixed-geometry', `Fixed page geometry differs from source coordinates at ${width}px.`, { errors:result.fixedGeometryErrors.slice(0,25),total:result.fixedGeometryErrors.length }));
       if (errors.length) findings.push(finding('error', 'browser-console', `Browser console errors at ${width}px.`, { errors }));
     } finally { await page.close(); }
   }
@@ -115,25 +152,28 @@ async function visualArtifacts(profile, samples, previewDir, browser) {
     return round(result.score,4);
   } finally { await page.close(); }
 }
-export async function validateOutput(profile, htmlPath, { expectedTables, expectedPictures, keepQaArtifacts = false, reportDir } = {}) {
+export async function validateOutput(profile, htmlPath, { evidence, expectedTables, expectedPictures, keepQaArtifacts = false, reportDir } = {}) {
   htmlPath = resolve(htmlPath);
   const previewDir = keepQaArtifacts && reportDir ? join(reportDir,'previews') : null;
   if (reportDir) await mkdir(reportDir,{recursive:true});
   if (previewDir) await mkdir(previewDir,{recursive:true});
-  const $=parseHtml(await readFile(htmlPath,'utf8')), source=tokens(profile.text), output=tokens(text($.root()[0]));
+  const $=parseHtml(await readFile(htmlPath,'utf8')), source=tokens(profile.text), output=tokens($('body').length ? text($('body')[0]) : '');
   const score=coverage(source,output), order=orderScore(source,output), findings=await validateAssets($,htmlPath);
   const anchors=$('[id]').toArray().map(node => node.attribs.id).filter(id => /^page_\d+$/.test(id)), expected=Array.from({length:profile.pages},(_,i) => `page_${i+1}`);
   const missing=expected.filter(id => !anchors.includes(id)), unexpected=anchors.filter(id => !expected.includes(id));
   if (missing.length || unexpected.length || new Set(anchors).size !== anchors.length) findings.push(finding('error','source-page-anchors','HTML page anchors do not match the source PDF pages.',{expected:expected.length,actual:anchors.length,missing,unexpected}));
-  for (const [value,warning,error,code,label] of [[score,.98,.95,'text-coverage','Text coverage'],[order,.95,.90,'text-order','Text order score']]) if(value<warning) findings.push(finding(value<error?'error':'warning',code,`${label} is below ${(value<error?error:warning)*100}%.`,{score:value}));
+  findings.push(...validateContent(profile, $, evidence));
+  const unresolved=$('section[data-source-page] [data-pdf-position-unresolved]').toArray();
+  if(unresolved.length) findings.push(finding('error','source-position-unresolved','HTML contains content that could not be placed using PDF geometry.',{elements:unresolved.slice(0,25).map(node=>({page:$(node).closest('section[data-source-page]').attr('data-source-page'),tag:node.name,text:$(node).text().slice(0,80)})),total:unresolved.length}));
   const tables=$('table').length, contents=$('nav.contents-list').length, images=$('img').length;
   if(expectedTables !== undefined && tables+contents !== expectedTables) findings.push(finding('error','table-count','HTML structural regions differ from Docling table output.',{expected:expectedTables,tables,normalizedContentsLists:contents}));
-  if(expectedPictures !== undefined && images<expectedPictures) findings.push(finding('error','picture-count','HTML contains fewer images than Docling picture items.',{expected:expectedPictures,actual:images}));
+  if(expectedPictures !== undefined && images!==expectedPictures) findings.push(finding('error','picture-count','HTML image count differs from serialized and recovered picture items.',{expected:expectedPictures,actual:images}));
+  if (!findings.some(item => item.code.startsWith('image-') || item.code === 'remote-image')) findings.push(...await validateSourceImages(profile,evidence,$,htmlPath));
   const browser=await launchBrowser();
   let checks,visual;
   try { checks=await browserChecks(htmlPath,previewDir,browser); visual=await visualArtifacts(profile,checks.samples,previewDir,browser); } finally {await browser.close();}
   findings.push(...checks.findings);
-  const report={status:findings.some(item => item.severity==='error')?'failed':findings.length?'passed_with_warnings':'passed',metrics:{sourcePages:profile.pages,sourceTokens:source.length,htmlTokens:output.length,textCoverage:round(score,4),textOrder:round(order,4),tables,normalizedContentsLists:contents,images,sourcePageAnchors:anchors.length,externalLinks:$('a[href]').toArray().filter(node=>/^https?:\/\//.test(node.attribs.href)).length,internalPageLinks:$('a[href]').toArray().filter(node=>/^#page_\d+$/.test(node.attribs.href)).length,visualSimilarityInformational:visual,...checks.metrics},findings,environment:{node:process.versions.node,platform:`${platform()} ${release()}`}};
+  const report={status:findings.some(item => item.severity==='error')?'failed':findings.length?'passed_with_warnings':'passed',metrics:{validationContract:'strict-source-text-v1',sourcePages:profile.pages,sourceTokens:source.length,htmlTokens:output.length,textCoverage:round(score,4),textOrder:round(order,4),tables,normalizedContentsLists:contents,images,sourcePageAnchors:anchors.length,externalLinks:$('a[href]').toArray().filter(node=>/^https?:\/\//.test(node.attribs.href)).length,internalPageLinks:$('a[href]').toArray().filter(node=>/^#page_\d+$/.test(node.attribs.href)).length,visualSimilarityInformational:visual,...checks.metrics},findings,environment:{node:process.versions.node,platform:`${platform()} ${release()}`}};
   if(reportDir) {
     await writeFile(join(reportDir,'report.json'),JSON.stringify(report,null,2)+'\n');
     await writeFile(join(reportDir,'report.html'),`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>PDF to HTML QA</title></head><body><h1>PDF to HTML QA</h1><p>Status: ${report.status}</p>${previewDir?'<p><a href="previews/visual-comparison.png">Open visual comparison</a></p>':''}<h2>Findings</h2><ul>${findings.map(item=>`<li>${escapeHtml(item.severity+': '+item.code+': '+item.message)}</li>`).join('')}</ul><h2>Metrics</h2><pre>${escapeHtml(JSON.stringify(report.metrics,null,2))}</pre></body></html>`);

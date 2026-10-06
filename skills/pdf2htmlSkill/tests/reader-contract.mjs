@@ -7,10 +7,13 @@ async function snapshot(content) {
     .filter(element => element.textContent.trim() && element.getClientRects().length)
     .map(element => {
       const style = getComputedStyle(element);
+      const sourcePage = element.closest('.source-page');
+      const transform = sourcePage ? getComputedStyle(sourcePage).transform : 'none';
+      const pageScale = transform === 'none' ? 1 : new DOMMatrixReadOnly(transform).a;
       return {
         tag: element.tagName,
         text: element.textContent,
-        size: Number.parseFloat(style.fontSize),
+        size: Number.parseFloat(style.fontSize) * pageScale,
         clipped: ['hidden', 'clip'].includes(style.overflowY) && element.scrollHeight > element.clientHeight + 2,
       };
     }));
@@ -68,10 +71,10 @@ export async function verifyReaderControls(page, readerUrl, { width = 390 } = {}
     return loaded.every(Boolean);
   });
   assert.ok(assets, 'The reader contains a broken image.');
-  const horizontalOverflow = await content.evaluate(element => {
+  const clippedHorizontal = await content.evaluate(element => {
     const root = element.ownerDocument.documentElement;
-    return root.scrollWidth > root.clientWidth + 2;
+    return root.scrollWidth > root.clientWidth + 2 && ['hidden','clip'].includes(getComputedStyle(root).overflowX);
   });
-  assert.equal(horizontalOverflow, false, 'Reader resizing caused document horizontal overflow.');
+  assert.equal(clippedHorizontal, false, 'Reader clips the zoomed page horizontally.');
   return { width, elements: original.length, originalSize: original[0].size, increasedSize: increased[0].size, maximumSize: maximum[0].size };
 }

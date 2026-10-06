@@ -34,14 +34,16 @@ export async function guardInstallation(browser, item, result, presentation, pro
         findings.push(...pageHeightDifferences(layout,profile).map(f=>({category:'page_height_below_minimum',...f})));
       }
     }
-    const blocking=findings.filter(f=>!(item.language!=='en'&&f.category==='horizontal_overflow'));
+    const blocking=findings;
     if(blocking.length){
-      const overflow=blocking.find(f=>f.category==='horizontal_overflow'&&f.overflowing?.length);
-      if(overflow)console.error('validatebook overflow diagnostic: '+JSON.stringify(overflow.overflowing));
+      const overflow=blocking.find(f=>f.category==='horizontal_overflow');
+      if(overflow)console.error('validatebook overflow diagnostic: '+JSON.stringify({viewportWidth:overflow.viewportWidth,scrollWidth:overflow.scrollWidth,overflowing:overflow.overflowing?.slice(0,12)||[]}));
       const geometry=blocking.find(f=>f.category==='reader_page_geometry_override');
       if(geometry)console.error('validatebook geometry diagnostic: '+JSON.stringify({width:geometry.width,actual:geometry.actual,expected:geometry.expected}));
-      const error=Error('Candidate installation rejected: '+[...new Set(blocking.map(f=>f.category))].join(', ')+(overflow?' ['+overflow.overflowing.map(n=>n.tag+':'+n.selector+' w='+n.width+' right='+n.right).join(' | ')+']':''));
-      error.findings=blocking;throw error;
+      const error=Error('Candidate installation rejected: '+[...new Set(blocking.map(f=>f.category))].join(', ')+(overflow&&overflow.overflowing?.length?' ['+overflow.overflowing.map(n=>n.tag+':'+n.selector+' w='+n.width+' right='+n.right).join(' | ')+']':overflow?' [scroll '+overflow.scrollWidth+' vs viewport '+overflow.viewportWidth+']':''));
+      error.findings=blocking;
+      if(process.env.VALIDATEBOOK_DUMP_REJECTED){await fs.mkdir(process.env.VALIDATEBOOK_DUMP_REJECTED,{recursive:true});await fs.copyFile(html,path.join(process.env.VALIDATEBOOK_DUMP_REJECTED,item.language+'-rejected.html'));await fs.copyFile(css,path.join(process.env.VALIDATEBOOK_DUMP_REJECTED,item.language+'-rejected.css'));}
+      throw error;
     }
   } finally {
     await fs.rm(html,{force:true});await fs.rm(css,{force:true});

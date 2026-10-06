@@ -52,6 +52,7 @@ try {
       else {const {convertMany}=await import('./batch.mjs');result=await convertMany(inputs,{...options,defaultLanguage:values.lang});}
     } else if(command==='validate') {if(inputs.length!==1 || !values.html) throw new Error('validate requires one input PDF and --html.');const {validateExisting}=await import('./converter.mjs');result=await validateExisting(inputs[0],values.html,!!values['keep-qa-artifacts']);}
     else throw new Error(help.trim());
+    if (result?.status === 'failed') process.exitCode = 1;
     process.stdout.write(JSON.stringify(result,null,2)+'\n');
   }
 } catch(error) {process.stderr.write(`pdf2html: ${error.message}\n`);process.exitCode=1;}

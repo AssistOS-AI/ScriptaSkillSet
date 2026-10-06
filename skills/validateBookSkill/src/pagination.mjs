@@ -10,8 +10,9 @@ export function paginateDocument({blankPages=[],origin='source',expectedPages=nu
   const existing=[...root.querySelectorAll(':scope > .pdf-source-page')];
   if(existing.length&&!repaginateExisting){
     const pages=existing.map(n=>Number(n.getAttribute('data-reader-page')));
-    if(expectedPages&&(pages.length!==expectedPages||pages.some((n,i)=>n!==i+1)))throw Error('Existing source pagination is incomplete');
-    if(pages.some((n,i)=>!Number.isInteger(n)||n<1||(i&&n<=pages[i-1])))throw Error('Existing page order is invalid');
+    // Removed empty converter pages leave a valid increasing subset; only a
+    // missing anchor, a duplicate or an out-of-range page is fatal.
+    if(expectedPages&&(pages.length>expectedPages||pages.some((n,i)=>!Number.isInteger(n)||n<1||n>expectedPages||(i&&n<=pages[i-1]))))throw Error('Existing source pagination is incomplete');
     return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,pages,blankPages:existing.filter(n=>n.hasAttribute('data-blank-page')).map(n=>Number(n.getAttribute('data-reader-page'))),origin,textPreserved:true};
   }
   if(existing.length&&repaginateExisting){
@@ -184,7 +185,25 @@ export function normaliseConverterHtml(){
 // cover exactly like the English edition.
 export function normaliseCoverPage(){
   const changes=[];
+  // A legacy author layout stylesheet would override the managed page geometry
+  // (e.g. a fixed narrow page width). The managed presentation owns layout, so
+  // drop it for every edition.
+  for(const link of [...document.querySelectorAll('link[data-source-layout],link[href*="source-layout.css"]')]){
+    const href=link.getAttribute('href');link.remove();changes.push({kind:'legacy_layout_stylesheet_removed',href});
+  }
   let removed=0;
+  // A printed page number left in the flow is running matter; the page footer is
+  // generated from the page label, so the lone number paragraph is removed.
+  for(const page of [...document.querySelectorAll('.pdf-source-page')]){
+    const number=String(page.getAttribute('data-source-page')||page.getAttribute('data-reader-page')||'').trim();
+    if(!number)continue;
+    for(const paragraph of [...page.querySelectorAll('p')]){
+      if(paragraph.textContent.replace(/\s+/g,' ').trim()!==number)continue;
+      if(paragraph.querySelector('img,svg,table'))continue;
+      paragraph.remove();removed++;
+    }
+  }
+  if(removed)changes.push({kind:'running_page_number_removed',count:removed});
   for(const caption of [...document.querySelectorAll('figcaption')]){
     if(!/^figure from pdf page \d+\s*$/i.test(caption.textContent.trim()))continue;
     const image=caption.closest('figure')?.querySelector('img');
@@ -216,6 +235,103 @@ export function normaliseCoverPage(){
   return changes;
 }
 
+// Runs inside the audit browser. Give converted tables the canonical table
+// contract (scroll wrapper + class) and drop deprecated <center> wrappers so
+// every edition shares the same table presentation.
+export function normaliseTables(){
+  const changes=[];
+  for(const center of [...document.querySelectorAll('center')]){
+    if(!center.querySelector('table'))continue;
+    const parent=center.parentNode;if(!parent)continue;
+    while(center.firstChild)parent.insertBefore(center.firstChild,center);
+    center.remove();changes.push({kind:'center_unwrapped'});
+  }
+  for(const table of [...document.querySelectorAll('table')]){
+    if(!table.classList.contains('pdf-table'))table.classList.add('pdf-table');
+    if(table.closest('.pdf-table-wrap'))continue;
+    const wrap=document.createElement('div');wrap.className='pdf-table-wrap';table.before(wrap);wrap.append(table);
+    changes.push({kind:'table_wrapped'});
+  }
+  // A source export can split one logical table into two at a page break. The
+  // split is reported by the table comparison; automatic re-joining is not
+  // applied here because the pagination pass re-splits the merged table and the
+  // join can cascade across adjacent tables.
+  return changes;
+}
+
+// Runs inside the audit browser, after pagination. A source export can split one
+// logical table into two at a page break: the first ends with an incomplete row
+// and the next page starts with the cells that complete it, with nothing else on
+// either side. Re-join only that exact case so rows are never orphaned.
+export function mergeSplitTables(){
+  const changes=[];
+  const wraps=[...document.querySelectorAll('.pdf-table-wrap')];
+  const pageOf=wrap=>{const section=wrap.closest('.pdf-source-page');return section?Number(section.getAttribute('data-reader-page')):null;};
+  const meaningful=node=>!node.matches('span.source-anchor')&&node.textContent.trim();
+  const atBoundary=(first,second)=>{
+    for(let node=first.nextElementSibling;node;node=node.nextElementSibling)if(meaningful(node))return false;
+    for(let node=second.previousElementSibling;node;node=node.previousElementSibling)if(meaningful(node))return false;
+    return true;
+  };
+  for(let index=0;index<wraps.length-1;index++){
+    let merged=wraps[index],cursor=index+1;
+    while(cursor<wraps.length){
+      const next=wraps[cursor];
+      if(!merged.isConnected||!next.isConnected)break;
+      const firstPage=pageOf(merged),secondPage=pageOf(next);
+      if(!(firstPage===secondPage||secondPage===firstPage+1))break;
+      if(!atBoundary(merged,next))break;
+      const table=merged.querySelector(':scope > table'),continuation=next.querySelector(':scope > table');
+      if(!table||!continuation)break;
+      const columns=[...table.rows[0].cells].reduce((sum,cell)=>sum+cell.colSpan,0);
+      const lastRow=table.rows[table.rows.length-1],firstRow=continuation.rows[0];
+      if(!columns||!lastRow||!firstRow)break;
+      const lastCells=[...lastRow.cells].reduce((sum,cell)=>sum+cell.colSpan,0);
+      const firstCells=[...firstRow.cells].reduce((sum,cell)=>sum+cell.colSpan,0);
+      if(lastCells>=columns||lastCells+firstCells!==columns)break;
+      for(const cell of [...firstRow.cells])lastRow.append(cell);
+      const body=table.tBodies[0]||table;
+      for(const row of [...continuation.rows].slice(1))body.append(row);
+      next.remove();
+      changes.push({kind:'split_table_merged'});
+      cursor++;
+    }
+    index=cursor-1;
+  }
+  return changes;
+}
+
+// Runs inside the audit browser. A conversion can leave source pages that hold
+// only a contents heading and no entries (page splits of a contents table).
+// Remove those empty pages for every language, keeping their anchors reachable.
+export function removeEmptyContentsPages(){
+  const changes=[];
+  const root=document.querySelector('[data-validatebook-root]')||document.body;
+  for(const page of [...root.querySelectorAll('.pdf-source-page')]){
+    const headings=[...page.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+    if(!headings.length)continue;
+    if(page.querySelector('table,figure,picture,img,svg,video,ol,ul,dl'))continue;
+    const text=page.textContent.replace(/\s+/g,' ').trim();
+    const headingText=headings.map(heading=>heading.textContent.replace(/\s+/g,' ').trim()).join(' ');
+    if(!text||text!==headingText)continue;
+    if(!/^(contents|cuprins|table of content|table of contents)$/i.test(headingText))continue;
+    const previous=page.previousElementSibling;
+    const readerPage=page.getAttribute('data-reader-page');
+    for(const node of [...page.querySelectorAll('[id]')]){
+      const id=node.id;if(!id)continue;
+      if(previous){const marker=document.createElement('span');marker.className='source-anchor';marker.id=id;previous.append(marker);}
+      node.removeAttribute('id');
+    }
+    page.remove();
+    changes.push({kind:'empty_contents_page_removed',page:readerPage});
+  }
+  return changes;
+}
+
+// Runs inside the audit browser on the English edition. Builds the structural
+// template: pages, top-level blocks and, for prose, the inline formatting runs
+// (strong/em/link) with their sentence counts, so a translation can reuse the
+// exact inline emphasis.
 export function sourceBlankPages(pages, anchors=[]) {
   const anchored=new Set(anchors);
   const lineKey=line=>line.normalize('NFKC').replace(/\s+/g,' ').trim();
@@ -492,9 +608,25 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
         if(expected.length&&JSON.stringify(current)!==JSON.stringify(expected))replaceTableWithList(list,sourceEntries,{sourceBacked:true});
       }
     }
+    const headingTarget=label=>{const key=normalize(label);if(!key)return null;const matches=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter(node=>!isContentsHeading(node)&&normalize(node.textContent.replace(/\s+/g,' ').trim())===key);return matches.length===1?matches[0]:null;};
     for(const table of document.querySelectorAll('table.pdf-toc')){
-      if(!linked.length||linked.some(source=>!document.getElementById('page_'+source.destination))){unmatched.push('Contents source structure');continue;}
-      replaceTableWithList(table,sourceEntries,{sourceBacked:true});
+      const usable=linked.length&&!linked.some(source=>!document.getElementById('page_'+source.destination));
+      if(usable){replaceTableWithList(table,sourceEntries,{sourceBacked:true});continue;}
+      // No linked page destinations: still turn the contents table into a clean
+      // list. Link each entry to its matching heading page when unique.
+      const rows=[...table.querySelectorAll('tr')];
+      const entries=[];
+      for(const row of rows){
+        const cells=[...row.children].filter(cell=>/^(td|th)$/i.test(cell.tagName));
+        if(!cells.length)continue;
+        const text=cells.map(cell=>cell.textContent.replace(/\s+/g,' ').trim()).filter(Boolean).join(' ');
+        if(!text)continue;
+        if(cells.length===1&&/^(chapter|capitol|capitole|contents?)$/i.test(text))continue;
+        const target=headingTarget(text),page=target?Number(target.closest('.pdf-source-page')?.getAttribute('data-reader-page')):NaN;
+        entries.push({kind:'entry',label:text,href:Number.isInteger(page)?'#page_'+page:null,number:Number.isInteger(page)?page:undefined,source:{indent:0}});
+      }
+      if(entries.length)replaceTableWithList(table,entries,{sourceBacked:false});
+      else unmatched.push('Contents source structure');
     }
     for(const table of document.querySelectorAll('table.pdf-table')){
       if(!contentsContext(table))continue;
@@ -528,13 +660,17 @@ export function applyContentsPresentation({profile,language='en',mapping=[]}) {
       }
       const norm=value=>value.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'').replace(/^(capitolul|chapter|partea|part)/,'').replace(/^[ivxlcdm\d]+/,'');
       const headings=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter(node=>node!==translatedHeading&&!isContentsHeading(node));
+      // When the translated edition carries no contents entries at all, build the
+      // list from its own section headings so the entry point is never empty. No
+      // translated prose is invented.
+      const contentsTokens=(tokens.length?tokens:headings.map(heading=>({kind:/^H1$/.test(heading.tagName)?'part':'entry',label:heading.textContent.replace(/\s+/g,' ').trim()})).filter(token=>token.label)).filter((token,index,list)=>token.label!==list[index-1]?.label);
       const findTarget=label=>{
         const key=norm(label);if(!key)return null;
         const exact=headings.filter(node=>{const other=norm(node.textContent);return other&&other===key;});
         return exact.length===1?exact[0]:null;
       };
       const entries=[];let matched=0,total=0;
-      for(const token of tokens){
+      for(const token of contentsTokens){
         if(token.kind==='part'){entries.push({kind:'part',label:token.label});continue;}
         total++;
         const target=findTarget(token.label),page=target?Number(target.closest('.pdf-source-page')?.getAttribute('data-reader-page')):NaN;
@@ -631,24 +767,6 @@ ${[...new Set(contents.map(r=>r.indent))].sort((a,b)=>a-b).map((indent,i)=>`[dat
 `.replaceAll('[data-validatebook-root]','[data-validatebook-root][data-validatebook-root]');
 }
 
-export function translatedPaginationCss({width,height,margins=null,contents=[],contentsLineHeight,contentsFontSize}) {
-  if(!(width>0&&height>0))throw Error('Source PDF page dimensions required');
-  const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
-  return `/* validateBook translated flow */
-@property --validatebook-page-scale{syntax:"<number>";inherits:true;initial-value:1}
-[data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size;background:var(--reader-surround,var(--standalone-surround,#e3e6e4));box-shadow:none;border-color:transparent}
-[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:max(1,calc(100cqw / ${width*4/3}px));font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
-[data-validatebook-root] > .pdf-source-page:last-of-type{margin-bottom:0;break-after:auto}
-[data-validatebook-root] > .pdf-source-page:has(figure#page_1){padding:0}
-.pdf-source-page figure#page_1{margin:0}
-.pdf-source-page figure#page_1 img{display:block;width:100%;height:auto;margin:0}
-[data-validatebook-root] :is(h1,h2,h3,h4,h5,h6,p,li,figcaption,caption,a){overflow-wrap:anywhere}
-[data-validatebook-root] :is(img,svg,video,figure,table){max-width:100%}
-[data-validatebook-root] :is(img,svg,video){height:auto}
-@media print{[data-validatebook-root]:has(> .pdf-source-page){width:100%;max-width:none;padding:0;border:0;background:transparent}[data-validatebook-root] > .pdf-source-page{min-height:0;margin:0;border:0;box-shadow:none;break-after:page}.pdf-source-page[data-blank-page]{min-height:90vh}}
-`+contentsCss({contents,contentsLineHeight,contentsFontSize});
-}
-
 export function paginationCss({width,height,margins,contents=[],contentsLineHeight,contentsFontSize}) {
   if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw Error('Source PDF page dimensions required');
   const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
@@ -663,11 +781,14 @@ export function paginationCss({width,height,margins,contents=[],contentsLineHeig
 .pdf-source-page figure#page_1 img{display:block;width:100%;height:auto;margin:0}
 .pdf-source-page p[data-page-continuation]{text-indent:0!important}
 [data-validatebook-root] :is(h1,h2,h3,h4,h5,h6,p,li,figcaption,caption,a){overflow-wrap:anywhere}
+[data-validatebook-root] :is(pre,code,kbd,samp){white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
 [data-validatebook-root] :is(img,svg,video,figure,table){max-width:100%}
 [data-validatebook-root] :is(img,svg,video){height:auto}
 [data-validatebook-root] .pdf-source-page :is(img,svg,video){max-width:100%;height:auto}
-[data-validatebook-root] .pdf-table-wrap{max-width:100%;overflow-x:auto}
-[data-validatebook-root] table{max-width:100%;border-collapse:collapse}
+[data-validatebook-root] .pdf-table-wrap{width:100%;max-width:100%;overflow-x:auto}
+[data-validatebook-root] table{width:100%;max-width:100%;border-collapse:collapse}
+[data-validatebook-root] .toc-table{width:100%}
+[data-validatebook-root] .pdf-table :is(th,td){padding:.4em .7em;border:1px solid color-mix(in srgb, currentColor 28%, transparent);vertical-align:top}
 [data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:normal;word-break:normal;hyphens:none}
 ${toc}
 @media print{[data-validatebook-root]:has(> .pdf-source-page){width:100%;max-width:none;padding:0;border:0;background:transparent}[data-validatebook-root] > .pdf-source-page{min-height:0;margin:0;border:0;box-shadow:none;break-after:page}.pdf-source-page[data-blank-page]{min-height:90vh}}

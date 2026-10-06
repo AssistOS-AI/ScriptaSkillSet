@@ -37,22 +37,24 @@ export async function ensureBookTarget(destination,overwrite) {
   if(collisions && !await isOwnedOutput(destination,true) && !( !await exists(index) && await emptyTree(assets))) throw new Error(`Refusing to replace index.html or assets in ${destination}; they are not owned by pdf2html-skill.`);
   if(await exists(assets) && (await lstat(assets)).isSymbolicLink()) throw new Error('Refusing to replace symbolic-link assets.');
 }
-export async function publish(staging,destination) {
-  let backup;
+export async function publish(staging,destination,verify) {
+  let backup, installed=false;
   try {
     if(await exists(destination)) {backup=await mkdtemp(join(dirname(destination),`.${basename(destination)}.backup-`)); await rm(backup,{recursive:true});await rename(destination,backup);}
-    await rename(staging,destination);
-  } catch(error) {if(backup && !await exists(destination)) await rename(backup,destination); throw error;}
+    await rename(staging,destination); installed=true;
+    if(verify) await verify(destination);
+  } catch(error) {if(installed) await rename(destination,staging);if(backup && !await exists(destination)) await rename(backup,destination); throw error;}
   if(backup) await rm(backup,{recursive:true,force:true});
 }
-export async function installBook(source,destination,overwrite) {
+export async function installBook(source,destination,overwrite,verify) {
   await ensureBookTarget(destination,overwrite);
   const backup=await mkdtemp(join(dirname(destination),`.${basename(destination)}.pdf2html-backup-`)), moved=[],installed=[];
   try {
     for(const name of ['index.html','assets']) {const target=join(destination,name); if(await exists(target)) {await rename(target,join(backup,name));moved.push(name);}}
     for(const name of ['index.html','assets']) {await rename(join(source,name),join(destination,name));installed.push(name);}
+    if(verify) await verify(destination);
   } catch(error) {
-    for(const name of installed.reverse()) await rm(join(destination,name),{recursive:true,force:true});
+    for(const name of installed.reverse()) await rename(join(destination,name),join(source,name));
     for(const name of moved) await rename(join(backup,name),join(destination,name));
     throw error;
   } finally {await rm(backup,{recursive:true,force:true});}

@@ -12,15 +12,14 @@ For an existing-book repair, references/repair.md additionally requires source-s
 
 ## Correctness gates
 
-- Normalized source-token recall measures content coverage. Scores below 0.98 warn and scores below 0.95 fail.
-- Adjacent-token pair recall measures local reading order. Scores below 0.95 warn and scores below 0.90 fail.
+Validation requires exact per-page text sequence after Unicode NFC, presentation-ligature, soft-hyphen and whitespace normalization. Case and punctuation are preserved; omissions, additions, duplicates, changed sentence punctuation and reordered content fail. Hard line-end hyphens are not silently removed. Text outside source-page sections and incorrect section order fail. Recall and adjacent-token scores remain diagnostic metrics, not acceptance thresholds. Recognized PDF tables are checked independently by cell text, positions and spans; recognized lists must retain their items; clear paragraph gaps must not be merged. PDF image regions require distinct matching local PNGs on the corresponding page (64-by-64 color samples, RMS tolerance 0.05 and aspect-ratio tolerance 3%). Unsupported image formats or unmatched regions fail this source-image check. Browser checks also reject hidden/clipped content and failed fonts. Both conversion and standalone validation use the source checks; failed standalone validation exits with code 1. Final-path validation runs before publication backups are discarded, and failures restore the previous output. These checks do not certify all source typography, ambiguous paragraph boundaries, image placement within a page, or pixel-identical rendering; complex extraction order differences require review instead of automatic acceptance.
 - Stable `page_N` anchors must cover every PDF page exactly, including pages without extracted text.
 - During conversion, the number of native HTML tables must equal the number of Docling table items.
-- HTML must contain at least one valid local image for every Docling picture item and every independently recovered embedded-image occurrence.
+- During conversion, HTML image count must equal serialized plus recovered image count. Both commands independently compare source image regions with local PNG color samples on each page.
 - Every referenced local image must exist, decode successfully, and have nonzero dimensions.
-- Chromium must load the HTML at 1440, 1024, and 390 CSS pixels without console errors, broken images, or global horizontal overflow. Source-derived table geometry is clamped to its responsive content box; only genuinely wide native tables may scroll inside their dedicated wrapper.
+- Chromium must load the HTML at 1440, 1024, and 390 CSS pixels without console errors, broken images, or horizontal overflow before reader zoom. Page elements must have resolvable source coordinates.
 - Centered display spacing may preserve large source gaps only between adjacent centered flow blocks; ordinary intervening prose terminates that spacing sequence.
-- Reader resizing must preserve text proportions and reflow long words in headings, paragraphs, lists, table cells, and captions. Test both the reader's extracted HTML view and its local iframe at 1440, 1024, and 390 pixels, including the largest supported text size.
+- Reader resizing must scale text, images, tables and spacing by the same factor without changing the PDF page composition. A zoomed page may scroll horizontally. Test both the reader's extracted HTML view and its local iframe at 1440, 1024, and 390 pixels, including the largest supported zoom.
 
 ## Structural comparison tools
 
@@ -33,7 +32,7 @@ node tests/document-equivalence.mjs reference.json candidate.json
 
 The comparator accepts DoclingDocument JSON and checks ordered body items, page provenance, text, table spans and headers, attached captions, and image references. It selects the BODY content layer used by the HTML serializer, ignores exporter metadata, and normalizes whitespace. Exit status is 0 for equivalent structures, 1 for differences, and 2 for invalid input. The command displays the first 25 differences and the total count. Intermediate JSON differences require inspection against the HTML serialization contract. A matching structure still requires the source-typography, asset, and browser checks.
 
-`tests/reader-contract.mjs` exports `verifyReaderControls(page, readerUrl, { width })`. Supply a Playwright Page in a fresh browser context and the actual reader URL. The helper clicks `[data-reader-text-larger]` and `[data-reader-text-smaller]`, checks proportional scaling and restoration, reaches the maximum size, loads lazy images, and rejects clipping or document horizontal overflow. Run each viewport in both extracted HTML and iframe views.
+`tests/reader-contract.mjs` exports `verifyReaderControls(page, readerUrl, { width })`. Supply a Playwright Page in a fresh browser context and the actual reader URL. The helper clicks `[data-reader-text-larger]` and `[data-reader-text-smaller]`, checks proportional scaling and restoration, reaches the maximum size, loads lazy images, and rejects a horizontally clipped zoomed page. Run each viewport in both extracted HTML and iframe views.
 
 ## Diagnostic evidence
 
@@ -43,7 +42,7 @@ Chapter-label tests cover exact source recovery, duplicate prevention, rejection
 
 Poppler renders the first, middle, and last source pages at 120 DPI. Chromium validates the complete semantic document in bounded-height screenshot segments at every viewport, so long books never become one oversized bitmap. The first, middle, and last HTML segments are retained as representative previews when detailed QA artifacts are enabled. The tool produces a side-by-side contact image and records a normalized pixel-distance score from these samples.
 
-The visual score is informational. Reflow, page-break movement, browser font substitution, and different rasterizers can lower it without indicating content loss. Browser and operating-system versions are recorded because screenshot output varies across environments.
+The visual score is informational. Browser font substitution and different rasterizers can lower it without indicating content loss. Browser and operating-system versions are recorded because screenshot output varies across environments.
 
 Validation status and metrics are returned directly to the caller. They are not added to the generated book artifact. When detailed QA artifacts are explicitly retained for an in-place conversion, they are written to a hidden `.pdf2html-qa/` directory beside `index.html`.
 

@@ -6,7 +6,7 @@
 The read-only `decorations INPUT.pdf` JSON includes `tables` alongside borders, lists and horizontal rules. It recognizes closed ruled grids and tables whose horizontal row rules and adjacent cell fills establish complete column partitions, including unfilled alternating rows. Recognition requires text confined to every inferred column; decorative rectangles, crossing text and missing boundaries are rejected. Evidence includes source page width, cell text and spans, column widths, fills, individual border edges, vertical alignment and uniform typography. Mixed typography remains null and unsupported tables remain uncertified. The command flushes stdout before exit and performs no conversion, installation or rasterization.
 
 
-Convert born-digital PDFs into semantic, responsive HTML books. The source PDF controls text, headings, emphasis, tables, images, links and typography. Each source page has a stable anchor and a responsive sheet with source-derived margins.
+Convert born-digital PDFs into source-positioned HTML books. The source PDF controls text, headings, emphasis, tables, images, links and typography. Each PDF page has a stable HTML anchor and retains its own dimensions and element coordinates.
 
 Distribute the skill checkout. Runtime packages, tools, models, browsers and caches are installed locally and excluded by `.gitignore`. Retain notices and required source for the native binaries bundled with the skill.
 
@@ -51,11 +51,11 @@ Use `--overwrite` to replace converter-owned output. In-place publication preser
 
 The converter aligns typography to each source occurrence, preserves available embedded fonts, repairs paragraph boundaries and indentation from source geometry, and derives table fills and individual borders from PDF drawings. Heading rules appear only when supported by an aligned source stroke. Fully ruled tables missed by region classification are recovered only when their existing text fits the closed source grid exactly, including merged cells.
 
-Numbered lists retain their starting numbers and any explicit numbering gaps. Images remain local images, including text inside image pixels. Headings, paragraphs, lists, tables, captions and figures remain semantic HTML. Rendering is responsive, so line wrapping can differ from fixed PDF pages.
+Numbered lists retain their starting numbers and any explicit numbering gaps. Images remain local images, including text inside image pixels. Headings, paragraphs, lists, tables, captions and figures remain HTML elements positioned from PDF geometry. On a narrow screen, a page initially shrinks to fit; its contents keep their relative proportions.
 
 Ruled chapter labels omitted by layout recognition are recovered from exact source text when their typography and position support the match. Heading weight follows the source so a medium font does not acquire browser-generated bold.
 
-Source font sizes use ratios of `--pdf-reader-size`. Host readers can set `--reader-font-size`; local iframe readers can send `axiologic-reader-settings`. A−/A+ scales prose, headings, captions and tables together. The generated HTML contains its own iframe bridge and local assets.
+Source font sizes keep their measured values. Host readers can set `--reader-font-size`; local iframe readers can send `axiologic-reader-settings`. A−/A+ changes page zoom, so text, images, tables and spacing scale together without reflow. A zoomed page can require horizontal scrolling. The generated HTML contains its own iframe bridge and local assets.
 
 ## Validation
 
@@ -63,9 +63,9 @@ Source font sizes use ratios of `--pdf-reader-size`. Host readers can set `--rea
 /path/to/pdf2htmlSkill/scripts/pdf2html validate input.pdf --html output/document/index.html
 ```
 
-Checks cover text recall and order, source-page anchors, structural counts, local assets, image decoding and browser overflow at 1440, 1024 and 390 pixels. Source-page renders and browser screenshots provide an informational visual score. `--keep-qa-artifacts` retains reports and previews in `.pdf2html-qa/`; conversion metadata otherwise remains in the command result.
+Checks cover exact page text, source-page anchors, structural counts, local assets, image decoding, unresolved source positions, rendered page geometry and browser overflow at 1440, 1024 and 390 pixels before reader zoom. Representative source-page renders and browser screenshots provide an informational visual score. `--keep-qa-artifacts` retains reports and previews in `.pdf2html-qa/`; conversion metadata otherwise remains in the command result.
 
-Text recall below 98% warns and below 95% fails. Text-order recall below 95% warns and below 90% fails. Multi-column documents can fail the order gate when row-wise source extraction and semantic column order differ; inspect retained diagnostics. See [validation](references/validation.md).
+Validation requires exact per-page text sequence after Unicode NFC, presentation-ligature, soft-hyphen and whitespace normalization. Case and punctuation are preserved; omissions, additions, duplicates, changed sentence punctuation and reordered content fail. Hard line-end hyphens are not silently removed. Text outside source-page sections and incorrect section order fail. Recall and adjacent-token scores remain diagnostic metrics, not acceptance thresholds. Recognized PDF tables are checked independently by cell text, positions and spans; recognized lists must retain their items; clear paragraph gaps must not be merged. PDF image regions require distinct matching local PNGs on the corresponding page (64-by-64 color samples, RMS tolerance 0.05 and aspect-ratio tolerance 3%). Unsupported image formats or unmatched regions fail this source-image check. Browser checks also reject hidden/clipped content and failed fonts. Both conversion and standalone validation use the source checks; failed standalone validation exits with code 1. Final-path validation runs before publication backups are discarded, and failures restore the previous output. These checks do not certify all source typography, ambiguous paragraph boundaries, image placement within a page, or pixel-identical rendering; complex extraction order differences require review instead of automatic acceptance. See [validation](references/validation.md).
 
 ## Development
 

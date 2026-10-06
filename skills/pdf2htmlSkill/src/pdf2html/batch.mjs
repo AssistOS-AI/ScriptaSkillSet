@@ -1,7 +1,7 @@
-import { stat, readdir, realpath, mkdtemp, rm } from 'node:fs/promises';
+import { stat, readdir, realpath, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { resolve, join, dirname, basename, extname } from 'node:path';
 import { exists, ensureBookTarget, installBook, publish } from './publication.mjs';
-import { convertPdf, qaDestination } from './converter.mjs';
+import { convertPdf, qaDestination, validateExisting } from './converter.mjs';
 const languages=new Set(['en','fr','de','es','pt','it','ro','pl']);
 export function inferLanguage(path,fallback) {
   const suffix=basename(path,extname(path)).match(/[_. -]([a-z]{2})$/i)?.[1]?.toLowerCase(),parent=basename(dirname(path)).toLowerCase();
@@ -33,7 +33,15 @@ export async function convertMany(inputs,{invocationDir=process.cwd(),defaultLan
     let retained=false;
     try {
       const result=await convertPdf(pdf,staged,{language:inferLanguage(pdf,defaultLanguage),title,imageScale,keepQaArtifacts});
-      await installBook(staged,destination,overwrite);
+      await installBook(staged,destination,overwrite,async finalPath => {
+        const report=await validateExisting(pdf,join(finalPath,'index.html'));
+        if(report.status==='failed') {
+          const diagnostic=join(temporary,'final-validation.json');
+          await writeFile(diagnostic,JSON.stringify(report,null,2)+'\n');
+          const error=new Error(`Final-path validation failed; previous output restored. Diagnostics: ${temporary}`);
+          error.diagnosticOutput=temporary;throw error;
+        }
+      });
       result.artifact=join(destination,'index.html');result.output=destination;
       if(keepQaArtifacts) {const qa=join(destination,'.pdf2html-qa');await publish(qaDestination(staged),qa);result.validation.report=join(qa,'report.json');}
       books.push(result);

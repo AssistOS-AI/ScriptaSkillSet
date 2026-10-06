@@ -29,7 +29,7 @@ Generated page boxes own PDF-derived outer insets. Undecorated normal-flow main/
 
 ## Independent translation pagination
 
-English page-boundary and PDF-margin checks apply only to English. Existing translations keep their page counts, break positions, chapter placement and local page geometry, including continuous flow and multiple chapters on one page. The --paginate correction option paginates English only. English page anchor numbers do not constrain translated reader pages. Missing reader content, broken anchors, hidden or clipped content, overlapping boxes and cumulative container spacing remain errors in every language. Translation page geometry is not replaced with the English profile during CSS regeneration.
+Existing translations use the single native semantic-template workflow described in [semantic-template](semantic-template.md). Reuse existing translated text and inline markers unchanged. English page containers define semantic groups that may grow across displayed pages. Align shared, language-independent anchors, then match ordered slots with a tolerant, order-preserving alignment that keeps translated-only blocks in place, reports missing or regrouped units and never rewrites prose. Only content loss, reordered identities, table-grid mismatch or an unalignable interval blocks the rebuild.
 
 ## Autonomous transactional completion
 
@@ -52,3 +52,8 @@ After successful correction, verify the installed canonical files and durably sa
 Every complete invocation (including prepare --auto-correct) deletes previous book-owned .validatebook-jobs, .validatebook-layout and .validatebook-layout-jobs results and final reports before creating a fresh transaction. Preserve canonical PDF/HTML/CSS/assets: starting from zero means fresh evidence, not undoing installed corrections. Never delete another job with an unresolved lock. Custom job directories receive a new transaction; unrelated files are preserved. Audit-only prepare retains its read-only report/status job.
 
 Apply source-supported repairs until no further file changes occur. Unresolved validation findings remain errors in RAPORT-CORECTII.md; completed_with_errors means verified corrections were installed, not that the book passed all checks. Exit code 3 signals remaining errors without disabling HTML or reader access. Unsafe candidate batches are rejected and recorded while other documents continue. Runtime/tool failures and concurrent edits preserve originals. After verified installation and durable reporting, remove temporary results even for completed_with_errors.
+
+
+## Semantic translation template
+
+Read [the canonical translation contract](semantic-template.md). Verification and correction share the same extractor, alignment and renderer. Existing prose is immutable; longer translations extend their semantic page in normal flow. No legacy template path, sentence-count rewriting or full-book translation is used.

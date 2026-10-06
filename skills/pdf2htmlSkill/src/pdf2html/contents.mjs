@@ -81,8 +81,27 @@ export function normalizeContents($) {
       if (anchors.length !== 1 || !match) { entries.length = 0; break; }
       entries.push([cells[0], anchors[0], match]);
     }
-    if (!entries.length) continue;
+    if (entries.length) {
+      addClass(table, 'toc-table');
+      for (const [cell, anchor, match] of entries) $(cell).empty().append(entry($, match[1].trimEnd(), match[2], false, anchor.attribs.href ?? ''));
+      continue;
+    }
+    // A contents section can list titles in a one-column table without links or
+    // dotted leaders; still render it as borderless typographic rows.
+    const section = $(table).closest('.source-page')[0];
+    const heading = section ? $(section).find('h1,h2,h3,h4,h5,h6').first()[0] : null;
+    if (!heading || !isContents(text(heading))) continue;
+    const items = [];
+    for (const row of $(table).find('tr').toArray()) {
+      const cells = $(row).children('th,td').toArray();
+      if (cells.length !== 1) { items.length = 0; break; }
+      const value = normalized(text(cells[0]));
+      if (!value || isContents(value) || /^(chapter|capitol|capitole)$/iu.test(value)) continue;
+      const match = value.match(dotted);
+      items.push({ cell: cells[0], title: match ? match[1].trimEnd() : value, page: match ? match[2] : null });
+    }
+    if (items.length < 2) continue;
     addClass(table, 'toc-table');
-    for (const [cell, anchor, match] of entries) $(cell).empty().append(entry($, match[1].trimEnd(), match[2], false, anchor.attribs.href ?? ''));
+    for (const item of items) $(item.cell).empty().append(entry($, item.title, item.page, false));
   }
 }

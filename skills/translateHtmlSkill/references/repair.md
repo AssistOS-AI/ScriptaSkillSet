@@ -22,7 +22,7 @@ Temporary candidates are not duplicate published editions. No absent language or
 missing whole chapter is generated. A complete ScriptaHub run also rechecks same-language
 humanisation, short readers and affected metadata through its host coordinator.
 
-This command consumes validateBook report.json without creating a new translation or rewriting an entire book.
+This command consumes validateBook report.json without creating a new translation or rewriting an entire book; it may insert translations for missing or partial units.
 
 ```sh
 scripts/translatehtml repair --report /audit/report.json
@@ -35,7 +35,14 @@ The first command returns this skill's findings and the exact reportHash. The ac
 {"reportHash":"returned hash","file":"/book/lang/full_content.html","patches":[{"findingId":"id","before":"unique exact old HTML substring","after":"localized corrected substring"}]}
 ```
 
-Use only reported locations and preserve unaffected structure, facts, markup and asset references. One exact-match patch per finding. Do not insert whole missing chapters or create absent languages. Source-edition and missing-chapter blockers stop repair. Input hashes and report hash must still match.
+To fill a missing or partial translated unit, insert the translated sentences beside
+one unique anchor instead of replacing text:
+
+```json
+{"reportHash":"returned hash","file":"/book/lang/full_content.html","patches":[{"findingId":"id","anchor":"unique exact nearby HTML substring","insert":"<p data-vb-style=\"s12\">Translated sentence.</p>","position":"after"}]}
+```
+
+Use only reported locations and preserve unaffected structure, facts, markup and asset references. One exact-match patch per finding. Localized insertions are allowed to fill missing or partial translated units: use `{findingId, anchor, insert, position}` to place the translated sentences beside one unique anchor. Do not insert whole missing chapters or create absent languages. Source-edition and missing-chapter blockers stop repair. Input hashes and report hash must still match.
 
 Output is exclusively a new .html file in the source directory. The command never overwrites originals, assets or previous candidates. It returns needs_revalidation, not a publication pass. Run a fresh validateBook audit before accepting the candidate. This host-reviewed exact replacement mechanism does not itself prove meaning preservation or DOM correctness.
 

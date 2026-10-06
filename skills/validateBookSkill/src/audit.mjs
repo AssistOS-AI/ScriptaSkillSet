@@ -5,11 +5,11 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { openBrowser } from './browser.mjs';
 import { guardInstallation } from './installation-guard.mjs';
-import {canonicalTranslationActions,glyphSafeFamily} from './translation-style.mjs';
+import {semanticTemplate,resolveTemplateFonts} from './semantic-template.mjs';
 import {compareImageStyles} from './images.mjs';
 import {restorePublisherIdentity} from './source-identity.mjs';
 import { hash, fileHash, readJson, writeJson, exists, verifyInputs, inside } from './storage.mjs';
-import { checkDisplay, compareEnglish, compareStructure, comparePdfFonts, parsePdfGeometry, comparePdfGeometry, issue } from './layout-checks.mjs';
+import { checkDisplay, compareEnglish, comparePdfFonts, parsePdfGeometry, comparePdfGeometry, issue } from './layout-checks.mjs';
 import { navigate, measure, applyDomRepairs } from './layout-browser.mjs';
 import { layoutReport, writeLayoutReport } from './layout-report.mjs';
 import { recoverLists } from './lists.mjs';
@@ -24,8 +24,18 @@ import {readingPages} from './layout-checks.mjs';
 import {restoreReferenceBoundaries,restoreSplitSourcePhrases} from './source-boundaries.mjs';
 import {displayPageProfiles,repairDisplayPages,checkDisplayPages} from './display-pages.mjs';
 import {repairFalseHeadings} from './false-headings.mjs';
-import {paginateDocument,repairPageShells,paginationCss,translatedPaginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,pageHeightDifferences,sourceBlankPages,splitDuplicateSourceToc,removeEmptyTranslatedPages,normaliseConverterHtml,normaliseCoverPage} from './pagination.mjs';
+import {paginateDocument,repairPageShells,paginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,pageHeightDifferences,sourceBlankPages,splitDuplicateSourceToc,removeEmptyTranslatedPages,normaliseConverterHtml,normaliseCoverPage,normaliseTables,mergeSplitTables,removeEmptyContentsPages} from './pagination.mjs';
 const execute = promisify(execFile);
+// English findings that make its DOM skeleton unsafe as a translation
+// blueprint. Presentation, typography, table and list content ambiguities do not
+// change the element topology, so they are reported on English and handled per
+// interval by the semantic template's own grid check and content guard instead
+// of blocking the whole translation.
+const templateSourceBlockers=new Set([
+  'missing_page_containers','broken_anchor','misplaced_page_anchor','broken_local_link',
+  'duplicate_id','overlapping_pages','overlapping_blocks','page_spacing_ownership_conflict',
+  'missing_asset','missing_source_images','image_inventory_difference'
+]);
 export const report = layoutReport;
 export async function doctor(options = {}) {
   if (Number(process.versions.node.split('.')[0]) < 22) throw Error('Node.js >=22 required');
@@ -163,19 +173,13 @@ export async function prepare(root, options = {}) {
     const sourceFontFaces=sourceFontSupport(sourceFontsList);
     const englishSourceText=await fs.readFile(selection.documents[0].file,'utf8');
     const converterSource=/main class="pdf-document"|class="source-page"|assets\/styles\.css|data-validatebook-converter/.test(englishSourceText);
+    // Rebuilt translations reuse the English converter fonts, so keep the PDF
+    // @font-face and family for them too instead of forcing a fallback.
     const fontKey=name=>name.replace(/^[A-Z]{6}\+/,'').replace(/[-_ ]?(regular|bold|italic|bolditalic|roman|mt)$/ig,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
-    // The converter PDF subsets for this edition can carry a broken cmap, so the
-    // converter edition renders with the source font's real family and generic
-    // fallbacks instead of the unusable subset face.
-    const baseFontStack=name=>{
-      if(/serif|georgia|times|garamond|palatino|minion|caslon|baskerville|roman/i.test(name))return '"Liberation Serif", Georgia, "Times New Roman", serif';
-      if(/liberation ?sans|carlito|calibri|arial|helvetica|segoe|inter|roboto|noto sans|sans/i.test(name))return '"Liberation Sans", Arial, system-ui, sans-serif';
-      return 'Georgia, serif';
-    };
     const sourceFontMap=Object.fromEntries(sourceFontsList.flatMap(font=>{
       const name=`${font.source_name} ${font.css_family}`.toLowerCase();
       const generic=/garamond|georgia|times|palatino|minion|caslon|baskerville/.test(name)?'Georgia, serif':/inter|arial|helvetica|segoe|roboto|noto sans|sans/.test(name)?'system-ui, sans-serif':'Georgia, serif';
-      const stack=converterSource?baseFontStack(font.source_name):`"${font.css_family}", ${generic}`;
+      const stack=`"${font.css_family}", ${generic}`;
       return [[fontKey(font.source_name),stack],[font.source_name,stack],[font.css_family,stack]];
     }));
     const sourceFontWeights={};
@@ -187,8 +191,7 @@ export async function prepare(root, options = {}) {
       if(!sourceFontStyles[key])sourceFontStyles[key]=[];
       if(!sourceFontStyles[key].includes(font.style))sourceFontStyles[key].push(font.style);
     }
-    const sourceEvidence = { pages, decorations, fonts:sourceFontsList, fontInventory: fontInfo.stdout, imageInventory: imageInfo.stdout, wordAndLineBounds: boxes.stdout, typographyXml:typography.stdout };
-    await writeJson(path.join(directory, 'source-evidence.json'), sourceEvidence);
+    const sourceEvidence = { pages, decorations, fonts:sourceFontsList, fontInventory: fontInfo.stdout, imageInventory: imageInfo.stdout, wordAndLineBounds: boxes.stdout, typographyXml:typography.stdout };    await writeJson(path.join(directory, 'source-evidence.json'), sourceEvidence);
     artifacts.push({ file: path.join(directory, 'source-evidence.json'), sha256: await fileHash(path.join(directory, 'source-evidence.json')) });
     browser = await openBrowser(runtime.tools.chromium);
     const pdfGeometry=await browser.evaluate(`(${parsePdfGeometry.toString()})(${JSON.stringify(boxes.stdout)})`);
@@ -202,6 +205,7 @@ export async function prepare(root, options = {}) {
     sourceType.tableFragments=decorations.tables;
     let english;
     let englishPresentation=null;
+    let englishTemplate=null;
     const unresolved = [];
     const expectedCurrent = new Map(initialInputs.map(i => [i.file, i.sha256]));
     async function backupOriginal(item) {
@@ -244,6 +248,7 @@ export async function prepare(root, options = {}) {
       if(cssBefore && !(await fs.readFile(cssFile,'utf8')).startsWith('/* validateBook managed presentation;'))throw Error('Managed stylesheet destination is occupied by unrelated content');
       const identityChanges=structure&&options.restoreSourcePublisher?await browser.evaluate(`(${restorePublisherIdentity.toString()})(${JSON.stringify(pages)})`):[];
       const applied=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify(actions)})`);
+      applied.changes.push(...await browser.evaluate(`(${normaliseTables.toString()})()`));
       applied.changes.push(...identityChanges);
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)})`));
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreReferenceBoundaries.toString()})(${JSON.stringify(readingPages(pages))})`));
@@ -252,7 +257,6 @@ export async function prepare(root, options = {}) {
       // Converter output must be normalised in every batch: pagination, tables
       // and image presentation all depend on the canonical page classes.
       if(item.language==='en'&&(structure||converterEdition))applied.changes.push(...await browser.evaluate(`(${normaliseConverterHtml.toString()})()`));
-      if(structure&&item.language!=='en')applied.changes.push(...await browser.evaluate(`(${removeEmptyTranslatedPages.toString()})()`));
       let listRepair=null;
       if(structure&&item.language==='en'&&decorations?.lists)listRepair=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)},true)`);
       const result = {changes:[...applied.changes]};
@@ -276,67 +280,50 @@ export async function prepare(root, options = {}) {
           result.changes.push({kind:'pagination',before:'page anchors in continuous text',after:paginated});
           delete result.changes.at(-1).after.html;
           result.changes.push({kind:'source_page_presentation',margins:pagePresentation.margins,contents:contents.mapping,unmatched:contents.unmatched});
-        }else{
-          // A translation is only "already paginated" when its page count matches
-          // the canonical English edition. An older or partial pagination is
-          // rebuilt from the aligned English page boundaries.
-          const currentPages=await browser.evaluate('document.querySelectorAll(".pdf-source-page[data-reader-page]").length');
-          const alreadyPaginated=currentPages===pages.length;
-          if(!alreadyPaginated){
-            // Translations map the canonical English page anchors; English blank
-            // pages are not reproduced in the translated edition.
-            const translatedPages=await browser.evaluate(`(${paginateDocument.toString()})(${JSON.stringify({blankPages:[],origin:'translation',repaginateExisting:true})})`);
-            result.changes.push({kind:'translated_pagination',before:'translated page anchors in continuous text',after:{pages:translatedPages.pages,blankPages:translatedPages.blankPages,origin:translatedPages.origin,textPreserved:translatedPages.textPreserved}});
-          }
-          if(contents.changes.length||contents.unmatched.length)result.changes.push({kind:'translated_contents_presentation',contents:contents.mapping,unmatched:contents.unmatched});
         }
       }
       if(item.language==='en'&&(mode==='all'||mode==='display'))result.changes.push(...await browser.evaluate(`(${repairDisplayPages.toString()})(${JSON.stringify(displayPages)},${JSON.stringify(Object.keys(sourceFontMap).length?sourceFontMap:presentation.sourceDisplayFamily)},${presentation.defaultSizePx*(presentation.scale||1)})`));
+      result.changes.push(...await browser.evaluate(`(${removeEmptyContentsPages.toString()})()`));
+      result.changes.push(...await browser.evaluate(`(${mergeSplitTables.toString()})()`));
       result.changes.push(...await browser.evaluate(`(${normaliseCoverPage.toString()})()`));
       result.changes.push(...await browser.evaluate(`(${repairPageShells.toString()})()`));
       const previousCssRaw=cssBefore?await fs.readFile(cssFile,'utf8'):null;
-      const previousCss=item.language!=='en'&&previousCssRaw?previousCssRaw.replace(/font-family:\s*("[^"]*pdf-font[^"]*"|pdf-font[^;,}\n]+)\s*,\s*/g,'font-family: '):previousCssRaw;
+      const previousCss=previousCssRaw;
       const scaleContract=item.language==='en'?presentation:(englishPresentation||presentation);
-      const consolidated=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',glyphSafe:item.language!=='en',previousCss,importedFontRatio:scaleContract?.articleContract?.fontRatio,standaloneSizeRem:scaleContract?.standaloneSizeRem}])})`);
+      const consolidated=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'consolidate_styles',href:'validatebook-layout.css',previousCss,importedFontRatio:scaleContract?.articleContract?.fontRatio,standaloneSizeRem:scaleContract?.standaloneSizeRem}])})`);
       result.html=consolidated.html;
       result.html=result.html.replace(/<style data-validatebook-candidate-pages="">[\s\S]*?<\/style>/g,'');
       result.stylesheet=consolidated.stylesheet;
-      // The English PDF subset faces do not cover every target-language glyph.
-      // Keep the fallback face as the primary family for translated text so
-      // diacritics never render as mixed or missing glyphs.
-      if(item.language!=='en'&&result.stylesheet?.css)result.stylesheet.css=result.stylesheet.css.replace(/font-family:\s*("[^"]*pdf-font[^"]*"|pdf-font[^;,}\n]+)\s*,\s*/g,'font-family: ');
       if(fontRules)result.stylesheet.css=result.stylesheet.css.replace('/* validateBook managed presentation; generated from verified declarations */','/* validateBook managed presentation; generated from verified declarations */\n'+fontRules);
       result.changes.push(...consolidated.changes);
       if(pagePresentation&&item.language==='en')result.stylesheet.css=result.stylesheet.css.split('/* validateBook source pagination */')[0]+paginationCss(pagePresentation);
       // Recognize nested covers. Translations keep their own breaks and gaps,
       // with the same full-page minimum proportions as the source edition.
       result.stylesheet.css=result.stylesheet.css.replaceAll(':has(> figure#page_1)',':has(figure#page_1)').replaceAll('.pdf-source-page > figure#page_1','.pdf-source-page figure#page_1');
-      if(item.language!=='en'&&pagePresentation){
-        const marker='/* validateBook translated flow */';
-        result.stylesheet.css=result.stylesheet.css.split(marker)[0]+translatedPaginationCss(pagePresentation);
-      }
-      // A translation is a different source edition; its unmatched blocks would
-      // otherwise keep the source export's own fonts. Inherit the English base
-      // body and heading families so both editions read identically.
-      if(item.language!=='en'&&english){
-        const mode=list=>{const counts=new Map();for(const value of list)counts.set(value,(counts.get(value)||0)+1);return [...counts].sort((a,b)=>b[1]-a[1])[0]?.[0];};
-        const body=mode(english.records.filter(r=>r.tag==='p'&&r.font?.family).map(r=>r.font.family));
-        const head=mode(english.records.filter(r=>/^h[1-6]$/.test(r.tag)&&r.font?.family).map(r=>r.font.family));
-        let inherited='';
-        if(body)inherited+=`[data-validatebook-root] > .pdf-source-page :is(p,li){font-family:${glyphSafeFamily(body)}!important}`;
-        if(head)inherited+=`\n[data-validatebook-root] > .pdf-source-page :is(h1,h2,h3,h4,h5,h6){font-family:${glyphSafeFamily(head)}!important}`;
-        if(inherited)result.stylesheet.css+='\n'+inherited;
-        // Residual PDF subset faces would garble translated diacritics; the
-        // glyph-safe English body family replaces them everywhere.
-        result.stylesheet.css=result.stylesheet.css.replace(/@font-face\s*\{[^}]*\}/g,'');
-        if(body)result.stylesheet.css=result.stylesheet.css.replace(/font-family:\s*("?pdf-font-[^",;}\n]+"?)(\s*,\s*[^;}]+)?/g,`font-family: ${glyphSafeFamily(body)}`);
-      }
+
       if(presentation.geometryCss)result.stylesheet.css+='\n'+presentation.geometryCss;
       // Converter subset faces are unusable (broken cmap); drop any @font-face
       // and render every surviving pdf-font stack from the real family.
       if(converterEdition){
-        result.stylesheet.css=result.stylesheet.css.replace(/@font-face\s*\{[^}]*\}/g,'');
-        result.stylesheet.css=result.stylesheet.css.replace(/font-family:\s*("?pdf-font-[^",;}\n]+"?)(\s*,\s*[^;}]+)?/g,(match,family)=>`font-family: ${sourceFontMap[String(family).replace(/"/g,'')]||'Georgia, serif'}`);
+        if(converterEdition)result.stylesheet.css=result.stylesheet.css.replace(/font-family:\s*("?pdf-font-[^",;}\n]+"?)(\s*,\s*[^;}]+)?/g,(match,family)=>`font-family: ${sourceFontMap[String(family).replace(/"/g,'')]||'Georgia, serif'}`);
+        // Keep the converter's real @font-face (the PDF's embedded fonts) and its
+        // structural list/table rules, scoped to the managed root. A rebuilt
+        // translation reuses the English fonts through ../en/assets.
+        const fontDir=converterEdition?item.file:selection.documents[0].file;
+        const fontUrlBase=converterEdition?'assets/fonts/':'../en/assets/fonts/';
+        const converterCss=await fs.readFile(path.join(path.dirname(fontDir),'assets','styles.css'),'utf8').catch(()=>null);
+        if(converterCss){
+          const faces=[...converterCss.matchAll(/@font-face\s*\{[^}]*\}/g)].map(match=>match[0].replace(/url\((['"]?)fonts\//g,(all,quote)=>`url(${quote}${fontUrlBase}`));
+          result.stylesheet.css=result.stylesheet.css.replace(/@font-face\s*\{[^}]*\}/g,'');
+          if(faces.length){
+            const marker='/* validateBook managed presentation; generated from verified declarations */';
+            const block=faces.join('\n');
+            result.stylesheet.css=result.stylesheet.css.includes(marker)?result.stylesheet.css.replace(marker,marker+'\n'+block):marker+'\n'+block+'\n'+result.stylesheet.css;
+          }
+          const kept=[...converterCss.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(match=>/\.(toc-|contents-list|table-scroll)/.test(match[1]))
+            .map(match=>match[1].split(',').map(selector=>`[data-validatebook-root] ${selector.trim()}`).join(', ')+` {${match[2]}}`);
+          if(kept.length)result.stylesheet.css+='\n/* validateBook converter structure */\n'+kept.join('\n');
+        }
       }
       if (!result.changes.length) return;
       if(result.html===await fs.readFile(item.file,'utf8')&&cssBefore&&result.stylesheet.css===await fs.readFile(cssFile,'utf8'))return false;
@@ -370,6 +357,66 @@ export async function prepare(root, options = {}) {
       return true;
     }
     for (const item of selection.documents) {
+      if(item.language!=='en'){
+        await navigate(browser,item.file);
+        const existing=await fs.readFile(item.file,'utf8');
+        const presentation=await readerPresentation(await measure(browser,item.file),item.file);
+        resourceInputs.push(...presentation.inputs);
+        await navigate(browser,item.file);
+        const result=englishTemplate?await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template:englishTemplate,language:item.language,apply:!!options.autoCorrect})})`):{issues:[{code:'translation_template_unavailable',detail:'The English semantic template is unavailable.'}]};
+        const templateFindings=result.issues.map(f=>issue(item.language,f.code,'semantic page '+(f.page||'unknown'),f.detail||'English and translated structure differ.',f));
+        const blockingFindings=templateFindings.filter(f=>f.severity==='error'&&f.blocking!==false);
+        const findings=[...templateFindings];
+        const cssFile=path.join(path.dirname(item.file),'validatebook-layout.css');
+        const cssBefore=await fs.readFile(cssFile,'utf8').catch(error=>{if(error.code==='ENOENT')return null;throw error;});
+        const cssChanged=result.expectedCss!==undefined&&result.expectedCss!==cssBefore;
+        if(!blockingFindings.length&&(result.changed||cssChanged)){
+          if(!options.autoCorrect)findings.push(issue(item.language,'translation_template_difference','document','Existing translation does not use the canonical English semantic template.'));
+          else if(unresolved.some(f=>f.language==='en'&&f.severity==='error'&&templateSourceBlockers.has(f.category)))findings.push(issue(item.language,'translation_template_source_invalid','document','Resolve structural English validation errors before applying its template.'));
+          else {
+            const candidate={html:result.html,stylesheet:{css:result.expectedCss}};
+            try {
+              await guardInstallation(browser,item,candidate,presentation,null);
+              if(await fileHash(item.file)!==expectedCurrent.get(item.file))throw Error('Concurrent translation change');
+              if(cssBefore!==null&&!cssBefore.startsWith('/* validateBook managed presentation;'))throw Error('Managed stylesheet destination is occupied by unrelated content');
+              if(cssBefore!==null&&await fs.readFile(cssFile,'utf8')!==cssBefore)throw Error('Concurrent translation stylesheet change');
+              if(cssBefore===null&&await exists(cssFile))throw Error('Translation stylesheet appeared during correction');
+              await backupOriginal(item);
+              if(cssBefore!==null&&!backups.some(b=>b.file===cssFile)){
+                const backup=path.join(directory,'recovery',item.language,'validatebook-layout.css');
+                await fs.copyFile(cssFile,backup,fs.constants.COPYFILE_EXCL);
+                backups.push({file:cssFile,backup,sha256:hash(cssBefore)});
+              }
+              const suffix='.validatebook-'+hash(directory).slice(0,10)+'.tmp';
+              try {
+                await fs.writeFile(cssFile+suffix,result.expectedCss,{flag:'wx'});
+                await fs.writeFile(item.file+suffix,result.html,{flag:'wx'});
+                await fs.rename(cssFile+suffix,cssFile);await fs.rename(item.file+suffix,item.file);
+                await navigate(browser,item.file);
+                const installed=await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template:englishTemplate,language:item.language})})`);
+                if(installed.issues.some(f=>(f.severity||'error')==='error'&&f.blocking!==false)||installed.changed||installed.expectedCss!==result.expectedCss)throw Error('Installed semantic template failed repeat validation');
+              } catch(error){await fs.writeFile(item.file,existing);if(cssBefore===null)await fs.rm(cssFile,{force:true});else await fs.writeFile(cssFile,cssBefore);throw error;}
+              finally {await fs.rm(cssFile+suffix,{force:true});await fs.rm(item.file+suffix,{force:true});}
+              expectedCurrent.set(item.file,await fileHash(item.file));expectedCurrent.set(cssFile,await fileHash(cssFile));
+              corrections.push({kind:'semantic_translation_template',file:item.file,language:item.language,pages:result.pages,slots:result.slots,textPreserved:true});
+              await writeJson(path.join(directory,'recovery.json'),{backups,corrections});
+            } catch(error){if(!error.findings)throw error;findings.push(issue(item.language,'translation_template_rejected','document',error.message,{findings:error.findings}));}
+          }
+        }
+        const final=await measure(browser,item.file,presentation);
+        findings.push(...final.layouts.flatMap(l=>checkDisplay(l,item.language)));
+        for(const sample of final.platformFonts)if(!sample.fonts.some(font=>font.glyphCount>0))findings.push(issue(item.language,'unrendered_text',sample.selector,'No platform font reports rendered glyphs.'));
+        if(presentation.articleContract){
+          const article=await measure(browser,item.file,{importedArticle:presentation.articleContract});
+          findings.push(...article.layouts.flatMap(l=>checkDisplay(l,item.language)));
+          const articleFile=path.join(directory,item.language+'-article-layout.json');await writeJson(articleFile,article);artifacts.push({file:articleFile,sha256:await fileHash(articleFile)});
+        }
+        const assets=await collectAssets(final);resourceInputs.push(...assets.inputs);findings.push(...assets.findings);
+        unresolved.push(...findings);
+        const evidence=path.join(directory,item.language+'-layout.json');await writeJson(evidence,{...final,semanticTemplate:{pages:result.pages,slots:result.slots,mapped:result.mapped,meaningVerified:false},findings});artifacts.push({file:evidence,sha256:await fileHash(evidence)});
+        measurements.push({...item,evidence,blocks:final.records.length,viewports:final.layouts.map(l=>l.width)});
+        continue;
+      }
       const standalone = await measure(browser, item.file);
       let presentation=await readerPresentation(standalone,item.file);
       const fidelityMarker=options.autoCorrect&&presentation.kind==='reader-default'&&!standalone.presentation.fidelity;
@@ -400,12 +447,8 @@ export async function prepare(root, options = {}) {
       initialFindings.push(...typeComparison.findings);
       if(item.language==='en'&&decorations?.lists){await navigate(browser,item.file);const listCheck=await browser.evaluate(`(${recoverLists.toString()})(${JSON.stringify(decorations.lists)})`);initialFindings.push(...listCheck.findings.map(f=>issue('en',f.kind,'page '+f.page,'PDF list structure differs from HTML.',f)));}
       const beforeDisplay = validateVisual?before.layouts.flatMap(l => checkDisplay(l, item.language)):[];
-      const structure = english ? compareStructure(english, before, item.language) : null;
+      const structure = null;
       const translationScalePresentation=item.language==='en'?presentation:(englishPresentation||presentation);
-      const canonicalTranslation=english?canonicalTranslationActions(english,before,item.language,translationScalePresentation.defaultSizePx*(translationScalePresentation.scale||1),structure?.alignment):null;
-      const translationPresentationActions=[
-        ...(canonicalTranslation?.actions||[])
-      ];
       const repairShells=beforeDisplay.some(f=>['page_spacing_ownership_conflict','reader_root_incomplete'].includes(f.category));
       if(validateVisual&&english)initialFindings.push(...compareImageStyles(english,before,item.language).findings);
       const tableProfile=english?translatedTables(decorations.tables,english,before,structure):decorations.tables;
@@ -423,7 +466,6 @@ export async function prepare(root, options = {}) {
         if(!english||!unresolved.some(f=>f.language==='en'&&f.severity==='error'))actions.push(...tableComparison.actions);
         if(borderComparison)actions.push(...decorationActions(borderComparison));
         if(item.language==='en')actions.unshift(...typographyActions(sourceType,before,typeComparison,{defaultSizePx:presentation.defaultSizePx*(presentation.scale||1),justifyPolicy:options.wordSpacing||'source',masterTypography:typeComparison,sourceFontMap,sourceFontWeights,sourceFontStyles,sourceFontFaces}));
-        actions.push(...translationPresentationActions);
         if(item.language==='en'&&presentation.articleContract){
           const imported=await measure(browser,item.file,{importedArticle:presentation.articleContract});
           presentation.geometryCss=await browser.evaluate(`(${readerGeometryCss.toString()})(${JSON.stringify(await fs.readFile(fileURLToPath(presentation.articleContract.readerCss),'utf8'))})`);
@@ -431,58 +473,6 @@ export async function prepare(root, options = {}) {
         }
         if (before.language.toLowerCase() !== item.language.toLowerCase()) actions.unshift({ kind: 'language_tag', language: item.language, safeTranslationStyle: item.language !== 'en' });
         if (beforeDisplay.some(f => ['horizontal_overflow', 'outside_content'].includes(f.category))) actions.push({ kind: 'stylesheet', css: responsiveCss });
-        if(english && item.language !== 'en'){
-          actions.push(...compareImageStyles(english,before,item.language).actions.map(action=>({...action,safeTranslationStyle:true})));
-          const inherited = await sheets(browser, selection.documents[0].file, item.file);
-          const bodyAttributes = await browser.evaluate('Object.fromEntries(["class","data-pdf-fidelity"].map(k=>[k,document.body.getAttribute(k)]).filter(p=>p[1]))');
-          actions.push({ kind: 'inherit_styles', sheets: inherited, bodyAttributes, safeTranslationStyle: true });
-          for (const match of structure.matches) {
-            const sourceBlock=english.records.find(r=>r.selector===match.source);
-            const sourceScale=Number(sourceBlock?.pageScale)>0?Number(sourceBlock.pageScale):1;
-            const sourceSize=parseFloat(sourceBlock?.font?.size)/sourceScale;
-            const sourceLeading=parseFloat(sourceBlock?.style?.lineHeight)/sourceScale;
-            if(sourceBlock?.tag==='p'&&Number.isFinite(sourceSize)&&sourceSize>0){
-              const properties={'font-size':`calc(var(--reader-font-size, var(--standalone-size, ${translationScalePresentation.defaultSizePx}px)) * ${sourceSize/translationScalePresentation.defaultSizePx} * var(--validatebook-page-scale, 1))`};if(sourceBlock?.font?.family)properties['font-family']=glyphSafeFamily(sourceBlock.font.family);
-              if(Number.isFinite(sourceLeading)&&sourceLeading>0)properties['line-height']=String(sourceLeading/sourceSize);
-              actions.push({kind:'presentation',selector:match.target,properties,safeTranslationStyle:true});
-            }
-          }
-          // A translation that was not paginated from the PDF has no page anchors.
-          // Map the canonical English page boundaries onto the aligned translated
-          // blocks so the English page layout can be applied to the existing text.
-          // The browser is on the English edition after inheriting its sheets;
-          // read the translation file to count its own page containers.
-          const translationPagesText=await fs.readFile(item.file,'utf8');
-          const currentTranslationPages=(translationPagesText.match(/data-reader-page="/g)||[]).length;
-          const translationHasAnchors=currentTranslationPages===pages.length;
-          if(!translationHasAnchors){
-            const firstByPage=new Map();
-            for(const pair of structure.alignment?.allMatches||[]){
-              const page=pair.source?.page,selector=pair.target?.selector;
-              if(page==null||!selector)continue;
-              if(!firstByPage.has(String(page)))firstByPage.set(String(page),selector);
-            }
-            // Pages whose content is only a table, an image or front matter have no
-            // aligned prose unit. Fall back to the translated block at the same
-            // ordinal among prose, table or image blocks so the page layout still
-            // mirrors the English edition.
-            const enProse=english.records.filter(r=>/^(p|h[1-6])$/.test(r.tag)&&r.text?.trim());
-            const roProse=before.records.filter(r=>/^(p|h[1-6])$/.test(r.tag)&&r.text?.trim());
-            const enImgs=english.records.filter(r=>r.tag==='img'),roImgs=before.records.filter(r=>r.tag==='img');
-            const enTables=english.records.filter(r=>r.tag==='table'),roTables=before.records.filter(r=>r.tag==='table');
-            for(let p=1;p<=pages.length;p++){
-              if(firstByPage.has(String(p)))continue;
-              const prose=enProse.find(r=>String(r.page)===String(p));
-              if(prose){const ro=roProse[Math.min(enProse.indexOf(prose),roProse.length-1)];if(ro){firstByPage.set(String(p),ro.selector);continue;}}
-              const table=enTables.find(r=>String(r.page)===String(p));
-              if(table){const ro=roTables[Math.min(enTables.indexOf(table),roTables.length-1)];if(ro){firstByPage.set(String(p),ro.selector);continue;}}
-              const image=enImgs.find(r=>String(r.page)===String(p));
-              if(image){const ro=roImgs[Math.min(enImgs.indexOf(image),roImgs.length-1)];if(ro)firstByPage.set(String(p),ro.selector);}
-            }
-            const anchors=[...firstByPage].map(([page,selector])=>({page:Number(page),selector})).sort((a,b)=>a.page-b.page);
-            if(anchors.length)actions.push({kind:'translation_page_anchors',anchors,rebuild:true,safeTranslationStyle:true});
-          }
-        }
         // English presentation is the master. Propagate only when its local layout has no unresolved errors.
         if (english && !unresolved.some(f => f.language === 'en' && f.severity === 'error')) {
           actions.push(...structure.findings.filter(f => f.repair).map(f => f.repair));
@@ -526,7 +516,6 @@ export async function prepare(root, options = {}) {
       const displayFindings=layouts=>item.language==='en'?checkDisplayPages(displayPages,layouts,sourceFontMap).map(f=>issue('en','source_display_page_difference','page '+f.page,f.detail,f)):[];
       const assets = await collectAssets(final); resourceInputs.push(...assets.inputs);
       let findings = validateVisual?[...listFindings,...final.typography.findings,...final.layouts.flatMap(l=>checkDisplay(l,item.language)),...assets.findings]:[...assets.findings];
-      if(canonicalTranslation)findings.push(...canonicalTranslation.findings);
       if(validateVisual)for(const layout of final.layouts.slice(1))findings.push(...compareTypography(sourceType,{...layout,platformFonts:final.platformFonts},item.language,{sourceFontMap}).findings);
       if(validateVisual)findings.push(...final.layouts.flatMap(l=>compareTables(tableProfile,{...l,platformFonts:final.platformFonts},tableOptions).findings));
       findings.push(...displayFindings(final.layouts));
@@ -576,11 +565,16 @@ export async function prepare(root, options = {}) {
         if(sourceImages.length && !htmlImages.length) findings.push(issue('en','missing_source_images','document',`PDF lists ${sourceImages.length} images but HTML contains none.`));
         else if(sourceImages.length !== htmlImages.length) findings.push(issue('en','image_inventory_difference','document',`PDF image inventory ${sourceImages.length}; HTML images ${htmlImages.length}. PDF masks/tiling and HTML reuse could not be aligned deterministically.`,{severity:'warning'}));
         english = final;
-      } else findings.push(...compareStructure(english, final, item.language).findings);
+      }
       const unique = new Map(findings.map(f => [f.id, f])); findings = [...unique.values()];
       unresolved.push(...findings);
       const evidence = path.join(directory, item.language + '-layout.json'); await writeJson(evidence, final); artifacts.push({ file: evidence, sha256: await fileHash(evidence) });
       measurements.push({ ...item, evidence, blocks: final.records.length, viewports: final.layouts.map(l => l.width) });
+      if(item.language==='en'){
+        await browser.send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+        await navigate(browser,item.file);
+        englishTemplate=await resolveTemplateFonts(await browser.evaluate(`(${semanticTemplate.toString()})()`));
+      }
     }
     await verifyInputs([...expectedCurrent].map(([file, sha256]) => ({ file, sha256 })));
     await verifyInputs(resourceInputs);

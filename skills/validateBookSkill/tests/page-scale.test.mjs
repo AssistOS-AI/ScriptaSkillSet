@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { pageScale, compareTypography, typographyActions } from '../src/typography.mjs';
-import { paginationCss,translatedPaginationCss,pageHeightDifferences } from '../src/pagination.mjs';
+import { paginationCss,pageHeightDifferences } from '../src/pagination.mjs';
 import { inspectLayout } from '../src/layout-checks.mjs';
 import { openBrowser } from '../src/browser.mjs';
 import { navigate, applyDomRepairs } from '../src/layout-browser.mjs';
@@ -17,22 +17,6 @@ test('page height validation detects collapsed pages and accepts longer translat
  assert.deepEqual(pageHeightDifferences(layout,geometry).map(p=>p.page),[1]);
 });
 
-test('translated cover, title, copyright and final pages retain full height while long prose grows',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
- const dir=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-translated-pages-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
- const file=path.join(dir,'book.html'),geometry={width:432,height:648,margins:{top:45,right:43,bottom:50,left:52}};
- const paragraphs=['Coperta','O BALANȚĂ DE FIER ȘI SARE','Drepturi de autor © [2026] Axiologic Research','O lucrare de ficțiune speculativă.','Textul tradus poate ocupa mai mult spațiu. '.repeat(400)];
- await fs.writeFile(file,'<!doctype html><html lang="ro"><head><style>body{margin:0}p{font-size:16px;line-height:24px}'+paginationCss(geometry)+'/* validateBook translated flow */\n[data-validatebook-root] > .pdf-source-page{min-height:0}</style></head><body data-validatebook-root>'+paragraphs.map((p,i)=>'<section class="pdf-source-page" data-reader-page="'+(i+1)+'"><p>'+p+'</p></section>').join('')+'</body></html>');
- const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());await navigate(browser,file);
- assert((await browser.evaluate(`(${inspectLayout.toString()})()`)).pagination.pages[0].height<500);
- await browser.evaluate('document.querySelector("style").textContent+='+JSON.stringify(translatedPaginationCss(geometry)));
- for(const width of [864,576,320]){
-  await browser.send('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:false});
-  const layout=await browser.evaluate(`(${inspectLayout.toString()})()`);
-  assert.deepEqual(pageHeightDifferences(layout,geometry),[]);
-  assert(layout.pagination.pages[4].height>width*1.5);
-  assert.deepEqual(layout.records.map(r=>r.text),paragraphs.map(p=>p.trim()));
- }
-});
 test('page scale uses physical source width and preserves a readable mobile floor',()=>{
   assert.equal(pageScale({pageWidth:864},432),1.5);
   assert.equal(pageScale({pageWidth:320},432),1);

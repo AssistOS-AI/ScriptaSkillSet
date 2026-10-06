@@ -11,8 +11,9 @@ import { buildStyles } from './styles.mjs';
 import { recoverSourceHeading, sourceDisplayGeometry } from './source-headings.mjs';
 import { applyParagraphBorders } from './decorations.mjs';
 import { sourceLists, recoverSourceLists } from './lists.mjs';
+import { applyFixedLayout, fixedStyles } from './fixed-layout.mjs';
 
-export function renderHtml(input, evidence, { title, language, content_pages = [], originalRoot = '.' }) {
+export function renderHtml(input, evidence, { title, language, content_pages = [], originalRoot = '.', layout = 'reflow' }) {
   let $ = parseHtml(input);
   if (!$('html').length) $ = parseHtml(`<!doctype html><html><head></head><body>${input}</body></html>`);
   if (!$('head').length) $('html').prepend('<head></head>');
@@ -31,7 +32,7 @@ export function renderHtml(input, evidence, { title, language, content_pages = [
     if (path !== '..' && !path.startsWith('../') && !isAbsolute(path)) $(image).attr('src', path.split('\\').join('/'));
   });
   markImagePages($, main, evidence);
-  readerBridge($, main, evidence.typography.body_size_pt);
+  if (layout !== 'fixed') readerBridge($, main, evidence.typography.body_size_pt);
   const geometry = documentGeometry(evidence);
   for (const page of evidence.pages) {
     const section = $(main).find(`section[data-source-page="${page.page_number}"]`).first()[0];
@@ -53,6 +54,16 @@ export function renderHtml(input, evidence, { title, language, content_pages = [
     applyInline($, page, aligned);
     applyParagraphBorders($, section, page, aligned);
   }
+  // Only lists backed by source evidence (recovered above with class
+  // "source-list") are real. Docling's own list classification turns hyphen-led
+  // dialogue into bullets, so demote every list without source evidence back to
+  // paragraphs, keeping the text intact.
+  $('ul,ol').each((_, list) => {
+    if ($(list).hasClass('source-list')) return;
+    const items = $(list).children('li').toArray();
+    if (!items.length) return;
+    $(list).replaceWith(items.map(item => $('<p></p>').html($(item).html())));
+  });
   repairContinuedHeaders($, main); mergeLinks($); normalizeContents($);
   $('head').append('<link rel="stylesheet" href="assets/styles.css">');
   $('table').each((_, table) => { if (!$(table.parent).hasClass('table-scroll')) $(table).wrap('<div class="table-scroll"></div>'); });
@@ -63,7 +74,8 @@ export function renderHtml(input, evidence, { title, language, content_pages = [
     $(image).attr({ loading: 'lazy', decoding: 'async' });
   });
   $('a[href]').each((_, anchor) => { if (/^https?:\/\//u.test(anchor.attribs.href)) $(anchor).attr('rel', 'noopener noreferrer'); });
-  return { html: `<!doctype html>\n${$.html().replace(/<!doctype[^>]*>\s*/ig, '')}`, css: buildStyles(evidence) };
+  if (layout === 'fixed') applyFixedLayout($, main, evidence);
+  return { html: `<!doctype html>\n${$.html().replace(/<!doctype[^>]*>\s*/ig, '')}`, css: buildStyles(evidence) + (layout === 'fixed' ? fixedStyles : '') };
 }
 
 export async function enhanceHtml(htmlPath, stylesheetPath, evidence, options) {

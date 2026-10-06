@@ -62,7 +62,7 @@ export function inspectLayout() {
           while(occupied.has(r+','+col))col++;
           const start=col;for(let y=r;y<r+c.rowSpan;y++)for(let x=col;x<col+c.colSpan;x++)occupied.add(y+','+x);col+=c.colSpan;
           const s=getComputedStyle(c),box=c.getBoundingClientRect();
-          return {selector:selector(c),row:r,col:start,rowspan:c.rowSpan,colspan:c.colSpan,text:c.textContent,width:box.width,verticalAlign:s.verticalAlign,
+          return {selector:selector(c),row:r,col:start,rowspan:c.rowSpan,colspan:c.colSpan,text:c.textContent,styleId:c.getAttribute('data-vb-style')||null,width:box.width,verticalAlign:s.verticalAlign,
             background:s.backgroundColor,color:s.color,font:{family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,style:s.fontStyle},lineHeight:s.lineHeight,textAlign:s.textAlign,indent:parseFloat(s.textIndent),padding:[s.paddingTop,s.paddingRight,s.paddingBottom,s.paddingLeft].map(parseFloat),
             borders:Object.fromEntries(['Top','Right','Bottom','Left'].map(side=>[side.toLowerCase(),{width:parseFloat(s['border'+side+'Width']),style:s['border'+side+'Style'],color:s['border'+side+'Color']}]))};
         });});
@@ -149,7 +149,7 @@ export function checkDisplay(document, language) {
   if (document.language.toLowerCase() !== language.toLowerCase()) findings.push(issue(language, 'language_tag', 'html', document.language, { repair: { kind: 'language_tag', language } }));
   for (const id of document.duplicates) findings.push(issue(language, 'duplicate_id', id, 'Anchor is not unique; automatic renaming could break references.'));
   for (const href of document.brokenLinks) findings.push(issue(language, 'broken_anchor', href, 'Contents/reference destination does not exist.'));
-  if (document.scrollWidth > document.width + 2) findings.push(issue(language, 'horizontal_overflow', 'document', `Content width ${document.scrollWidth}, viewport ${document.width}.`, { overflowing: document.overflowing }));
+  if (document.scrollWidth > document.width + 2) findings.push(issue(language, 'horizontal_overflow', 'document', `Content width ${document.scrollWidth}, viewport ${document.width}.`, { overflowing: document.overflowing, scrollWidth: document.scrollWidth, viewportWidth: document.width }));
   for (const selector of document.conversionNotices || []) findings.push(issue(language,'generated_conversion_notice',selector,'An automatically generated PDF conversion notice is visible book content and must not be delivered.',{repair:{kind:'remove_conversion_notice',selector}}));
   for (const r of document.records) {
     for (const type of ['hidden', 'clipped', 'outside', 'broken']) if (r[type]) findings.push(issue(language, type === 'broken' ? 'broken_image' : type + '_content', r.selector, r.text.slice(0, 160) || r.src || r.tag, { width: document.width }));
@@ -223,185 +223,6 @@ export function compareEnglish(pages, document) {
     }
   }
   return { findings, coverage };
-}
-
-const translationBlock = r => /^(p|h[1-6]|li|blockquote|figcaption)$/.test(r.tag)&&r.text?.trim()&&r.translationPlaceholder!=='review';
-const structuralKey = r => r.sourceId ? 'source:' + r.sourceId : r.id && !/^page_\d+$/.test(r.id) ? 'id:' + r.id : null;
-
-export function sentenceCount(text, language='en') {
-  const value=String(text||'').trim();if(!value)return 0;
-  try{return [...new Intl.Segmenter(language,{granularity:'sentence'}).segment(value)].filter(part=>/[\p{L}\p{N}]/u.test(part.segment)).length||1;}
-  catch{return value.split(/(?<=[.!?…])\s+/u).filter(part=>/[\p{L}\p{N}]/u.test(part)).length||1;}
-}
-
-export function sentenceSegments(text, language='en') {
-  const value=String(text||'').trim();if(!value)return [];
-  try{return [...new Intl.Segmenter(language,{granularity:'sentence'}).segment(value)].map(part=>part.segment.trim()).filter(part=>/[\p{L}\p{N}]/u.test(part));}
-  catch{return value.split(/(?<=[.!?…])\s+/u).map(part=>part.trim()).filter(part=>/[\p{L}\p{N}]/u.test(part));}
-}
-
-// Sentence units keep every character of the source text: punctuation-only
-// fragments are attached to the surrounding sentence unit instead of dropped,
-// so a sentence-boundary reflow never loses prose.
-export function sentenceUnits(text, language='en') {
-  const value=String(text||'').trim();if(!value)return [];
-  let parts;
-  try{parts=[...new Intl.Segmenter(language,{granularity:'sentence'}).segment(value)].map(part=>part.segment);}
-  catch{parts=value.split(/(?<=[.!?…])\s+/u);}
-  const units=[];let current='';
-  for(const part of parts){current+=part;if(/[\p{L}\p{N}]/u.test(part)){const unit=current.trim();if(unit)units.push(unit);current='';}}
-  if(current.trim()){if(units.length)units[units.length-1]+=current.trim();else units.push(current.trim());}
-  return units;
-}
-
-const flowTag=tag=>/^(p|h[1-6]|blockquote)$/.test(tag);
-// Only prose-to-prose and matching list/figure roles may align; translations
-// keep their own pagination, so alignment is by document order and sentence
-// count, never by page number.
-const blockTagCost=(source,target)=>{
-  if(source.tag===target.tag)return 0;
-  if(flowTag(source.tag)&&flowTag(target.tag))return .5;
-  return Infinity;
-};
-const translatedBlockShape=(record,language)=>({selector:record.selector,tag:record.tag,classes:record.classes,sentences:sentenceSegments(record.text,language),text:record.text});
-
-export function alignTranslationBlocks(english,target,language) {
-  const sources=english.records.filter(translationBlock),targets=target.records.filter(translationBlock);
-  const n=sources.length,m=targets.length;
-  const sourceSentences=sources.map(record=>sentenceCount(record.text,'en'));
-  const targetSentences=targets.map(record=>sentenceCount(record.text,language));
-  const width=m+1,at=(i,j)=>i*width+j;
-  const cost=new Float64Array((n+1)*width).fill(Infinity);
-  const operation=new Uint8Array((n+1)*width),span=new Uint8Array((n+1)*width);
-  cost[0]=0;
-  // A skip costs more than a small sentence-count difference, so a misplaced
-  // or partial unit stays identifiable instead of being dropped as missing.
-  const skipCost=2.5,splitStep=.1,mergeStep=1,maxGroup=4;
-  for(let i=0;i<=n;i++)for(let j=0;j<=m;j++){
-    const base=cost[at(i,j)];if(!Number.isFinite(base))continue;
-    if(i<n&&base+skipCost<cost[at(i+1,j)]){cost[at(i+1,j)]=base+skipCost;operation[at(i+1,j)]=1;span[at(i+1,j)]=1;}
-    if(j<m&&base+skipCost<cost[at(i,j+1)]){cost[at(i,j+1)]=base+skipCost;operation[at(i,j+1)]=2;span[at(i,j+1)]=1;}
-    if(i<n&&j<m){
-      const tagCost=blockTagCost(sources[i],targets[j]);
-      if(Number.isFinite(tagCost)){
-        const value=base+tagCost+Math.abs(sourceSentences[i]-targetSentences[j]);
-        if(value<cost[at(i+1,j+1)]){cost[at(i+1,j+1)]=value;operation[at(i+1,j+1)]=3;span[at(i+1,j+1)]=1;}
-      }
-    }
-    if(i<n&&j<m&&flowTag(sources[i].tag)){
-      let tagTotal=blockTagCost(sources[i],targets[j]);
-      if(Number.isFinite(tagTotal)&&flowTag(targets[j].tag)){
-        let sentenceTotal=targetSentences[j];
-        for(let k=2;k<=maxGroup&&j+k<=m;k++){
-          const tagCost=blockTagCost(sources[i],targets[j+k-1]);
-          if(!Number.isFinite(tagCost)||!flowTag(targets[j+k-1].tag))break;
-          tagTotal+=tagCost;sentenceTotal+=targetSentences[j+k-1];
-          const value=base+tagTotal+Math.abs(sourceSentences[i]-sentenceTotal)+splitStep*(k-1),cell=at(i+1,j+k);
-          if(value<cost[cell]){cost[cell]=value;operation[cell]=4;span[cell]=k;}
-        }
-      }
-    }
-    if(i<n&&j<m&&flowTag(targets[j].tag)){
-      let tagTotal=blockTagCost(sources[i],targets[j]);
-      if(Number.isFinite(tagTotal)&&flowTag(sources[i].tag)){
-        let sentenceTotal=sourceSentences[i];
-        for(let k=2;k<=maxGroup&&i+k<=n;k++){
-          const tagCost=blockTagCost(sources[i+k-1],targets[j]);
-          if(!Number.isFinite(tagCost)||!flowTag(sources[i+k-1].tag))break;
-          tagTotal+=tagCost;sentenceTotal+=sourceSentences[i+k-1];
-          const value=base+tagTotal+Math.abs(sentenceTotal-targetSentences[j])+mergeStep*(k-1),cell=at(i+k,j+1);
-          if(value<cost[cell]){cost[cell]=value;operation[cell]=5;span[cell]=k;}
-        }
-      }
-    }
-  }
-  const operations=[];
-  for(let i=n,j=m;i>0||j>0;){
-    const op=operation[at(i,j)],k=span[at(i,j)]||1;
-    if(op===1){operations.push({kind:'missing',source:sources[i-1]});i--;}
-    else if(op===2){operations.push({kind:'extra',target:targets[j-1]});j--;}
-    else if(op===3){operations.push({kind:'match',source:sources[i-1],target:targets[j-1]});i--;j--;}
-    else if(op===4){operations.push({kind:'split',source:sources[i-1],targets:targets.slice(j-k,j)});i--;j-=k;}
-    else if(op===5){operations.push({kind:'merge',sources:sources.slice(i-k,i),target:targets[j-1]});i-=k;j--;}
-    else break;
-  }
-  operations.reverse();
-  const matches=[],missing=[],extra=[],sentenceDifferences=[],unitsByPage=new Map(),sourcesByPage=new Map(),targetsByPage=new Map();
-  const pageOf=record=>String(record?.page??'unpaged');
-  const addUnit=(page,unit)=>{const key=String(page);if(!unitsByPage.has(key))unitsByPage.set(key,[]);unitsByPage.get(key).push(unit);};
-  const pushSource=(page,record)=>{const key=String(page),list=sourcesByPage.get(key)||[];if(!list.includes(record))list.push(record);sourcesByPage.set(key,list);};
-  const pushTarget=(page,record)=>{const key=String(page),list=targetsByPage.get(key)||[];if(!list.includes(record))list.push(record);targetsByPage.set(key,list);};
-  let lastPage='unpaged';
-  for(const op of operations){
-    const page=pageOf(op.source||op.sources?.[0]);
-    if(op.kind==='match'){
-      lastPage=page;pushSource(page,op.source);pushTarget(page,op.target);
-      const englishSentences=sentenceCount(op.source.text,'en'),translationSentences=sentenceCount(op.target.text,language);
-      if(englishSentences!==translationSentences){sentenceDifferences.push({source:op.source,target:op.target,page});addUnit(page,{kind:'sentence_count_difference',page,sourceSelector:op.source.selector,sourceTag:op.source.tag,sourceText:op.source.text,englishSentences,translationSelector:op.target.selector,translationTag:op.target.tag,translationText:op.target.text,translationSentences});}
-      else matches.push({source:op.source,target:op.target,targets:[op.target],page,kind:op.source.tag===op.target.tag?'match':'tag'});
-    }else if(op.kind==='split'){
-      lastPage=page;pushSource(page,op.source);op.targets.forEach(record=>pushTarget(page,record));
-      const englishSentences=sentenceCount(op.source.text,'en'),translationSentences=op.targets.reduce((sum,item)=>sum+sentenceCount(item.text,language),0);
-      if(englishSentences!==translationSentences)addUnit(page,{kind:'sentence_count_difference',page,sourceSelector:op.source.selector,sourceTag:op.source.tag,sourceText:op.source.text,englishSentences,translationSelectors:op.targets.map(item=>item.selector),translationText:op.targets.map(item=>item.text).join(' '),translationSentences});
-      else matches.push({source:op.source,target:op.targets[0],targets:op.targets,page,kind:'split_target'});
-    }else if(op.kind==='merge'){
-      lastPage=page;op.sources.forEach(record=>pushSource(pageOf(record),record));pushTarget(page,op.target);
-      const englishSentences=op.sources.reduce((sum,item)=>sum+sentenceCount(item.text,'en'),0),translationSentences=sentenceCount(op.target.text,language);
-      if(englishSentences!==translationSentences)addUnit(page,{kind:'sentence_count_difference',page,sourceSelector:op.sources[0].selector,sourceTag:op.sources[0].tag,sourceText:op.sources.map(item=>item.text).join(' '),englishSentences,translationSelector:op.target.selector,translationTag:op.target.tag,translationText:op.target.text,translationSentences});
-      else matches.push({source:op.sources[0],sources:op.sources,target:op.target,targets:[op.target],page,kind:'merge_target'});
-    }else if(op.kind==='missing'){
-      lastPage=page;pushSource(page,op.source);
-      missing.push({source:op.source,page});
-      addUnit(page,{kind:'missing_translation',page,sourceSelector:op.source.selector,sourceTag:op.source.tag,sourceText:op.source.text,englishSentences:sentenceCount(op.source.text,'en')});
-    }else if(op.kind==='extra'){
-      extra.push({target:op.target,page:pageOf(op.target)});
-      pushTarget(lastPage,op.target);
-      addUnit(lastPage,{kind:'extra_translation',page:lastPage,translationSelector:op.target.selector,translationTag:op.target.tag,translationText:op.target.text});
-    }
-  }
-  const defectivePages=new Set(unitsByPage.keys());
-  const mismatchedPages=[...unitsByPage].map(([page,units])=>{
-    const englishRecords=sourcesByPage.get(page)||[],translationRecords=targetsByPage.get(page)||[];
-    const englishBlocks=englishRecords.map(record=>translatedBlockShape(record,'en'));
-    const translationBlocks=translationRecords.map(record=>translatedBlockShape(record,language));
-    return {page,units,englishBlocks,translationBlocks,englishRecords,translationRecords,
-      englishShape:englishBlocks.map(block=>({tag:block.tag,sentences:block.sentences.length})),
-      translationShape:translationBlocks.map(block=>({tag:block.tag,sentences:block.sentences.length})),
-      englishLastSentence:englishBlocks.at(-1)?.sentences.at(-1)||null,
-      translationLastSentence:translationBlocks.at(-1)?.sentences.at(-1)||null};
-  }).sort((a,b)=>(Number(a.page)||0)-(Number(b.page)||0)||a.page.localeCompare(b.page));
-  return {matches:matches.filter(pair=>!defectivePages.has(String(pair.page))),allMatches:matches,operations,missing,extra,sentenceDifferences,ambiguousPages:[],mismatchedPages};
-}
-
-export function compareStructure(english, target, language) {
-  const findings = [], matches = [], matchedSources=new Set(), matchedTargets=new Set();
-  const key = structuralKey;
-  const alignment=alignTranslationBlocks(english,target,language),mismatchedPages=new Set(alignment.mismatchedPages.map(item=>String(item.page)));
-  const map = new Map();
-  for (const r of target.records) { const k = key(r); if (k) map.set(k, map.has(k) ? null : r); }
-  const addMatch=(r,t,k)=>{
-    if(matchedSources.has(r.selector)||matchedTargets.has(t.selector))return;
-    matchedSources.add(r.selector);matchedTargets.add(t.selector);matches.push({ source: r.selector, target: t.selector, key:k||null });
-    if (r.tag !== t.tag) findings.push(issue(language, 'structural_tag', t.selector, `${t.tag} differs from English ${r.tag}.`, { repair: { kind: 'tag', selector: t.selector, expectedTag: t.tag, tag: r.tag, sourceSelector: r.selector } }));
-    if (r.rows && JSON.stringify(r.rows) !== JSON.stringify(t.rows)) {
-      const spans = rows => rows?.map(row=>row.map(({colspan,rowspan})=>({colspan,rowspan})));
-      const safe = JSON.stringify(spans(r.rows)) === JSON.stringify(spans(t.rows));
-      findings.push(issue(language, 'table_structure', t.selector, 'Row, cell, header or span structure differs from English.', safe ? {repair:{kind:'table_headers',selector:t.selector,rows:r.rows}} : {}));
-    }
-    if (r.classes !== t.classes&&!t.translationPlaceholder) findings.push(issue(language,'presentation_classes',t.selector,'English presentation classes differ.',{repair:{kind:'classes',selector:t.selector,classes:r.classes}}));
-  };
-  for (const r of english.records) {
-    if(mismatchedPages.has(String(r.page??'unpaged')))continue;
-    const k = key(r); if (!k) continue;
-    const t = map.get(k);
-    if (!t) { findings.push(issue(language, 'missing_structural_anchor', k, `English ${r.tag} has no unique translated counterpart.`, {})); continue; }
-    addMatch(r,t,k);
-  }
-  for(const pair of alignment.matches)for(const t of pair.targets||[pair.target])if(t)addMatch(pair.source,t,key(pair.source));
-  for(const page of alignment.mismatchedPages)findings.push(issue(language,'translation_page_retranslation_required','page '+page.page,'The deterministic unit alignment found a missing, partial or structural translation unit. Insert the translated text for the listed unit(s) and let the following deterministic structure reflow; do not retranslate already matching units.',page));
-  const images = d => d.records.filter(r => r.tag === 'img').length;
-  if (images(english) !== images(target)) findings.push(issue(language, 'image_count_difference', 'document', `${images(english)} English images; ${images(target)} translated images.`));
-  return { findings, matches, blockMatches:alignment.matches.flatMap(pair=>(pair.targets||[pair.target]).filter(Boolean).map(t=>({source:pair.source.selector,target:t.selector,page:pair.page}))), alignment, limitation: 'Translations preserve the English block order and mechanical sentence counts; pagination may differ because alignment is by document order, not page number. Unit-level missing/partial text is inserted by the translation agent.' };
 }
 
 export function comparePdfFonts(inventory, rendered, sourceFonts = []) {

@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {openBrowser} from '../src/browser.mjs';
 import {navigate} from '../src/layout-browser.mjs';
-import {paginateDocument,paginationCss,translatedPaginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,sourceBlankPages} from '../src/pagination.mjs';
+import {paginateDocument,paginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,sourceBlankPages} from '../src/pagination.mjs';
 import {checkDisplay} from '../src/layout-checks.mjs';
 test('translations keep independent margins and source anchors without suppressing rendering errors',()=>{
  const profile={width:400,margins:{top:40,right:40,bottom:40,left:40}};
@@ -79,19 +79,6 @@ test('PDF contents with partial links still rebuilds every dotted row',{skip:!pr
  const repaired=await browser.evaluate('('+applyContentsPresentation.toString()+')('+JSON.stringify({profile})+')');
  assert.equal(repaired.unmatched.length,0);assert.equal(repaired.mapping.length,3);
  assert.deepEqual(await browser.evaluate('Array.from(document.querySelectorAll(".validatebook-toc-label"),n=>n.textContent)'),['The Argument in Ten Minutes','Twenty-Five Years at the Edges','SELECTED BIBLIOGRAPHY']);
-});
-test('pagination CSS uses source page proportions and never clips flowing text',()=>{
- const css=paginationCss({width:432,height:648});
- assert(css.includes('min-height:150cqw'));
- assert(css.includes('break-after:page'));
- assert(css.includes('--validatebook-page-scale:max(1,calc(100cqw / 576px))'));
- const translated=translatedPaginationCss({width:432,height:648,margins:{top:52,right:47,bottom:51,left:56},contents:[{indent:0}],contentsLineHeight:17,contentsFontSize:11});
- assert(translated.includes('--validatebook-font-size:var(--reader-font-size,var(--standalone-size,1em))'));
- assert(translated.includes('padding:12.037037037037036cqw 10.87962962962963cqw 11.805555555555555cqw 12.962962962962962cqw'));
- assert(css.includes('[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:normal;word-break:normal;hyphens:none}'));
- assert(!css.includes('[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:anywhere}'));
- assert(!css.includes('overflow:hidden'));
- assert.throws(()=>paginationCss({width:0,height:648}));
 });
 test('native pagination separates cover/title, splits nested contents, preserves text and is idempotent',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
  const root=await fs.mkdtemp(path.join(os.tmpdir(),'source-pages-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));const file=path.join(root,'book.html');

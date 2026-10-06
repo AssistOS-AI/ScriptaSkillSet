@@ -91,8 +91,8 @@ th { background-color: #f2f2f2; font-weight: bold; }
 .contents-list { margin: 0; }
 .contents-list-entry { margin: 0 0 0.45em; line-height: 1.25; text-align: left; }
 .contents-list-entry:last-child { margin-bottom: 0; }
-pre { padding: 1em; overflow: auto; background-color: #f6f8fa; border-radius: 3px; }
-code { padding: 0.2em 0.4em; background-color: #f6f8fa; border-radius: 3px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+pre { padding: 1em; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background-color: #f6f8fa; border-radius: 3px; }
+code { padding: 0.2em 0.4em; background-color: #f6f8fa; border-radius: 3px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; overflow-wrap: anywhere; word-break: break-word; }
 pre code { padding: 0; background-color: transparent; }
 .formula { margin: 1em 0; padding: 0.5em; background-color: #f9f9f9; text-align: center; }
 .formula-not-decoded {

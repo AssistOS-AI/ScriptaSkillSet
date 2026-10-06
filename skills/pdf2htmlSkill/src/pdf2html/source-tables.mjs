@@ -181,7 +181,7 @@ export function sourceTables(evidence) {
       const left=words.length?Math.min(...words.map(w=>w.x0)):b.l;
       const background=fills[0]?.fill_color || '#ffffff';
       return { row:cell.start_row_offset_idx, col:cell.start_col_offset_idx, rowspan:cell.row_span, colspan:cell.col_span,
-        text:words.map(w=>w.text).join(' '), widthPt:b.r-b.l,
+        text:words.map(w=>w.text).join(' '), widthPt:b.r-b.l, heightPt:b.b-b.t,
         background,
         borders:Object.fromEntries([['top',b.t,b.l,b.r],['right',b.r,b.t,b.b],['bottom',b.b,b.l,b.r],['left',b.l,b.t,b.b]].map(([side,pos,start,end])=>[side,sourceBorder(page.strokes,side,pos,start,end)])),
         typography:sample?{family:sample.font_family,name:sample.font_name,sizePt:sample.size_pt,color:darkColor(background)?'#ffffff':sample.color,weight:sample.bold?700:400,style:sample.italic?'italic':'normal',
@@ -194,7 +194,7 @@ export function sourceTables(evidence) {
           // symmetrically so responsive rows can size to their content.
           paddingPt:[Math.max(0,Math.min(...words.map(w=>w.top))-b.t),Math.max(0,left-b.l),Math.max(0,Math.min(...words.map(w=>w.top))-b.t),Math.max(0,left-b.l)]}:null };
     });
-    tables.push({page:page.page_number,pageWidthPt:page.width_pt,topPt:grid.bbox.t,bottomPt:grid.bbox.b,rows:grid.num_rows,columns:grid.num_cols,widthPt:grid.bbox.r-grid.bbox.l,cells});
+    tables.push({page:page.page_number,pageWidthPt:page.width_pt,leftPt:grid.bbox.l,topPt:grid.bbox.t,bottomPt:grid.bbox.b,rows:grid.num_rows,columns:grid.num_cols,widthPt:grid.bbox.r-grid.bbox.l,cells});
   }
   return tables;
 }

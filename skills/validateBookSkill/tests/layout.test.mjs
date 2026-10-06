@@ -5,8 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { compareEnglish, compareStructure, checkDisplay, comparePdfFonts, comparePdfGeometry, alignTranslationBlocks, sentenceCount } from '../src/layout-checks.mjs';
-import { sentenceReflowPlan, paragraphMergePlan, normalizeSentenceCounts, semanticStructurePlan, paragraphGroupPlan, splitSentenceUnit, mergeSentenceUnits } from '../src/translation-style.mjs';
+import { compareEnglish, checkDisplay, comparePdfFonts, comparePdfGeometry } from '../src/layout-checks.mjs';
 import { discover, collectAssets, doctor, splitSafeVisibleContentRepairs } from '../src/audit.mjs';
 import { textReport, layoutReport } from '../src/layout-report.mjs';
 import { planComplete, completeStatus } from '../src/complete.mjs';
@@ -27,145 +26,6 @@ test('all PDF pages compared; omission is localized without rewriting',()=>{
   const pages=[{page:1,text:'This first paragraph appears in both documents.'},{page:2,text:'This second paragraph was lost during conversion.'}];
   const result=compareEnglish(pages,document([record('p1',pages[0].text)]));
   assert.equal(result.coverage.length,2);assert.equal(result.findings.filter(f=>f.category==='source_text_unmatched').length,1);assert.match(result.findings[0].location,/page 2/);
-});
-test('matching sentence positions inherit the canonical English block tag',()=>{
-  const en=document([{...record('page_13','CHAPTER 1'),tag:'h2'}]);
-  const ro=document([record('page_13','Un paragraf tradus.')]);
-  const findings=compareStructure(en,ro,'ro').findings;
-  assert(findings.some(f=>f.category==='structural_tag'&&f.repair?.tag==='h2'));
-  assert(!findings.some(f=>f.category==='missing_structural_anchor'));
-});
-test('missing translated paragraphs and anchor substitutions require page retranslation',()=>{
-  const en=document([record('p1'),record('p2')]);
-  const missing=compareStructure(en,document([record('p1','Traducere.')]),'ro');
-  assert(missing.findings.some(f=>f.category==='translation_page_retranslation_required'));
-  const substitute=compareStructure(en,document([record('p1'),record('different')]),'ro');assert(substitute.findings.some(f=>f.category==='missing_structural_anchor'));
-  assert(!missing.findings.some(f=>f.repair?.kind==='translation_placeholder'));
-});
-test('a page is rejected when one canonical paragraph is missing',()=>{
-  const en=document([
-    record('a','First sentence.',{page:'7'}),
-    record('b','Missing first sentence. Missing second sentence.',{page:'7'}),
-    record('c','Third one. Third two. Third three.',{page:'7'})
-  ]);
-  const ro=document([
-    record('a','Prima propoziție.',{page:'7'}),
-    record('c','A treia unu. A treia doi. A treia trei.',{page:'7'})
-  ]);
-  const alignment=alignTranslationBlocks(en,ro,'ro');
-  assert.equal(alignment.matches.length,0);
-  assert.equal(alignment.mismatchedPages.length,1);
-  assert.deepEqual(alignment.mismatchedPages[0].englishShape,[{tag:'p',sentences:1},{tag:'p',sentences:2},{tag:'p',sentences:3}]);
-});
-test('sentence counts are mechanical and any mismatch requires full-page retranslation',()=>{
-  assert.equal(sentenceCount('One sentence. A second sentence!','en'),2);
-  const en=document([record('p','One sentence. A second sentence!',{page:'8'})]);
-  const ro=document([record('p','O singură propoziție.',{page:'8'})]);
-  const finding=compareStructure(en,ro,'ro').findings.find(item=>item.category==='translation_page_retranslation_required');
-  assert.equal(finding.englishShape[0].sentences,2);assert.equal(finding.translationShape[0].sentences,1);assert.equal(finding.englishLastSentence,'A second sentence!');assert.equal(finding.repair,undefined);
-});
-test('matching page structure pairs blocks by canonical order for style propagation',()=>{
-  const en=document([record('a','First. Second.',{page:'3'}),record('b','Third.',{page:'3'})]);
-  const ro=document([record('x','Prima. A doua.',{page:'3'}),record('y','A treia.',{page:'3'})]);
-  const alignment=alignTranslationBlocks(en,ro,'ro');
-  assert.deepEqual(alignment.matches.map(pair=>[pair.source.id,pair.target.id]),[['a','x'],['b','y']]);
-  assert.equal(alignment.mismatchedPages.length,0);
-});
-test('translation alignment follows document order, not translated page numbers',()=>{
-  const en=document([record('a','First. Second.',{page:'5'}),record('b','Third.',{page:'5'})]);
-  const ro=document([record('x','Prima. A doua.',{page:'9'}),record('y','A treia.',{page:'9'})]);
-  const alignment=alignTranslationBlocks(en,ro,'ro');
-  assert.equal(alignment.mismatchedPages.length,0);
-  assert.deepEqual(alignment.matches.map(pair=>[pair.source.id,pair.target.id]),[['a','x'],['b','y']]);
-});
-test('a split translated paragraph with equal sentence counts is reconciled',()=>{
-  const en=document([record('a','One. Two.',{page:'3'})]);
-  const ro=document([record('x','Unu.',{page:'4'}),record('y','Doi.',{page:'4'})]);
-  const alignment=alignTranslationBlocks(en,ro,'ro');
-  assert.equal(alignment.mismatchedPages.length,0);
-  assert.equal(alignment.matches[0].kind,'split_target');
-  assert.deepEqual(alignment.matches[0].targets.map(target=>target.id),['x','y']);
-});
-test('a missing canonical unit is reported with its exact source text',()=>{
-  const en=document([record('a','First.',{page:'7'}),record('b','Second. Third.',{page:'7'}),record('c','Fourth.',{page:'7'})]);
-  const ro=document([record('a','Primul.',{page:'7'}),record('c','Al patrulea.',{page:'7'})]);
-  const alignment=alignTranslationBlocks(en,ro,'ro');
-  assert.equal(alignment.mismatchedPages.length,1);
-  const unit=alignment.mismatchedPages[0].units.find(item=>item.kind==='missing_translation');
-  assert.equal(unit.sourceText,'Second. Third.');
-  assert.equal(unit.sourceSelector,'#b');
-});
-test('sentence reflow re-partitions translated prose to English paragraph counts',()=>{
-  const p=(id,text)=>({id,selector:'#'+id,tag:'p',text});
-  const alignment={operations:[
-    {kind:'split',source:p('g1','Niko stood. How many options did Branch 214 receive?'),targets:[p('t1','Niko se ridică.'),p('t2','Câte opțiuni a primit Ramura 214? Julian nu răspunse.')]},
-    {kind:'match',source:p('g2','Julian did not answer. Niko turned toward Mara.'),target:p('t3','Niko se întoarse spre Mara.')}
-  ]};
-  const plan=sentenceReflowPlan(alignment,'ro');
-  assert.equal(plan.length,1);
-  assert.deepEqual(plan[0].targets,[
-    {selector:'#t1',text:'Niko se ridică.'},
-    {selector:'#t2',text:'Câte opțiuni a primit Ramura 214?'},
-    {selector:'#t3',text:'Julian nu răspunse. Niko se întoarse spre Mara.'}
-  ]);
-  assert.deepEqual(plan[0].remove,[]);
-});
-test('sentence reflow removes a merged empty translated paragraph',()=>{
-  const p=(id,text)=>({id,selector:'#'+id,tag:'p',text});
-  const alignment={operations:[
-    {kind:'split',source:p('g1','First sentence.'),targets:[p('t1','Prima propoziție.'),p('t2','A doua propoziție.')]},
-    {kind:'match',source:p('g2','Second. Third. Fourth.'),target:p('t3','A treia propoziție. A patra propoziție.')}
-  ]};
-  const plan=sentenceReflowPlan(alignment,'ro');
-  assert.equal(plan.length,1);
-  assert.deepEqual(plan[0].remove,['#t2']);
-  assert.deepEqual(plan[0].targets.map(item=>[item.selector,item.text]),[
-    ['#t1','Prima propoziție.'],
-    ['#t3','A doua propoziție. A treia propoziție. A patra propoziție.']
-  ]);
-});
-test('a sentence broken across two translated paragraphs is re-joined',()=>{
-  const p=(id,text)=>({id,selector:'#'+id,tag:'p',text});
-  const alignment={operations:[
-    {kind:'split',source:p('g','AUTHORISE BRANCH TERMINATION. YOUR FATHER WILL BE RELEASED. Hana tore the card.'),
-      targets:[p('t1','AUTORIZEAZĂ TERMINAREA RAMURII. TRATAMENTUL TĂTULUI VA FI'),p('t2','ELIBERAT.'),p('t3','Hana rupse cardul.')]}
-  ]};
-  const plan=paragraphMergePlan(alignment,'ro');
-  assert.equal(plan.length,1);
-  assert.deepEqual(plan[0].remove,['#t2']);
-  assert.deepEqual(plan[0].targets,[
-    {selector:'#t1',text:'AUTORIZEAZĂ TERMINAREA RAMURII. TRATAMENTUL TĂTULUI VA FI ELIBERAT.'},
-    {selector:'#t3',text:'Hana rupse cardul.'}
-  ]);
-});
-test('sentence normalization merges and splits only at boundaries',()=>{
-  assert.deepEqual(normalizeSentenceCounts(['One.','Two.','Three.'],2),['One, two.','Three.']);
-  assert.equal(normalizeSentenceCounts(['One, two and three.'],2).length,2);
-  assert.deepEqual(normalizeSentenceCounts(['One.','Two.'],2),['One.','Two.']);
-});
-test('semantic structure reflows a chapter to the English paragraph and sentence counts',()=>{
-  const p=(id,text)=>({id,selector:'#'+id,tag:'p',text});
-  const alignment={operations:[
-    {kind:'merge',sources:[p('s1','A.'),p('s2','B.')],target:p('t1','A. B.')}
-  ]};
-  const plan=semanticStructurePlan(alignment,'ro');
-  assert.deepEqual(plan,[{paragraphs:['#t1'],counts:[1,1]}]);
-});
-test('grouping-only runs merge whole paragraphs without touching inline text',()=>{
-  const p=(id,text)=>({id,selector:'#'+id,tag:'p',text});
-  const alignment={operations:[
-    {kind:'split',source:p('s1','A. B.'),targets:[p('t1','A.'),p('t2','B.')]},
-    {kind:'match',source:p('s2','C.'),target:p('t3','C.')}
-  ]};
-  const plan=paragraphGroupPlan(alignment,'ro');
-  assert.deepEqual(plan,[{keep:'#t1',remove:['#t2']}]);
-});
-test('only unambiguous table header differences have an automatic repair',()=>{
-  const en=document([record('table','',{tag:'table',rows:[[{tag:'th',colspan:1,rowspan:1}]]})]);
-  const ro=document([record('table','',{tag:'table',rows:[[{tag:'td',colspan:1,rowspan:1}]]})]);
-  assert.equal(compareStructure(en,ro,'ro').findings.find(f=>f.category==='table_structure').repair.kind,'table_headers');
-  ro.records[0].rows[0][0].colspan=2;
-  assert.equal(compareStructure(en,ro,'ro').findings.find(f=>f.category==='table_structure').repair,undefined);
 });
 test('local display detects hidden/clipped text, corruption, failed fonts, broken links and images',()=>{
   const d=document([record('bad','Broken \uFFFD',{hidden:true,clipped:true}),record('image','',{tag:'img',broken:true,src:'missing.png'})]);d.fontFaces=[{family:'BookFont',status:'error'}];d.brokenLinks=['#absent'];d.scrollWidth=900;
@@ -212,10 +72,6 @@ test('translation presentation layer is split from risky layout batches',()=>{
   assert.deepEqual(split.batch,[actions[3]]);
 });
 
-test('translated paragraph fallback keeps page scaling in inherited font size',async()=>{
-  const audit=await fs.readFile(fileURLToPath(new URL('../src/audit.mjs',import.meta.url)),'utf8');
-  assert.match(audit,/sourceBlock\?\.font\?\.size[\s\S]*?var\(--validatebook-page-scale, 1\)/);
-});
 test('actual rendered fonts compared with PDF subset names',()=>{
   const source='ABCDEF+EBGaramond-Regular TrueType yes yes yes 1 0';
   assert.equal(comparePdfFonts(source,[{fonts:[{familyName:'EB Garamond',glyphCount:40}]}]).length,0);
@@ -252,14 +108,14 @@ test('report groups clear errors, missing translation blocks and repeated correc
     ,{language:'ro',kind:'presentation',file:'ro/full_content.html'}
   ],initialFindings:[],limitations:[],backups:[],findings:[
     {severity:'error',language:'ro',category:'block_sequence_difference',location:'document',detail:'Paragraph/heading/table/list sequence differs from the English canonical layout.'},
-    {severity:'error',language:'ro',category:'translation_page_retranslation_required',location:'page 2',detail:'The translated page must be rebuilt.'},
+    {severity:'error',language:'ro',category:'translation_structure_difference',location:'page 2',detail:'The translated interval requires structural review.'},
     {severity:'error',language:'en',category:'html_table_unmapped',location:'table:nth-child(1)',detail:'HTML table has no certified source grid.'},
     {severity:'warning',language:'en',category:'remote_asset',location:'script',detail:'Remote script was disabled.'}
   ]};
   const report=textReport(result);
   assert(report.indexOf('## Erori clare rămase')<report.indexOf('## Pagini de traducere de corectat'));
   assert(report.includes('HTML table has no certified source grid.'));
-  assert(report.includes('agentul insereaza doar textul unitatii'));
+  assert(report.includes('Structura sau numarul de propozitii difera'));
   assert(report.includes('| ro / presentation | 2 | 1 |'));
   assert(!report.includes('Remote script was disabled.'));
   assert(!report.includes('## Probleme inițiale'));
@@ -290,27 +146,10 @@ test('status rejects unrelated or malformed jobs without overwriting evidence',a
   }
 });
 
-test('paginated presentation wraps long tokens inside the reading column',async()=>{
-  const {paginationCss,translatedPaginationCss}=await import('../src/pagination.mjs');
-  const profile={width:595,height:842,margins:{top:60,right:60,bottom:60,left:60},contents:[],contentsLineHeight:0,contentsFontSize:0};
-  for(const css of [paginationCss(profile),translatedPaginationCss(profile)]){
-    assert.match(css,/\[data-validatebook-root\] :is\([^)]*p[^)]*\)\{overflow-wrap:anywhere\}/);
-  }
-});
-
 test('converter adapter keeps the managed stylesheet contract in every pass',async()=>{
   const source=await fs.readFile(fileURLToPath(new URL('../src/pagination.mjs',import.meta.url)),'utf8');
   assert.match(source,/data-validatebook-converter/);
   assert.match(source,/styles\\?\.css/);
   assert.match(source,/pdf-document/);
   assert.match(source,/pdf-table-wrap/);
-});
-
-test('sentence reflow never fragments translated prose into single words',async()=>{
-  assert.equal(splitSentenceUnit('unu doi trei patru cinci șase șapte'),null);
-  const unit='Teza noastră arhitecturală este că mulți agenți fiabili pentru organizații vor combina o componentă învățată relativ mică cu un strat substanțial.';
-  const out=normalizeSentenceCounts([unit],6);
-  const words=text=>text.replace(/[.,;:]/g,'').split(/\s+/).filter(Boolean).map(word=>word.toLowerCase());
-  assert.deepEqual(words(out.join(' ')),words(unit));
-  assert(out.every(fragment=>words(fragment).length>=3));
 });

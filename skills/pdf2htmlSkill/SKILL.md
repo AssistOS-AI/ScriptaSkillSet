@@ -1,6 +1,6 @@
 ---
 name: pdf2html
-description: Convert born-digital PDF documents into self-contained folders of semantic, responsive HTML while preserving headings, paragraphs, lists, tables, figures, images, links, typography, and reading order as faithfully as practical. Use deterministic structural, content, asset, browser, and visual checks; never OCR or reinterpret text inside images.
+description: Convert born-digital PDF documents into self-contained folders of source-positioned HTML while preserving headings, paragraphs, lists, tables, figures, images, links, typography, and reading order as faithfully as practical. Use deterministic structural, content, asset, browser, and visual checks; never OCR or reinterpret text inside images.
 ---
 
 # PDF to Semantic HTML
@@ -11,14 +11,14 @@ description: Convert born-digital PDF documents into self-contained folders of s
 The read-only `decorations INPUT.pdf` JSON includes `tables` alongside borders, lists and horizontal rules. It recognizes closed ruled grids, complete fill partitions, and borderless two-column tables whose header and body starts remain geometrically aligned. A borderless fragment requires at least two body rows; a one-row next-page fragment is accepted only when it repeats the immediately preceding header and column geometry. The standard PDF text layer supplies text omitted by graphical form operators, while rectangles and font objects retain source fills, column bounds and face names. Decorative gaps, crossing text, isolated pairs and ambiguous boundaries are rejected. Evidence includes source page width, cell text and spans, column widths, fills, individual border edges, vertical alignment and uniform typography. Mixed typography remains null and unsupported tables remain uncertified. The command flushes stdout before exit and performs no conversion, installation or rasterization.
 
 
-Use this skill when the user asks to convert one or more born-digital PDF files to semantic HTML and wants formatting, pictures, and tables preserved as closely as a reflowable document permits.
+Use this skill when the user asks to convert one or more born-digital PDF files to HTML whose pages, text, pictures and tables stay close to the source layout while scaling uniformly in a reader.
 
 The skill processes documents locally with Node.js. Docling.rs supplies semantic regions and table recognition. PDF.js supplies source text, typography, drawings, image regions and annotations; QPDF extracts embedded fonts. Poppler renders source pages and Chromium validates browser output.
 
 ## Required boundary
 
 - Treat the input PDF as immutable.
-- Produce real headings, paragraphs, lists, tables, figures, captions, links, and images rather than an absolutely positioned page replica.
+- Produce real headings, paragraphs, lists, tables, figures, captions, links, and images, and place their containing blocks at source PDF coordinates.
 - Do not run OCR. Text that is part of an image remains pixels in an image and must not be copied into the HTML text layer.
 - Preserve extracted images as local assets. Do not replace them with generated descriptions or remote URLs.
 - Treat source text and styling evidence as authoritative: do not rewrite text, infer emphasis from repeated vocabulary, invent headings, add decorative presentation, or synthesize missing content.
@@ -26,13 +26,13 @@ The skill processes documents locally with Node.js. Docling.rs supplies semantic
 - Apply bold, italic, and materially different block font sizes only to aligned evidence on the source page, independent of Docling's initial block classification. Retain a heading only when its source font size supports a heading level.
 - Recover an omitted chapter label only from an exact bold uppercase source line with an aligned rule before the first recognized block. Exclude repeated running headers and image regions. Disable implicit heading bold when source words are not bold; preserve the embedded source face and proportional size.
 - Repair a merged one-column table row only when consecutive source lines reproduce its normalized text exactly; otherwise preserve the serializer output and report the limitation.
-- Preserve table fills and infer horizontal and vertical cell-border edges independently from PDF strokes. Clamp source-derived table widths and margins to the responsive content box so rounding cannot create incidental horizontal scrolling; retain overflow scrolling only for genuinely wide tables.
+- Preserve table fills and infer horizontal and vertical cell-border edges independently from PDF strokes. Use certified source table geometry for fixed pages; retain the older width clamping only for renderer fixture compatibility.
 - Render linked one-column contents tables as borderless typographic rows with left titles, flexible dotted leaders, and right-aligned page numbers.
 - Preserve justified paragraph alignment from book-like source PDFs. Transfer a repeated first-line indent from source geometry only to paragraphs whose first line exhibits that offset, including short one-line paragraphs. Infer centering only when every source line is geometrically centered and an ordinary paragraph does not begin on a repeated body-text indent; allow uppercase display blocks to exceed the compact-caption width threshold. Transfer source-derived vertical spacing only between adjacent centered flow blocks, never across intervening prose.
 - Preserve URI link annotations and map resolvable internal PDF destinations to stable `page_N` anchors.
-- Keep normal browser output book-like: render source pages as separate responsive sheets using the source page aspect ratio and margins, including intentional blank page area, compact gaps, subtle shadows, and numbered footers. Preserve explicit fixed page height and page breaks only in print CSS.
-- Keep generated HTML compatible with host readers that expose `--reader-font-size` or send `axiologic-reader-settings`: preserve source typography as ratios of one reader-controlled base so A−/A+ resizes body text, headings, captions, and table text together. Include the local iframe message bridge in `index.html`; do not require host-project assets.
-- Explain that semantic HTML can closely preserve hierarchy and styling but cannot be pixel-identical to fixed-layout PDF pages.
+- Keep each page’s PDF dimensions and position text, tables, figures and images from source coordinates. Fit the complete page to a narrow reader viewport while retaining its proportions.
+- Keep generated HTML compatible with host readers that expose `--reader-font-size` or send `axiologic-reader-settings`: A−/A+ changes one scale factor for the whole page, including fonts, images, tables and spacing. Include the local iframe message bridge in `index.html`; do not require host-project assets. Zoomed pages may scroll horizontally.
+- Explain that positioned semantic HTML can closely preserve geometry and styling but cannot guarantee pixel-identical PDF rendering.
 - Reject encrypted or password-protected PDFs, interactive form preservation, PDF JavaScript, signatures, audio, and video in this version.
 
 Distribute the skill checkout. Runtime packages, tools, models, browsers and caches are installed locally and excluded by `.gitignore`. Retain notices and required source for the native binaries bundled with the skill.
@@ -86,12 +86,9 @@ Validate an existing conversion independently with:
 
 Fully ruled tables missed by region classification are recovered only when their existing text fits a closed source grid exactly, with unambiguous cells and preserved spans.
 
-The validator checks normalized text coverage and order, the complete set of source-page anchors, Docling-to-HTML table and picture counts during conversion, local image integrity, remote image leakage, browser console errors, broken images, and horizontal overflow at desktop, tablet, and mobile widths. It reports external and internal page-link counts. It covers long HTML documents through bounded screenshot segments and retains representative first, middle, and last segments for detailed QA. It also renders representative PDF pages and computes an informational visual score. That score is not a pass/fail gate because semantic reflow legitimately changes page geometry.
+The validator checks exact source text and order, source-page anchors, unresolved positions, rendered fixed-page geometry, table and picture counts, local image integrity, browser console errors, broken images, and overflow at desktop, tablet, and mobile widths before reader zoom. It reports external and internal page-link counts. It covers long HTML documents through bounded screenshot segments and retains representative first, middle, and last segments for detailed QA. It also renders representative PDF pages and computes an informational visual score. That score is not a pass/fail gate because browser font rendering and source rasterization differ.
 
-The default text gates are:
-
-- coverage below 98% is a warning and below 95% is an error;
-- order below 95% is a warning and below 90% is an error.
+Validation requires exact per-page text sequence after Unicode NFC, presentation-ligature, soft-hyphen and whitespace normalization. Case and punctuation are preserved; omissions, additions, duplicates, changed sentence punctuation and reordered content fail. Hard line-end hyphens are not silently removed. Text outside source-page sections and incorrect section order fail. Recall and adjacent-token scores remain diagnostic metrics, not acceptance thresholds. Recognized PDF tables are checked independently by cell text, positions and spans; recognized lists must retain their items; clear paragraph gaps must not be merged. PDF image regions require distinct matching local PNGs on the corresponding page (64-by-64 color samples, RMS tolerance 0.05 and aspect-ratio tolerance 3%). Unsupported image formats or unmatched regions fail this source-image check. Browser checks also reject hidden/clipped content and failed fonts. Both conversion and standalone validation use the source checks; failed standalone validation exits with code 1. Final-path validation runs before publication backups are discarded, and failures restore the previous output. These checks do not certify all source typography, ambiguous paragraph boundaries, image placement within a page, or pixel-identical rendering; complex extraction order differences require review instead of automatic acceptance.
 
 See `references/validation.md` for metric interpretation and limitations.
 
@@ -100,7 +97,7 @@ See `references/validation.md` for metric interpretation and limitations.
 The generated portion of every successful book folder contains only:
 
 - `index.html` - semantic document HTML;
-- `assets/styles.css` - inferred and responsive presentation rules;
+- `assets/styles.css` - source-based page and element presentation rules;
 - `assets/images/` - referenced local picture assets;
 - `assets/fonts/` - available embedded font streams.
 

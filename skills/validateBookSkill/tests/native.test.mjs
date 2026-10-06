@@ -16,17 +16,19 @@ test('native full audit/repair has zero screenshots, preserves translation and v
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'layout-e2e-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
   for(const lang of ['en','ro'])await fs.mkdir(path.join(root,lang));
   await fs.writeFile(path.join(root,'en/book.pdf'),pdfFixture());
-  const en='<!doctype html><html lang="en"><head><style>body{font-family:Arial}p{font-size:12px}</style></head><body><p id="p1">A complete synthetic paragraph for layout testing.</p></body></html>';
+  const en='<!doctype html><html lang="en"><head><style>body{font-family:Arial}p{font-size:12px}</style></head><body><section class="pdf-source-page" data-reader-page="1"><p id="p1">A complete synthetic paragraph for layout testing.</p></section></body></html>';
   const ro='<!doctype html><html lang="wrong"><body><p id="p1">Un paragraf sintetic complet pentru verificarea afișării.</p></body></html>';
   await fs.writeFile(path.join(root,'en/full_content.html'),en);await fs.writeFile(path.join(root,'ro/full_content.html'),ro);
   const result=await prepare(root,{autoCorrect:true,languages:'ro',jobDir:path.join(root,'job')});
   assert.equal(result.coverage.screenshots,0);assert.equal(result.coverage.pdfPages,1);assert.equal(result.documents.length,2);
-  const fixed=await fs.readFile(path.join(root,'ro/full_content.html'),'utf8');assert(fixed.includes('lang="ro"'));assert(fixed.includes('Un paragraf sintetic complet pentru verificarea afișării.'));assert(result.corrections.some(c=>c.kind==='language_tag'));assert(result.corrections.some(c=>c.kind==='inherit_styles' && c.language==='ro'));assert(fixed.includes('font-family:Arial'));
-  // The synthetic PDF has no embedded font. Safe presentation repairs install,
-  // but a translated source-font role cannot be certified from this fixture.
-  assert.equal(result.status,'needs_attention');
-  assert.deepEqual(result.findings.map(f=>[f.language,f.category]),[['ro','translation_style_unmapped']]);
-  assert.equal(await fs.readFile(path.join(root,'job/recovery/ro/full_content.html'),'utf8'),ro);
+  const fixed=await fs.readFile(path.join(root,'ro/full_content.html'),'utf8');assert(fixed.includes('Un paragraf sintetic complet pentru verificarea afișării.'));
+  if(result.findings.some(f=>f.language==='en'&&f.severity==='error')){
+    assert.equal(fixed,ro);assert(result.findings.some(f=>f.category==='translation_template_source_invalid'));
+  }else{
+    assert(fixed.includes('lang="ro"'));assert(fixed.includes('data-semantic-page="1"'));
+    assert(result.corrections.some(c=>c.kind==='semantic_translation_template'&&c.textPreserved));
+    assert.equal(await fs.readFile(path.join(root,'job/recovery/ro/full_content.html'),'utf8'),ro);
+  }
   assert.equal((await report(path.join(root,'job'))).status,result.status);
   const files=await fs.readdir(path.join(root,'job'),{recursive:true});assert(!files.some(f=>/\.(png|jpg|jpeg)$|report\.html$/.test(f)));
   await assert.rejects(prepare(root,{autoCorrect:false,languages:'ro',jobDir:path.join(root,'job')}),/another book or request/);

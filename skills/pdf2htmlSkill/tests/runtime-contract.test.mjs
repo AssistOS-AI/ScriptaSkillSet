@@ -10,7 +10,7 @@ import { inspectSource, emphasis, browserLoadableTrueType } from '../src/pdf2htm
 import { captionIsBelow } from '../src/pdf2html/images.mjs';
 import { parseHtml } from '../src/pdf2html/dom.mjs';
 import { inferLanguage, expandInputs, convertMany } from '../src/pdf2html/batch.mjs';
-import { ensureBookTarget, installBook, prepareDestination, exists } from '../src/pdf2html/publication.mjs';
+import { ensureBookTarget, installBook, publish, prepareDestination, exists } from '../src/pdf2html/publication.mjs';
 async function temporary(t) {const path=await realpath(await mkdtemp(join(tmpdir(),'pdf2html-test-')));t.after(()=>rm(path,{recursive:true,force:true}));return path;}
 async function generated(path,content='new') {await mkdir(join(path,'assets'),{recursive:true});await writeFile(join(path,'index.html'),`<html><head><meta name="generator" content="pdf2html-skill"></head><body>${content}</body></html>`);await writeFile(join(path,'assets/styles.css'),content);}
 test('text metrics preserve repeated occurrences, ligatures and Romanian text',()=>{
@@ -89,4 +89,17 @@ test('asset checks resolve temporary-directory aliases and reject remote or esca
   const outside=await temporary(t);await writeFile(join(outside,'image.svg'),'<svg/>');await symlink(join(outside,'image.svg'),join(root,'linked.svg'));
   const findings=await validateAssets(parseHtml('<img src="https://example.com/a.png"><img src="linked.svg">'),html);
   assert.deepEqual(findings.map(item=>item.code),['remote-image','image-outside-output']);
+});
+
+test('final-path verification failure restores existing output and retains the candidate',async t=>{
+  const root=await temporary(t),destination=join(root,'book'),source=join(root,'new');
+  await generated(destination,'old');await generated(source,'candidate');
+  const reject=async path=>{assert.equal(path,destination);assert.match(await readFile(join(path,'index.html'),'utf8'),/candidate/);throw new Error('validation failed');};
+  await assert.rejects(installBook(source,destination,true,reject),/validation failed/);
+  assert.match(await readFile(join(destination,'index.html'),'utf8'),/old/);
+  assert.equal(await readFile(join(destination,'assets/styles.css'),'utf8'),'old');
+  assert.equal(await readFile(join(source,'assets/styles.css'),'utf8'),'candidate');
+  await assert.rejects(publish(source,destination,reject),/validation failed/);
+  assert.match(await readFile(join(destination,'index.html'),'utf8'),/old/);
+  assert.equal(await readFile(join(source,'assets/styles.css'),'utf8'),'candidate');
 });

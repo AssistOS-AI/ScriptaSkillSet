@@ -190,4 +190,4 @@ The host maintains a reviewed chapter map, before/after hashes and evidence; amb
 alignment or missing chapters block repair. Structural repairs use a separate reviewed
 candidate patch, not relaxed translation-build safeguards. Read references/repair.md.
 
-Use `scripts/translatehtml repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. No missing translations or whole chapters are generated. See [repair contract](references/repair.md).
+Use `scripts/translatehtml repair --report REPORT_JSON` for localized fixes to an existing audited book. The active LLM proposes exact replacements and may insert translations for missing or partial units beside a unique anchor; `--patches FILE --output NEW_HTML` creates a separate candidate and requires revalidation. Whole missing chapters or absent languages are never generated. See [repair contract](references/repair.md).

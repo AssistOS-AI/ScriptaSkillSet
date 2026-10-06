@@ -28,28 +28,6 @@ test('empty translated pages are removed and keep their anchors',{skip:!process.
  assert.equal(await browser.evaluate('document.getElementById("page_2").tagName.toLowerCase()'),'span');
 });
 
-test('resegment merges translated paragraphs to the canonical count preserving inline links',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
- const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
- await browser.evaluate('document.body.innerHTML='+JSON.stringify('<section class="pdf-source-page" data-source-page="9"><p id="a">Prima propoziție.</p><p id="b">A doua pe <a href="https://ScriptaHub.com">site</a>.</p></section>'));
- const runs=[{paragraphs:['#a','#b'],counts:[2]}];
- const result=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'resegment_run',language:'ro',runs}])})`);
- assert.equal(result.changes.filter(c=>c.kind==='resegment_run').length,1);
- assert.equal(await browser.evaluate('document.querySelectorAll("p").length'),1);
- assert.equal(await browser.evaluate('document.querySelector("p a").getAttribute("href")'),'https://ScriptaHub.com');
- assert.equal(await browser.evaluate('document.getElementById("a").tagName.toLowerCase()'),'span');
-});
-
-test('resegment splits one translated paragraph into the canonical paragraph count',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
- const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
- await browser.evaluate('document.body.innerHTML='+JSON.stringify('<section class="pdf-source-page" data-source-page="9"><p id="page_9">Unu, doi și trei.</p></section>'));
- const runs=[{paragraphs:['#page_9'],counts:[1,1]}];
- const result=await browser.evaluate(`(${applyDomRepairs.toString()})(${JSON.stringify([{kind:'resegment_run',language:'ro',runs}])})`);
- assert.equal(result.changes.filter(c=>c.kind==='resegment_run').length,1);
- assert.equal(await browser.evaluate('document.querySelectorAll("p").length'),2);
- assert.equal(await browser.evaluate('document.getElementById("page_9").tagName.toLowerCase()'),'span');
- assert.equal(await browser.evaluate('Array.from(document.querySelectorAll("p"),p=>p.textContent.trim()).join(" | ")'),'Unu. | Doi și trei.');
-});
-
 test('localized cover dimensions match English through consolidation and both reader paths',{skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-images-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
  const en=path.join(dir,'en.html'),ro=path.join(dir,'ro.html'),style=path.join(dir,'reader.css');

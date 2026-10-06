@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {pointsToCssPixels,sourceTypographyProfile,compareTypography,typographyActions,normalizePdfFontFamilies,sourceFontSupport} from '../src/typography.mjs';
 import {assertReaderStyleIsolation,frameScale} from '../src/reader-presentation.mjs';
-import {checkDisplay, compareStructure, compareEnglish} from '../src/layout-checks.mjs';
+import {checkDisplay, compareEnglish} from '../src/layout-checks.mjs';
 const text='A final address appeared: EQUATORIAL CONTINUITY ARCHIVE, NAIROBI. ACCESS TRUSTEE: NURU OKAFOR.';
 const lines=[{text,top:100,font:{sizePt:11}},{text:'Another sufficiently long line after this paragraph.',top:115.5,font:{sizePt:11}}];
 const pages=[{page:1,lines}];
@@ -322,13 +322,6 @@ test('split table lines and rebranded copyright are not unmatched source omissio
   const pages=[{page:3,text:'Copyright © [2026] Axiologic Research\nAll rights reserved.\nKDP publishing rights held by Outfinity SRL (Iasi, Romania).'},{page:67,text:'RCT and longitudinal             Stronger for causality and direction; may be short or\nstudy                            unrepresentative.'}];
   const document={records:[{tag:'p',selector:'#page_3',text:'Copyright © [2026] ScriptaHub All rights reserved.'},{tag:'p',selector:'#t',text:'RCT and longitudinal study Stronger for causality and direction; may be short or unrepresentative.'}],text:'Copyright © [2026] ScriptaHub All rights reserved. KDP publishing rights held by Outfinity SRL (Iasi, Romania). Available for free on ScriptaHub website. This work was created under the umbrella of ScriptaHub as part of two interconnected research programs. RCT and longitudinal study Stronger for causality and direction; may be short or unrepresentative.'};
   assert.equal(compareEnglish(pages,document).findings.length,0);
-});
-
-test('source page folios are not treated as translated structural counterparts',()=>{
-  const record=(id,text,tag='p')=>({id,selector:'#'+id,tag,classes:'',text,font:{family:'Garamond'}});
-  const document=records=>({records,text:records.map(r=>r.text).join('\n')});
-  const findings=compareStructure(document([record('page_13','CHAPTER 1','h2')]),document([record('page_13','Un paragraf tradus.')]),'ro').findings;
-  assert(!findings.some(f=>f.category==='structural_tag'||f.category==='missing_structural_anchor'));
 });
 
 test('generated figure captions are not treated as unmapped source prose',()=>{

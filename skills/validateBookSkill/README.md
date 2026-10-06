@@ -14,9 +14,9 @@ Paginated readers scale text, leading and paragraph gaps by max(1, rendered page
 Native table repairs preserve prose and responsive flow, restore source fills/edges and proportional columns, and consolidate cell styles into managed CSS. Cell selector specificity survives subsequent consolidation and source stylesheet order. Translations require the canonical English page/block structure and matching table spans. Regression tests cover lost dark header fills, column proportions, ambiguous mappings, CSS consolidation and imported delivery.
 
 
-Local verification and correction of book HTML layout, fonts and structural integrity. English PDF/HTML presentation is corrected first. Existing translations are aligned to the English canonical order by tag role and sentence count, without using translated page numbers. The active skill agent inserts only the missing or sentence-count-different unit text, then English presentation is propagated to reconciled pages. The native implementation uses no external model API, Python command or external repair plan.
+Local verification and correction of book HTML layout, fonts and structural integrity. English PDF/HTML presentation is corrected first. Existing translations are aligned to the English canonical order by shared, language-independent anchors and a tolerant, order-preserving slot alignment, never by translated page numbers. Existing prose is reused exactly and never rewritten, re-split or generated. English presentation is applied to the rebuilt translation; sentence-count differences, extra translated blocks and missing units are reported for review, while only content loss, reordered identities, table-grid mismatch or an unalignable interval blocks the rebuild. The native implementation uses no external model API, Python command or external repair plan.
 
-No general humanisation, whole-book semantic proofreading, summaries, metadata, font +/− tests or screenshots. Agent translation is limited to the missing or sentence-count-different units identified by deterministic alignment. The final human-readable artifact is `report.md`, supported by JSON evidence and correction logs.
+No general humanisation, whole-book semantic proofreading, summaries, metadata, font +/− tests or screenshots. No translation step generates or edits prose. The final human-readable artifact is `report.md`, supported by JSON evidence and correction logs.
 
 The `complete` command delivers the final correction account as `RAPORT-CORECTII.md` at the book root, beside `manifest.json`; a requested audit account goes there as `RAPORT-VERIFICARE.md`. Final responses link these book-owned reports. After delivery, complete retains the private job directory and recovery copies; disposable candidate files are removed. Native audit-only `prepare` still keeps its job for `report`/`status`. Ambiguous evidence remains an explicit finding and is never delegated to an agent or LLM.
 
@@ -83,7 +83,7 @@ The pdf2html source extractor also returns numbered and bulleted list groups fro
 
 ## Executable completion
 
-Use `scripts/validatebook complete BOOK_ROOT` for native English correction and deterministic translated-unit findings. The active skill agent consumes `translation_page_retranslation_required`, inserts only the missing or corrected unit text and reruns validation until every existing language reconciles. No external model API, Python runtime, helper script or external review plan is used. PDF extraction is delegated to the configured pdf2html skill.
+Existing translations use the single native semantic-template workflow described in [semantic-template](references/semantic-template.md). Reuse existing translated text and inline markers unchanged. English page containers define semantic groups that may grow across displayed pages. Align shared, language-independent anchors, then match ordered slots with a tolerant, order-preserving alignment that keeps translated-only blocks in place, reports missing or regrouped units and never rewrites prose. Only content loss, reordered identities, table-grid mismatch or an unalignable interval blocks the rebuild.
 
 Sparse centered or left-aligned display pages are checked independently from prose and reader parity. Source XML groups establish separate title, subtitle, italic description and year blocks, their font sizes, explicit line groups and vertical gaps. Repair requires complete normalized text agreement and a verified embedded source family. Rebuild the groups before the single CSS consolidation step; retain page anchors and responsive wrapping. Check grouping, alignment, emphasis, sizes, leading and margins at each viewport in both reader paths. A repeated running title must not exempt the title-page heading from these checks.
 
@@ -98,11 +98,11 @@ Generated page boxes own PDF-derived outer insets. Undecorated normal-flow main/
 
 ## Canonical translation pages
 
-English PDF-margin and visual page checks apply only to English. Translations are paired to the corresponding English page and must have identical ordered block tags and per-block sentence counts. Translated words may make the page taller. No independent visual-conformance findings are produced for translations.
+English PDF-margin and visual page checks apply only to English. Translations are rebuilt from the English semantic page containers and aligned by shared language-independent anchors; ordered block tags and sentence counts are compared and differences are reported, not rewritten. Translated words may make a page taller. No independent visual-conformance findings are produced for translations.
 
 ## Autonomous transactional completion
 
-Complete owns native English correction, CSS consolidation and canonical style propagation. Each translated unit is accepted only when it reconciles to its English counterpart by document order, tag role and sentence count. A mismatch emits full structured evidence; the active agent inserts only the missing or corrected unit text without placeholders. Validation repeats until every unit reconciles. The corrected translation then inherits English fonts, sizes, weights, colors, spacing, classes and table/list presentation. Reports contain grouped remaining translation errors and grouped applied fixes; detailed unit evidence remains in JSON.
+Complete owns native English correction, CSS consolidation and canonical style propagation. An existing translation is rebuilt from the corrected English semantic containers; each translated unit is reused exactly and placed by an order-preserving alignment. A translated-only block stays in place, a missing English counterpart is reported, and a split or merge is reported; nothing is generated or rewritten. The corrected translation inherits English fonts, sizes, weights, colors, spacing, classes and table/list presentation while keeping its own prose, links and localized assets. Reports contain grouped remaining translation review items and grouped applied fixes; detailed unit evidence remains in JSON.
 
 ## Authorized publisher restoration
 
@@ -121,3 +121,8 @@ After successful correction, verify the installed canonical files and durably sa
 Every complete invocation (including prepare --auto-correct) deletes previous book-owned .validatebook-jobs, .validatebook-layout and .validatebook-layout-jobs results and final reports before creating a fresh transaction. Preserve canonical PDF/HTML/CSS/assets: starting from zero means fresh evidence, not undoing installed corrections. Never delete another job with an unresolved lock. Custom job directories receive a new transaction; unrelated files are preserved. Audit-only prepare retains its read-only report/status job.
 
 Apply source-supported repairs until no further file changes occur. Unresolved validation findings remain errors in RAPORT-CORECTII.md; completed_with_errors means verified corrections were installed, not that the book passed all checks. Exit code 3 signals remaining errors without disabling HTML or reader access. Unsafe candidate batches are rejected and recorded while other documents continue. Runtime/tool failures and concurrent edits preserve originals. After verified installation and durable reporting, remove temporary results even for completed_with_errors.
+
+
+## Semantic translation template
+
+Read [the canonical translation contract](references/semantic-template.md). Verification and correction share the same extractor, alignment and renderer. Existing prose is immutable; longer translations extend their semantic page in normal flow. No legacy template path, sentence-count rewriting or full-book translation is used.

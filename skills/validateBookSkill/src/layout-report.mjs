@@ -6,8 +6,14 @@ const categoryReason={
   missing_structural_anchor:'Un bloc din engleza nu are corespondent unic in traducere; poate lipsi un paragraf sau s-a pierdut ancora structurala.',
   block_sequence_difference:'Ordinea sau tipurile de blocuri difera de layout-ul canonic englez; poate indica paragrafe lipsa, fragmente extra sau cuprins/tabele rupte.',
   translation_block_count_difference:'O pagina tradusa are alt numar de blocuri decat pagina engleza corespondenta; stilurile nu pot fi propagate complet.',
-  translation_page_retranslation_required:'Alinierea determinista a gasit unitati de text lipsa sau cu numar de propozitii diferit; agentul insereaza doar textul unitatii lipsa/partiale si lasa restul structurii sa reflueze.',
+  translation_template_difference:'Traducerea existenta necesita aplicarea templateului semantic englez; continutul este pastrat.',
+  translation_structure_difference:'Structura sau numarul de propozitii difera in intervalul indicat; textul existent nu este rescris.',
+  translation_content_changed:'Reconstruirea ar modifica textul, marcajele sau resursele traducerii si a fost respinsa.',
   translation_alignment_ambiguous:'Blocurile nu pot fi aliniate mecanic in mod unic; skillul nu propaga pozitional stilurile pe pagina afectata.',
+  translation_alignment_limit:'Intervalul este prea mare pentru aliniere determinista; a fost raportat fara rescriere.',
+  translation_sentence_count_difference:'Gruparea propozitiilor diferă de engleza in unitatile indicate; textul tradus este pastrat exact.',
+  translation_missing_unit:'O unitate engleza nu are corespondent tradus; a fost raportata, nu generata.',
+  translation_anchor_unmapped:'O ancora existenta nu are continut englez mapat; textul a fost pastrat.',
   extra_translation_block:'Traducerea contine un bloc suplimentar fara corespondent englez verificat.',
   translation_style_difference:'Un bloc tradus nu foloseste fontul, marimea, leading-ul, culoarea sau spacing-ul rolului englez corespondent.',
   translation_style_unmapped:'Skillul nu a gasit un rol englez neambiguu pentru blocul tradus; textul este pastrat, dar stilul nu este certificat.',
@@ -22,7 +28,7 @@ function summarizeFindings(findings=[]){
   for(const f of findings)counts.set(f.category,(counts.get(f.category)||0)+1);
   return [...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
 }
-const missingTranslationCategories=new Set(['missing_structural_anchor','translation_page_retranslation_required']);
+const missingTranslationCategories=new Set(['translation_alignment_ambiguous','translation_structure_difference','translation_sentence_count_difference','translation_missing_unit','extra_translation_block','translation_anchor_unmapped']);
 const clean=value=>String(value??'').replace(/\s+/g,' ').replace(/\|/g,'\\|').trim();
 function groupedFindings(findings=[]){
   const groups=new Map();
