@@ -35,7 +35,7 @@ export function inspectLayout() {
     if (n.id) { if (ids.has(n.id)) duplicates.push(n.id); ids.add(n.id); }
     if (n.closest('script,style,template,noscript,head')) continue;
     if (/^H[1-6]$/.test(n.tagName) && n.id) chapter = n.id;
-    if (!n.matches('p,h1,h2,h3,h4,h5,h6,li,blockquote,figcaption,table,th,td,img')) continue;
+    if (!n.matches('p,h1,h2,h3,h4,h5,h6,li,blockquote,figcaption,pre,table,th,td,img')) continue;
     const s = getComputedStyle(n), r = n.getBoundingClientRect(), text = (n.textContent || '').trim();
     const range = document.createRange(); range.selectNodeContents(n);
     const textRects = [...range.getClientRects()].filter(v => v.width && v.height);

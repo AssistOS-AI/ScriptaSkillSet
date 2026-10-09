@@ -17,7 +17,7 @@ No Python, external model API, screenshots, general editorial review or metadata
 Tool paths also accept VALIDATEBOOK_CHROMIUM/PDFTOTEXT/PDFFONTS/PDFIMAGES.`;
 try {
   const { positionals: [command, input, ...extra], values } = parseArgs({ allowPositionals: true, options: {
-    'restore-source-publisher': {type: 'boolean'}, pdf2html: { type: 'string' }, paginate: { type: 'boolean' }, help: { type: 'boolean', short: 'h' }, chromium: { type: 'string' }, pdftotext: { type: 'string' }, pdffonts: { type: 'string' }, pdfimages: { type: 'string' }, pdftohtml: { type: 'string' }, 'word-spacing': { type: 'string' }, filename: { type: 'string' }, languages: { type: 'string' }, pdf: { type: 'string' }, english: { type: 'string' }, 'job-dir': { type: 'string' }, 'auto-correct': { type: 'boolean' }
+    'restore-source-publisher': {type: 'boolean'}, pdf2html: { type: 'string' }, paginate: { type: 'boolean' }, help: { type: 'boolean', short: 'h' }, chromium: { type: 'string' }, pdftotext: { type: 'string' }, pdffonts: { type: 'string' }, pdfimages: { type: 'string' }, pdftohtml: { type: 'string' }, 'word-spacing': { type: 'string' }, filename: { type: 'string' }, languages: { type: 'string' }, pdf: { type: 'string' }, english: { type: 'string' }, 'job-dir': { type: 'string' }, 'auto-correct': { type: 'boolean' }, translations: { type: 'string' }, 'shared-fonts': { type: 'string' }
   } });
   if (values.help) console.log(help);
   else {

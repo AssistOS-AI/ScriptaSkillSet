@@ -16,6 +16,38 @@ test('smaller table text cannot determine body prose leading',()=>{
   assert.equal(mixed.bodyPt,11);
   assert.equal(mixed.leadingPt,19.5);
 });
+test('converted preformatted or monospace blocks are calibrated like prose',()=>{
+  const srcText='PROTECTION SYSTEMS THAT DELAYED AUTONOMY TO PRESERVE ERROR REDUCTION.';
+  const p={...profile,bodyPt:14,bodyCssPx:pointsToCssPixels(14),leadingPt:21,leadingCssPx:pointsToCssPixels(21),pages:[{page:1,width:432,lines:[{text:srcText,top:100,font:{sizePt:14,family:'CourierNew',color:'#000000'}}]}]};
+  const d={presentation:{bodyFontSize:pointsToCssPixels(14),contentSelector:'body'},records:[{tag:'pre',selector:'#code',text:srcText,page:'1',font:{size:String(pointsToCssPixels(14)),family:'courier'},style:{lineHeight:String(pointsToCssPixels(21)),marginBottom:0,textAlign:'left'}}]};
+  const compared=compareTypography(p,d);
+  assert(compared.mappings.some(m=>m.selector==='#code'),'a pre block is matched to its source text');
+  const action=typographyActions(p,d,compared,{defaultSizePx:pointsToCssPixels(14),sourceFontMap:{couriernew:'pdf-font-courier'},sourceFontWeights:{couriernew:[400]},sourceFontStyles:{couriernew:['normal']}}).find(a=>a.selector==='#code');
+  assert(action,'a converted pre block receives a typography action');
+  assert.equal(action.properties['font-family'],'pdf-font-courier');
+  assert.equal(action.properties['white-space'],'normal');
+  assert.equal(action.properties['text-align'],'justify');
+  assert.equal(action.properties['margin-bottom'],'0');
+});
+test('source alignment keeps ragged source blocks out of justification',()=>{
+  const line=(text,top,width)=>({text,top,left:78,width,font:{sizePt:11}});
+  const p={...profile,bodyPt:11,bodyCssPx:pointsToCssPixels(11),leadingPt:15,leadingCssPx:pointsToCssPixels(15),pages:[{page:1,width:432,lines:[
+    line('Alpha beta gamma delta epsilon zeta eta theta',100,600),
+    line('iota kappa lambda mu.',100,200),
+    line('RAGGED ONE.',200,180),
+    line('RAGGED TWO.',215,150),
+    line('RAGGED THREE.',230,120)
+  ]}]};
+  const style={lineHeight:String(pointsToCssPixels(15)),marginBottom:0,textAlign:'left'};
+  const record=(selector,text)=>({tag:'p',selector,text,page:'1',font:{size:String(pointsToCssPixels(11))},style});
+  const d={presentation:{bodyFontSize:pointsToCssPixels(11),contentSelector:'body'},records:[record('#just','Alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu.'),record('#rag','RAGGED ONE. RAGGED TWO. RAGGED THREE.')]};
+  const c=compareTypography(p,d);
+  assert.equal(c.mappings.find(m=>m.selector==='#just').sourceAlign,'justify');
+  assert.equal(c.mappings.find(m=>m.selector==='#rag').sourceAlign,'left');
+  const actions=typographyActions(p,d,c,{defaultSizePx:pointsToCssPixels(11)});
+  assert.equal(actions.find(x=>x.selector==='#just').properties['text-align'],'justify');
+  assert.equal(actions.find(x=>x.selector==='#rag').properties['text-align'],'left');
+});
 const doc=(size=23,leading=31)=>({presentation:{bodyFontSize:size,contentSelector:'body'},records:[{tag:'p',selector:'#passage',text,font:{size:String(size)},style:{lineHeight:String(leading),marginBottom:4}}]});
 test('point conversion and baseline distance are independent from glyph height',()=>{assert.equal(pointsToCssPixels(12),16);assert.equal(profile.bodyPt,11);assert.equal(profile.leadingCssPx,15.5*4/3);assert.notEqual(profile.leadingCssPx,14.3*4/3);});
 test('chapter hierarchy restores PDF colors, multiline leading and adjacent heading gaps',()=>{

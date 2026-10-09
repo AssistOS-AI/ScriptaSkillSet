@@ -1,7 +1,7 @@
 import { issue, normalizeText } from './layout-checks.mjs';
 
 export const pointsToCssPixels = points => points * 96 / 72;
-export const pageScale = (record, widthPt) => record.pageWidth>0&&widthPt>0 ? Math.max(1,record.pageWidth/pointsToCssPixels(widthPt)) : 1;
+export const pageScale = (record, widthPt) => record.pageWidth>0&&widthPt>0 ? Math.min(1.2,Math.max(1,record.pageWidth/pointsToCssPixels(widthPt))) : 1;
 const median = values => { const sorted = values.filter(Number.isFinite).sort((a,b)=>a-b); return sorted[Math.floor(sorted.length/2)] ?? null; };
 const colorKey = value => {
   const text=String(value||'').toLowerCase();
@@ -135,7 +135,13 @@ export function sourceTypographyProfile(pages, geometry) {
       if(a.font.sizePt===bodyPt&&z.font.sizePt===bodyPt&&a.text.length>30&&z.text.length>30&&delta>bodyPt*.9&&delta<bodyPt*1.9)leading.push(delta);
     }
   }
-  return {bodyPt,bodyCssPx:pointsToCssPixels(bodyPt),leadingPt:median(leading),leadingCssPx:median(leading)===null?null:pointsToCssPixels(median(leading)),fontSizeUncertaintyPt:.5,units:'PDF pt; CSS px = pt × 96/72',pages};
+  const bodyLeftCounts=new Map();
+  for(const p of pages)for(const l of p.lines)if(l.font.sizePt===bodyPt){const key=Math.round(l.left);bodyLeftCounts.set(key,(bodyLeftCounts.get(key)||0)+1);}
+  const bodyLeft=Number([...bodyLeftCounts].sort((a,b)=>b[1]-a[1])[0]?.[0]);
+  const indentCandidates=[];
+  for(const p of pages)for(const l of p.lines)if(l.font.sizePt===bodyPt){const delta=l.left-bodyLeft;if(delta>bodyPt*.25&&delta<bodyPt*3)indentCandidates.push(delta);}
+  const bodyIndentPt=Number.isFinite(bodyLeft)?(median(indentCandidates)??0):0;
+  return {bodyPt,bodyCssPx:pointsToCssPixels(bodyPt),leadingPt:median(leading),leadingCssPx:median(leading)===null?null:pointsToCssPixels(median(leading)),bodyIndentPt,fontSizeUncertaintyPt:.5,units:'PDF pt; CSS px = pt × 96/72',pages};
 }
 
 function sourceJoined(lines) { return lines.map(line=>line.joined).join(''); }
@@ -181,7 +187,7 @@ export function compareTypography(profile, document, language='en', {sourceFontM
   const sourceLines=readingSourceLines(profile.pages);
   const platformSamples=selector=>(document.platformFonts||[]).filter(sample=>sample.selector===selector);
   const lastPage=Math.max(0,...sourceLines.map(line=>line.page));
-  const eligible=document.records.filter(r=>/^(p|h[1-6]|figcaption)$/.test(r.tag)&&normalizeText(r.text).length>=3);
+  const eligible=document.records.filter(r=>/^(p|h[1-6]|figcaption|pre)$/.test(r.tag)&&normalizeText(r.text).length>=3);
   const pageOccurrences=new Map(),documentOccurrences=new Map();
   for(const r of eligible){
     const key=String(r.page||'')+'|'+normal(r.text);
@@ -261,8 +267,15 @@ export function compareTypography(profile, document, language='en', {sourceFontM
         mapping.previousSelector=previous.selector;
       }
     }
-    if(r.tag==='p'&&next&&profile.leadingPt&&next.top-last.top<profile.leadingPt*2)mapping.paragraphGapCssPx=Math.max(0,pointsToCssPixels(next.top-last.top)-profile.leadingCssPx);
+    const maxTop=matchedLines.length?Math.max(...matchedLines.map(line=>line.top)):last.top;
+    const stacked=profile.leadingPt?matchedLines.filter(line=>line.top===maxTop).length-1:0;
+    const effectiveLastTop=maxTop+Math.max(0,stacked)*(profile.leadingPt||0);
+    if(r.tag==='p'&&next&&profile.leadingPt&&next.top-effectiveLastTop<profile.leadingPt*2)mapping.paragraphGapCssPx=Math.max(0,pointsToCssPixels(next.top-effectiveLastTop)-profile.leadingCssPx);
     if(mapping.paragraphGapCssPx<1)mapping.paragraphGapCssPx=0;
+    const pageLines=profile.pages.find(p=>p.page===matchedLines[0].page)?.lines||[];
+    const bodyColumn=pageLines.filter(line=>line.font?.sizePt===profile.bodyPt).reduce((max,line)=>Math.max(max,Number(line.width)||0),0);
+    const nonLast=matchedLines.slice(0,-1).map(line=>Number(line.width)||0);
+    if(bodyColumn>0&&nonLast.length)mapping.sourceAlign=nonLast.every(w=>w>=bodyColumn*.9)?'justify':'left';
     mappings.push(mapping);
     if(Math.abs(actual-expected)>Math.max(1,expected*.08))findings.push(issue(language,'absolute_font_size_difference',r.selector,'Computed default font size differs from the PDF font size in physical units.',{...mapping,repair:{kind:'presentation',selector:r.selector,properties:{'font-size':`${sourcePt/profile.bodyPt}em`}}}));
     if(mapping.sourceLeadingPt&&Math.abs(parseFloat(r.style.lineHeight)/actual-mapping.sourceLeadingPt/sourcePt)>.08)findings.push(issue(language,'heading_line_leading_difference',r.selector,'Heading line spacing differs from the PDF baseline increments.',{...mapping,repair:{kind:'presentation',selector:r.selector,properties:{'line-height':String(mapping.sourceLeadingPt/sourcePt)}}}));
@@ -298,7 +311,7 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
       installedFamilies.get(key).add(record.font.family);
     }
   }
-  const records=document.records.filter(r=>/^(p|h[1-6]|figcaption)$/.test(r.tag));
+  const records=document.records.filter(r=>/^(p|h[1-6]|figcaption|pre)$/.test(r.tag));
   const bodyMappings=sourceComparison.mappings.filter(m=>m.tag==='p'&&m.fontSizePt===profile.bodyPt);
   const dominantBodyFamily=(()=>{
     const counts=new Map();
@@ -343,8 +356,9 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
         const styles=sourceFontStyles[dominantBodyFamily]||[];
         if(styles.includes('normal'))properties['font-style']='normal';
       }
+      if(r.tag==='p'){if(properties['margin-top']===undefined)properties['margin-top']='0';properties['padding']='0';properties['text-indent']=profile.bodyIndentPt>0?`${profile.bodyIndentPt/profile.bodyPt}em`:'0';}
     }
-    if(m){properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${pointsToCssPixels(m.fontSizePt)/defaultSizePx} * var(--validatebook-page-scale, 1))`;if(m.paragraphGapCssPx!==undefined)properties['margin-bottom']=`${m.paragraphGapCssPx/pointsToCssPixels(m.fontSizePt)}em`;if(m.fontSizePt===profile.bodyPt&&profile.leadingCssPx)properties['line-height']=String(profile.leadingCssPx/profile.bodyCssPx);if(m.sourceLeadingPt)properties['line-height']=String(m.sourceLeadingPt/m.fontSizePt);if(m.gapBeforeEm!==undefined){properties['margin-top']=m.gapBeforeEm+'em';if(m.previousSelector)actions.push({kind:'presentation',selector:m.previousSelector,properties:{'margin-bottom':'0'}});}if(m.sourceColors?.length===1)properties.color=m.sourceColors[0];}
+    if(m){properties['font-size']=`calc(var(--reader-font-size, var(--standalone-size, ${defaultSizePx}px)) * ${pointsToCssPixels(m.fontSizePt)/defaultSizePx} * var(--validatebook-page-scale, 1))`;if(m.paragraphGapCssPx!==undefined)properties['margin-bottom']=`${m.paragraphGapCssPx/pointsToCssPixels(m.fontSizePt)}em`;else if(r.tag==='p'||r.tag==='pre')properties['margin-bottom']='0';if(m.fontSizePt===profile.bodyPt&&profile.leadingCssPx)properties['line-height']=String(profile.leadingCssPx/profile.bodyCssPx);if(m.sourceLeadingPt)properties['line-height']=String(m.sourceLeadingPt/m.fontSizePt);if(m.gapBeforeEm!==undefined){properties['margin-top']=m.gapBeforeEm+'em';if(m.previousSelector)actions.push({kind:'presentation',selector:m.previousSelector,properties:{'margin-bottom':'0'}});}if(m.sourceColors?.length===1)properties.color=m.sourceColors[0];if(r.tag==='p'||r.tag==='pre'){if(properties['margin-top']===undefined)properties['margin-top']='0';properties['padding']='0';properties['white-space']='normal';if(r.tag==='p'&&m.fontSizePt===profile.bodyPt)properties['text-indent']=(m.gapBeforeEm===undefined&&profile.bodyIndentPt>0)?`${profile.bodyIndentPt/profile.bodyPt}em`:'0';}}
     if(m?.sourceFamilies?.length){
       const keys=[...new Set(m.sourceFamilies.filter(Boolean).map(familyKey))];
       const mapped=keys.length===1?sourceFontMap[keys[0]]:null;
@@ -360,11 +374,12 @@ export function typographyActions(profile, document, sourceComparison, {defaultS
       properties['font-style']=style;
     }
     const sourceDisplayText=r.displayGroup!==null&&r.displayGroup!==undefined;
-    const proseParagraph=r.tag==='p'&&!sourceDisplayText;
+    const proseParagraph=(r.tag==='p'||r.tag==='pre')&&!sourceDisplayText;
     const protectedAlignment=['center','right','end'].includes(r.style?.textAlign);
+    const sourceAlign=m?.sourceAlign;
     if(proseParagraph&&!protectedAlignment){
-      properties['text-align']=justifyPolicy==='natural'?'left':'justify';
-      if(justifyPolicy==='source'){
+      properties['text-align']=sourceAlign==='left'?'left':(justifyPolicy==='natural'?'left':'justify');
+      if(properties['text-align']==='justify'&&justifyPolicy==='source'){
         properties['text-align-last']='left';
         properties.hyphens='auto';
       }

@@ -774,7 +774,7 @@ export function paginationCss({width,height,margins,contents=[],contentsLineHeig
   return `/* validateBook source pagination */
 @property --validatebook-page-scale{syntax:"<number>";inherits:true;initial-value:1}
 [data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size;background:var(--reader-surround,var(--standalone-surround,#e3e6e4));box-shadow:none;border-color:transparent}
-[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:max(1,calc(100cqw / ${width*4/3}px));font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
+[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:clamp(1,calc(100cqw / ${width*4/3}px),1.2);font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
 [data-validatebook-root] > .pdf-source-page:last-of-type{margin-bottom:0;break-after:auto}
 [data-validatebook-root] > .pdf-source-page:has(figure#page_1){padding:0}
 .pdf-source-page figure#page_1{margin:0}

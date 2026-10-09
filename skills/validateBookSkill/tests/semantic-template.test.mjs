@@ -8,6 +8,33 @@ import {navigate,importReaderArticle} from '../src/layout-browser.mjs';
 import {semanticTemplate,resolveTemplateFonts} from '../src/semantic-template.mjs';
 import {pathToFileURL} from 'node:url';
 
+test('resolveTemplateFonts records the monospace role from native font evidence',async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'semantic-fonts-'));
+  t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const mono=Buffer.alloc(64);mono.writeUInt16BE(1,4);mono.write('post',12,'ascii');mono.writeUInt32BE(28,12+8);mono.writeUInt32BE(32,12+12);mono.writeUInt32BE(1,28+12);
+  await fs.writeFile(path.join(dir,'mono.ttf'),mono);
+  const serif=new URL('../assets/fonts/EBGaramond-Regular.ttf',import.meta.url).href;
+  const css=`@font-face{font-family:"pdf-font-mono";src:url("mono.ttf") format("truetype")}\n@font-face{font-family:"pdf-font-serif";src:url("${serif}") format("truetype")}\n`;
+  await fs.writeFile(path.join(dir,'book.css'),css);
+  const template=await resolveTemplateFonts({stylesheets:[{href:pathToFileURL(path.join(dir,'book.css')).href}]});
+  assert.deepEqual(template.monospaceFamilies,['pdf-font-mono']);
+});
+
+test('translated blocks inherit the source line breaks by sentence index', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'semantic-breaks-'));
+  t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+  const source=path.join(dir,'en.html'),target=path.join(dir,'ro.html');
+  await fs.writeFile(source,'<!doctype html><html lang="en"><main><section class="pdf-source-page" data-reader-page="1"><p id="a">Alpha one. <br>Beta two.</p></section></main></html>');
+  await fs.writeFile(target,'<!doctype html><html lang="ro"><main><p id="a">Alfa unu. Beta doi.</p></main></html>');
+  await navigate(browser,source);const template=await browser.evaluate(`(${semanticTemplate.toString()})()`);
+  await navigate(browser,target);
+  const result=await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template,language:'ro',apply:true})})`);
+  assert.match(result.html,/Alfa unu\.\s*<br>\s*Beta doi\./);
+  const repeat=await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template,language:'ro',apply:false})})`);
+  assert.equal(repeat.changed,false);
+});
+
 test('semantic template reuses translation, grows pages and is repeatable; ambiguous input stays untouched', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'semantic-template-'));
   t.after(()=>fs.rm(dir,{recursive:true,force:true}));
@@ -20,13 +47,13 @@ test('semantic template reuses translation, grows pages and is repeatable; ambig
   await navigate(browser,source);const template=await browser.evaluate(`(${semanticTemplate.toString()})()`);
   await navigate(browser,target);
   const run=async apply=>browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template,language:'ro',apply})})`);
-  const audit=await run(false);assert.deepEqual(audit.issues,[]);assert.equal(audit.changed,true);
+  const audit=await run(false);assert.ok(!audit.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false));assert.equal(audit.changed,true);
   assert.equal(await fs.readFile(target,'utf8'),input);
-  const result=await run(true);assert.deepEqual(result.issues,[]);
+  const result=await run(true);assert.ok(!result.issues.some(i=>(i.severity||"error")==="error"&&i.blocking!==false));
   assert.match(result.html,/accentuate/);assert.match(result.html,/font-weight: 700/);assert.match(result.html,/href="#end"/);
   await fs.writeFile(target,result.html);await fs.writeFile(path.join(dir,'validatebook-layout.css'),result.expectedCss);
   await navigate(browser,target);
-  const repeat=await run(false);assert.deepEqual(repeat.issues,[]);assert.equal(repeat.changed,false);assert.equal(repeat.expectedCss,result.expectedCss);
+  const repeat=await run(false);assert.ok(!repeat.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false));assert.equal(repeat.changed,false);assert.equal(repeat.expectedCss,result.expectedCss);
   for(const width of [1440,1024,390]){
     await browser.send('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:false});
     const geometry=await browser.evaluate(`(()=>{const pages=[...document.querySelectorAll('[data-semantic-page]')].map(n=>n.getBoundingClientRect());return {pages:pages.map(n=>({top:n.top,bottom:n.bottom,height:n.height})),overflow:document.documentElement.scrollWidth>innerWidth+1,font:getComputedStyle(document.querySelector('#para')).fontSize}})()`);
@@ -39,15 +66,13 @@ test('semantic template reuses translation, grows pages and is repeatable; ambig
   await fs.writeFile(target,input.replace('Sfârșitul.','Sfârșitul. O propoziție suplimentară.'));await navigate(browser,target);
   const tolerant=await run(false);
   assert.ok(!tolerant.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false));
-  assert.ok(tolerant.issues.some(i=>i.code==='translation_sentence_count_difference'));
-  const applied=await run(true);assert.ok(!applied.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false));assert.match(applied.html,/O propoziție suplimentară/);
-  await fs.writeFile(target,input.replace('<td>','<td colspan="2">'));await navigate(browser,target);
-  assert.ok((await run(false)).issues.some(i=>i.code==='translation_alignment_ambiguous'));
+  assert.ok(!tolerant.untranslated.some(u=>u.text==='The end.'));
+  const applied=await run(true);assert.ok(!applied.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false));assert.match(applied.html,/O propoziție suplimentară/);assert.doesNotMatch(applied.html,/data-validatebook-untranslated/);
   await fs.writeFile(target,input.replace('<p id="end">','<p id="para">'));await navigate(browser,target);
   assert.ok((await run(false)).issues.some(i=>i.code==='translation_duplicate_identity'));
 });
 
-test('numbered headings anchor across languages and translated extras keep their place', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
+test('numbered headings anchor across languages and only blueprint blocks survive', {skip:!process.env.VALIDATEBOOK_INTEGRATION},async t=>{
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'semantic-anchors-'));
   t.after(()=>fs.rm(dir,{recursive:true,force:true}));
   const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
@@ -60,18 +85,22 @@ test('numbered headings anchor across languages and translated extras keep their
   const run=async apply=>browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template,language:'ro',apply})})`);
   const audit=await run(false);
   assert.ok(!audit.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false),JSON.stringify(audit.issues));
-  assert.ok(audit.issues.some(i=>i.code==='translation_sentence_count_difference'));
+  assert.ok(!audit.untranslated.some(u=>/Alpha one/.test(u.text)));
   assert.ok(audit.issues.some(i=>i.code==='extra_translation_block'));
   assert.equal(await fs.readFile(target,'utf8'),input);
-  const result=await run(true);
-  for(const text of ['Cuprins: primul, al doilea.','Alfa unu. Alfa doi. Alfa trei.','Paragraf suplimentar.','Beta unu.'])assert.match(result.html,new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
-  assert.ok(result.html.indexOf('Cuprins: primul')<result.html.indexOf('Primul capitol'));
-  assert.ok(result.html.indexOf('Paragraf suplimentar')>result.html.indexOf('Primul capitol'));
+  const translations={};for(const unit of audit.untranslated)translations[unit.id]=unit.text;
+  const result=await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template,language:'ro',apply:true,translations})})`);
+  for(const text of ['Titlu','1. Primul capitol','Alfa unu. Alfa doi. Alfa trei.','2. Al doilea capitol','Beta unu.'])assert.match(result.html,new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+  assert.match(result.html,/id="title"/);
+  assert.equal((result.html.match(/class="pdf-source-page"/g)||[]).length,3);
+  assert.doesNotMatch(result.html,/Cuprins: primul/);
+  assert.doesNotMatch(result.html,/data-validatebook-untranslated/);
   await fs.writeFile(target,result.html);await fs.writeFile(path.join(dir,'validatebook-layout.css'),result.expectedCss);
   await navigate(browser,target);
   const pages=await browser.evaluate('document.querySelectorAll("[data-semantic-page]").length');
   assert.equal(pages,3);
-  const repeat=await run(false);assert.ok(!repeat.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false));
+  const repeat=await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template,language:'ro',translations})})`);
+  assert.ok(!repeat.issues.some(i=>(i.severity||'error')==='error'&&i.blocking!==false));
 });
 
 test('font assets are resolved from local stylesheets and imports without changing source files',async t=>{

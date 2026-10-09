@@ -144,6 +144,9 @@ export function applyDomRepairs(actions) {
           const family=declaration.getPropertyValue('font-family');
           if(family){const parts=family.split(',').map(part=>part.trim()).filter(Boolean);if(parts.length>1&&/pdf-font/i.test(parts[0]))declaration.setProperty('font-family',parts.slice(1).join(', '),declaration.getPropertyPriority('font-family'));}
         }
+        // Prose blocks never carry a forced source box height: a reflowed
+        // paragraph must not reserve the PDF block height as blank space.
+        if(/^(P|H[1-6]|LI|BLOCKQUOTE|FIGCAPTION)$/.test(n.tagName)){declaration.removeProperty('min-height');declaration.removeProperty('height');declaration.removeProperty('max-height');}
         const signature=declaration.cssText;if(!signature){n.removeAttribute('style');continue;}
         const computed=getComputedStyle(n);expected.push({node:n,values:Object.fromEntries([...declaration].map(key=>[key,computed.getPropertyValue(key)]))});
         let id=signatures.get(signature);if(!id){id='s'+(signatures.size+1);signatures.set(signature,id);}

@@ -21,7 +21,7 @@ import {readerPresentation} from './reader-presentation.mjs';
 import {readerTypographyRepairs,readerGeometryCss} from './reader-repairs.mjs';
 import {tryCorrectionBatches} from './correction-batches.mjs';
 import {readingPages} from './layout-checks.mjs';
-import {restoreReferenceBoundaries,restoreSplitSourcePhrases} from './source-boundaries.mjs';
+import {restoreReferenceBoundaries,restoreSplitSourcePhrases,restoreSourceLineBreaks} from './source-boundaries.mjs';
 import {displayPageProfiles,repairDisplayPages,checkDisplayPages} from './display-pages.mjs';
 import {repairFalseHeadings} from './false-headings.mjs';
 import {paginateDocument,repairPageShells,paginationCss,sourcePagePresentation,sourceImagePresentation,applyContentsPresentation,applySourceImagePresentation,pagePaddingDifferences,pageHeightDifferences,sourceBlankPages,splitDuplicateSourceToc,removeEmptyTranslatedPages,normaliseConverterHtml,normaliseCoverPage,normaliseTables,mergeSplitTables,removeEmptyContentsPages} from './pagination.mjs';
@@ -206,6 +206,13 @@ export async function prepare(root, options = {}) {
     let english;
     let englishPresentation=null;
     let englishTemplate=null;
+    // Translations supplied by the active LLM for English units with no confident
+    // existing counterpart. The audit writes the list of those units as evidence.
+    const translations = options.translations ? JSON.parse(await fs.readFile(options.translations, 'utf8')) : {};
+    // One shared local font library serves every book; the translated stylesheet
+    // references it with a path relative to the edition (same stable depth as the
+    // shared reader stylesheet), or bundled per-book when none is configured.
+    const sharedFontsDir = options['shared-fonts'] || process.env.VALIDATEBOOK_SHARED_FONTS;
     const unresolved = [];
     const expectedCurrent = new Map(initialInputs.map(i => [i.file, i.sha256]));
     async function backupOriginal(item) {
@@ -253,6 +260,7 @@ export async function prepare(root, options = {}) {
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${repairFalseHeadings.toString()})(${JSON.stringify(typography.stdout)})`));
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreReferenceBoundaries.toString()})(${JSON.stringify(readingPages(pages))})`));
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreSplitSourcePhrases.toString()})(${JSON.stringify(typography.stdout)})`));
+      if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${restoreSourceLineBreaks.toString()})(${JSON.stringify(typography.stdout)})`));
       if(structure&&item.language==='en')applied.changes.push(...await browser.evaluate(`(${splitDuplicateSourceToc.toString()})(${JSON.stringify(pages)})`));
       // Converter output must be normalised in every batch: pagination, tables
       // and image presentation all depend on the canonical page classes.
@@ -363,7 +371,7 @@ export async function prepare(root, options = {}) {
         const presentation=await readerPresentation(await measure(browser,item.file),item.file);
         resourceInputs.push(...presentation.inputs);
         await navigate(browser,item.file);
-        const result=englishTemplate?await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template:englishTemplate,language:item.language,apply:!!options.autoCorrect})})`):{issues:[{code:'translation_template_unavailable',detail:'The English semantic template is unavailable.'}]};
+        const result=englishTemplate?await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template:englishTemplate,language:item.language,apply:!!options.autoCorrect,translations,fontBase:sharedFontsDir||undefined})})`):{issues:[{code:'translation_template_unavailable',detail:'The English semantic template is unavailable.'}]};
         const templateFindings=result.issues.map(f=>issue(item.language,f.code,'semantic page '+(f.page||'unknown'),f.detail||'English and translated structure differ.',f));
         const blockingFindings=templateFindings.filter(f=>f.severity==='error'&&f.blocking!==false);
         const findings=[...templateFindings];
@@ -376,6 +384,15 @@ export async function prepare(root, options = {}) {
           else {
             const candidate={html:result.html,stylesheet:{css:result.expectedCss}};
             try {
+              // Install the bundled OFL typeface beside the translated stylesheet
+              // so its relative font URLs resolve (skipped when a shared library
+              // is configured and referenced instead).
+              if(!sharedFontsDir){
+                const bundledFontDir=path.join(path.dirname(fileURLToPath(import.meta.url)),'..','assets','fonts');
+                const targetFontDir=path.join(path.dirname(item.file),'assets','fonts');
+                await fs.mkdir(targetFontDir,{recursive:true});
+                for(const name of ['EBGaramond-Regular.ttf','EBGaramond-Italic.ttf']){const dest=path.join(targetFontDir,name);if(!await exists(dest))await fs.copyFile(path.join(bundledFontDir,name),dest);}
+              }
               await guardInstallation(browser,item,candidate,presentation,null);
               if(await fileHash(item.file)!==expectedCurrent.get(item.file))throw Error('Concurrent translation change');
               if(cssBefore!==null&&!cssBefore.startsWith('/* validateBook managed presentation;'))throw Error('Managed stylesheet destination is occupied by unrelated content');
@@ -393,7 +410,7 @@ export async function prepare(root, options = {}) {
                 await fs.writeFile(item.file+suffix,result.html,{flag:'wx'});
                 await fs.rename(cssFile+suffix,cssFile);await fs.rename(item.file+suffix,item.file);
                 await navigate(browser,item.file);
-                const installed=await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template:englishTemplate,language:item.language})})`);
+                const installed=await browser.evaluate(`(${semanticTemplate.toString()})(${JSON.stringify({template:englishTemplate,language:item.language,translations,fontBase:sharedFontsDir||undefined})})`);
                 if(installed.issues.some(f=>(f.severity||'error')==='error'&&f.blocking!==false)||installed.changed||installed.expectedCss!==result.expectedCss)throw Error('Installed semantic template failed repeat validation');
               } catch(error){await fs.writeFile(item.file,existing);if(cssBefore===null)await fs.rm(cssFile,{force:true});else await fs.writeFile(cssFile,cssBefore);throw error;}
               finally {await fs.rm(cssFile+suffix,{force:true});await fs.rm(item.file+suffix,{force:true});}
@@ -410,6 +427,12 @@ export async function prepare(root, options = {}) {
           const article=await measure(browser,item.file,{importedArticle:presentation.articleContract});
           findings.push(...article.layouts.flatMap(l=>checkDisplay(l,item.language)));
           const articleFile=path.join(directory,item.language+'-article-layout.json');await writeJson(articleFile,article);artifacts.push({file:articleFile,sha256:await fileHash(articleFile)});
+        }
+        if(result.untranslated&&result.untranslated.length){
+          const untranslatedFile=path.join(directory,item.language+'-untranslated.json');
+          await writeJson(untranslatedFile,result.untranslated);
+          artifacts.push({file:untranslatedFile,sha256:await fileHash(untranslatedFile)});
+          findings.push(issue(item.language,'translation_untranslated_units',item.language+'-untranslated.json',result.untranslated.length+' English unit(s) have no confident translation; supply them and re-run.',{count:result.untranslated.length,severity:'warning'}));
         }
         const assets=await collectAssets(final);resourceInputs.push(...assets.inputs);findings.push(...assets.findings);
         unresolved.push(...findings);

@@ -18,19 +18,19 @@ test('page height validation detects collapsed pages and accepts longer translat
 });
 
 test('page scale uses physical source width and preserves a readable mobile floor',()=>{
-  assert.equal(pageScale({pageWidth:864},432),1.5);
+  assert.equal(pageScale({pageWidth:864},432),1.2);
   assert.equal(pageScale({pageWidth:320},432),1);
   assert.equal(pageScale({},432),1);
   const doc={records:[{tag:'p',page:'1',pageWidth:864,selector:'#p',text,font:{size:'14.6667px'},style:{lineHeight:'20px',marginBottom:0}}]};
   assert(compareTypography(profile,doc).findings.some(f=>f.category==='absolute_font_size_difference'));
-  doc.records[0].font.size='22px';doc.records[0].style.lineHeight='30px';
+  doc.records[0].font.size='17.6px';doc.records[0].style.lineHeight='24px';
   assert.deepEqual(compareTypography(profile,doc).findings,[]);
 });
 
 test('page scale follows the page box, not a wider host container',()=>{
   const css=paginationCss({width:432,height:648,margins:{top:45,right:43,bottom:50,left:52}});
   assert(css.includes('[data-validatebook-root] > .pdf-source-page{container-type:inline-size;'));
-  assert(css.includes('--validatebook-page-scale:max(1,calc(100cqw / 576px))'));
+  assert(css.includes('--validatebook-page-scale:clamp(1,calc(100cqw / 576px),1.2)'));
   assert(!css.includes('> *{--validatebook-page-scale'));
   assert(css.includes('[data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size'));
 });
@@ -51,7 +51,7 @@ test('native page scaling survives consolidation, nested containers and a second
     for(const width of [864,576,320]){
       await browser.send('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:false});
       const layout=await browser.evaluate(`(${inspectLayout.toString()})()`);
-      for(const p of layout.records.filter(r=>r.tag==='p'))assert(Math.abs(parseFloat(p.font.size)-44/3*Math.max(1,width/576))<.02,JSON.stringify({pass,width,p}));
+      for(const p of layout.records.filter(r=>r.tag==='p'))assert(Math.abs(parseFloat(p.font.size)-44/3*Math.min(1.2,Math.max(1,width/576)))<.02,JSON.stringify({pass,width,p}));
     }
   }
 });
