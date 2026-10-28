@@ -1,0 +1,57 @@
+{
+  "version": "docling.rs 1.32.0, FP32 models-v1 assets published 2026-10-13",
+  "files": {
+    "models/layout_heron.onnx": {
+      "bytes": 172208540,
+      "sha256": "3b92f33998e87878ea05624043f8092b7f7c5a6e9c484282977845b5f9742a28",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/layout_heron.onnx",
+      "releaseAssetId": 636374702
+    },
+    "models/tableformer/bbox.onnx": {
+      "bytes": 52225,
+      "sha256": "25b2097148afde72d99eb8a23a261c24fb24ea37e141691c6cfc1bc9ef293c13",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/bbox.onnx",
+      "releaseAssetId": 636374183
+    },
+    "models/tableformer/bbox.onnx.data": {
+      "bytes": 39649280,
+      "sha256": "7610e2593bfaecd72a535370f06e8c2468f9bf208bd2abe46cc727dda0a11392",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/bbox.onnx.data",
+      "releaseAssetId": 636374217
+    },
+    "models/tableformer/decoder.onnx": {
+      "bytes": 427108,
+      "sha256": "74398a2df2f5831e9c673b97d875287c4fb9929f1ddf3f2e6a2172b3f5ef98c0",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/decoder.onnx",
+      "releaseAssetId": 636374383
+    },
+    "models/tableformer/decoder.onnx.data": {
+      "bytes": 77856768,
+      "sha256": "f497d191f3907a2dd0ac9b4a2562e8f52c60f7657a1a714f5a8c4e855f3e39ef",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/decoder.onnx.data",
+      "releaseAssetId": 636374429
+    },
+    "models/tableformer/encoder.onnx": {
+      "bytes": 107827334,
+      "sha256": "f28ca9c405ac55aeac0304e73cd6ce36eb7e47031e2de35f98b208c365419e08",
+      "url": "https://github.com/docling-project/docling.rs/releases/download/models-v1/encoder.onnx",
+      "releaseAssetId": 636374605
+    },
+    "darwin-arm64/docling.node": {
+      "bytes": 37133728,
+      "sha256": "ee27e24bd9edd09b74e0b7152f47edca2351761410f1e2abab65cadd7039891f"
+    },
+    "darwin-arm64/lib/libpdfium.dylib": {
+      "bytes": 7260512,
+      "sha256": "f151baf68cf7c4ebee7e7b9263bdce065436b8df7008fb174d89dd2a97fac124"
+    },
+    "linux-arm64/docling.node": {
+      "bytes": 32792720,
+      "sha256": "26c881b73697708bba5fd4c0285b128a8e9bf1a6b18924c066deb8b4f51df87a"
+    },
+    "linux-arm64/lib/libpdfium.so": {
+      "bytes": 7963264,
+      "sha256": "794a43ec86642d48ed69becb6923022cd0b34d23c81c524452d6f0549398d710"
+    }
+  }
+}

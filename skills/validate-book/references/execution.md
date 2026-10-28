@@ -1,0 +1,68 @@
+# Continue an authorized layout correction
+
+## PDF reference and responsive integrity
+
+Book fidelity is measured once at the original PDF page width, using 96 CSS pixels per inch (1 PDF point = 96/72 CSS pixels). Select the viewport that naturally delivers that page width; do not override document styles or font sizes to force a match. A page that cannot reach its source width is an explicit reference geometry error. Typography, table and border presentation, display-page geometry and source insets are compared against this reference, for both standalone and supported imported readers.
+
+The 1440, 1024 and 390 CSS-pixel views remain integrity checks: hidden or clipped text, overlaps, broken assets/fonts, omitted pages, overflow and reader import differences are still errors. Different word spacing and line wrapping at these widths are expected reflow and are not source fidelity errors. There is no universal 0.65 em acceptance threshold.
+
+At the PDF reference width, compare measured word gaps only for unique source and HTML lines with the same word sequence, allowing the greater of 2 CSS pixels or 25% of the source gap for normal rendering and rounded font-metric differences. Visual fidelity is approximate, not pixel-identical. Differences beyond this tolerance are advisory when computed word-spacing and letter-spacing remain normal or zero; forced spacing beyond tolerance remains an error. Missing spacing-style evidence cannot certify natural spacing. Record matching-line coverage and gap measurements; differently wrapped or ambiguous lines are not certified by that spacing comparison. Full manuscript text, source typography and structural checks remain independent. Reports retain the reference dimensions separately from responsive layouts.
+
+
+The native correction loop retries rejected combined candidates as independent source-supported repair batches, remeasuring after each accepted installation. Rejection does not authorize weaker checks. Runtime failures and concurrent edits abort; rejected layout attempts and unresolved findings remain in the final report. Activate final page geometry before CSS consolidation and preserve host responsive root geometry from the hash-bound reader stylesheet.
+
+The user's verify-and-correct request authorizes this skill's complete local structure/display workflow. Reuse that authorization across stages, retries and interruptions. Do not ask whether to continue, apply a deterministic local fix, process another language or finish installation. Scope excludes editorial work, summaries, metadata and font-size-control tests.
+
+Inventory required permissions once. Use allowed workspace reads/writes and already approved native launchers. Task authorization and platform permission remain different: a proposed or interrupted approval is not a granted rule. Never bypass sandbox boundaries or broaden a launcher to run unrelated code. Request a platform grant only when a required operation cannot run with existing permissions and no permitted equivalent exists.
+
+Resume existing evidence when input and dependency hashes remain valid. After an interrupted correction inspect recovery.json and actual canonical files; do not overwrite recovery copies or invent completion. Continue all independent work if a native measurement is unavailable, and report that limitation rather than marking it passed.
+
+Use the bundled Node.js code for PDF extraction orchestration, DOM/structure comparison, font measurements, asset/link checks, native repairs and reports. Do not use an LLM, model API, Python command, agent-authored helper script, external repair plan or reviewed-difference input. Ambiguous local evidence remains a failed or warning finding. Run `complete` to execute correction passes and deliver the book-root report. There is no fixed cycle limit or external judgment stage.
+
+Complete the authorized correction by applying deterministic local changes, verifying canonical files and delivering report.md. List initial problems, before/after corrections, unresolved cases and backups. No intermediate task confirmations or additional review stages.
+
+The `complete` command delivers the final correction report at the book root, beside manifest.json: RAPORT-CORECTII.md for corrections and RAPORT-VERIFICARE.md for a requested audit. Link the book-root report in the final answer. After verified successful installation and final-report delivery, remove the private job directory and recovery copies according to the cleanup rule. Do not delete the book root, PDF, canonical HTML/CSS or the delivered report. Interrupted runs keep the job until a later complete finishes. This delivery step does not change the native audit command's read-only contract.
+
+Use native default typography calibration and measured word spacing before delivery. If the user requests normal word spacing, retain that preference with --word-spacing natural. Recheck every existing language after typography changes; report unsupported host delivery paths. A standalone no-overflow result cannot be described as complete reader typography validation.
+
+## Executable completion
+
+Use `scripts/validatebook complete BOOK_ROOT` for an authorized verify-and-correct request. The command applies English corrections, checks installed files, propagates accepted presentation, checks existing translations and writes `RAPORT-CORECTII.md` at the book root. Private jobs, recovery copies and temporary evidence are retained during execution and on failure; successful completion cleans them after saving the final report. `prepare` remains the single-pass audit/repair primitive and keeps its job. No LLM, model API, Python runtime or external review plan is used. PDF extraction is delegated to the explicitly configured pdf2html skill. A failed correction handler must be fixed; do not relabel its unresolved findings as passed. The coordinator detects repeated installed file states, rather than stopping after a fixed number of passes or comparing error counts.
+
+Display-page correction is generic: detect centered or left-aligned sparse layouts, including a centered title whose lines share a midline even if one glyph box is slightly off axis; flush-left rows are not treated as centered. Retain each group's verified source family, color, emphasis, first-line inset, line breaks and vertical gaps, and scale down to the available column on narrow screens. Reader iframe/article parity does not rewrite measured display-page groups. Isolated horizontal rules are consumed from the source-hash-bound pdf2html evidence, excluding table intersections; their width, color and placement are never inferred from the book title. Missing font mappings or ambiguous content leave the affected repair unapplied and reported. Check both standalone and imported delivery after CSS consolidation and rerunning the repair.
+
+
+## Installation safety and page spacing
+
+Generated page boxes own PDF-derived outer insets. Undecorated normal-flow main/article/section/div page shells have their duplicate box spacing and minimum height neutralized; paragraph, list and table spacing is preserved. Positioned or decorated layouts with ambiguous spacing remain reported errors. Covers are detected at any nesting depth. One reading root must contain every page. Before replacing canonical HTML/CSS, same-directory candidates are measured at 1440, 1024 and 390 px in standalone and supported imported delivery. Missing reader pages, cumulative shell spacing and unsafe display regressions reject the affected correction batch, without aborting other documents. Recovery copies and native job evidence are retained on failure and removed after verified successful completion and final-report delivery.
+
+## Independent translation pagination
+
+Existing translations use the single native semantic-template workflow described in [semantic-template](semantic-template.md). Reuse existing translated text and inline markers unchanged. English page containers define semantic groups that may grow across displayed pages. Align shared, language-independent anchors, then match ordered slots with a tolerant, order-preserving alignment that keeps translated-only blocks in place, reports missing or regrouped units and never rewrites prose. Only content loss, reordered identities, table-grid mismatch or an unalignable interval blocks the rebuild.
+
+## Autonomous transactional completion
+
+Complete owns the whole correction cycle in an isolated working copy, including source-anchor pagination when present, CSS consolidation, source typography checks at all three widths, translated role-based typography and both delivery paths. Translations are never matched lexically to English paragraphs; ambiguous roles remain explicit errors. Every language retains full page minimum dimensions, checked in both delivery paths at every viewport; translated content may extend pages without changing its text or imposing English breaks. Explicit paragraph sizes include the page scale exactly once, and managed selector priority survives reruns. Both complete and CLI prepare --auto-correct use this transaction. Install verified correction batches after original input hashes are rechecked. Reject unsafe rendering batches, report their errors and continue other documents. Remaining validation errors do not reject accepted corrections. External PDF/HTML overrides are audit-only. A candidate that changes the host reader cannot be installed as a book-only change. No external agent scripts, repair plans or manual sequence of helper scripts is part of normal execution.
+
+## Authorized publisher restoration
+
+The --restore-source-publisher option requires explicit user authorization. Native code extracts a unique copyright identity and website from the PDF, restores those entities only inside the existing copyright section, preserves narrative and translated sentence structure, and records before/after evidence. It is not enabled by ordinary layout correction. Complete still requires successful candidate validation before installation.
+
+## Translated images and tables
+
+Preserve localized image assets, including cover lettering, while applying English display dimensions, aspect ratio, fit, alignment and decoration. Match unique shared image/figure identities, including the cover role; ambiguous images remain reported errors. Check rendered image boxes in standalone and imported readers at every viewport, even when intrinsic asset ratios differ. Never replace localized artwork merely to inherit presentation. Table styling follows source cell borders, fills, column proportions, padding, typography and alignment; preserve translated cell text and allow row-height growth. Match unique structural identities or a unique same-grid table in the same structural role; missing or ambiguous translated tables remain reported errors.
+
+## Cleanup after successful completion
+
+After successful correction, verify the installed canonical files and durably save RAPORT-CORECTII.md at the book root. Then the native complete command must automatically remove book-owned .validatebook-jobs, .validatebook-layout and .validatebook-layout-jobs, including obsolete jobs, staged copies, recovery copies and temporary evidence. Preserve the PDF, canonical HTML/CSS/assets, manifest and final reports. Runtime failures retain diagnostics until the next fresh invocation; unresolved validation errors permit verified installation and cleanup. Never remove another running job: unresolved lock files defer cleanup. Audit-only prepare retains its report/status job. No agent-authored cleanup script or intermediate user confirmation is required. Cleanup status and removed paths remain in the machine-readable command result and are omitted from the user-facing Markdown report.
+
+## Fresh execution and partial completion
+
+Every complete invocation (including prepare --auto-correct) deletes previous book-owned .validatebook-jobs, .validatebook-layout and .validatebook-layout-jobs results and final reports before creating a fresh transaction. Preserve canonical PDF/HTML/CSS/assets: starting from zero means fresh evidence, not undoing installed corrections. Never delete another job with an unresolved lock. Custom job directories receive a new transaction; unrelated files are preserved. Audit-only prepare retains its read-only report/status job.
+
+Apply source-supported repairs until no further file changes occur. Unresolved validation findings remain errors in RAPORT-CORECTII.md; completed_with_errors means verified corrections were installed, not that the book passed all checks. Exit code 3 signals remaining errors without disabling HTML or reader access. Unsafe candidate batches are rejected and recorded while other documents continue. Runtime/tool failures and concurrent edits preserve originals. After verified installation and durable reporting, remove temporary results even for completed_with_errors.
+
+
+## Semantic translation template
+
+Read [the canonical translation contract](semantic-template.md). Verification and correction share the same extractor, alignment and renderer. Existing prose is immutable; longer translations extend their semantic page in normal flow. No legacy template path, sentence-count rewriting or full-book translation is used.

@@ -46,7 +46,7 @@ Player integration alone does not require an editorial plan, source adaptation o
 - `SKILL.md` routes presentation creation and player integration.
 - `assets/player/shf-player.js` is the bundled player distribution; `runtime/` contains its source.
 - `SHF_Asset_Catalog.html` and `assets/library/` provide reusable objects and character expressions, with 502 catalog entries.
-- `SHF_Preview_Silent.html`, `SHF_Preview.html` and `SHF_Cinema_Demo.html` show bundled examples. Included voices are demonstrations, not evidence of newly generated production narration.
+- Generated demo HTML files, rendered films and validation reports are omitted from this compact checkout. Editable direction examples, measured demo audio and build inputs remain available for regeneration. They are not needed to compile a new presentation or install the player.
 - [dependencies.md](dependencies.md) distinguishes the required runtime from optional narration, compressed-audio measurement and developer tools.
 
 ## Development checks
@@ -60,6 +60,6 @@ npm run catalog
 npm run test:portability
 ```
 
-Build and catalog generation update the skill's distributions and examples. They are development operations, not prerequisites for creating a presentation. The portability check copies the skill, rebuilds it and uses the player in a temporary unrelated project. Optional Python browser and schema checks are described in `HOW_TO_TEST.md`.
+Run `npm run build` before development checks that read rendered demo films. Build and catalog generation update the skill's distributions and examples. They are development operations, not prerequisites for creating a presentation. The portability check copies the skill, rebuilds it and uses the player in a temporary unrelated project. Optional Python browser and schema checks are described in `HOW_TO_TEST.md`.
 
-The bundled `evaluation/` reports describe earlier validation runs. They are historical evidence, not proof that a new presentation has passed visual, editorial or listening review. Check the actual presentation in its receiving project before claiming it is ready.
+Generated `evaluation/` reports describe a specific validation run and are not shipped in this compact checkout. They do not establish that a new presentation has passed visual, editorial or listening review. Check the actual presentation in its receiving project before claiming it is ready.

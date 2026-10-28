@@ -1,0 +1,809 @@
+// Runs inside the audit browser. Split containers at existing page anchors without rewriting prose.
+export function paginateDocument({blankPages=[],origin='source',expectedPages=null,repaginateExisting=false}={}) {
+  const root=document.querySelector('[data-validatebook-root]')||document.body;
+  const narrative=()=>{const copy=root.cloneNode(true);copy.querySelectorAll('script,style,template,noscript').forEach(n=>n.remove());return copy.textContent;};
+  const before=narrative();
+  // A reader imports the first matching root. Pagination must never clone that
+  // entry point into page-local fragments.
+  root.setAttribute('data-reader-content','true');
+  root.querySelectorAll('[data-reader-content]').forEach(n=>n.removeAttribute('data-reader-content'));
+  const existing=[...root.querySelectorAll(':scope > .pdf-source-page')];
+  if(existing.length&&!repaginateExisting){
+    const pages=existing.map(n=>Number(n.getAttribute('data-reader-page')));
+    // Removed empty converter pages leave a valid increasing subset; only a
+    // missing anchor, a duplicate or an out-of-range page is fatal.
+    if(expectedPages&&(pages.length>expectedPages||pages.some((n,i)=>!Number.isInteger(n)||n<1||n>expectedPages||(i&&n<=pages[i-1]))))throw Error('Existing source pagination is incomplete');
+    return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,pages,blankPages:existing.filter(n=>n.hasAttribute('data-blank-page')).map(n=>Number(n.getAttribute('data-reader-page'))),origin,textPreserved:true};
+  }
+  if(existing.length&&repaginateExisting){
+    const nodes=[];
+    for(const section of existing)nodes.push(...section.childNodes);
+    const trailing=[...root.childNodes].filter(n=>!(n.nodeType===Node.ELEMENT_NODE&&n.matches('.pdf-source-page')));
+    root.replaceChildren(...nodes,...trailing);
+  }
+  let markers=[...root.querySelectorAll('[id]')].filter(n=>/^page_\d+$/.test(n.id));
+  if(!markers.length)throw Error('No page anchors; source boundary evidence is required');
+  let numbers=markers.map(n=>Number(n.id.slice(5)));
+  if(numbers[0]!==1||numbers.some((n,i)=>i&&n<=numbers[i-1])) {
+    const firstTargets=new Map();
+    markers.forEach((marker,index)=>{if(!firstTargets.has(marker.id))firstTargets.set(marker.id,'page_'+(index+1));});
+    const links=[...root.querySelectorAll('a[href^="#page_"],area[href^="#page_"]')].map(node=>({node,href:node.getAttribute('href')}));
+    markers.forEach((marker,index)=>{marker.id='validatebook-page-anchor-'+index;});
+    markers.forEach((marker,index)=>{marker.id='page_'+(index+1);});
+    for(const {node,href} of links){
+      const target=firstTargets.get(href.slice(1));
+      if(target)node.setAttribute('href','#'+target);
+    }
+    markers=[...root.querySelectorAll('[id]')].filter(n=>/^page_\d+$/.test(n.id));
+    numbers=markers.map(n=>Number(n.id.slice(5)));
+  }
+  if(blankPages.some(n=>!Number.isInteger(n)||n<1||numbers.includes(n)))throw Error('Invalid or duplicate source-confirmed blank page');
+  const all=[...numbers,...blankPages].sort((a,b)=>a-b);
+  if(expectedPages&&(all.length!==expectedPages||all.some((n,i)=>n!==i+1)))throw Error('Source page coverage is incomplete');
+  const starts=new Map(markers.map((node,i)=>[node,numbers[i]]));
+  for(const marker of markers){let n=marker.previousSibling;while(n){if(n.nodeType===Node.TEXT_NODE&&!n.textContent.trim()){n=n.previousSibling;continue;}if(n.nodeType===Node.ELEMENT_NODE&&n.matches('span.source-anchor')&&!n.textContent.trim()){starts.set(n,Number(marker.id.slice(5)));n=n.previousSibling;continue;}break;}}
+  let current=1;
+  function split(node){
+    if(starts.has(node))current=starts.get(node);
+    if(node.nodeType!==Node.ELEMENT_NODE||!node.childNodes.length)return [{page:current,node:node.cloneNode(true)}];
+    const parts=[];let group;
+    for(const child of node.childNodes)for(const part of split(child)){
+      if(!group||group.page!==part.page){const clone=node.cloneNode(false);if(parts.length){clone.removeAttribute('id');if(node.tagName==='P')clone.setAttribute('data-page-continuation','');if(node.tagName==='OL'){const count=parts.reduce((sum,p)=>sum+p.node.children.length,0);clone.setAttribute('start',String((Number(node.getAttribute('start'))||(node.reversed?node.children.length:1))+(node.reversed?-count:count)));}}group={page:part.page,node:clone};parts.push(group);}
+      group.node.append(part.node);
+    }
+    return parts;
+  }
+  const grouped=new Map(all.map(page=>[page,[]])),runtime=[];
+  for(const node of [...root.childNodes]){
+    if(node.nodeType===Node.ELEMENT_NODE&&node.matches('script,style,template,noscript')){runtime.push(node);continue;}
+    for(const part of split(node))grouped.get(part.page).push(part.node);
+  }
+  const pages=[];
+  for(const [page,nodes] of grouped){const section=document.createElement('section');section.className='pdf-source-page';section.setAttribute('data-reader-page',String(page));section.setAttribute('data-page-origin',origin);if(origin==='source')section.setAttribute('data-source-page',String(page));
+    if(blankPages.includes(page)){section.id='page_'+page;section.setAttribute('data-blank-page','');}
+    section.append(...nodes);pages.push(section);
+  }
+  root.replaceChildren(...pages,...runtime);
+  if(narrative()!==before)throw Error('Pagination changed narrative text');
+  const ids=[...root.querySelectorAll('[id]')].map(n=>n.id);if(new Set(ids).size!==ids.length)throw Error('Pagination created duplicate anchors');
+  return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,pages:all,blankPages,origin,textPreserved:true};
+}
+
+// Runs inside the audit browser. A converter may repeat one complete contents
+// list on every page it spans. Keep only the entries actually printed on each
+// PDF page, without losing any entry from the contents as a whole.
+export function splitDuplicateSourceToc(pages) {
+  const normalize=value=>String(value||'').normalize('NFKC').replace(/[.·•]{2,}/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+  const lists=[...document.querySelectorAll('ol.source-toc')];
+  if(lists.length<2)return [];
+  const entries=list=>[...list.children].filter(node=>node.tagName==='LI');
+  const signature=list=>entries(list).map(item=>normalize(item.textContent)).join('\u0001');
+  const pageOf=list=>String(list.closest('[data-source-page]')?.getAttribute('data-source-page')||list.closest('[data-reader-page]')?.getAttribute('data-reader-page')||'');
+  const groups=new Map();
+  for(const list of lists){const key=signature(list);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(list);}
+  const pageText=new Map(pages.map(page=>[String(page.page),normalize(page.text)]));
+  const changes=[];
+  for(const group of groups.values()){
+    if(group.length<2)continue;
+    const union=new Set(entries(group[0]).map(item=>normalize(item.textContent)));
+    const removals=[];
+    for(const list of group){
+      const text=pageText.get(pageOf(list))||'';
+      for(const item of entries(list)){
+        const value=normalize(item.textContent);
+        if(!value||text.includes(value))continue;
+        const survives=group.some(other=>other!==list&&entries(other).some(node=>normalize(node.textContent)===value&&(pageText.get(pageOf(other))||'').includes(value)));
+        if(survives)removals.push({list,item});
+      }
+    }
+    if(!removals.length)continue;
+    const removed=new Map();
+    for(const removal of removals)removed.set(removal.list,(removed.get(removal.list)||0)+1);
+    if(group.some(list=>entries(list).length-(removed.get(list)||0)<1))continue;
+    const remaining=new Set();
+    for(const list of group)for(const item of entries(list))if(!removals.some(removal=>removal.item===item))remaining.add(normalize(item.textContent));
+    if([...union].some(value=>!remaining.has(value)))continue;
+    for(const removal of removals)removal.item.remove();
+    for(const [list,count] of removed)changes.push({kind:'duplicate_source_toc',page:pageOf(list)||null,removed:count,kept:entries(list).length});
+  }
+  return changes;
+}
+
+// Runs inside the audit browser. Translated pages left empty by reflow carry no
+// prose, image or table; drop them and keep their anchors on the previous page.
+export function removeEmptyTranslatedPages(){
+  const changes=[];
+  const root=document.querySelector('[data-validatebook-root]')||document.body;
+  for(const page of [...root.querySelectorAll('.pdf-source-page')]){
+    if(page.hasAttribute('data-source-page'))continue;
+    const text=page.textContent.replace(/[\s\d]/gu,'');
+    if(text)continue;
+    if(page.querySelector('img,figure,picture,svg,table,canvas,video'))continue;
+    const previous=page.previousElementSibling;
+    for(const node of [...page.querySelectorAll('[id]')]){
+      const id=node.id;if(!id||document.getElementById(id)!==node)continue;
+      if(previous){const marker=document.createElement('span');marker.className='source-anchor';marker.id=id;previous.append(marker);}
+      node.removeAttribute('id');
+    }
+    const readerPage=page.getAttribute('data-reader-page');
+    page.remove();
+    changes.push({kind:'empty_translated_page_removed',page:readerPage});
+  }
+  return changes;
+}
+
+// Runs inside the audit browser. Normalise a pdf2html/Docling export into the
+// canonical page model validateBook owns: flatten the document shell, promote
+// converter pages to .pdf-source-page, name figures .pdf-figure, put the page
+// anchor on the cover image and drop the converter's author page CSS.
+export function normaliseConverterHtml(){
+  const changes=[];
+  // Fixed-page coordinates and frame dimensions belong to the converter's
+  // viewport bridge. The managed page model uses source-derived flow geometry
+  // and must not retain a second positioning system or require book scripts.
+  for(const frame of [...document.querySelectorAll('.pdf-page-frame')]){
+    const page=frame.querySelector(':scope > section.source-page');
+    if(!page || !page.hasAttribute('data-source-page'))continue;
+    for(const node of [page,...page.children]){
+      for(const property of ['position','left','right','top','bottom','width','height','min-width','max-width','min-height','max-height','transform','transform-origin','aspect-ratio'])node.style.removeProperty(property);
+    }
+    frame.replaceWith(...frame.childNodes);
+    changes.push({kind:'fixed_page_flow_adapted',page:Number(page.getAttribute('data-source-page'))});
+  }
+  document.querySelector('#pdf2html-reader-bridge')?.remove();
+  // Persistent marker so later passes and reruns recognise the adapted edition
+  // after the converter's own classes and stylesheet are gone.
+  if(!document.body.hasAttribute('data-validatebook-converter')){document.body.setAttribute('data-validatebook-converter','');changes.push({kind:'converter_marked',selector:'body'});}
+  // The converter stylesheet is document-global (html/body/h1..), so it leaks
+  // into the reader chrome. Remove those global rules
+  // and let the scoped managed presentation own the content.
+  for(const link of [...document.querySelectorAll('link[rel~="stylesheet"][href]')]){
+    if(/(^|\/)assets\/styles\.css(\?|$)/.test(link.getAttribute('href'))){
+      changes.push({kind:'converter_css_removed',href:link.getAttribute('href')});link.remove();
+    }
+  }
+  for(const main of [...document.querySelectorAll('main.pdf-document')]){
+    const parent=main.parentNode;if(!parent)continue;
+    while(main.firstChild)parent.insertBefore(main.firstChild,main);
+    main.remove();changes.push({kind:'converter_shell_removed',selector:'main.pdf-document'});
+  }
+  for(const section of [...document.querySelectorAll('section.source-page')]){
+    const id=section.getAttribute('id')||'';
+    const page=Number(id.replace(/^page_/,''))||Number(section.getAttribute('data-source-page'))||null;
+    const fullImage=section.classList.contains('source-page-full-image');
+    section.classList.remove('source-page');
+    section.classList.add('pdf-source-page');
+    if(page){section.setAttribute('data-reader-page',String(page));section.setAttribute('data-page-origin','source');if(!section.hasAttribute('data-source-page'))section.setAttribute('data-source-page',String(page));}
+    for(const figure of [...section.querySelectorAll('figure')])figure.classList.add('pdf-figure');
+    for(const image of [...section.querySelectorAll('img,svg')]){image.style.maxWidth='100%';image.style.height='auto';image.style.display='block';}
+    for(const table of [...section.querySelectorAll('table')]){
+      if(table.closest('.pdf-table-wrap'))continue;
+      const wrap=document.createElement('div');wrap.className='pdf-table-wrap';table.before(wrap);wrap.append(table);
+    }
+    if(fullImage){
+      const figure=section.querySelector('figure.pdf-figure');
+      if(figure&&id&&/^page_\d+$/.test(id)&&(!document.getElementById(id)||document.getElementById(id)===section)){
+        figure.setAttribute('id',id);if(section.getAttribute('id')===id)section.removeAttribute('id');
+      }
+      if(figure)figure.style.margin='0';
+      section.style.setProperty('padding','0');
+    }
+    changes.push({kind:'converter_page_normalised',page});
+  }
+  return changes;
+}
+
+// Runs inside the audit browser. Remove converter placeholder captions and give
+// the cover page the canonical full-page figure so every language renders the
+// cover exactly like the English edition.
+export function normaliseCoverPage(){
+  const changes=[];
+  // A legacy author layout stylesheet would override the managed page geometry
+  // (e.g. a fixed narrow page width). The managed presentation owns layout, so
+  // drop it for every edition.
+  for(const link of [...document.querySelectorAll('link[data-source-layout],link[href*="source-layout.css"]')]){
+    const href=link.getAttribute('href');link.remove();changes.push({kind:'legacy_layout_stylesheet_removed',href});
+  }
+  let removed=0;
+  // A printed page number left in the flow is running matter; the page footer is
+  // generated from the page label, so the lone number paragraph is removed.
+  for(const page of [...document.querySelectorAll('.pdf-source-page')]){
+    const number=String(page.getAttribute('data-source-page')||page.getAttribute('data-reader-page')||'').trim();
+    if(!number)continue;
+    for(const paragraph of [...page.querySelectorAll('p')]){
+      if(paragraph.textContent.replace(/\s+/g,' ').trim()!==number)continue;
+      if(paragraph.querySelector('img,svg,table'))continue;
+      paragraph.remove();removed++;
+    }
+  }
+  if(removed)changes.push({kind:'running_page_number_removed',count:removed});
+  for(const caption of [...document.querySelectorAll('figcaption')]){
+    if(!/^figure from pdf page \d+\s*$/i.test(caption.textContent.trim()))continue;
+    const image=caption.closest('figure')?.querySelector('img');
+    if(image&&/^figure from pdf page \d+$/i.test(image.getAttribute('alt')||''))image.setAttribute('alt','');
+    caption.remove();removed++;
+  }
+  if(removed)changes.push({kind:'generated_caption_removed',count:removed});
+  let emptyAnchors=0;
+  for(const marker of [...document.querySelectorAll('span.source-anchor:not([id])')]){marker.remove();emptyAnchors++;}
+  if(emptyAnchors)changes.push({kind:'empty_anchor_removed',count:emptyAnchors});
+  for(const page of document.querySelectorAll('.pdf-source-page')){
+    const images=[...page.querySelectorAll('img')];
+    if(images.length!==1)continue;
+    const text=page.textContent.replace(/figure from pdf page \d+/gi,'').replace(/\s+/g,'').trim();
+    if(text)continue;
+    const image=images[0];
+    let figure=image.closest('figure');
+    if(!figure){figure=document.createElement('figure');figure.className='pdf-figure';image.before(figure);figure.append(image);}
+    for(const marker of [...figure.querySelectorAll('.source-anchor')])marker.remove();
+    const number=String(page.getAttribute('data-reader-page')||'1');
+    const id='page_'+number;
+    const holder=document.getElementById(id);
+    if(holder&&holder!==figure)holder.removeAttribute('id');
+    figure.id=id;
+    if(/figure from pdf page \d+/i.test(image.getAttribute('alt')||''))image.setAttribute('alt','');
+    changes.push({kind:'cover_page_normalised',page:number});
+    break;
+  }
+  return changes;
+}
+
+// Runs inside the audit browser. Give converted tables the canonical table
+// contract (scroll wrapper + class) and drop deprecated <center> wrappers so
+// every edition shares the same table presentation.
+export function normaliseTables(){
+  const changes=[];
+  for(const center of [...document.querySelectorAll('center')]){
+    if(!center.querySelector('table'))continue;
+    const parent=center.parentNode;if(!parent)continue;
+    while(center.firstChild)parent.insertBefore(center.firstChild,center);
+    center.remove();changes.push({kind:'center_unwrapped'});
+  }
+  for(const table of [...document.querySelectorAll('table')]){
+    if(!table.classList.contains('pdf-table'))table.classList.add('pdf-table');
+    if(table.closest('.pdf-table-wrap'))continue;
+    const wrap=document.createElement('div');wrap.className='pdf-table-wrap';table.before(wrap);wrap.append(table);
+    changes.push({kind:'table_wrapped'});
+  }
+  // A source export can split one logical table into two at a page break. The
+  // split is reported by the table comparison; automatic re-joining is not
+  // applied here because the pagination pass re-splits the merged table and the
+  // join can cascade across adjacent tables.
+  return changes;
+}
+
+// Runs inside the audit browser, after pagination. A source export can split one
+// logical table into two at a page break: the first ends with an incomplete row
+// and the next page starts with the cells that complete it, with nothing else on
+// either side. Re-join only that exact case so rows are never orphaned.
+export function mergeSplitTables(){
+  const changes=[];
+  const wraps=[...document.querySelectorAll('.pdf-table-wrap')];
+  const pageOf=wrap=>{const section=wrap.closest('.pdf-source-page');return section?Number(section.getAttribute('data-reader-page')):null;};
+  const meaningful=node=>!node.matches('span.source-anchor')&&node.textContent.trim();
+  const atBoundary=(first,second)=>{
+    for(let node=first.nextElementSibling;node;node=node.nextElementSibling)if(meaningful(node))return false;
+    for(let node=second.previousElementSibling;node;node=node.previousElementSibling)if(meaningful(node))return false;
+    return true;
+  };
+  for(let index=0;index<wraps.length-1;index++){
+    let merged=wraps[index],cursor=index+1;
+    while(cursor<wraps.length){
+      const next=wraps[cursor];
+      if(!merged.isConnected||!next.isConnected)break;
+      const firstPage=pageOf(merged),secondPage=pageOf(next);
+      if(!(firstPage===secondPage||secondPage===firstPage+1))break;
+      if(!atBoundary(merged,next))break;
+      const table=merged.querySelector(':scope > table'),continuation=next.querySelector(':scope > table');
+      if(!table||!continuation)break;
+      const columns=[...table.rows[0].cells].reduce((sum,cell)=>sum+cell.colSpan,0);
+      const lastRow=table.rows[table.rows.length-1],firstRow=continuation.rows[0];
+      if(!columns||!lastRow||!firstRow)break;
+      const lastCells=[...lastRow.cells].reduce((sum,cell)=>sum+cell.colSpan,0);
+      const firstCells=[...firstRow.cells].reduce((sum,cell)=>sum+cell.colSpan,0);
+      if(lastCells>=columns||lastCells+firstCells!==columns)break;
+      for(const cell of [...firstRow.cells])lastRow.append(cell);
+      const body=table.tBodies[0]||table;
+      for(const row of [...continuation.rows].slice(1))body.append(row);
+      next.remove();
+      changes.push({kind:'split_table_merged'});
+      cursor++;
+    }
+    index=cursor-1;
+  }
+  return changes;
+}
+
+// Runs inside the audit browser. A conversion can leave source pages that hold
+// only a contents heading and no entries (page splits of a contents table).
+// Remove those empty pages for every language, keeping their anchors reachable.
+export function removeEmptyContentsPages(){
+  const changes=[];
+  const root=document.querySelector('[data-validatebook-root]')||document.body;
+  for(const page of [...root.querySelectorAll('.pdf-source-page')]){
+    const headings=[...page.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+    if(!headings.length)continue;
+    if(page.querySelector('table,figure,picture,img,svg,video,ol,ul,dl'))continue;
+    const text=page.textContent.replace(/\s+/g,' ').trim();
+    const headingText=headings.map(heading=>heading.textContent.replace(/\s+/g,' ').trim()).join(' ');
+    if(!text||text!==headingText)continue;
+    if(!/^(contents|cuprins|table of content|table of contents)$/i.test(headingText))continue;
+    const previous=page.previousElementSibling;
+    const readerPage=page.getAttribute('data-reader-page');
+    for(const node of [...page.querySelectorAll('[id]')]){
+      const id=node.id;if(!id)continue;
+      if(previous){const marker=document.createElement('span');marker.className='source-anchor';marker.id=id;previous.append(marker);}
+      node.removeAttribute('id');
+    }
+    page.remove();
+    changes.push({kind:'empty_contents_page_removed',page:readerPage});
+  }
+  return changes;
+}
+
+// Runs inside the audit browser on the English edition. Builds the structural
+// template: pages, top-level blocks and, for prose, the inline formatting runs
+// (strong/em/link) with their sentence counts, so a translation can reuse the
+// exact inline emphasis.
+export function sourceBlankPages(pages, anchors=[]) {
+  const anchored=new Set(anchors);
+  const lineKey=line=>line.normalize('NFKC').replace(/\s+/g,' ').trim();
+  const pageLines=pages.map(page=>({page:page.page,lines:String(page.text||'').split(/\r?\n/).map(lineKey).filter(Boolean)}));
+  const counts=new Map();
+  for(const page of pageLines)for(const line of new Set(page.lines))counts.set(line,(counts.get(line)||0)+1);
+  const repeated=new Set([...counts].filter(([line,count])=>count>=3&&!/^\d+$/.test(line)).map(([line])=>line));
+  return pageLines
+    .filter(page=>!anchored.has(page.page)&&page.lines.every(line=>/^\d+$/.test(line)||repeated.has(line)))
+    .map(page=>page.page);
+}
+
+export function sourceImagePresentation(inventory) {
+  const counts=new Map();
+  return String(inventory).split(/\r?\n/).flatMap(line=>{
+    const fields=line.trim().split(/\s+/);
+    if(fields.length<14||fields[2]!=='image')return [];
+    const page=Number(fields[0]),pixelWidth=Number(fields[3]),pixelHeight=Number(fields[4]),xPpi=Number(fields[12]),yPpi=Number(fields[13]);
+    if(!Number.isInteger(page)||![pixelWidth,pixelHeight,xPpi,yPpi].every(value=>value>0))return [];
+    const index=counts.get(page)||0;counts.set(page,index+1);
+    return [{page,index,width:pixelWidth/xPpi*72,height:pixelHeight/yPpi*72}];
+  });
+}
+
+// Executed in Chromium against Poppler XML, never against document scripts.
+export function repairPageShells() {
+  const root=document.querySelector('[data-validatebook-root]');
+  if(!root)return [];
+  const pages=[...root.querySelectorAll(':scope > .pdf-source-page[data-reader-page]')];
+  if(!pages.length)return [];
+  const originalText=root.textContent;
+  const changes=[];
+  root.setAttribute('data-reader-content','true');
+  root.querySelectorAll('[data-reader-content]').forEach(n=>n.removeAttribute('data-reader-content'));
+  // Consecutive normal-flow sections may share a page, especially in translations.
+  // Only structural shells are eligible; prose and decorated layouts retain
+  // their spacing. The page box owns the outer inset exactly once.
+  for(const page of pages){
+    const pending=[...page.children];
+    while(pending.length){
+      const shell=pending.shift();
+      if(!shell.matches('main,article,section,div')||[...shell.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()))continue;
+      if(shell.matches('.pdf-table-wrap'))continue;
+      const style=getComputedStyle(shell);
+      if(!['block','flow-root'].includes(style.display)||!['static','relative'].includes(style.position)||!['transparent','rgba(0, 0, 0, 0)'].includes(style.backgroundColor)||style.backgroundImage!=='none'||['Top','Right','Bottom','Left'].some(side=>parseFloat(style['border'+side+'Width'])>0))continue;
+      const properties={'padding':'0px','margin':'0px','min-height':'0px','font-size':'inherit','break-before':'auto','break-after':'auto'};
+      const before=shell.getAttribute('style');
+      for(const [key,value] of Object.entries(properties))shell.style.setProperty(key,value,'important');
+      changes.push({kind:'page_shell_spacing',page:page.getAttribute('data-reader-page'),before,after:shell.getAttribute('style')});
+      pending.push(...shell.children);
+    }
+  }
+  if(root.textContent!==originalText)throw Error('Page shell repair changed narrative text');
+  return changes;
+}
+
+export function sourcePagePresentation(xml) {
+  const doc=new DOMParser().parseFromString(xml,'text/xml');
+  if(doc.querySelector('parsererror'))throw Error('Invalid source typography XML');
+  const fonts=new Map([...doc.querySelectorAll('fontspec')].map(n=>[n.getAttribute('id'),Number(n.getAttribute('size'))]));
+  const runningMatterKey=text=>{
+    const value=String(text||'').normalize('NFKC').replace(/\s+/g,' ').trim();
+    const match=value.match(/^(.{6,}?)\s*[·•|]\s*\d{1,4}$/u);
+    return match?match[1].normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,''):null;
+  };
+  const pages=[...doc.querySelectorAll('page')].map(p=>({number:Number(p.getAttribute('number')),width:Number(p.getAttribute('width')),height:Number(p.getAttribute('height')),rows:[...p.querySelectorAll('text')].map(n=>({text:n.textContent.trim(),left:Number(n.getAttribute('left')),top:Number(n.getAttribute('top')),width:Number(n.getAttribute('width')),height:Number(n.getAttribute('height')),size:fonts.get(n.getAttribute('font')),bold:!!n.querySelector('b'),linked:!!n.querySelector('a')})).filter(n=>n.text&&!/^\d+$/.test(n.text)),images:[...p.querySelectorAll('image')].map((n,index)=>({index,width:Number(n.getAttribute('width')),height:Number(n.getAttribute('height')),left:Number(n.getAttribute('left')),top:Number(n.getAttribute('top'))}))}));
+  const mode=values=>{const counts=new Map();for(const value of values){const n=Math.round(value);counts.set(n,(counts.get(n)||0)+1);}return [...counts].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0]?.[0];};
+  const runningHeaders=new Map();
+  const runningFooters=new Map();
+  for(const p of pages)for(const text of new Set(p.rows.filter(r=>r.top<p.height*.06).map(r=>r.text)))runningHeaders.set(text,(runningHeaders.get(text)||0)+1);
+  for(const p of pages)for(const key of new Set(p.rows.filter(r=>r.top>p.height*.88).map(r=>runningMatterKey(r.text)).filter(Boolean)))runningFooters.set(key,(runningFooters.get(key)||0)+1);
+  for(const p of pages)p.rows=p.rows.filter(r=>!(r.top<p.height*.06&&runningHeaders.get(r.text)>=3)&&!(r.top>p.height*.88&&runningFooters.get(runningMatterKey(r.text))>=3));
+  const dense=pages.filter(p=>p.rows.length>=12),wide=dense.flatMap(p=>p.rows.filter(r=>r.width>p.width*.6));
+  if(dense.length<2||wide.length<20)throw Error('Insufficient recurring source bounds for page padding');
+  const width=pages[0].width,height=pages[0].height;
+  if(pages.some(p=>p.width!==width||p.height!==height))throw Error('Mixed PDF page sizes require an explicit page geometry plan');
+  // Paragraph first lines can be more numerous than continuation lines. Use each
+  // dense page's left envelope, not the most frequent row indent.
+  const left=mode(dense.map(p=>Math.min(...p.rows.filter(r=>r.width>p.width*.6).map(r=>r.left))).filter(Number.isFinite)),right=width-mode(wide.map(r=>r.left+r.width));
+  const top=mode(dense.map(p=>Math.min(...p.rows.map(r=>r.top))));
+  const bottoms=dense.map(p=>Math.max(...p.rows.map(r=>r.top+r.height))).sort((a,b)=>a-b);
+  const bottom=height-bottoms[Math.floor((bottoms.length-1)*.95)];
+  const margins={top,right,bottom,left};
+  if(Object.values(margins).some(n=>!Number.isFinite(n)||n<0)||left+right>width*.5||top+bottom>height*.4)throw Error('Ambiguous source page margins');
+  const contents=[];
+  let contentsNote='';
+  const compactExact=value=>value.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'');
+  const compact=value=>value.normalize('NFKC').toLowerCase().replace(/^\s*\d+[.)]?\s*/,'').replace(/[^\p{L}\p{N}]+/gu,'');
+  const outlineMatch=label=>{
+    const exact=outline.filter(item=>compactExact(item.label)===compactExact(label));
+    return exact.length?exact:outline.filter(item=>compact(item.label)===compact(label));
+  };
+  const outline=[...doc.querySelectorAll('outline item')].map(item=>({label:item.childNodes[0]?.textContent?.trim()||item.textContent.trim(),destination:Number(item.getAttribute('page'))}));
+  for(const page of doc.querySelectorAll('page')){
+    const rows=[...page.querySelectorAll('text')];
+    const pageNumber=Number(page.getAttribute('number'));
+    const linkedEntries=[];
+    for(let i=0;i<rows.length;i++){
+      const node=rows[i],a=node.querySelector('a');if(!a)continue;
+      let value=node.textContent.trim();
+      if(/\.{3,}$/.test(value)&&rows[i+1]?.querySelector('a')?.getAttribute('href')===a.getAttribute('href')&&/^\d+$/.test(rows[i+1].textContent.trim()))value+=' '+rows[i+1].textContent.trim();
+      const match=value.match(/^(.*?)\.{3,}\s*(\d+)\s*$/);if(!match)continue;
+      const href=a.getAttribute('href')||'';
+      const destination=Number(href.match(/#(\d+)$/)?.[1]);
+      linkedEntries.push({kind:'entry',label:match[1].trim(),number:match[2],page:pageNumber,indent:Number(node.getAttribute('left'))-left,top:Number(node.getAttribute('top')),size:fonts.get(node.getAttribute('font')),destination:Number.isFinite(destination)?destination:undefined});
+    }
+    const hasContentsHeading=rows.some(node=>/^contents\s*$/i.test(node.textContent.trim()));
+    if(!hasContentsHeading){contents.push(...linkedEntries);continue;}
+    const pageWidth=Number(page.getAttribute('width'));
+    const pageHeight=Number(page.getAttribute('height'));
+    const ordered=rows.map(node=>({node,text:node.textContent.replace(/\s+/g,' ').trim(),top:Number(node.getAttribute('top')),left:Number(node.getAttribute('left')),size:fonts.get(node.getAttribute('font'))})).filter(row=>row.text).sort((a,b)=>a.top-b.top||a.left-b.left);
+    const heading=ordered.find(row=>/^contents$/i.test(row.text));
+    const noteRows=ordered.filter(row=>row.top>heading.top&&/^(?:page\s+numbers\s+refer|10\.$)/i.test(row.text));
+    contentsNote=noteRows.map(row=>row.text).join(' ').replace(/\s+/g,' ').trim();
+    const entries=[];
+    const pushEntry=(entry)=>{
+      if(entries.some(row=>compactExact(row.label)===compactExact(entry.label)&&row.number===entry.number))return;
+      entries.push(entry);
+    };
+    for(const row of ordered){
+      if(row.top<=heading.top+20||row.top>=pageHeight*.9)continue;
+      const match=row.text.match(/^(.*?)\.{3,}\s*(\d{1,4})\s*$/);
+      if(!match)continue;
+      const label=match[1].trim();
+      const destinations=outlineMatch(label);
+      if(destinations.length!==1)continue;
+      pushEntry({kind:'entry',label,number:match[2],page:pageNumber,indent:row.left-left,top:row.top,size:row.size,destination:destinations[0].destination});
+    }
+    const numbers=ordered.filter(row=>/^\d+$/.test(row.text)&&row.left>pageWidth*.7&&row.top>heading.top+20&&row.top<pageHeight*.9);
+    for(let i=0;i<numbers.length;i++){
+      const number=numbers[i];
+      const nextTop=numbers[i+1]?.top??number.top+60;
+      const lines=ordered.filter(row=>row.left<number.left-20&&row.top>=number.top-3&&row.top<Math.min(nextTop-4,number.top+56)&&!/^part\b/i.test(row.text)&&!/^page\s+numbers\s+refer/i.test(row.text));
+      if(!lines.length)continue;
+      const label=lines.map(row=>row.text).join(' ').replace(/\s+/g,' ').trim();
+      const destinations=outlineMatch(label);
+      if(destinations.length!==1)continue;
+      pushEntry({kind:'entry',label,number:number.text,page:pageNumber,indent:lines[0].left-left,top:number.top,size:lines[0].size,lineAdvances:lines.slice(1).map((line,index)=>line.top-lines[index].top),destination:destinations[0].destination});
+    }
+    const parts=ordered.filter(row=>/^part\s+[ivxlcdm]+\s*:/i.test(row.text)).map(row=>({kind:'part',label:row.text,page:pageNumber,indent:row.left-left,top:row.top,size:row.size}));
+    if(entries.length){
+      contents.push(...parts,...entries);
+    }else if(linkedEntries.length){
+      contents.push(...linkedEntries);
+    }else{
+      const contentRows=ordered.filter(row=>row.top>heading.top+20&&row.top<pageHeight*.88&&!/^contents$/i.test(row.text)&&!/^part\s+[ivxlcdm]+\s*:/i.test(row.text)&&!/^page\s+numbers\s+refer/i.test(row.text)&&!runningMatterKey(row.text));
+      for(const row of contentRows){
+        const destinations=outlineMatch(row.text);
+        if(destinations.length!==1)continue;
+        contents.push({kind:'entry',label:row.text,page:pageNumber,indent:row.left-left,top:row.top,size:row.size,destination:destinations[0].destination});
+      }
+    }
+    contents.sort((a,b)=>a.page-b.page||a.top-b.top);
+  }
+  const entries=contents.filter(row=>row.kind!=='part');
+  const contentsFontSize=mode(entries.map(r=>r.size));
+  const contentsLineHeight=mode(entries.flatMap(row=>row.lineAdvances||[]))||contentsFontSize*1.45;
+  const images=pages.flatMap(page=>page.images.map(image=>({...image,page:page.number}))).filter(image=>image.width>0&&image.height>0);
+  return {width,height,margins,evidence:{densePages:dense.length,wideRows:wide.length},contents,contentsNote,contentsLineHeight,contentsFontSize,images};
+}
+
+// Scale source images with the page instead of leaving converted pixel widths
+// fixed. Page/order correspondence must be unique; ambiguous pages are left
+// untouched and reported by the caller.
+export function applySourceImagePresentation({width,margins,images=[]}) {
+  const changes=[],unmatched=[];
+  const contentWidth=width-(margins?.left||0)-(margins?.right||0);
+  if(!(contentWidth>0))return {changes,unmatched:['Source image content width']};
+  const byPage=new Map();
+  for(const image of images){const list=byPage.get(image.page)||[];list.push(image);byPage.set(image.page,list);}
+  for(const [page,sources] of byPage){
+    const sheet=document.querySelector(`.pdf-source-page[data-source-page="${page}"]`);
+    const targets=sheet?[...sheet.querySelectorAll('.pdf-figure img')]:[];
+    if(targets.length!==sources.length){unmatched.push(`page ${page}: ${sources.length} source images, ${targets.length} HTML images`);continue;}
+    targets.forEach((image,index)=>{
+      const source=sources[index],cover=page===1&&image.closest('figure')?.id==='page_1';
+      const ratio=cover?100:Math.min(100,source.width/contentWidth*100);
+      const before={width:image.style.width,marginLeft:image.style.marginLeft,marginRight:image.style.marginRight,display:image.style.display};
+      image.style.width=ratio+'%';image.style.height='auto';image.style.marginLeft='auto';image.style.marginRight='auto';image.style.display='block';
+      const figure=image.closest('.pdf-figure');if(figure){figure.style.marginLeft='0px';figure.style.marginRight='0px';}
+      changes.push({kind:'source_image_presentation',page,before,after:{width:image.style.width,marginLeft:'auto',marginRight:'auto',display:'block'}});
+    });
+  }
+  return {changes,unmatched};
+}
+
+// Preserve labels and links; page labels are generated presentation, never prose edits.
+export function applyContentsPresentation({profile,language='en',mapping=[]}) {
+  const normalize=s=>s.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'');
+  const isContentsHeading=el=>/^(contents|cuprins|indice|índice|table des matières|inhalt)$/i.test(el?.textContent?.replace(/\s+/g,' ').trim()||'');
+  const result=[],unmatched=[],changes=[];
+  const sourceEntries=profile.contents||[];
+  const levels=[...new Set(sourceEntries.map(r=>r.indent))].sort((a,b)=>a-b);
+  const rowParts=tr=>{
+    const cells=[...tr.children].filter(cell=>/^(td|th)$/i.test(cell.tagName));
+    if(cells.length<2)return null;
+    const number=cells[cells.length-1].textContent.replace(/\s+/g,' ').trim();
+    const label=cells.slice(0,-1).map(cell=>cell.textContent.replace(/\s+/g,' ').trim()).filter(Boolean).join(' ');
+    return label&&/^\d{1,4}$/.test(number)?{label,number}:null;
+  };
+  const tableRows=table=>[...table.querySelectorAll('tr')].map(rowParts).filter(Boolean);
+  const contentsContext=table=>{
+    if(table.classList.contains('pdf-toc'))return true;
+    const rows=tableRows(table);
+    if(rows.length<3)return false;
+    const before=[];let node=table.closest('.pdf-table-wrap')||table;
+    for(let prev=node.previousElementSibling;prev&&before.length<6;prev=prev.previousElementSibling)before.push(prev);
+    if(before.some(el=>el.classList?.contains('source-toc')||isContentsHeading(el)))return true;
+    const page=table.closest('.pdf-source-page');
+    const heading=page?.querySelector('h1,h2,h3,h4,h5,h6');
+    if(heading&&isContentsHeading(heading))return true;
+    let previous=page?.previousElementSibling;
+    for(let i=0;previous&&i<3;i++,previous=previous.previousElementSibling){
+      if(previous.querySelector?.('.source-contents-heading,.source-toc'))return true;
+    }
+    return false;
+  };
+  const makeAnchor=({label,number,href,source})=>{
+    const a=document.createElement('a');
+    if(href)a.href=href;
+    if(number!==undefined){a.setAttribute('data-page-label',number);a.setAttribute('data-page-label-origin',language==='en'?'pdf':'translation');}
+    const labelSpan=document.createElement('span');labelSpan.className='validatebook-toc-label';labelSpan.textContent=label;
+    a.append(labelSpan);
+    if(number!==undefined){const folio=document.createElement('span');folio.className='validatebook-toc-page';folio.textContent=' '+number;a.append(folio);}
+    const size=source?.size||profile.contentsFontSize;if(size>0)a.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
+    return a;
+  };
+  const makeList=entries=>{
+    const list=document.createElement('ol');list.className='source-toc';
+    for(const entry of entries){
+      const li=document.createElement('li');
+      if(entry.kind==='part'){li.className='source-toc-part';li.textContent=entry.label;}
+      else{
+        const source=entry.source||entry;
+        const href=entry.href||(source.destination?'#page_'+source.destination:null);
+        li.append(makeAnchor({label:entry.label,number:entry.number,href,source}));
+        if(source?.indent!==undefined)li.setAttribute('data-toc-level',String(Math.max(0,levels.indexOf(source.indent))));
+      }
+      list.append(li);
+    }
+    return list;
+  };
+  const replaceTableWithList=(table,entries,{sourceBacked=false}={})=>{
+    const list=makeList(entries);
+    const before=table.outerHTML;const page=table.closest('.pdf-source-page'),wrap=table.closest('.pdf-table-wrap');
+    const boundaryId=wrap?.id||table.id;
+    if(/^page_\d+$/.test(boundaryId)&&!list.id)list.id=boundaryId;
+    if(wrap)wrap.replaceWith(list);else table.replaceWith(list);
+    const heading=page?.querySelector('h1,h2,h3,h4,h5,h6');if(heading)heading.classList.add('source-contents-heading');
+    if(sourceBacked&&profile.contentsNote&&!page?.textContent.includes(profile.contentsNote)){
+      const note=document.createElement('p');note.className='source-contents-note';note.textContent=profile.contentsNote;list.after(note);
+    }
+    changes.push({kind:'source_contents_recovery',before,after:list.outerHTML,sourceEntries:entries.map(entry=>entry.source||entry)});
+  };
+  if(language==='en'){
+    const linked=sourceEntries.filter(source=>source.kind!=='part');
+    const lists=[...document.querySelectorAll('.source-toc')];
+    const sizes=lists.map(list=>list.querySelectorAll('li').length);
+    // A contents list split across pages keeps each page's own entries; never
+    // copy the whole contents onto every page.
+    if(lists.length>1&&sizes.reduce((sum,count)=>sum+count,0)===sourceEntries.length){
+      let offset=0;
+      lists.forEach((list,index)=>{
+        const slice=sourceEntries.slice(offset,offset+sizes[index]);offset+=sizes[index];
+        const replacement=makeList(slice);
+        if(/^page_\d+$/.test(list.id))replacement.id=list.id;
+        const before=list.outerHTML;list.replaceWith(replacement);
+        changes.push({kind:'source_contents_recovery',before,after:replacement.outerHTML,sourceEntries:slice.map(entry=>entry.source||entry)});
+      });
+    }else{
+      for(const list of lists){
+        const current=[...list.querySelectorAll('.validatebook-toc-label,.source-toc-part')].map(node=>normalize(node.textContent));
+        const expected=sourceEntries.map(entry=>normalize(entry.label));
+        if(expected.length&&JSON.stringify(current)!==JSON.stringify(expected))replaceTableWithList(list,sourceEntries,{sourceBacked:true});
+      }
+    }
+    const headingTarget=label=>{const key=normalize(label);if(!key)return null;const matches=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter(node=>!isContentsHeading(node)&&normalize(node.textContent.replace(/\s+/g,' ').trim())===key);return matches.length===1?matches[0]:null;};
+    for(const table of document.querySelectorAll('table.pdf-toc')){
+      const usable=linked.length&&!linked.some(source=>!document.getElementById('page_'+source.destination));
+      if(usable){replaceTableWithList(table,sourceEntries,{sourceBacked:true});continue;}
+      // No linked page destinations: still turn the contents table into a clean
+      // list. Link each entry to its matching heading page when unique.
+      const rows=[...table.querySelectorAll('tr')];
+      const entries=[];
+      for(const row of rows){
+        const cells=[...row.children].filter(cell=>/^(td|th)$/i.test(cell.tagName));
+        if(!cells.length)continue;
+        const text=cells.map(cell=>cell.textContent.replace(/\s+/g,' ').trim()).filter(Boolean).join(' ');
+        if(!text)continue;
+        if(cells.length===1&&/^(chapter|capitol|capitole|contents?)$/i.test(text))continue;
+        const target=headingTarget(text),page=target?Number(target.closest('.pdf-source-page')?.getAttribute('data-reader-page')):NaN;
+        entries.push({kind:'entry',label:text,href:Number.isInteger(page)?'#page_'+page:null,number:Number.isInteger(page)?page:undefined,source:{indent:0}});
+      }
+      if(entries.length)replaceTableWithList(table,entries,{sourceBacked:false});
+      else unmatched.push('Contents source structure');
+    }
+    for(const table of document.querySelectorAll('table.pdf-table')){
+      if(!contentsContext(table))continue;
+      const converted=[];
+      for(const row of tableRows(table)){
+        const matches=sourceEntries.filter(source=>source.kind!=='part'&&normalize(source.label)===normalize(row.label));
+        converted.push({...row,source:matches.length===1?matches[0]:undefined,href:matches.length===1?'#page_'+matches[0].destination:null,number:matches.length===1?matches[0].number:row.number});
+      }
+      if(converted.length)replaceTableWithList(table,converted,{sourceBacked:false});
+    }
+  }else{
+    // Build the translated contents list from the translated entries, linking
+    // each entry to its own translated heading so a translation renders the same
+    // table of contents (parts, entries, page labels) without altering text.
+    const translatedHeading=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6,p')].find(isContentsHeading);
+    const container=translatedHeading?.closest('.pdf-source-page')||translatedHeading?.parentElement;
+    if(translatedHeading&&container){
+      const nodes=[...container.children].filter(node=>node!==translatedHeading&&/^(P|DIV|UL|OL|TABLE)$/.test(node.tagName));
+      const tokens=[];
+      for(const node of nodes){
+        const text=node.textContent.replace(/\s+/g,' ').trim();
+        if(!text||isContentsHeading(node))continue;
+        const part=/^(PARTEA|PART)\b/i.test(text);
+        const packed=[...text.matchAll(/CAPITOLUL\s+\d+\s*:|CHAPTER\s+\d+\s*:/gi)];
+        if(!part&&packed.length>1){
+          for(let i=0;i<packed.length;i++){
+            const at=packed[i].index,next=i+1<packed.length?packed[i+1].index:text.length;
+            tokens.push({kind:'entry',label:text.slice(at,next).trim()});
+          }
+        }else tokens.push({kind:part?'part':'entry',label:text});
+      }
+      const norm=value=>value.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'').replace(/^(capitolul|chapter|partea|part)/,'').replace(/^[ivxlcdm\d]+/,'');
+      const headings=[...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].filter(node=>node!==translatedHeading&&!isContentsHeading(node));
+      // When the translated edition carries no contents entries at all, build the
+      // list from its own section headings so the entry point is never empty. No
+      // translated prose is invented.
+      const contentsTokens=(tokens.length?tokens:headings.map(heading=>({kind:/^H1$/.test(heading.tagName)?'part':'entry',label:heading.textContent.replace(/\s+/g,' ').trim()})).filter(token=>token.label)).filter((token,index,list)=>token.label!==list[index-1]?.label);
+      const findTarget=label=>{
+        const key=norm(label);if(!key)return null;
+        const exact=headings.filter(node=>{const other=norm(node.textContent);return other&&other===key;});
+        return exact.length===1?exact[0]:null;
+      };
+      const entries=[];let matched=0,total=0;
+      for(const token of contentsTokens){
+        if(token.kind==='part'){entries.push({kind:'part',label:token.label});continue;}
+        total++;
+        const target=findTarget(token.label),page=target?Number(target.closest('.pdf-source-page')?.getAttribute('data-reader-page')):NaN;
+        if(Number.isInteger(page))matched++;
+        entries.push({kind:'entry',label:token.label,href:Number.isInteger(page)?'#page_'+page:null,number:Number.isInteger(page)?page:undefined,source:{indent:0}});
+      }
+      if(entries.some(entry=>entry.kind!=='part')&&matched>=Math.max(1,Math.floor(total*0.5))){
+        const list=makeList(entries);
+        for(const node of nodes)node.remove();
+        translatedHeading.after(list);
+        translatedHeading.classList.add('source-contents-heading');
+        changes.push({kind:'translated_contents_recovery',entries:entries.length,matched});
+      }
+    }
+  }
+  const repairExistingContentsBoundaries=()=>{
+    const headings=[...document.querySelectorAll('h1[id^="page_"],h2[id^="page_"],h3[id^="page_"],h4[id^="page_"],h5[id^="page_"],h6[id^="page_"]')].filter(isContentsHeading);
+    for(const heading of headings){
+      const start=Number(heading.id.slice(5));if(!Number.isInteger(start))continue;
+      const lists=[];
+      for(let node=heading.nextElementSibling;node;node=node.nextElementSibling){
+        if(/^page_\d+$/.test(node.id||'')&&!node.classList.contains('source-toc'))break;
+        if(/^H[1-6]$/.test(node.tagName)&&/^page_\d+$/.test(node.id||''))break;
+        if(node.classList.contains('source-toc'))lists.push(node);
+      }
+      lists.forEach((list,index)=>{
+        if(index===0||/^page_\d+$/.test(list.id||''))return;
+        list.id='page_'+(start+index);
+        changes.push({kind:'source_contents_boundary',before:null,after:list.id});
+      });
+    }
+  };
+  repairExistingContentsBoundaries();
+  const lineHeight=(profile.contentsLineHeight>0&&profile.contentsFontSize>0)?profile.contentsLineHeight/profile.contentsFontSize:null;
+  if(language==='en')for(const li of document.querySelectorAll('.source-toc-part')){
+    const matches=sourceEntries.filter(row=>row.kind==='part'&&normalize(row.label)===normalize(li.textContent));
+    if(matches.length!==1){unmatched.push(li.textContent.trim());continue;}
+    const source=matches[0],size=source.size||profile.contentsFontSize;
+    if(size>0)li.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
+    if(lineHeight)li.style.lineHeight=String(lineHeight);
+  }
+  for(const a of document.querySelectorAll('.source-toc a')){
+    if(lineHeight)a.parentElement.style.lineHeight=String(lineHeight);
+    if(!a.hasAttribute('href'))continue;
+    const label=a.querySelector('.validatebook-toc-label')?.textContent||a.textContent;
+    const matches=language==='en'?sourceEntries.filter(r=>r.kind!=='part'&&normalize(r.label)===normalize(label)):mapping.filter(r=>r.href===a.getAttribute('href'));
+    if(matches.length!==1){unmatched.push(label);continue;}
+    const source=matches[0],target=document.getElementById(a.getAttribute('href').slice(1));
+    const size=source.size||profile.contentsFontSize;
+    if(size>0)a.style.fontSize=`calc(${size*96/72}px * var(--validatebook-page-scale, 1))`;
+    const destination=target?.closest('.pdf-source-page');
+    const page=language==='en'?source.number:destination?String([...destination.parentElement.querySelectorAll(':scope > .pdf-source-page')].indexOf(destination)+1):null;
+    if(!a.querySelector('.validatebook-toc-label')){const span=document.createElement('span');span.className='validatebook-toc-label';span.append(...a.childNodes);a.append(span);}
+    if(page){
+      a.setAttribute('data-page-label',page);a.setAttribute('data-page-label-origin',language==='en'?'pdf':'reader');
+      let folio=a.querySelector('.validatebook-toc-page');if(!folio){folio=document.createElement('span');folio.className='validatebook-toc-page';a.append(folio);}folio.textContent=' '+page;
+    }else{
+      a.removeAttribute('data-page-label');a.removeAttribute('data-page-label-origin');a.querySelector('.validatebook-toc-page')?.remove();
+    }
+    a.parentElement.setAttribute('data-toc-level',String(Math.max(0,levels.indexOf(source.indent))));
+    result.push({href:a.getAttribute('href'),number:source.number,indent:source.indent,label});
+  }
+  return {html:(document.doctype?'<!DOCTYPE html>\n':'')+document.documentElement.outerHTML,mapping:result,unmatched,changes};
+}
+
+export function pagePaddingDifferences(layout,profile,language='en') {
+  if(!profile||language!=='en')return [];
+  return (layout.pagination?.pages||[]).filter(page=>!page.padding||page.padding.some((value,i)=>Math.abs(value/page.width-(page.cover?0:profile.margins[['top','right','bottom','left'][i]]/profile.width))>.002)).map(page=>({page:page.number,width:layout.width,padding:page.padding,expected:profile.margins}));
+}
+
+export function pageHeightDifferences(layout,profile) {
+  if(!profile)return [];
+  return (layout.pagination?.pages||[]).filter(p=>p.height+2<p.width*profile.height/profile.width)
+    .map(p=>({page:p.number,width:layout.width,height:p.height,minimumHeight:p.width*profile.height/profile.width}));
+}
+
+function contentsCss({contents=[],contentsLineHeight,contentsFontSize}) {
+  if(!contents.length)return '';
+  const lineHeight=(contentsLineHeight>0&&contentsFontSize>0)?contentsLineHeight/contentsFontSize:1.4;
+  const sizeBase=contentsFontSize>0?contentsFontSize:1;
+  return `
+[data-validatebook-root] .source-contents-heading{margin:0 0 .25em!important;text-align:left!important}
+[data-validatebook-root] .source-toc{box-sizing:border-box;width:100%;list-style:none;margin:0;padding:0}
+[data-validatebook-root] .source-toc li{margin:0!important;line-height:${lineHeight};text-indent:0}
+[data-validatebook-root] .source-toc .source-toc-part{font-weight:400;margin-top:1em!important}
+[data-validatebook-root] .source-contents-note{font-style:italic;margin-top:1.5em}
+[data-validatebook-root] .source-toc a[data-page-label]{display:flex;align-items:baseline;gap:.12em;color:inherit;text-decoration:none}
+[data-validatebook-root] .source-toc .validatebook-toc-label{min-width:0;overflow-wrap:anywhere}
+[data-validatebook-root] .source-toc a[data-page-label]::before{content:"";order:1;flex:1 0 .5em;align-self:baseline;border-bottom:1px dotted currentColor}
+[data-validatebook-root] .source-toc a[data-page-label]::after{content:attr(data-page-label);order:2;flex:none;text-align:right;font-variant-numeric:lining-nums}
+[data-validatebook-root] .source-toc a:has(.validatebook-toc-page)::after{content:none}
+[data-validatebook-root] .source-toc .validatebook-toc-page{order:2;flex:none;font-variant-numeric:lining-nums}
+${[...new Set(contents.map(r=>r.indent))].sort((a,b)=>a-b).map((indent,i)=>`[data-validatebook-root] .source-toc li[data-toc-level="${i}"]{padding-left:${(Number(indent)||0)/sizeBase}em}`).join('\n')}
+`.replaceAll('[data-validatebook-root]','[data-validatebook-root][data-validatebook-root]');
+}
+
+export function paginationCss({width,height,margins,contents=[],contentsLineHeight,contentsFontSize}) {
+  if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw Error('Source PDF page dimensions required');
+  const padding=margins?['top','right','bottom','left'].map(k=>(margins[k]/width*100)+'cqw').join(' '):'0';
+  const toc=contentsCss({contents,contentsLineHeight,contentsFontSize});
+  return `/* validateBook source pagination */
+@property --validatebook-page-scale{syntax:"<number>";inherits:true;initial-value:1}
+[data-validatebook-root]:has(> .pdf-source-page){container-type:inline-size;background:var(--reader-surround,var(--standalone-surround,#e3e6e4));box-shadow:none;border-color:transparent}
+[data-validatebook-root] > .pdf-source-page{container-type:inline-size;--validatebook-page-scale:clamp(1,calc(100cqw / ${width*4/3}px),1.2);font-size:calc(1em * var(--validatebook-page-scale));display:flow-root;box-sizing:border-box;min-height:${height/width*100}cqw;margin:0 0 32px;padding:${padding};background:var(--reader-paper,var(--standalone-paper,#fff));border:1px solid var(--reader-paper-line,var(--standalone-paper-line,#d7dcda));box-shadow:0 2px 8px #0002;break-after:page}
+[data-validatebook-root] > .pdf-source-page:last-of-type{margin-bottom:0;break-after:auto}
+[data-validatebook-root] > .pdf-source-page:has(figure#page_1){padding:0}
+.pdf-source-page figure#page_1{margin:0}
+.pdf-source-page figure#page_1 img{display:block;width:100%;height:auto;margin:0}
+.pdf-source-page p[data-page-continuation]{text-indent:0!important}
+[data-validatebook-root] :is(h1,h2,h3,h4,h5,h6,p,li,figcaption,caption,a){overflow-wrap:anywhere}
+[data-validatebook-root] :is(pre,code,kbd,samp){white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
+[data-validatebook-root] :is(img,svg,video,figure,table){max-width:100%}
+[data-validatebook-root] :is(img,svg,video){height:auto}
+[data-validatebook-root] .pdf-source-page :is(img,svg,video){max-width:100%;height:auto}
+[data-validatebook-root] .pdf-table-wrap{width:100%;max-width:100%;overflow-x:auto}
+[data-validatebook-root] table{width:100%;max-width:100%;border-collapse:collapse}
+[data-validatebook-root] .toc-table{width:100%}
+[data-validatebook-root] .pdf-table :is(th,td){padding:.4em .7em;border:1px solid color-mix(in srgb, currentColor 28%, transparent);vertical-align:top}
+[data-validatebook-root] th, [data-validatebook-root] td{overflow-wrap:normal;word-break:normal;hyphens:none}
+${toc}
+@media print{[data-validatebook-root]:has(> .pdf-source-page){width:100%;max-width:none;padding:0;border:0;background:transparent}[data-validatebook-root] > .pdf-source-page{min-height:0;margin:0;border:0;box-shadow:none;break-after:page}.pdf-source-page[data-blank-page]{min-height:90vh}}
+`;
+}

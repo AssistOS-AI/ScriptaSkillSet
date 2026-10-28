@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { openBrowser } from '../src/browser.mjs';
+import { navigate } from '../src/layout-browser.mjs';
+import { parsePdfGeometry } from '../src/layout-checks.mjs';
+import { manuscriptEvidence, compareManuscriptText, inspectManuscriptText } from '../src/manuscript-text.mjs';
+
+test('independent Poppler and Chromium manuscript audit detects lost text and altered punctuation', {skip:!process.env.VALIDATEBOOK_INTEGRATION}, async t=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'validatebook-manuscript-'));
+  t.after(()=>fs.rm(root,{recursive:true,force:true}));
+  const browser=await openBrowser(process.env.VALIDATEBOOK_CHROMIUM);t.after(()=>browser.close());
+  const html=path.join(root,'index.html'),pdf=path.join(root,'source.pdf');
+  await fs.writeFile(html,'<!doctype html><html lang="en"><meta charset="utf-8"><body><main><p>One — two. A well-known case.</p><p>Keep 42 and every word.</p></main></body></html>');
+  await navigate(browser,html);
+  const printed=await browser.send('Page.printToPDF',{displayHeaderFooter:false});
+  await fs.writeFile(pdf,Buffer.from(printed.data,'base64'));
+  const {stdout}=await promisify(execFile)(process.env.VALIDATEBOOK_PDFTOTEXT,['-bbox-layout',pdf,'-']);
+  const pages=await browser.evaluate(`(${parsePdfGeometry.toString()})(${JSON.stringify(stdout)})`),evidence=manuscriptEvidence(pages);
+  const inspect=()=>browser.evaluate(`(${inspectManuscriptText.toString()})()`);
+  assert.deepEqual(compareManuscriptText(evidence,{manuscriptText:await inspect()}),[]);
+  await browser.evaluate(`document.querySelector('p').innerHTML='One - two. A well-known case.'`);
+  assert.equal(compareManuscriptText(evidence,{manuscriptText:await inspect()})[0].category,'source_text_mismatch');
+  await browser.evaluate(`document.querySelector('p').innerHTML='One — two. A well-known case.';document.querySelector('p:last-child').innerHTML='Keep 42 and word.'`);
+  assert.equal(compareManuscriptText(evidence,{manuscriptText:await inspect()})[0].category,'source_text_mismatch');
+});

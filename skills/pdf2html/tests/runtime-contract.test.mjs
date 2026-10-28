@@ -1,0 +1,94 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, writeFile, readFile, rm, realpath, symlink } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { checkAssets } from '../src/pdf2html/conversion-checks.mjs';
+import { inspectSource, emphasis, browserLoadableTrueType } from '../src/pdf2html/source.mjs';
+import { captionIsBelow } from '../src/pdf2html/images.mjs';
+import { parseHtml } from '../src/pdf2html/dom.mjs';
+import { inferLanguage, expandInputs, convertMany } from '../src/pdf2html/batch.mjs';
+import { ensureBookTarget, installBook, publish, prepareDestination, exists } from '../src/pdf2html/publication.mjs';
+async function temporary(t) {const path=await realpath(await mkdtemp(join(tmpdir(),'pdf2html-test-')));t.after(()=>rm(path,{recursive:true,force:true}));return path;}
+async function generated(path,content='new') {await mkdir(join(path,'assets'),{recursive:true});await writeFile(join(path,'index.html'),`<html><head><meta name="generator" content="pdf2html-skill"></head><body>${content}</body></html>`);await writeFile(join(path,'assets/styles.css'),content);}
+test('source extraction preserves words, emphasis, strokes, fills and image regions',async()=>{
+  const {evidence}=await inspectSource(fileURLToPath(new URL('fixtures/semantic.pdf',import.meta.url))), expected=JSON.parse(await readFile(new URL('fixtures/semantic-evidence.json',import.meta.url),'utf8'));
+  assert.deepEqual(evidence.typography,expected.typography);
+  const page=evidence.pages[0],reference=expected.pages[0];
+  assert.equal(page.words.length,reference.words.length);
+  for(let index=0;index<page.words.length;index++) {
+    for(const key of ['text','token','bold','italic','font_name','font_family','color']) assert.equal(page.words[index][key],reference.words[index][key],`${key} at word ${index}`);
+    for(const key of ['x0','x1','top','bottom','size_pt']) assert.ok(Math.abs(page.words[index][key]-reference.words[index][key])<.1,`${key} at word ${index}`);
+  }
+  assert.equal(page.images.length,1);assert.equal(page.rectangles[0].fill_color,'#d3d3d3');assert.equal(page.strokes.length,6);
+  assert.deepEqual(emphasis('Subset+ArialMT',[.75,0,.1875,.75,10,20]),{bold:false,italic:true});
+});
+test('TrueType streams missing OS/2 receive a Chromium-loadable table',()=>{
+  const tables=[{tag:'cmap',data:Buffer.alloc(8)},{tag:'head',data:Buffer.alloc(54)},{tag:'hhea',data:Buffer.alloc(36)},{tag:'hmtx',data:Buffer.alloc(8)},{tag:'maxp',data:Buffer.from([0,1,0,0,0,1])},{tag:'name',data:Buffer.alloc(12)},{tag:'post',data:Buffer.alloc(32)}];
+  let cursor=12+tables.length*16;
+  const input=Buffer.alloc(cursor+tables.reduce((sum,t)=>sum+t.data.length,0));
+  input.writeUInt32BE(0x00010000,0);input.writeUInt16BE(tables.length,4);
+  tables.forEach((table,i)=>{const offset=12+i*16;input.write(table.tag,offset,4,'ascii');input.writeUInt32BE(cursor,offset+8);input.writeUInt32BE(table.data.length,offset+12);table.data.copy(input,cursor);cursor+=table.data.length;});
+  const out=browserLoadableTrueType(input,{bold:true});
+  const count=out.readUInt16BE(4);const tags=[];
+  for(let i=0;i<count;i++)tags.push(out.subarray(12+i*16,16+i*16).toString('ascii'));
+  assert(tags.includes('OS/2'));
+  assert.equal(browserLoadableTrueType(out,{bold:true}).length,out.length);
+});
+test('caption position uses source lines',()=>{
+  assert.equal(captionIsBelow([{text:'Figure 1. A diagram',top:80}],'Figure 1. A diagram',100,300),false);
+  assert.equal(captionIsBelow([{text:'Figure 1. A diagram',top:310}],'Figure 1. A diagram',100,300),true);
+  assert.equal(captionIsBelow([],'Figure 1',100,300),null);
+});
+test('input discovery respects default PDF, nested editions, deduplication and language precedence',async t=>{
+  const root=await temporary(t);await mkdir(join(root,'en'));await mkdir(join(root,'ro'));
+  const a=join(root,'en/book.pdf'),b=join(root,'ro/edition.PDF');await writeFile(a,'%PDF-');await writeFile(b,'%PDF-');
+  assert.deepEqual(await expandInputs([],join(root,'en')),[a]);assert.deepEqual(await expandInputs([root,a],root),[a,b]);
+  assert.equal(inferLanguage(join(root,'en/title_RO.pdf'),'fr'),'ro');assert.equal(inferLanguage(b),'ro');assert.equal(inferLanguage(join(root,'unknown.pdf'),'DE'),'de');
+});
+test('in-place publication preserves source and unrelated files and rejects foreign ownership',async t=>{
+  const root=await temporary(t),destination=join(root,'book'),source=join(root,'new');await generated(destination,'old');await generated(source);
+  await writeFile(join(destination,'book.pdf'),'%PDF-');await writeFile(join(destination,'notes.txt'),'keep');
+  await assert.rejects(installBook(source,destination,false),/already exist/);await installBook(source,destination,true);
+  assert.equal(await readFile(join(destination,'book.pdf'),'utf8'),'%PDF-');assert.equal(await readFile(join(destination,'notes.txt'),'utf8'),'keep');assert.equal(await readFile(join(destination,'assets/styles.css'),'utf8'),'new');
+  await writeFile(join(destination,'index.html'),'foreign');await writeFile(join(destination,'assets/.pdf2html-skill'),'pdf2html-skill');
+  await assert.rejects(ensureBookTarget(destination,true),/not owned/);
+});
+test('publication rolls back both files if installation fails',async t=>{
+  const root=await temporary(t),destination=join(root,'book'),source=join(root,'new');await generated(destination,'old');await mkdir(source);await writeFile(join(source,'index.html'),'new');
+  await assert.rejects(installBook(source,destination,true));
+  assert.match(await readFile(join(destination,'index.html'),'utf8'),/old/);assert.equal(await readFile(join(destination,'assets/styles.css'),'utf8'),'old');
+});
+test('output checks reject unknown files and accept owned incomplete assets',async t=>{
+  const root=await temporary(t);await writeFile(join(root,'user.txt'),'keep');
+  await assert.rejects(prepareDestination(root,false),/not empty/);await assert.rejects(prepareDestination(root,true),/not identified/);
+  await mkdir(join(root,'assets/images'),{recursive:true});await ensureBookTarget(root,true);
+  await writeFile(join(root,'assets/user.css'),'keep');await assert.rejects(ensureBookTarget(root,true),/not owned/);
+  await writeFile(join(root,'assets/.pdf2html-skill'),'pdf2html-skill');await ensureBookTarget(root,true);
+});
+test('batch rejects collisions before conversion begins',async t=>{
+  const root=await temporary(t);await writeFile(join(root,'one.pdf'),'%PDF-');await writeFile(join(root,'two.pdf'),'%PDF-');
+  await assert.rejects(convertMany([root]),/same folder/);await generated(root);
+  await assert.rejects(convertMany([join(root,'one.pdf')]),/already exist/);
+});
+test('asset checks resolve temporary-directory aliases and reject remote or escaped images',async t=>{
+  const root=await temporary(t),html=join(root,'index.html');await writeFile(html,'');await writeFile(join(root,'image.svg'),'<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>');
+  assert.deepEqual(await checkAssets(parseHtml('<img src="image.svg">'),html),[]);
+  const outside=await temporary(t);await writeFile(join(outside,'image.svg'),'<svg/>');await symlink(join(outside,'image.svg'),join(root,'linked.svg'));
+  const findings=await checkAssets(parseHtml('<img src="https://example.com/a.png"><img src="linked.svg">'),html);
+  assert.deepEqual(findings.map(item=>item.code),['remote-image','image-outside-output']);
+});
+
+test('final-path verification failure restores existing output and retains the candidate',async t=>{
+  const root=await temporary(t),destination=join(root,'book'),source=join(root,'new');
+  await generated(destination,'old');await generated(source,'candidate');
+  const reject=async path=>{assert.equal(path,destination);assert.match(await readFile(join(path,'index.html'),'utf8'),/candidate/);throw new Error('validation failed');};
+  await assert.rejects(installBook(source,destination,true,reject),/validation failed/);
+  assert.match(await readFile(join(destination,'index.html'),'utf8'),/old/);
+  assert.equal(await readFile(join(destination,'assets/styles.css'),'utf8'),'old');
+  assert.equal(await readFile(join(source,'assets/styles.css'),'utf8'),'candidate');
+  await assert.rejects(publish(source,destination,reject),/validation failed/);
+  assert.match(await readFile(join(destination,'index.html'),'utf8'),/old/);
+  assert.equal(await readFile(join(source,'assets/styles.css'),'utf8'),'candidate');
+});

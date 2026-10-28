@@ -1,0 +1,381 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {pointsToCssPixels,sourceTypographyProfile,compareTypography,typographyActions,normalizePdfFontFamilies,sourceFontSupport} from '../src/typography.mjs';
+import {assertReaderStyleIsolation,frameScale} from '../src/reader-presentation.mjs';
+import {checkDisplay, compareEnglish} from '../src/layout-checks.mjs';
+const text='A final address appeared: EQUATORIAL CONTINUITY ARCHIVE, NAIROBI. ACCESS TRUSTEE: NURU OKAFOR.';
+const lines=[{text,top:100,font:{sizePt:11}},{text:'Another sufficiently long line after this paragraph.',top:115.5,font:{sizePt:11}}];
+const pages=[{page:1,lines}];
+const geometry=[{blocks:[{lines:[{text,top:100,bottom:114.3},{text:lines[1].text,top:115.5,bottom:129.8}]}]}];
+const profile=sourceTypographyProfile(pages,geometry);
+test('smaller table text cannot determine body prose leading',()=>{
+  const table=Array.from({length:20},(_,i)=>({text:'Small table text with enough characters for the old length heuristic '+i,top:200+i*11.6,font:{sizePt:8}}));
+  const body=Array.from({length:30},(_,i)=>({...lines[i%2],top:100+i*19.5,text:('Ordinary body prose repeated sufficiently to establish the body size '+i).repeat(2)}));
+  const measured=[{blocks:[{lines:body},{lines:table}]}];
+  const mixed=sourceTypographyProfile([{page:1,lines:[...body,...table]}],measured);
+  assert.equal(mixed.bodyPt,11);
+  assert.equal(mixed.leadingPt,19.5);
+});
+test('converted preformatted or monospace blocks are calibrated like prose',()=>{
+  const srcText='PROTECTION SYSTEMS THAT DELAYED AUTONOMY TO PRESERVE ERROR REDUCTION.';
+  const p={...profile,bodyPt:14,bodyCssPx:pointsToCssPixels(14),leadingPt:21,leadingCssPx:pointsToCssPixels(21),pages:[{page:1,width:432,lines:[{text:srcText,top:100,font:{sizePt:14,family:'CourierNew',color:'#000000'}}]}]};
+  const d={presentation:{bodyFontSize:pointsToCssPixels(14),contentSelector:'body'},records:[{tag:'pre',selector:'#code',text:srcText,page:'1',font:{size:String(pointsToCssPixels(14)),family:'courier'},style:{lineHeight:String(pointsToCssPixels(21)),marginBottom:0,textAlign:'left'}}]};
+  const compared=compareTypography(p,d);
+  assert(compared.mappings.some(m=>m.selector==='#code'),'a pre block is matched to its source text');
+  const action=typographyActions(p,d,compared,{defaultSizePx:pointsToCssPixels(14),sourceFontMap:{couriernew:'pdf-font-courier'},sourceFontWeights:{couriernew:[400]},sourceFontStyles:{couriernew:['normal']}}).find(a=>a.selector==='#code');
+  assert(action,'a converted pre block receives a typography action');
+  assert.equal(action.properties['font-family'],'pdf-font-courier');
+  assert.equal(action.properties['white-space'],'normal');
+  assert.equal(action.properties['text-align'],'justify');
+  assert.equal(action.properties['margin-bottom'],'0');
+});
+test('source alignment keeps ragged source blocks out of justification',()=>{
+  const line=(text,top,width)=>({text,top,left:78,width,font:{sizePt:11}});
+  const p={...profile,bodyPt:11,bodyCssPx:pointsToCssPixels(11),leadingPt:15,leadingCssPx:pointsToCssPixels(15),pages:[{page:1,width:432,lines:[
+    line('Alpha beta gamma delta epsilon zeta eta theta',100,600),
+    line('iota kappa lambda mu.',100,200),
+    line('RAGGED ONE.',200,180),
+    line('RAGGED TWO.',215,150),
+    line('RAGGED THREE.',230,120)
+  ]}]};
+  const style={lineHeight:String(pointsToCssPixels(15)),marginBottom:0,textAlign:'left'};
+  const record=(selector,text)=>({tag:'p',selector,text,page:'1',font:{size:String(pointsToCssPixels(11))},style});
+  const d={presentation:{bodyFontSize:pointsToCssPixels(11),contentSelector:'body'},records:[record('#just','Alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu.'),record('#rag','RAGGED ONE. RAGGED TWO. RAGGED THREE.')]};
+  const c=compareTypography(p,d);
+  assert.equal(c.mappings.find(m=>m.selector==='#just').sourceAlign,'justify');
+  assert.equal(c.mappings.find(m=>m.selector==='#rag').sourceAlign,'left');
+  const actions=typographyActions(p,d,c,{defaultSizePx:pointsToCssPixels(11)});
+  assert.equal(actions.find(x=>x.selector==='#just').properties['text-align'],'justify');
+  assert.equal(actions.find(x=>x.selector==='#rag').properties['text-align'],'left');
+});
+const doc=(size=23,leading=31)=>({presentation:{bodyFontSize:size,contentSelector:'body'},records:[{tag:'p',selector:'#passage',text,font:{size:String(size)},style:{lineHeight:String(leading),marginBottom:4}}]});
+test('point conversion and baseline distance are independent from glyph height',()=>{assert.equal(pointsToCssPixels(12),16);assert.equal(profile.bodyPt,11);assert.equal(profile.leadingCssPx,15.5*4/3);assert.notEqual(profile.leadingCssPx,14.3*4/3);});
+test('chapter hierarchy restores PDF colors, multiline leading and adjacent heading gaps',()=>{
+  const source={...profile,bodyPt:10,bodyCssPx:40/3,leadingPt:14.7,leadingCssPx:19.6,pages:[{page:15,width:432,lines:[
+    {text:'CHAPTER 2',top:64,font:{sizePt:10,family:'Inter',color:'#8a593c'},bold:true},
+    {text:'Essential Patterns: Tools,',top:83,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'Planning, Memory,',top:113,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'Reflection, and Multi-Agent',top:143,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'Work',top:173,font:{sizePt:23,family:'Inter',color:'#17232d'},bold:true},
+    {text:'2.1 From augmented models to adaptive loops',top:268,font:{sizePt:12,family:'Inter',color:'#315e78'},bold:true}
+  ]}]};
+  const record=(selector,text,size,marginTop)=>({tag:'h2',selector,text,page:'15',font:{size:String(pointsToCssPixels(size)),family:'Inter',weight:'700'},style:{lineHeight:String(pointsToCssPixels(size)*1.22),marginTop,marginBottom:10,color:'rgb(0, 0, 0)'}});
+  const target={presentation:{bodyFontSize:40/3,contentSelector:'body'},records:[record('#chapter','CHAPTER 2',10,0),record('#title','Essential Patterns: Tools, Planning, Memory, Reflection, and Multi-Agent Work',23,62),record('#section','2.1 From augmented models to adaptive loops',12,32)]};
+  const compared=compareTypography(source,target);
+  assert(compared.findings.some(f=>f.category==='source_text_color_difference'&&f.location==='#chapter'));
+  assert(compared.findings.some(f=>f.category==='heading_line_leading_difference'&&f.location==='#title'));
+  assert(compared.findings.some(f=>f.category==='block_gap_difference'&&f.location==='#title'));
+  const actions=typographyActions(source,target,compared,{defaultSizePx:18.56});
+  assert.equal(actions.find(a=>a.selector==='#chapter').properties.color,'#8a593c');
+  assert.equal(actions.find(a=>a.selector==='#section').properties.color,'#315e78');
+  assert.equal(actions.find(a=>a.selector==='#title').properties['line-height'],String(30/23));
+  assert(parseFloat(actions.find(a=>a.selector==='#title').properties['margin-top'])<.4);
+});
+test('heading after a table measures its gap from the source table bottom',()=>{
+  const caption='Table 5.1. Example requirements.';
+  const heading='5.3 The next section';
+  const source={...profile,bodyPt:10,bodyCssPx:40/3,leadingPt:14.7,leadingCssPx:19.6,tableFragments:[{page:46,topPt:80,bottomPt:314,cells:[{text:'Example'}]}],pages:[{page:46,width:432,lines:[
+    {text:caption,top:64,font:{sizePt:8,family:'Inter',color:'#5d6a73'}},
+    {text:heading,top:338,font:{sizePt:12,family:'Inter',color:'#315e78'},bold:true}
+  ]}]};
+  const target={presentation:{bodyFontSize:40/3,contentSelector:'body'},records:[
+    {tag:'p',selector:'#caption',nodeIndex:1,text:caption,page:'46',font:{size:String(32/3),family:'Inter'},style:{lineHeight:'13',marginTop:0,marginBottom:0,color:'rgb(93, 106, 115)'}},
+    {tag:'table',selector:'#table',nodeIndex:2,text:'Example',page:'46'},
+    {tag:'h2',selector:'#heading',nodeIndex:3,text:heading,page:'46',font:{size:'16',family:'Inter'},style:{lineHeight:'19.5',marginTop:350,marginBottom:0,color:'rgb(49, 94, 120)'}}
+  ]};
+  const compared=compareTypography(source,target);
+  const mapping=compared.mappings.find(m=>m.selector==='#heading');
+  assert.equal(mapping.gapSource,'source_table_bottom');assert.equal(mapping.gapBeforeEm,2);
+  const actions=typographyActions(source,target,compared,{defaultSizePx:18.56});
+  assert.equal(actions.find(a=>a.selector==='#heading').properties['margin-top'],'2em');
+  assert(!actions.some(a=>a.selector===undefined));
+});
+test('absolute enlargement fails even with unchanged relative type hierarchy',()=>{const c=compareTypography(profile,doc());assert(c.findings.some(f=>f.category==='absolute_font_size_difference'));assert(c.findings.some(f=>f.category==='line_leading_difference'));assert(c.findings.some(f=>f.category==='paragraph_gap_difference'));});
+test('correct physical typography does not trigger false enlargement',()=>{const d=doc(11*4/3,15.5*4/3);d.records[0].style.marginBottom=0;assert.equal(compareTypography(profile,d).findings.length,0);});
+test('ambiguous repeated source passages cannot authorize font replacement',()=>{const c=compareTypography({...profile,pages:[...pages,...pages]},doc());assert.equal(c.mappings.length,0);assert(c.findings.some(f=>f.category==='source_typography_ambiguous'));});
+test('calibration is general, preserves control variables, and natural spacing never edits prose',()=>{const d=doc(),c=compareTypography(profile,d),a=typographyActions(profile,d,c,{defaultSizePx:18.56,justifyPolicy:'natural'});assert(a[0].properties['font-size'].includes('--reader-font-size'));assert(a.find(x=>x.selector==='#passage').properties['text-align']==='left');assert(a.every(x=>!('text' in x)&&x.kind==='presentation'));assert.throws(()=>typographyActions(profile,d,c),/default CSS/);});
+test('natural word spacing preserves centered and right-aligned display paragraphs',()=>{for(const textAlign of ['center','right','end']){const d=doc();d.records[0].style.textAlign=textAlign;const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'natural'});assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],undefined);}});
+test('route-based reader inflation and marker-based defaults are explicit, unsupported contracts fail',()=>{const routeScaling='const sourceScale = /\\/old\\/book/.test(new URL(state.htmlFrame.src).pathname) ? 1 : 1.24;';assert.equal(frameScale(routeScaling,'/new/book',true),1.24);assert.equal(frameScale(routeScaling,'/old/book',true),1);const current="const sourceScale = state.htmlFrame.contentDocument?.body?.matches('[data-pdf-fidelity], [data-validatebook-root]') ? 1 : 1.24;";assert.equal(frameScale(current,'/any/book',true),1);assert.equal(frameScale(current,'/any/book',false),1.24);assert.throws(()=>frameScale('unknown','/',true),/not recognized/);});
+test('reader CSS cannot style the inside of managed books',()=>{const gate=':not([data-pdf-fidelity]):not([data-validatebook-root])';assert.doesNotThrow(()=>assertReaderStyleIsolation(`.reader-html-content{--standalone-size:var(--reader-font-size);width:1240px;margin:auto}.reader-html-content${gate}{padding:2rem}.reader-html-content${gate} p{margin:0;color:black}.reader-html-content :is(script, style, noscript, [hidden]){display:none!important}`,`body{width:1240px;margin:auto}body${gate}{padding:2rem}body${gate} p{margin:0}`));assert.throws(()=>assertReaderStyleIsolation('.reader-html-content p{margin:1em}','body{}'),/does not exclude managed books/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{font-family:serif}','body{}'),/cannot set book typography/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{padding:2rem}','body{}'),/page padding/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content[data-pdf-fidelity="book"] p{color:red}','body{}'),/Book-specific presentation/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{}','p{margin:1em}'),/Standalone content selector/);assert.throws(()=>assertReaderStyleIsolation('.reader-html-content{}','body{padding:2rem}'),/managed root cannot add page padding/);});
+test('responsive justification gaps do not create source fidelity errors',()=>{
+ const d={language:'en',duplicates:[],brokenLinks:[],scrollWidth:390,width:390,fontFaces:[],records:[{selector:'#p',tag:'p',text,spacing:{gapP90Em:1.2,excessive:true}}]};
+ assert.equal(checkDisplay(d,'en').length,0);
+ d.records[0].clipped=true;
+ assert(checkDisplay(d,'en').some(f=>f.category==='clipped_content'));
+});
+test('translated prose inherits the English baseline rhythm without text matching or rewriting',()=>{const master=compareTypography(profile,doc());const target=doc();target.records[0].text='Un paragraf tradus care nu coincide lexical cu sursa engleză.';const own=compareTypography(profile,target,'ro');assert.equal(own.mappings.length,0);const actions=typographyActions(profile,target,own,{defaultSizePx:18.56,masterTypography:master});const p=actions.find(a=>a.selector==='#passage');assert.equal(p.properties['margin-bottom'],'0');assert.equal(Number(p.properties['line-height']),profile.leadingCssPx/profile.bodyCssPx);});
+
+test('short dialogue uses the same PDF font-size checks as surrounding prose',()=>{
+  const dialogue=['"Recommendation recorded."','"Do you confirm recycling?"','"I confirm that you made a recommendation."'];
+  const source={...profile,pages:[{page:1,lines:dialogue.map((text,i)=>({text,top:100+i*15.5,font:{sizePt:11}}))}]};
+  const target=doc(18.56);target.records=dialogue.map((text,i)=>({...target.records[0],selector:'#dialogue'+i,text}));
+  const compared=compareTypography(source,target);
+  assert.equal(compared.mappings.length,3);
+  assert.equal(compared.findings.filter(f=>f.category==='absolute_font_size_difference').length,3);
+  assert(compared.mappings.every(m=>m.expectedCssPx===44/3));
+  const ambiguous={...source,pages:[{page:1,lines:[...source.pages[0].lines,source.pages[0].lines[0]]}]};
+  const repeated=compareTypography(ambiguous,target);
+  assert(!repeated.mappings.some(m=>m.selector==='#dialogue0'));
+  assert(repeated.findings.some(f=>f.category==='source_typography_ambiguous'&&f.location==='#dialogue0'));
+});
+
+test('a paragraph that continues across PDF pages still maps as one HTML paragraph',()=>{
+  const first='This makes the subject part of the Outfinitist philosophy adopted here. Outfinitism begins from finite but movable limits.';
+  const second='It is to distinguish physical impossibility from institutional refusal.';
+  const source={...profile,pages:[
+    {page:5,lines:[{text:first,top:693,font:{sizePt:11,family:'AAAAAA+EBGaramond'}}]},
+    {page:6,lines:[{text:second,top:76,font:{sizePt:11,family:'AAAAAA+EBGaramond'}},{text:lines[1].text,top:166,font:{sizePt:11,family:'AAAAAA+EBGaramond'}}]}
+  ]};
+  const fonts={ebgaramond:'"pdf-font-9e82528ffc0c", Georgia, serif'};
+  const target=doc(11*4/3,15.5*4/3);target.records[0].text=first+' '+second;target.records[0].style.marginBottom=0;
+  target.records[0].font.family='Georgia, "Iowan Old Style", "Palatino Linotype", serif';
+  const wrong=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert.equal(wrong.mappings.length,1);
+  assert.equal(wrong.mappings[0].fontSizePt,11);
+  assert.equal(wrong.mappings[0].page,5);
+  assert.deepEqual(wrong.mappings[0].sourceFamilies,['AAAAAA+EBGaramond']);
+  assert(wrong.findings.some(f=>f.category==='source_font_family_difference'));
+  assert.equal(wrong.findings.find(f=>f.category==='source_font_family_difference').repair.properties['font-family'],fonts.ebgaramond);
+  target.records[0].font.family=fonts.ebgaramond;
+  const compared=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert.equal(compared.findings.length,0);
+  const actions=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts});
+  assert.equal(actions.find(a=>a.selector==='#passage').properties['font-family'],fonts.ebgaramond);
+});
+
+test('PDF family normalization groups regular italic bold and bolditalic faces',()=>{
+  const raw=[
+    {source_name:'AAAAAA+EBGaramond-Regular',css_family:'pdf-font-regular',href:'regular.ttf',weight:400,style:'normal'},
+    {source_name:'BAAAAA+EBGaramond-Italic',css_family:'pdf-font-italic',href:'italic.ttf',weight:400,style:'italic'},
+    {source_name:'CAAAAA+EBGaramond-Bold',css_family:'pdf-font-bold',href:'bold.ttf',weight:700,style:'normal'},
+    {source_name:'DAAAAA+EBGaramond-BoldItalic',css_family:'pdf-font-bolditalic',href:'bolditalic.ttf',weight:700,style:'italic'}
+  ];
+  const normalized=normalizePdfFontFamilies(raw);
+  assert.deepEqual([...new Set(normalized.map(font=>font.css_family))],['pdf-font-regular']);
+  const support=sourceFontSupport(normalized);
+  assert.equal(support.ebgaramond.hasNormal400,true);
+  assert.deepEqual(support.ebgaramond.weights.sort(),[400,700]);
+  assert.deepEqual(support.ebgaramond.styles.sort(),['italic','normal']);
+  const source={...profile,pages:[{page:1,lines:[{text,top:100,font:{sizePt:11,family:'AAAAAA+EBGaramond-Regular',color:'#000000'}}]}]};
+  const target=doc(11*4/3,15.5*4/3);
+  target.records[0].font.family='"pdf-font-bolditalic", Georgia, serif';
+  target.records[0].font.size=String(11*4/3);
+  target.records[0].style.lineHeight=String(15.5*4/3);
+  target.records[0].style.marginBottom=0;
+  const sourceFontMap={ebgaramond:'"pdf-font-regular", Georgia, serif'};
+  const compared=compareTypography(source,target,'en',{sourceFontMap});
+  const action=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap,sourceFontWeights:{ebgaramond:[400,700]},sourceFontStyles:{ebgaramond:['normal','italic']},sourceFontFaces:support}).find(a=>a.selector==='#passage');
+  assert.equal(action.properties['font-family'],sourceFontMap.ebgaramond);
+  assert.equal(action.properties['font-weight'],'400');
+  assert.equal(action.properties['font-style'],'normal');
+});
+
+test('partial bold source phrases do not make the whole paragraph bold',()=>{
+  const paragraph='Elites are groups and persons with disproportionate influence over capital, infrastructure, knowledge, institutions, or symbols. They arise in every complex society, including communities that officially deny having them.';
+  const source={...profile,pages:[{page:10,height:648,lines:[{text:paragraph,top:100,font:{sizePt:11,family:'AAAAAA+EBGaramond-Regular',color:'#000000'},bold:true,boldText:'Elites'}]}]};
+  const target=doc(11*4/3,15.5*4/3);
+  target.records[0].text=paragraph;
+  target.records[0].page='10';
+  target.records[0].font.size=String(11*4/3);
+  target.records[0].font.family='"pdf-font-9e82528ffc0c", Georgia, serif';
+  target.records[0].font.weight='700';
+  target.records[0].style.lineHeight=String(15.5*4/3);
+  target.records[0].style.marginBottom=0;
+  target.records[0].style.color='rgb(0, 0, 0)';
+  const fonts={ebgaramond:'"pdf-font-9e82528ffc0c", Georgia, serif'};
+  const compared=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert.equal(compared.mappings[0].sourceBold,false);
+  assert(compared.mappings[0].sourceBoldCoverage < .1);
+  const action=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts,sourceFontWeights:{ebgaramond:[400,700]},sourceFontStyles:{ebgaramond:['normal']}}).find(a=>a.selector==='#passage');
+  assert.equal(action.properties['font-weight'],'400');
+  assert.equal(action.properties['font-style'],'normal');
+});
+
+test('running headers and printed folios do not split a cross-page paragraph match',()=>{
+  const first='Here the moral line appears. A good business can earn money by reducing a problem.';
+  const second='A business dependent on the problem earns more when the problem persists.';
+  const header='ASPIRIN, VIAGRA & COFFINS · AN AI WRITING EXPERIMENT';
+  const source={...profile,pages:[
+    {page:11,height:648,lines:[{text:first,top:693,font:{sizePt:11}}]},
+    {page:12,height:648,lines:[
+      {text:header,top:20,font:{sizePt:8}},
+      {text:second,top:76,font:{sizePt:11}},
+      {text:'12',top:616,font:{sizePt:8}}
+    ]},
+    {page:13,height:648,lines:[{text:header,top:20,font:{sizePt:8}}]},
+    {page:14,height:648,lines:[{text:header,top:20,font:{sizePt:8}}]}
+  ]};
+  const target=doc(11*4/3,15.5*4/3);target.records[0].text=first+' '+second;target.records[0].style.marginBottom=0;target.records[0].page='11';
+  const compared=compareTypography(source,target);
+  assert.equal(compared.mappings.length,1);
+  assert.equal(compared.findings.length,0);
+});
+
+test('a chapter heading on its source page is unique even when the contents list repeats it',()=>{
+  const heading='CHAPTER 1';
+  const source={...profile,pages:[
+    {page:4,height:648,lines:[{text:heading,top:149,font:{sizePt:11,family:'CAAAAA+EBGaramond'}}]},
+    {page:13,height:648,lines:[{text:heading,top:76,font:{sizePt:16,family:'CAAAAA+EBGaramond'}}]}
+  ]};
+  const target=doc(16*4/3,21);target.records[0]={tag:'h2',selector:'#page_13',text:heading,page:'13',font:{size:String(16*4/3)},style:{lineHeight:String(21),marginBottom:0}};
+  const compared=compareTypography(source,target);
+  assert.equal(compared.mappings.length,1);
+  assert.equal(compared.mappings[0].page,13);
+  assert.equal(compared.mappings[0].fontSizePt,16);
+  assert(!compared.findings.some(f=>f.category==='source_typography_ambiguous'));
+});
+
+test('unpaginated repeated passages map by document order instead of remaining ambiguous',()=>{
+  const heading='CONTENTS';
+  const source={...profile,pages:[
+    {page:4,height:648,lines:[{text:heading,top:45,font:{sizePt:9,family:'BAAAAA+Arial'}}]},
+    {page:13,height:648,lines:[{text:heading,top:76,font:{sizePt:16,family:'CAAAAA+EBGaramond'}}]}
+  ]};
+  const target={presentation:{bodyFontSize:21,contentSelector:'body'},records:[
+    {tag:'h2',selector:'#toc',text:heading,font:{size:String(9*4/3)},style:{lineHeight:'16',marginBottom:0}},
+    {tag:'h1',selector:'#chapter',text:heading,font:{size:String(16*4/3)},style:{lineHeight:'24',marginBottom:0}}
+  ]};
+  const compared=compareTypography(source,target);
+  assert.equal(compared.mappings.length,2);
+  assert.equal(compared.mappings[0].fontSizePt,9);
+  assert.equal(compared.mappings[1].fontSizePt,16);
+  assert(!compared.findings.some(f=>f.category==='source_typography_ambiguous'));
+});
+
+test('source policy keeps body prose justified when a later viewport has large gaps',()=>{
+  const d=doc();
+  d.records[0].spacing={excessive:false};
+  d.layouts=[{width:1440,records:[{selector:'#passage',spacing:{excessive:false}}]},{width:390,records:[{selector:'#passage',spacing:{excessive:true}}]}];
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56});
+  const properties=actions.find(a=>a.selector==='#passage').properties;
+  assert.equal(properties['text-align'],'justify');
+  assert.equal(properties['text-align-last'],'left');
+  assert.equal(properties.hyphens,'auto');
+});
+
+test('source policy justifies prose below body size but preserves PDF display text',()=>{
+  const d=doc();
+  d.records=[
+    {tag:'p',selector:'#note',text:'A shorter front-matter note at a smaller point size.',font:{size:'14.66'},style:{lineHeight:'21',textAlign:'left',marginBottom:0}},
+    {tag:'p',selector:'#display',text:'The Hidden Cost of Saving Humanity',font:{size:'16'},style:{lineHeight:'24',textAlign:'left',marginBottom:0},displayGroup:'1'}
+  ];
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  const note=actions.find(a=>a.selector==='#note').properties;
+  assert.equal(note['text-align'],'justify');
+  assert.equal(note['text-align-last'],'left');
+  assert.equal(actions.find(a=>a.selector==='#display')?.properties?.['text-align'],undefined);
+});
+
+test('adaptive justification keeps justify for normal word gaps',()=>{
+  const d=doc();
+  d.records[0].style.textAlign='justify';
+  d.records[0].spacing={excessive:false,gapP90Em:0.2};
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  const properties=actions.find(a=>a.selector==='#passage').properties;
+  assert.equal(properties['text-align'],'justify');
+  assert.equal(properties['text-align-last'],'left');
+});
+
+test('short final lines stay left without disabling paragraph justification',()=>{
+  const d=doc();
+  d.records[0].style.textAlign='justify';
+  d.records[0].spacing={excessive:false,gapP90Em:0.55};
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  const properties=actions.find(a=>a.selector==='#passage').properties;
+  assert.equal(properties['text-align'],'justify');
+  assert.equal(properties['text-align-last'],'left');
+});
+
+test('adaptive justification boundary at 0.4em keeps justify',()=>{
+  const d=doc();
+  d.records[0].style.textAlign='justify';
+  d.records[0].spacing={excessive:false,gapP90Em:0.4};
+  const actions=typographyActions(profile,d,compareTypography(profile,d),{defaultSizePx:18.56,justifyPolicy:'source'});
+  assert.equal(actions.find(a=>a.selector==='#passage').properties['text-align'],'justify');
+});
+
+test('same-page repeated headings map by local order instead of remaining ambiguous',()=>{
+  const heading='Selected Bibliography and Notes for Orientation';
+  const source={...profile,pages:[{page:80,height:648,lines:[
+    {text:heading,top:45,font:{sizePt:11,family:'CAAAAA+EBGaramond'}},
+    {text:heading,top:80,font:{sizePt:16,family:'CAAAAA+EBGaramond'}}
+  ]}]};
+  const target={presentation:{bodyFontSize:21,contentSelector:'body'},records:[
+    {tag:'h2',selector:'#page_80',text:heading,page:'80',font:{size:String(11*4/3)},style:{lineHeight:'20',marginBottom:0}},
+    {tag:'h2',selector:'#sub',text:heading,page:'80',font:{size:String(16*4/3)},style:{lineHeight:'24',marginBottom:0}}
+  ]};
+  const compared=compareTypography(source,target);
+  assert.equal(compared.mappings.length,2);
+  assert.equal(compared.mappings[0].fontSizePt,11);
+  assert.equal(compared.mappings[1].fontSizePt,16);
+  assert(!compared.findings.some(f=>f.category==='source_typography_ambiguous'));
+});
+
+test('a declared custom CONTENTS face is accepted even when the PDF subset name differs',()=>{
+  const source={...profile,pages:[{page:4,height:648,lines:[{text:'CONTENTS',top:45,font:{sizePt:9,family:'BAAAAA+Arial'}}]}]};
+  const fonts={arial:'"pdf-font-06572dbddc97", system-ui, sans-serif'};
+  const target=doc(12,16);target.records[0]={tag:'h2',selector:'#page_4',text:'CONTENTS',page:'4',font:{size:'12',family:fonts.arial},style:{lineHeight:'16',marginBottom:0}};
+  target.platformFonts=[{selector:'#page_4',fonts:[{familyName:'Arial',glyphCount:8,isCustomFont:false}]}];
+  const compared=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert.equal(compared.mappings.length,1);
+  assert(!compared.findings.some(f=>f.category==='source_font_family_difference'));
+  const actions=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts,sourceFontWeights:{arial:[400]}});
+  assert.equal(actions.find(a=>a.selector==='#page_4').properties['font-weight'],'400');
+});
+
+test('high token overlap cannot certify unmapped copyright typography',()=>{
+  const source={...profile,pages:[{page:3,height:648,lines:[{text:'Copyright © [2026] Axiologic Research All rights reserved.',top:80,font:{sizePt:11}}]}]};
+  const target=doc(11*4/3,15.5*4/3);target.records[0].text='Copyright © [2026] ScriptaHub All rights reserved.';target.records[0].page='3';target.records[0].style.marginBottom=0;
+  const compared=compareTypography(source,target);
+  const finding=compared.findings.find(f=>f.category==='source_typography_unmapped');
+  assert.equal(finding.severity,'error');
+});
+
+test('unmapped English body prose inherits nearby certified body typography',()=>{
+  const source={...profile,pages:[{page:4,height:648,lines:[
+    {text:'This book is not the transcript of a consciousness.',top:80,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}},
+    {text:'The first experiment concerned forgiveness and its history matters because the final text was produced through failure and correction.',top:126,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}},
+    {text:'The second experiment asked what an AI might say about human beings more generally and why witnesses matter.',top:158,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}},
+    {text:'The collection is strangely insightful even where its scientific status remains uncertain.',top:202,font:{sizePt:11,family:'AAAAAA+EBGaramond',color:'#000000'}}
+  ]}]};
+  const target={presentation:{bodyFontSize:18.56,contentSelector:'body'},platformFonts:[{selector:'#before',fonts:[{familyName:'pdf-font-9e82528ffc0c',glyphCount:20,isCustomFont:true}]}],records:[
+    {tag:'p',selector:'#before',text:'This book is not the transcript of a consciousness.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'h2',selector:'#heading',text:'What Was Asked',page:'4',font:{size:'16',family:'Inter'},style:{lineHeight:'20',marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#unmapped',text:'The four large chapters began as four separate book experiments in a 2026 dialogue conducted within the ScriptaHub research project, which is dedicated to the creation and study of literature produced with artificial intelligence.',page:'4',font:{size:'18.56',family:'Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#after1',text:'The first experiment concerned forgiveness and its history matters because the final text was produced through failure and correction.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#after2',text:'The second experiment asked what an AI might say about human beings more generally and why witnesses matter.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}},
+    {tag:'p',selector:'#after3',text:'The collection is strangely insightful even where its scientific status remains uncertain.',page:'4',font:{size:String(11*4/3),family:'"pdf-font-9e82528ffc0c", Georgia, serif'},style:{lineHeight:String(15.5*4/3),marginBottom:0,color:'rgb(0, 0, 0)'}}
+  ]};
+  const fonts={ebgaramond:'"pdf-font-9e82528ffc0c", Georgia, serif'};
+  const compared=compareTypography(source,target,'en',{sourceFontMap:fonts});
+  assert(compared.findings.some(f=>f.category==='source_typography_unmapped'&&f.location==='#unmapped'));
+  const action=typographyActions(source,target,compared,{defaultSizePx:18.56,sourceFontMap:fonts,sourceFontWeights:{ebgaramond:[400]}}).find(a=>a.selector==='#unmapped');
+  assert.equal(action.properties['font-family'],fonts.ebgaramond);
+  assert.equal(action.properties['font-weight'],'400');
+  assert.equal(action.properties['font-size'],`calc(var(--reader-font-size, var(--standalone-size, 18.56px)) * ${(11*4/3)/18.56} * var(--validatebook-page-scale, 1))`);
+});
+
+test('split table lines and rebranded copyright are not unmatched source omissions',()=>{
+  const pages=[{page:3,text:'Copyright © [2026] Axiologic Research\nAll rights reserved.\nKDP publishing rights held by Outfinity SRL (Iasi, Romania).'},{page:67,text:'RCT and longitudinal             Stronger for causality and direction; may be short or\nstudy                            unrepresentative.'}];
+  const document={records:[{tag:'p',selector:'#page_3',text:'Copyright © [2026] ScriptaHub All rights reserved.'},{tag:'p',selector:'#t',text:'RCT and longitudinal study Stronger for causality and direction; may be short or unrepresentative.'}],text:'Copyright © [2026] ScriptaHub All rights reserved. KDP publishing rights held by Outfinity SRL (Iasi, Romania). Available for free on ScriptaHub website. This work was created under the umbrella of ScriptaHub as part of two interconnected research programs. RCT and longitudinal study Stronger for causality and direction; may be short or unrepresentative.'};
+  assert.equal(compareEnglish(pages,document).findings.length,0);
+});
+
+test('generated figure captions are not treated as unmapped source prose',()=>{
+  const target=doc(11*4/3,15.5*4/3);target.records[0]={tag:'figcaption',selector:'#cap',text:'Figure from PDF page 11',page:'11',font:{size:String(11*4/3)},style:{lineHeight:String(15.5*4/3),marginBottom:0}};
+  assert.equal(compareTypography(profile,target).findings.length,0);
+});
+
+test('an unmapped English paragraph is an error, not an uncertified pass',()=>{
+  const target=doc(11*4/3,15.5*4/3);target.records[0].text='This English paragraph never occurs in the PDF source.';target.records[0].style.marginBottom=0;
+  const compared=compareTypography(profile,target);
+  assert.equal(compared.mappings.length,0);
+  assert.equal(compared.findings[0].category,'source_typography_unmapped');
+});
+
+test('translated prose without a lexical PDF match is not an English unmapped error',()=>{
+  const target=doc();target.records[0].text='Un paragraf tradus care nu coincide lexical cu sursa engleză.';
+  const own=compareTypography(profile,target,'ro');
+  assert.equal(own.mappings.length,0);
+  assert(!own.findings.some(f=>f.category==='source_typography_unmapped'||f.category==='source_font_family_difference'));
+});

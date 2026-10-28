@@ -1,0 +1,27 @@
+{
+  "title": "PDF to Semantic HTML",
+  "family": "document-conversion",
+  "sourceTableContract": "The decorations command exports ruled and fill-partitioned tables with source page widths, cell spans, fills, individual borders, vertical alignment and uniform typography. JSON is flushed before exit.",
+  "summary": "Converts born-digital PDFs to semantic positioned HTML and local assets. Checks technical output assembly and resource loading only; bookValidated is always false. Manuscript fidelity and book acceptance belong exclusively to validateBook. Supports a hash-verified prepared runtime for read-only mounts.",
+  "aliases": [
+    "pdf2html",
+    "pdf-to-html"
+  ],
+  "dependsOn": [],
+  "outputs": [
+    "<outputDir>/index.html",
+    "<outputDir>/assets/"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "scripts/pdf2html",
+    "references/dependencies.md",
+    "scripts/setup.mjs",
+    "dependencies.md",
+    "scripts/launch-runtime.mjs",
+    "references/conversion-checks.md"
+  ],
+  "selfContained": true,
+  "conversionContract": "Conversion performs technical assembly checks only: nonempty generated content, complete page containers and serialized region counts, safe local assets, image decoding, font loading and browser loading errors. Reports use scope=conversion-technical and bookValidated=false. Text fidelity, punctuation, reading order, source-image correspondence, typography, positioning, clipping and overflow are book-validation responsibilities and never determine conversion acceptance. A successful conversion must be handed to validateBook before publication. Technical failures retain diagnostic output; installation checks the final path before discarding recovery copies.",
+  "punctuationRestoration": "Exact local source alignment with bounded unique-context resumption; preserve unmatched words and restore source compound hyphens; folios retain extractor page provenance."
+}

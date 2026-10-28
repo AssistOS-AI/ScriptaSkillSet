@@ -6,3 +6,16 @@
 **/__pycache__/
 **/*.pyc
 **/*.egg-info/
+
+# Installed dependencies and generated runtime/build artifacts
+**/node_modules/
+**/.cache/
+**/target/
+**/external/browser/
+**/external/tools/
+**/external/native/models/
+**/external/native/linux-*/
+**/external/native/darwin-*/
+**/external/native/win32-*/
+**/external/native/sources/*.zip
+**/*.actual.html

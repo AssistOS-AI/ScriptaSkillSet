@@ -1,0 +1,174 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { compareEnglish, checkDisplay, comparePdfFonts, comparePdfGeometry } from '../src/layout-checks.mjs';
+import { discover, collectAssets, doctor, splitSafeVisibleContentRepairs } from '../src/audit.mjs';
+import { textReport, layoutReport } from '../src/layout-report.mjs';
+import { planComplete, completeStatus } from '../src/complete.mjs';
+import { fileHash, writeJson } from '../src/storage.mjs';
+
+async function fixture(t) {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'layout-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  for (const lang of ['en','ro']) { await fs.mkdir(path.join(root,lang)); await fs.writeFile(path.join(root,lang,'full_content.html'),`<html lang="${lang}"><p id="p1">Fixture paragraph.</p></html>`); }
+  await fs.writeFile(path.join(root,'en/book.pdf'),'fixture');
+  await writeJson(path.join(root,'manifest.json'),{editions:{en:{fullContent:'en/full_content.html'},ro:{fullContent:'ro/full_content.html'},fr:{book:'fr/book.html'}}});
+  return root;
+}
+const record=(id,text='A paragraph.',extra={})=>({id,selector:'#'+id,tag:'p',classes:'',text,font:{family:'Garamond'},...extra});
+const document=records=>({records,text:records.map(r=>r.text).join('\n'),language:'en',duplicates:[],brokenLinks:[],fontFaces:[],scrollWidth:390,width:390});
+
+test('all PDF pages compared; omission is localized without rewriting',()=>{
+  const pages=[{page:1,text:'This first paragraph appears in both documents.'},{page:2,text:'This second paragraph was lost during conversion.'}];
+  const result=compareEnglish(pages,document([record('p1',pages[0].text)]));
+  assert.equal(result.coverage.length,2);assert.equal(result.findings.filter(f=>f.category==='source_text_unmatched').length,1);assert.match(result.findings[0].location,/page 2/);
+});
+test('local display detects hidden/clipped text, corruption, failed fonts, broken links and images',()=>{
+  const d=document([record('bad','Broken \uFFFD',{hidden:true,clipped:true}),record('image','',{tag:'img',broken:true,src:'missing.png'})]);d.fontFaces=[{family:'BookFont',status:'error'}];d.brokenLinks=['#absent'];d.scrollWidth=900;
+  const kinds=checkDisplay(d,'en').map(f=>f.category);for(const name of ['hidden_content','clipped_content','suspect_character','font_load_failed','broken_anchor','broken_image','horizontal_overflow'])assert(kinds.includes(name));
+});
+test('converter figure placeholders are visible-content errors with a native removal',()=>{
+  const d=document([record('caption','Figure from PDF page 1',{tag:'figcaption'})]);
+  const finding=checkDisplay(d,'en').find(f=>f.category==='generated_figure_caption');
+  assert.equal(finding.repair.kind,'remove_generated_caption');
+  assert.equal(finding.repair.selector,'#caption');
+});
+test('repeated title-number running matter is a safe visible-content repair',()=>{
+  const d=document([
+    {...record('f6','BEYOND THE LAST STONE · 6',{tag:'h2'}),selector:'#f6'},
+    {...record('f7','BEYOND THE LAST STONE · 7',{tag:'h2'}),selector:'#f7'},
+    {...record('f8','BEYOND THE LAST STONE · 8',{tag:'h2'}),selector:'#f8'}
+  ]);
+  const findings=checkDisplay(d,'en').filter(f=>f.category==='running_matter_visible');
+  assert.equal(findings.length,3);
+  assert.equal(findings[0].repair.kind,'remove_running_matter');
+});
+test('generated figure captions and running matter are split from layout batches as safe visible-content repairs',()=>{
+  const actions=[
+    {kind:'presentation',selector:'#p',properties:{'font-size':'1em'}},
+    {kind:'remove_generated_caption',selector:'#cap',text:'Figure from PDF page 1'},
+    {kind:'presentation',selector:'#cap',properties:{'font-size':'1em'}},
+    {kind:'remove_running_matter',selector:'#footer',text:'BOOK · 2'},
+    {kind:'presentation',selector:'#footer',properties:{'font-size':'1em'}},
+    {kind:'stylesheet',css:'p{overflow-wrap:anywhere}'}
+  ];
+  const split=splitSafeVisibleContentRepairs(actions);
+  assert.deepEqual(split.safe,[actions[1],actions[3]]);
+  assert.deepEqual(split.batch,[actions[0],actions[5]]);
+});
+test('translation presentation layer is split from risky layout batches',()=>{
+  const actions=[
+    {kind:'inherit_styles',sheets:[{href:'../en/validatebook-layout.css'}],bodyAttributes:{'data-pdf-fidelity':'validatebook'},safeTranslationStyle:true},
+    {kind:'language_tag',language:'it',safeTranslationStyle:true},
+    {kind:'presentation',selector:'#translated',properties:{'font-family':'"Source", serif'},safeTranslationStyle:true},
+    {kind:'table_grid',selector:'#table',rows:[]}
+  ];
+  const split=splitSafeVisibleContentRepairs(actions);
+  assert.deepEqual(split.safe,actions.slice(0,3));
+  assert.deepEqual(split.batch,[actions[3]]);
+});
+
+test('actual rendered fonts compared with PDF subset names',()=>{
+  const source='ABCDEF+EBGaramond-Regular TrueType yes yes yes 1 0';
+  assert.equal(comparePdfFonts(source,[{fonts:[{familyName:'EB Garamond',glyphCount:40}]}]).length,0);
+  assert.equal(comparePdfFonts(source,[{fonts:[{familyName:'Arial',glyphCount:40}]}])[0].category,'source_font_family_unmatched');
+  assert.equal(comparePdfFonts(source,[{fonts:[{familyName:'pdf-font-9e82528ffc0c',glyphCount:40}]}],[{source_name:'ABCDEF+EBGaramond-Regular',css_family:'pdf-font-9e82528ffc0c'}]).length,0);
+});
+test('new coordinator has only layout stages and discovers no absent readers',async t=>{
+  const root=await fixture(t),d=await discover(root);assert.deepEqual(d.documents.map(d=>d.language),['en','ro']);
+  const p=await planComplete(root);assert.equal(p.status,'incomplete');assert(!p.stages.join(' ').match(/humanis|summar|metadata|translation rewriting/i));
+  assert.equal((await completeStatus(p.stateFile)).auditDirectory,p.auditDirectory);
+  const cli=fileURLToPath(new URL('../scripts/validatebook.mjs',import.meta.url));
+  const run=spawnSync(process.execPath,[cli,'complete-status',p.stateFile],{encoding:'utf8'});assert.equal(run.status,3);assert.equal(JSON.parse(run.stdout).scope,'layout_and_structure');
+});
+test('CLI rejects removed external repair-plan input',()=>{
+  const cli=fileURLToPath(new URL('../scripts/validatebook.mjs',import.meta.url));
+  const run=spawnSync(process.execPath,[cli,'prepare','/book','--patches','plan.json'],{encoding:'utf8'});
+  assert.equal(run.status,2);assert.match(run.stderr,/Unknown option '--patches'/);
+});
+test('CSS imports/fonts are in the hash closure, remote scripts only warn',async t=>{
+  const root=await fixture(t);await fs.writeFile(path.join(root,'a.css'),'@import "b.css";');await fs.writeFile(path.join(root,'b.css'),'@font-face{src:url(font.ttf)}');await fs.writeFile(path.join(root,'font.ttf'),'font');
+  const result=await collectAssets({language:'en',resources:[{tag:'link',url:new URL('file://'+root+'/a.css').href},{tag:'script',url:'https://example.test/script.js'}],loadedResources:[]});
+  assert.equal(result.inputs.length,3);assert.equal(result.findings[0].severity,'warning');
+});
+test('report has only text/JSON, remains stale after source mutation',async t=>{
+  const root=await fixture(t),file=path.join(root,'en/full_content.html');
+  const result={scope:'layout_and_structure',status:'passed',documents:[{language:'en'}],pageCoverage:[{page:1}],corrections:[],findings:[],initialFindings:[],limitations:['No semantic translation review.'],backups:[]};
+  await writeJson(path.join(root,'job.json'),{scope:'layout_and_structure',inputs:[{file,sha256:await fileHash(file)}],artifacts:[],result});
+  await layoutReport(root);const files=await fs.readdir(root);assert(files.includes('report.md'));assert(!files.includes('repair-tasks.json'));assert(!files.some(f=>/\.png$|report\.html$/.test(f)));assert(!textReport(result).includes('<img'));
+  await fs.appendFile(file,'changed');await assert.rejects(layoutReport(root),/Stale input/);
+});
+test('report groups clear errors, missing translation blocks and repeated corrections',()=>{
+  const result={scope:'layout_and_structure',status:'needs_attention',documents:[{language:'en'},{language:'ro'}],pageCoverage:[{page:1}],corrections:[
+    {language:'ro',kind:'presentation',file:'ro/full_content.html'}
+    ,{language:'ro',kind:'presentation',file:'ro/full_content.html'}
+  ],initialFindings:[],limitations:[],backups:[],findings:[
+    {severity:'error',language:'ro',category:'block_sequence_difference',location:'document',detail:'Paragraph/heading/table/list sequence differs from the English canonical layout.'},
+    {severity:'error',language:'ro',category:'translation_structure_difference',location:'page 2',detail:'The translated interval requires structural review.'},
+    {severity:'error',language:'en',category:'html_table_unmapped',location:'table:nth-child(1)',detail:'HTML table has no certified source grid.'},
+    {severity:'warning',language:'en',category:'remote_asset',location:'script',detail:'Remote script was disabled.'}
+  ]};
+  const report=textReport(result);
+  assert(report.indexOf('## Erori clare rămase')<report.indexOf('## Pagini de traducere de corectat'));
+  assert(report.includes('HTML table has no certified source grid.'));
+  assert(report.includes('Structura sau numarul de propozitii difera'));
+  assert(report.includes('| ro / presentation | 2 | 1 |'));
+  assert(!report.includes('Remote script was disabled.'));
+  assert(!report.includes('## Probleme inițiale'));
+});
+test('preflight missing tools fails before creating output',async()=>{await assert.rejects(doctor({chromium:'/definitely-missing-layout-browser'}),/ENOENT/);});
+
+test('source bounds expose a body paragraph incorrectly enlarged as a heading',()=>{
+  const prose='This is a source body paragraph with enough text to establish its normal line height and compare the HTML presentation.';
+  const second=prose+' Additional source context.';
+  const block=text=>({text,lines:[{bottom:20,top:10}],left:10,right:300,top:10,bottom:20});
+  const d=document([record('p',prose,{font:{size:'16px'}}),record('wrong',second,{tag:'h2',font:{size:'32px'}})]);
+  const result=comparePdfGeometry([{page:1,blocks:[block(prose),block(second)]}],d);
+  assert.equal(result.mappings.length,2);assert(result.findings.some(f=>f.location==='#wrong' && f.category==='source_type_scale_difference'));
+});
+
+test('status rejects unrelated or malformed jobs without overwriting evidence',async t=>{
+  const root=await fixture(t),file=path.join(root,'job.json');
+  for(const job of [{scope:'complete_book',inputs:[],artifacts:[],result:{status:'passed'}},{scope:'layout_and_structure',inputs:[],artifacts:[],result:{scope:'complete_book'}},{scope:'layout_and_structure',result:{scope:'layout_and_structure'}}]){
+    await writeJson(file,job);
+    await assert.rejects(layoutReport(root),/Invalid layout job contract/);
+    assert.deepEqual(JSON.parse(await fs.readFile(file,'utf8')),job);
+  }
+  const coordinator=path.join(root,'complete.json');
+  for(const state of [{scope:'complete_book'},{scope:'layout_and_structure',root,auditDirectory:root,documents:[],identity:'wrong'}]){
+    await writeJson(coordinator,state);
+    await assert.rejects(completeStatus(coordinator),/Invalid layout coordinator contract/);
+    assert.deepEqual(JSON.parse(await fs.readFile(coordinator,'utf8')),state);
+  }
+});
+
+test('converter adapter keeps the managed stylesheet contract in every pass',async()=>{
+  const source=await fs.readFile(fileURLToPath(new URL('../src/pagination.mjs',import.meta.url)),'utf8');
+  assert.match(source,/data-validatebook-converter/);
+  assert.match(source,/styles\\?\.css/);
+  assert.match(source,/pdf-document/);
+  assert.match(source,/pdf-table-wrap/);
+});
+
+test('durable report retains exact source and HTML text differences after job cleanup',()=>{
+ const report=textReport({status:'needs_attention',documents:[{language:'en'}],pageCoverage:[{page:9}],corrections:[],findings:[{severity:'error',language:'en',category:'source_text_mismatch',location:'page 9',detail:'Text differs.',expected:'region ’ s politics',actual:"region ' s politics"}]});
+ assert(report.includes('PDF: region ’ s politics'));
+ assert(report.includes("HTML: region ' s politics"));
+});
+
+test('variable font axis metadata does not change the rendered family identity',()=>{
+ const source='PISVKG+Red-Hat-Display-weight=706 TrueType yes yes yes 1 0';
+ assert.deepEqual(comparePdfFonts(source,[{fonts:[{familyName:'Red Hat Display SemiBold',postScriptName:'RedHatDisplay-SemiBold',glyphCount:32}]}]),[]);
+ assert.equal(comparePdfFonts(source,[{fonts:[{familyName:'Arial',glyphCount:32}]}]).length,1);
+});
+
+test('nonblocking visual observations remain visible in the human report',()=>{
+ const report=textReport({status:'passed_with_warnings',documents:[{language:'en'}],pageCoverage:[{page:9}],corrections:[],findings:[{severity:'warning',language:'en',category:'source_word_spacing_difference',location:'page 9',detail:'Natural rendering differs slightly from PDF.'}]});
+ assert(report.includes('Observații neblocante'));
+ assert(report.includes('Natural rendering differs slightly from PDF.'));
+ assert(report.includes('**Erori rămase** | 0'));
+});

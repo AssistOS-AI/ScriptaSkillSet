@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+skill_root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+if ! command -v node >/dev/null 2>&1; then
+  echo "pdf2html: Node.js 22 or later is required. See references/dependencies.md." >&2
+  exit 1
+fi
+exec node "$skill_root/scripts/launch-runtime.mjs" "$@"
